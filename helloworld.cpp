@@ -8,6 +8,9 @@ int main() {
   //Printing "David Snyder" to the command line
   cout << "David Snyder" << endl;
   cout << "Ben Huddle" << endl;     // Printing out Ben Huddle
+
+  // This is a change I've made
+  cout << "Jess VanDerwalker" << endl;
   return 0;
 
 }
