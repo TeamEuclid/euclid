@@ -6,13 +6,33 @@
 #include <unistd.h>
 #include <xcb/xcb.h>
 
-int main (int argc, char *argv) {
+int main (int argc, char **argv) {
 
-    xcb_connection_t    *connection;
-    xcb_screen_t        *screen;
-    xcb_window_t        win;
+    xcb_connection_t *connection; /* The connection to the X server */
+    xcb_screen_t *screen;         /* The screen window will go into */
+    xcb_drawable_t win;           /* The ID of the window we are going
+                                   * to draw into */
+    xcb_gcontext_t gc;          /* ID of the graphical context */
 
+    /* Open the connection to the X server */
+    connection = xcb_connect(NULL, NULL);
+    /* We're just getting the data out of the first thing the iterator
+     * points to */
+    screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
+    win = xcb_generate_id(connection);
+
+    /* Create a new window */
+    xcb_create_window(connection, XCB_COPY_FROM_PARENT, win, screen->root,
+                      0, 0, 400, 400, 10, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      screen->root_visual, 0, NULL);
+
+    /* Map the window to the screen and flush any pending messages */
+    xcb_map_window(connection, win);
+    xcb_flush(connection);
     pause();
+
+    /* Close the connection */
+    xcb_disconnect(connection);
 
     return 0;
 }
