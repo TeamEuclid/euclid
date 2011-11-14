@@ -1,28 +1,19 @@
 /* Copyright (c) 2011 Jess VanDerwalker
  *
  * Test program to create a window using the XCB library.
+ *
+ * The majority of this is taken from the XCB tutorial at:
+ *
+ * http://www.x.org/releases/X11R7.6/doc/libxcb/tutorial/index.html
+ *
  */
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 
-void print_modifiers(uint32_t mask) {
-    const char **mod;
-    const char *mods[] = {
-        "Shift", "Lock", "Ctrl", "Alt", "Mod2", "Mod3", "Mod4", "Mod5",
-        "Button1", "Button2", "Button3", "Button4", "Button5"
-    };
-
-    printf("Modifier mask: ");
-    for (mod = mods; mask; mask >>=1, mod++) {
-        if (mask & 1) {
-            printf(*mod);
-        }
-        putchar('\n');
-    }
-}
 
 
 int main (int argc, char **argv) {
@@ -31,22 +22,14 @@ int main (int argc, char **argv) {
     xcb_screen_t *screen;         /* The screen window will go into */
     xcb_drawable_t win;           /* The ID of the window we are going
                                    * to draw into */
+    xcb_font_t font;            /* The font for the GC */
     xcb_gcontext_t gc;          /* ID of the graphical context */
     xcb_generic_event_t *evt;   /* */
     uint32_t mask = 0;          /* Bit mask used to set options */
     uint32_t values[2];         /* Array that holds values used by GC
                                  * as called for by the value set in
                                  * the mask */
-
-    /* Some shapes */
-    xcb_point_t polyline[] = {
-        {50, 10}, {5, 20}, {25, -20}, {10, 10}
-    };
-
-    xcb_rectangle_t rectangle[] = {
-        {10, 50, 40, 20},
-        {80, 50, 10, 40}
-    };
+    char fontname[] = "-adobe-courier-medium-o-normal--11-80-100-100-m-60-iso10646-1";
 
     /* Open the connection to the X server */
     connection = xcb_connect(NULL, NULL);
@@ -54,17 +37,25 @@ int main (int argc, char **argv) {
      * points to */
     screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
 
+    /* Get a font for our window */
+    font = xcb_generate_id(connection);
+    xcb_open_font(connection, font, strlen(fontname), fontname);
+
     /* Create a graphic context for drawing */
     win = screen->root;
     gc = xcb_generate_id(connection);
-    mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+    mask = XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_FONT;
     values[0] = screen->black_pixel;
-    values[1] = 0;
+    values[1] = screen->white_pixel;
+    values[2] = font;
     xcb_create_gc(connection, gc, win, mask, values);
 
-    win = xcb_generate_id(connection);
+    /* Done with te font */
+    xcb_close_font(connection, font);
+ 
 
     /* Create a new window */
+    win = xcb_generate_id(connection);
     mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
     values[0] = screen->white_pixel;
     values[1] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS |
@@ -87,11 +78,6 @@ int main (int argc, char **argv) {
         case XCB_EXPOSE: {
             xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
 
-            /* Draw the polyline and the rectangle */
-            xcb_poly_line(connection, XCB_COORD_MODE_PREVIOUS, win, gc,
-                          4, polyline);
-            xcb_poly_rectangle(connection, win, gc, 2, rectangle);
-
             printf("Window %ld exposed. Region to be redrawn at location (%d, %d), ",
                    exevnt->window, exevnt->x, exevnt->y);
             printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
@@ -100,36 +86,25 @@ int main (int argc, char **argv) {
         }
         case XCB_BUTTON_PRESS: {
             xcb_button_press_event_t *bpevnt = (xcb_button_press_event_t *)evt;
-            print_modifiers(bpevnt->state);
-
             printf("Button %d pressed in window %ld, at coordinates (%d, %d)\n",
                    bpevnt->detail, bpevnt->event, bpevnt->event_x, bpevnt->event_y);
-
             break;
         }
         case XCB_BUTTON_RELEASE: {
             xcb_button_release_event_t *brevnt = (xcb_button_release_event_t *)evt;
-            print_modifiers(brevnt->state);
-
             printf("Button %d released in window %ld, at coordinates (%d, %d)\n",
                    brevnt->detail, brevnt->event, brevnt->event_x, brevnt->event_y);
-
             break;
         }
         case XCB_MOTION_NOTIFY: {
             xcb_motion_notify_event_t *mnevnt = (xcb_motion_notify_event_t *)evt;
-
             printf("Mouse moved in window %ld, at coordinates (%d, %d)\n",
                    mnevnt->event, mnevnt->event_x, mnevnt->event_y);
-
             break;
         }
         case XCB_KEY_PRESS: {
             xcb_key_press_event_t *kpevnt = (xcb_key_press_event_t *)evt;
-            print_modifiers(kpevnt->state);
-
             printf("Key pressed in window %ld\n", kpevnt->event);
-
             break;
         }
         default: {
@@ -140,7 +115,6 @@ int main (int argc, char **argv) {
         }
         free(evt);              /* Need to free the event */
     }
-    pause();
 
     /* Close the connection */
     xcb_disconnect(connection);
