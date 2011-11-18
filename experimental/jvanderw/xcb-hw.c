@@ -18,7 +18,7 @@
 
 int main (int argc, char **argv) {
 
-    xcb_connection_t *connection; /* The connection to the X server */
+    xcb_connection_t *conn; /* The connection to the X server */
     xcb_screen_t *screen;         /* The screen window will go into */
     xcb_drawable_t win;           /* The ID of the window we are going
                                    * to draw into */
@@ -30,32 +30,34 @@ int main (int argc, char **argv) {
                                  * as called for by the value set in
                                  * the mask */
     char fontname[] = "-adobe-courier-medium-o-normal--11-80-100-100-m-60-iso10646-1";
+    xcb_void_cookie_t cookie_conf; /* Response cookie for call to configure */
+    xcb_generic_error_t *error;    /* Struct for error information */
 
     /* Open the connection to the X server */
-    connection = xcb_connect(NULL, NULL);
+    conn = xcb_connect(NULL, NULL);
     /* We're just getting the data out of the first thing the iterator
      * points to */
-    screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
+    screen = xcb_setup_roots_iterator(xcb_get_setup(conn)).data;
 
     /* Get a font for our window */
-    font = xcb_generate_id(connection);
-    xcb_open_font(connection, font, strlen(fontname), fontname);
+    font = xcb_generate_id(conn);
+    xcb_open_font(conn, font, strlen(fontname), fontname);
 
     /* Create a graphic context for drawing */
     win = screen->root;
-    gc = xcb_generate_id(connection);
+    gc = xcb_generate_id(conn);
     mask = XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_FONT;
     values[0] = screen->black_pixel;
     values[1] = screen->white_pixel;
     values[2] = font;
-    xcb_create_gc(connection, gc, win, mask, values);
+    xcb_create_gc(conn, gc, win, mask, values);
 
     /* Done with te font */
-    xcb_close_font(connection, font);
+    xcb_close_font(conn, font);
  
 
     /* Create a new window */
-    win = xcb_generate_id(connection);
+    win = xcb_generate_id(conn);
     mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
     values[0] = screen->white_pixel;
     values[1] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS |
@@ -63,17 +65,17 @@ int main (int argc, char **argv) {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW |
         XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE;
 
-    xcb_create_window(connection, XCB_COPY_FROM_PARENT, win, screen->root,
+    xcb_create_window(conn, XCB_COPY_FROM_PARENT, win, screen->root,
                       0, 0, 400, 400, 10, XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       screen->root_visual, mask, values);
 
     /* Map the window to the screen and flush any pending messages */
-    xcb_map_window(connection, win);
-    xcb_flush(connection);
+    xcb_map_window(conn, win);
+    xcb_flush(conn);
 
     /* Setup a loop to handle events. Note that this uses the blocking
      * style of event handling loop */
-    while ((evt = xcb_wait_for_event(connection))) {
+    while ((evt = xcb_wait_for_event(conn))) {
         switch (evt->response_type & ~0x80) {
         case XCB_EXPOSE: {
             xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
@@ -88,6 +90,22 @@ int main (int argc, char **argv) {
             xcb_button_press_event_t *bpevnt = (xcb_button_press_event_t *)evt;
             printf("Button %d pressed in window %ld, at coordinates (%d, %d)\n",
                    bpevnt->detail, bpevnt->event, bpevnt->event_x, bpevnt->event_y);
+
+            /* Resize the window on the button press */
+            values[0] = 600;
+            values[1] = 600;
+            cookie_conf = xcb_configure_window_checked(conn, win,
+                                                       XCB_CONFIG_WINDOW_X |
+                                                       XCB_CONFIG_WINDOW_Y,
+                                                       values);
+            /* Check the cookies for errors */
+            error = xcb_request_check(conn, cookie_conf);
+            if (error) {
+                fprintf(stderr, "ERROR: Failed to reconfigure the window: %d\n",
+                        error->error_code);
+            }
+            xcb_map_window(conn, win);
+
             break;
         }
         case XCB_BUTTON_RELEASE: {
@@ -117,7 +135,7 @@ int main (int argc, char **argv) {
     }
 
     /* Close the connection */
-    xcb_disconnect(connection);
+    xcb_disconnect(conn);
 
     return 0;
 }
