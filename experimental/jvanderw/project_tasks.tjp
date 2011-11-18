@@ -1,0 +1,87 @@
+# Copyright (c) 2011-2012 Jess VanDerwalker
+#
+# Task Juggler Project for Team Euclid
+
+project euclid "X.org Project" "1.0" 2010-09-28 -  2012-03-19 {
+
+    timezone "America/Los_Angeles"
+    timeformat "%Y-%m%d"
+    # Only plan to be working 2.5 hours per day
+    dailyworkinghours 2.5
+    weekstartsmonday
+    workinghours sat, sun off
+}
+
+# Set up the vacations
+vacation "Winter Break" 2011-12-10 - 2012-01-09
+vacation "Veterans Day" 2011-11-11
+vacation "Thanksgiving Day" 2011-11-23 - 2011-11-24
+vacation "Martin Luther King Jr." 2012-01-16
+flags team
+
+# Macro for all team 
+macro allocate_team [
+    allocate bwooley
+    allocate bhuddle
+    allocate jvanderw
+    allocate carrbs
+    allocate askroma
+    allocate dsnyder
+]
+
+# Define resources
+resource devs "Developers" {
+    resource bwooley "Braden Wooley" {
+    }
+    resource bhuddle "Ben Huddle" {
+    }
+    resource jvanderw "Jess VanDerwalker" {
+    }
+    resource carrbs "Ben Carr" {
+    }
+    resource askroma "Aaron Skroma" {
+    }
+    resource dsnyder "David Snyder" {
+    }
+    flags team
+}
+
+
+# Specify the work packages. These are the tasks for the team
+task xorg_rsm "Rootless Window System" {
+
+    task proj_plan "Project Plan" {
+        # The start date for the plan
+        start 2011-11-07
+        # The number of days to 
+        effort 10d
+        # Allocate the whole team to the task
+        ${allocate_team}
+    }
+
+    task research "Research" {
+        # Depends on completing the project plan
+        depends !proj_plan
+
+        task learn_xcb "Learn XCB basics" {
+           effort 10h
+           ${allocate_team}
+        }
+
+        task learn_apple_api "Learn Apple windowing API" {
+           effort 8h
+           ${allocate_team}
+        }
+    }
+    
+}
+
+# Project Milestones
+
+# Reports to generate
+taskreport euclid_task_report "Euclid Work Breakdown Structure" {
+    # Formats to generate
+    formats html
+    columns bsi {title 'Work Breakdown Structure'}, name, start,
+        end, effort, chart
+}
