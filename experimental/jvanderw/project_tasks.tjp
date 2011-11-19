@@ -2,13 +2,14 @@
 #
 # Task Juggler Project for Team Euclid
 
-project euclid "X.org Project" "1.0" 2010-09-28 -  2012-03-19 {
+project euclid "X.org Project" "1.0" 2011-09-28 - 2012-04-10 {
 
     timezone "America/Los_Angeles"
-    timeformat "%Y-%m%d"
+    timeformat "%Y-%m-%d"
     # Only plan to be working 2.5 hours per day
     dailyworkinghours 2.5
     weekstartsmonday
+    workinghours mon - fri 13:30 - 16:00
     workinghours sat, sun off
 }
 
@@ -54,7 +55,7 @@ task xorg_rsm "Rootless Window System" {
         # The start date for the plan
         start 2011-11-07
         # The number of days to 
-        effort 10d
+        effort 60d
         # Allocate the whole team to the task
         ${allocate_team}
     }
@@ -64,24 +65,48 @@ task xorg_rsm "Rootless Window System" {
         depends !proj_plan
 
         task learn_xcb "Learn XCB basics" {
-           effort 10h
+           effort 60h
            ${allocate_team}
         }
 
         task learn_apple_api "Learn Apple windowing API" {
-           effort 8h
+           effort 54h
            ${allocate_team}
         }
     }
-    
+
+    task meetings "Required Meetings" {
+        task wkly_team_14 "Team Meeting" {
+            start 2011-11-14
+            effort 6h
+            ${allocate_team}
+        }
+        task wkly_team_21 "Team Meeting " {
+            start 2011-11-21
+            effort 6h
+            ${allocate_team}
+        }        
+        task wkly_team_28 "Team Meeting" {
+            start 2011-11-28
+            effort 6h
+            ${allocate_team}
+        }
+    }
 }
 
 # Project Milestones
 
-# Reports to generate
-taskreport euclid_task_report "Euclid Work Breakdown Structure" {
-    # Formats to generate
+
+# A traditional Gantt chart with a project overview.
+taskreport overview "Team Euclid Project Overview" {
     formats html
-    columns bsi {title 'Work Breakdown Structure'}, name, start,
-        end, effort, chart
+    columns bsi { title 'WBS' },
+          name, start, end, effort,
+          chart
+    # For this report we like to have the abbreviated weekday in front
+    # of the date. %a is the tag for this.
+    timeformat "%a %Y-%m-%d"
+    loadunit days
+    hideresource 1
+    caption 'All effort values are in man days.'
 }
