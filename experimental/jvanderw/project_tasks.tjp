@@ -16,7 +16,8 @@ project euclid "X.org Project" "1.0" 2011-09-28 - 2012-04-10 {
 # Set up the vacations
 vacation "Winter Break" 2011-12-10 - 2012-01-09
 vacation "Veterans Day" 2011-11-11
-vacation "Thanksgiving Day" 2011-11-23 - 2011-11-24
+vacation "Thanksgiving Day" 2011-11-23
+vacation "Day after Thanksgiving" 2011-11-24
 vacation "Martin Luther King Jr." 2012-01-16
 flags team
 
@@ -98,15 +99,25 @@ task xorg_rsm "Rootless Window System" {
 
 
 # A traditional Gantt chart with a project overview.
-taskreport overview "Team Euclid Project Overview" {
+taskreport overview "euclid_project_overview" {
     formats html
+    headline "Team Euclid Project Overview"
     columns bsi { title 'WBS' },
           name, start, end, effort,
           chart
     # For this report we like to have the abbreviated weekday in front
     # of the date. %a is the tag for this.
     timeformat "%a %Y-%m-%d"
-    loadunit days
+#    loadunit days
     hideresource 1
     caption 'All effort values are in man days.'
+}
+
+taskreport development "euclid_dev" {
+    formats html
+    headline "Development and Resource Allocation"
+    columns bsi {title 'WBS'}, name, start, end, effort, duration, chart {scale day width 1000}
+    timeformat "%Y-%m-%d"
+    hideresource ~(isleaf() & isleaf_())
+    sortresources name.up
 }
