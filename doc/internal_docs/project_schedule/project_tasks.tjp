@@ -1,17 +1,18 @@
 # Copyright (c) 2011-2012 Jess VanDerwalker
 #
 # Task Juggler Project for Team Euclid
+#
 
-project euclid "X.org Project" "1.0" 2011-09-28 - 2012-05-24 {
+project euclid "X.org Project" "1.0" 2011-11-14 - 2012-06-24 {
 
     # Final date is March 24 - give or take a couple of days.
 
     timezone "America/Los_Angeles"
     timeformat "%Y-%m-%d"
-    # Only plan to be working 2.5 hours per day
+    # Only plan to be working 2.5 hours per day and not on weekends
     dailyworkinghours 2.5
     weekstartsmonday
-    workinghours mon - fri 13:00 - 16:00
+    workinghours mon - fri 12:00 - 14:30
     workinghours sat, sun off
 }
 
@@ -27,7 +28,7 @@ flags team
 macro allocate_team [
     allocate bwooley
     allocate bhuddle
-#    allocate jvanderw
+    allocate jvanderw
     allocate carrbs
     allocate askomra
     allocate dsnyder
@@ -68,13 +69,28 @@ resource devs "Developers"
 }
 
 # Shifts so we can have recurring weekly tasks. Have them on Monday
-shift one_hr_weekly "One hour per week" {
-    workinghours mon 13:30-14:30
+shift mon_one_hr_weekly "One hour per week for meetings" {
+    workinghours mon 12:30-13:30
     workinghours tue, wed, thu, fri, sat, sun off
 }
 
+shift tue_one_hr_weekly "One hour per week on Tuesday" {
+    workinghours tue 12:30-13:30
+    workinghours mon, wed, thu, fri, sat, sun off
+}
+
+shift thu_one_hr_weekly "One hour per week on Thursday" {
+    workinghours thu 12:30-13:30
+    workinghours mon, tue, wed, fri, sat, sun off
+}
+
+shift fri_one_hr_weekly "One hour per week on Friday" {
+    workinghours fri 12:30-13:30
+    workinghours mon, tue, wed, thu, sat, sun off
+}
+
 shift two_hr_weekly "Two hours per week" {
-    workinghours mon 13:30-15:30
+    workinghours wed 12:30-14:30
     workinghours tue, wed, thu, fri, sat, sun off
 }
 
@@ -88,13 +104,126 @@ task documentation "Documentation" {
 
         task proj_plan "Project Plan" {
             # The start date for the plan
-            start 2011-11-07
-            end 2011-11-26
-            # The number of days to 
-            #        effort 60d
-            # Allocate the whole team to the task
-            ${allocate_team}
-        }
+            
+            task ram_personnel "Risk assessment for personnel" {
+                start 2011-11-20
+                effort 2h
+                allocate jvanderw
+            }
+            task ram_it "Risk assessment for IT" {
+                start 2011-11-21
+                effort 2h
+                allocate carrbs
+            }
+            task ram_dev "Risk assessment for architecture and design" {
+                start 2011-11-21
+                effort 2h
+                allocate dsnyder
+            }
+            task role_desc "Role descriptions" {
+                start 2011-11-14
+                effort 6h
+                ${allocate_team}
+                complete 90
+            }
+            task gen_wbs "Inital WBS" {
+                note "Initial version of the Work Breakdown Structure"
+                start 2011-11-14
+                effort 36h
+                ${allocate_team}
+                complete 90
+            }
+                
+            task gen_schedule "Schedule and calendar" {
+                priority 750
+                
+                task wbs_into_tj3 "WBS into TaskJuggler" {
+                    note "Put the information from the WBS drafts into TaskJuggler for scheduling and resource allocation."
+                    start 2011-11-17
+                    effort 6h
+                    allocate jvanderw
+                    complete 50
+                }
+                task assign_resources "Assign resources" {
+                    note "Assign resources in TaskJuggler"
+                    start 2011-11-17
+                    effort 3h
+                    allocate jvanderw
+                    complete 50
+                }
+                task gen_mile_dates "Determine Milestone dates" {
+                    note "Determine Milestone dates from results of TaskJuggler scheduling."
+                    start 2011-11-17
+                    effort 1h
+                    allocate jvanderw
+                    complete 50
+                }
+                task gen_reports "Generate and distribute schedule" {
+                    note "Generate a schedule and calendar and make available to the team and the sponsors."
+                    start 2011-11-17
+                    effort 1h
+                    allocate jvanderw
+                    complete 0
+                }
+            } # end gen_schedule
+            
+            task id_develiverables "Identify and describe deliverables" {
+                note "Identify and describe the deliverables expected by the sponsor."
+                start 2011-11-20
+                effort 4h
+                allocate askomra
+            }
+
+            task project_desc "Project description" {
+                note "Overall description of the project."
+
+                task project_desc_sp_meetings "Meetings with project sponsors" {
+                    note "Meetings with sponsors to understand project."
+                    start 2011-11-14
+                    effort 2h
+                    ${allocate_team}
+                    complete 100
+                }
+                task gen_project_desc "Generate the project description" {
+                    note "Write the project description for the Project Plan based on information from the meetings."
+                    start 2011-11-20
+                    effort 1h
+                    allocate bhuddle
+                }
+             } # end project_desc
+
+             task mile_desc "Milestone descriptions" {
+                 note "Description of the Milestons for Project Plan"
+                 start 2011-11-20
+                 effort 1h
+                 allocate askomra
+             }
+
+             task meeting_desc "Meetings and communication" {
+                 note "Description of regular meetings and communication methods used by the team internally and with the sponsors."
+                 start 2011-11-20
+                 effort 1h
+                 allocate dsnyder
+             }
+             task asset_track_desc "Asset tracking" {
+                 note "Describe assets and work product and how it is tracked/version controlled."
+                 start 2011-11-20
+                 effort 1h
+                 allocate carrbs
+             }
+             task desc_v_and_v "Validation, verification, and testing" {
+                 note "Provide a basic outline of what we expect to test, when it will be tested and how it will be done."
+                 start 2011-11-20
+                 effort 2h
+                 allocate bhuddle
+             }
+             task deployment_desc "Deployment" {
+                 note "Describe how we are going to deploy the final product."
+                 start 2011-11-20
+                 effort 1h
+                 allocate bwooley
+             }
+        } # end proj_plan
         
         task usrd "User requirements" {
             note "Specification of the user requirements for the project."
@@ -106,8 +235,11 @@ task documentation "Documentation" {
                 allocate jvanderw
                 complete 50
             }
-            task write_usrd "Write document" {
-                note "Write the user requirement document."
+            task write_usrd "Generate document" {
+                note "Generate user requirement document."
+                depends !id_usr_reqs
+                effort 4h
+                allocate bhuddle
             }
         } # end usrd
 
@@ -127,7 +259,9 @@ task documentation "Documentation" {
                 ${allocate_a_and_d}
             }
             task arch_doc_maint "Document maintaince" {
+
                 note "Maintain the document with changes and updates to the architecture and design."
+                depends !init_arch_doc
                 priority 750
                 effort 22h
                 shift two_hr_weekly
@@ -277,8 +411,10 @@ task a_and_d "Archicture and Design" {
 
         task module_a_and_d "Module archictecture and design" {
             note "Archicture and design of module that are going to be specifically written by our team."
-                depends a_and_d.a_and_d_research
-                task a_and_d_mile1 "Milestone 1" {
+            depends a_and_d.a_and_d_research
+            depends !!!documentation.project_docs.a_and_d_doc.init_arch_doc
+
+            task a_and_d_mile1 "Milestone 1" {
                 task mile1_identify "Identify modules" {
                     effort 4h
                     ${allocate_a_and_d}
@@ -530,6 +666,92 @@ task v_and_v "Validation and Verfication" {
     } # end v_and_v_mile4
 } # end validation and verfication
 
+# System Administration tasks
+task sys_admin "System Administration" {
+
+    task back_ups "Backup and recovery system" {
+        task back_up_plan "Indentify back-up plan" {
+            note "Identify what it is that we are going to do for a back-up plan"
+            start 2011-11-14
+            effort 4h
+            allocate carrbs
+            complete 100
+        }
+        task weekly_backup "Weekly backup to physical media" {
+            note "Weekly recurring task of backing up and restoring of assets."
+            start 2011-11-30
+            effort 12h
+            priority 750
+            allocate carrbs
+            shift thu_one_hr_weekly
+        }
+        task weekly_verification "Verification of weekly backup" {
+            note "Weekly recurring task of verifiying the the weekly backups."
+            start 2011-11-30
+            effort 12h
+            priority 750
+            allocate carrbs
+            shift fri_one_hr_weekly
+         }
+    } # back_ups
+
+    task repo_mangement "Repository management" {
+        
+        task sync_github_redmine "Sync Redmine and Github repositories" {
+            note "Implement synchronization between Redmine and Github repositories."
+            end 2011-11-28
+            effort 3h
+            allocate carrbs
+        }
+        task repo_maint "Repository maintenance" {
+            note "Occasional maintainance on the repository."
+            start 2011-11-28
+            effort 6h
+            allocate carrbs
+            shift tue_one_hr_weekly
+        }
+    } # end repo_mangement
+} # end sys_admin
+
+# Management tasks and meetings
+task management "Management" {
+    # All of these tasks are currently weekly repeating
+    
+    task weekly_status_updates "Status and performance update" {
+        note "Weekly status and performance updates to be emailed to Bart"
+        start 2011-11-14
+        priority 750
+        effort 15h
+        allocate jvanderw
+        shift fri_one_hr_weekly
+    }
+    task weekly_meeting "Weekly team meeting" {
+        note "Required weekly team meeting."
+        start 2011-11-14
+        priority 760  # A little higher than other repeating tasks
+        effort 15h
+        ${allocate_team}
+        shift mon_one_hr_weekly
+    }
+    task weekly_wbs_update "Weekly updating of the WBS" {
+        note "Weekly updating and maintaince on the Work Breakdown Schedule"
+        depends !!documentation.project_docs.proj_plan.gen_wbs
+        start 2011-11-28
+        priority 750
+        effort 12h
+        allocate jvanderw
+        shift tue_one_hr_weekly
+    }
+    task weekly_schedule_update "Weekly updating of the project schedule" {
+        note "Weekly updating of the project schedule."
+        depends !!documentation.project_docs.proj_plan.gen_schedule
+        start 2011-11-28
+        priority 750
+        effort 12h
+        allocate jvanderw
+        shift thu_one_hr_weekly
+    }    
+} # end management
 
 # Project Milestones
 task project_milestones "Milestones" {
@@ -537,13 +759,14 @@ task project_milestones "Milestones" {
     task init_project_plan "Initial Project Plan Complete" {
         milestone
         depends documentation.project_docs.proj_plan
-        end 2011-11-29
+        end 2011-11-28
         note "Initial Project Plan submitted to Bart Massey for review"
     }
 
     task mile0 "Milestone 0" {
         milestone
         note "Setup and first window"
+        depends !!documentation.project_docs.proj_plan
         depends v_and_v.v_and_v_mile0
     }
 
@@ -575,15 +798,14 @@ task project_milestones "Milestones" {
 # A traditional Gantt chart with a project overview.
 taskreport overview "euclid_project_overview" {
     formats html
-    headline "Team Euclid Project Overview"
+    headline "Team Euclid Work Breakdown Structure"
     columns bsi { title 'WBS' },
-          name, start, end, effort,
-          chart
+          name, start, end, effort
     # For this report we like to have the abbreviated weekday in front
     # of the date. %a is the tag for this.
     timeformat "%a %Y-%m-%d"
     loadunit hours
-    hideresource 0
+    hideresource 1
     caption 'All effort values are in human hours.'
 }
 
@@ -595,4 +817,5 @@ taskreport development "euclid_dev" {
     hideresource ~(isleaf() & isleaf_())
     loadunit hours
     sortresources name.up
+    caption 'All effort values are in human hours.'
 }
