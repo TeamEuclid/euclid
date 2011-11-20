@@ -27,8 +27,24 @@ macro allocate_team [
     allocate bhuddle
     allocate jvanderw
     allocate carrbs
-    allocate askroma
+    allocate askomra
     allocate dsnyder
+]
+
+# Macro for Arch and Design team members
+macro allocate_a_and_d [
+    allocate dsnyder
+    allocate bwooley
+]
+
+# Marco to assign V&V developers
+macro allocate_v_and_v [
+    allocate bhuddle
+]
+
+# Macro to assign IT team members
+macro allocate_it [
+    allocate carrbs
 ]
 
 # Define resources
@@ -41,7 +57,7 @@ resource devs "Developers" {
     }
     resource carrbs "Ben Carr" {
     }
-    resource askroma "Aaron Skroma" {
+    resource askomra "Aaron Skroma" {
     }
     resource dsnyder "David Snyder" {
     }
@@ -62,41 +78,249 @@ task xorg_rsm "Rootless Window System" {
     }
 
     task research "Research" {
+        note "Team wide research tasks."
         # Depends on completing the project plan
         depends !proj_plan
+        
+        task code_bases "Existing code bases" {
 
-        task learn_xcb "Learn XCB basics" {
-           effort 60h
-           ${allocate_team}
+            task learn_xcb "Learn XCB basics" {
+                effort 36h
+                ${allocate_team}
+            } 
+            task lightpipe "Examine lightpipe code" {
+                effort 24h
+                ${allocate_team}
+            }
         }
+
+        task xcode "Learn XCode" {
+            effort 12h
+            ${allocate_team}
+        }
+
+        task osx_learn "Become familiar with OS X enviornment" {
+            effort 12h
+            ${allocate_team}
+        }
+
+        task obj_c "Basic Objective-C familiarity" {
+            effort 24h
+            ${allocate_team}
+        }
+
+        task dev_env_installed "Working Development Envionment" {
+            effort 24h
+            ${allocate_team}
+            note "Get a working development environment working on OS X systems."
+        }
+
 
         task learn_apple_api "Learn Apple windowing API" {
-           effort 54h
-           ${allocate_team}
+            effort 54h
+            depends !dev_env_installed
+            ${allocate_team}
         }
     }
 
-    task meetings "Required Meetings" {
-        task wkly_team_14 "Team Meeting" {
-            start 2011-11-14
-            effort 6h
-            ${allocate_team}
-        }
-        task wkly_team_21 "Team Meeting " {
-            start 2011-11-21
-            effort 6h
-            ${allocate_team}
-        }        
-        task wkly_team_28 "Team Meeting" {
-            start 2011-11-28
-            effort 6h
-            ${allocate_team}
-        }
-    }
+    # Arch and Design tasks
+    task arch_design "Archicture and Design" {
+        depends !proj_plan
+        ${allocate_a_and_d}
+
+        # Research task associated with Architecture and Design
+        task a_and_d_research "Research" {
+
+            task interface "External Interface" {
+
+                task xcb_lib_research "XCB library" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task xlib_lib_research "Xlib library" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task xtest_lib_research "XTest library" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task comp_lib_research "Composite library" {
+                    effort 8h
+                    ${allocate_a_and_d}
+                }
+                task damage_lib_research "Damage library" {
+                    effort 8h
+                    ${allocate_a_and_d}
+                }
+            } # end interface
+
+            task examples_research "Code examples" {
+
+                task lighpipe_a_and_r "Lightpipe" {
+                    effort 8h
+                    ${allocate_a_and_d}
+                }
+                task xcomp_manager "XComp Manager" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task misc_win_managers "i3 and awesome" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+            } # end examples_research
+            
+            task id_comps_research "Identify Components" {
+                effort 6h
+                ${allocate_a_and_d}
+            }
+
+        } # end of a_and_d_research
+
+        task library_a_and_d "Module design" {
+            
+            task damage_interface "Interface with Damage" {
+                effort 4h
+                ${allocate_a_and_d}
+            }
+            task compositing "Interface with manual compositing" {
+                effort 4h
+                ${allocate_a_and_d}
+            }
+            task io_interface "Interface with I/O libraries" {
+                effort 4h
+                ${allocate_a_and_d}
+            }
+
+            task module_a_and_d "Module archictecture and design" {
+                note "Archicture and design of module that are going to be specifically written by our team."
+
+                task a_and_d_mile1 "Milestone 1" {
+                    task mile1_identify "Identify modules" {
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile1_relations "Module relationships" {
+                        note "Identify and manage indentify relationships between modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile1_api "API design" {
+                        note "Design APIs for requires modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                } # end a_and_d_mile1
+
+                task a_and_d_mile2 "Milestone 2" {
+                    task mile2_identify "Identify modules" {
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile2_relations "Module relationships" {
+                        note "Identify and manage indentify relationships between modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile2_api "API design" {
+                        note "Design APIs for requires modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                } # end a_and_d_mile2
+
+                task a_and_d_mile3 "Milestone 3" {
+                    task mile3_identify "Identify modules" {
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile3_relations "Module relationships" {
+                        note "Identify and manage indentify relationships between modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile3_api "API design" {
+                        note "Design APIs for requires modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                } # end a_and_d_mile3
+
+                task a_and_d_mile4 "Milestone 4" {
+                    task mile4_identify "Identify modules" {
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile4_relations "Module relationships" {
+                        note "Identify and manage indentify relationships between modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                    task mile4_api "API design" {
+                        note "Design APIs for requires modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                    }
+                } # end a_and_d_mile4
+
+            } # end module_a_and_d
+
+        } # end library_a_and_d
+
+        task app_a_and_d "Application" {
+
+            task proc_arch "Process / control flow" {
+                effort 2h
+                ${allocate_a_and_d}
+            }
+            task osx_interface_a_and_d "Interface with OS X" {
+                effort 3h
+                ${allocate_a_and_d}
+            }
+            task app_interface "Interface with our API" {
+                effort 2h
+                ${allocate_a_and_d}
+            }
+
+        } # end app_a_and_d
+    } # end of arch_design
 }
 
 # Project Milestones
+task project_milestones "Milestones" {
 
+    task init_project_plan "Initial Project Plan Complete" {
+        milestone
+        depends xorg_rsm.proj_plan
+        end 2011-11-29
+        note "Initial Project Plan submitted to Bart Massey for review"
+    }
+
+    task mile1 "Milestone 1" {
+        milestone
+        note "Rooted window"
+        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile1
+    }
+
+    task mile2 "Milestone 2" {
+        milestone
+        note "Rooted window with input"
+        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile2
+    }
+
+    task mile3 "Milestone 3" {
+        milestone
+        note "Rootless window"
+        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile3
+    }
+
+    task mile4 "Milestone 4" {
+        milestone
+        note "Rootless window with input"
+        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile4
+    }
+}
 
 # A traditional Gantt chart with a project overview.
 taskreport overview "euclid_project_overview" {
