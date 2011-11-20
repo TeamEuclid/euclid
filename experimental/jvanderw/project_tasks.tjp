@@ -2,7 +2,7 @@
 #
 # Task Juggler Project for Team Euclid
 
-project euclid "X.org Project" "1.0" 2011-09-28 - 2012-05-10 {
+project euclid "X.org Project" "1.0" 2011-09-28 - 2012-04-24 {
 
     # Final date is March 24 - give or take a couple of days.
 
@@ -27,7 +27,7 @@ flags team
 macro allocate_team [
     allocate bwooley
     allocate bhuddle
-    allocate jvanderw
+#    allocate jvanderw
     allocate carrbs
     allocate askomra
     allocate dsnyder
@@ -50,7 +50,8 @@ macro allocate_it [
 ]
 
 # Define resources
-resource devs "Developers" {
+resource devs "Developers"
+{
     resource bwooley "Braden Wooley" {
     }
     resource bhuddle "Ben Huddle" {
@@ -66,31 +67,86 @@ resource devs "Developers" {
     flags team
 }
 
+# Shifts so we can have recurring weekly tasks. Have them on Monday
+shift one_hr_weekly "One hour per week" {
+    workinghours mon 13:30-14:30
+    workinghours tue, wed, thu, fri, sat, sun off
+}
+
+shift two_hr_weekly "Two hours per week" {
+    workinghours mon 13:30-15:30
+    workinghours tue, wed, thu, fri, sat, sun off
+}
 
 # Specify the work packages. These are the tasks for the team
-task xorg_rsm "Rootless Window System" {
 
-    task proj_plan "Project Plan" {
-        # The start date for the plan
-        start 2011-11-07
-        end 2011-11-26
-        # The number of days to 
-#        effort 60d
-        # Allocate the whole team to the task
-        ${allocate_team}
-    }
+# Project Documentation tasks
+task documentation "Documentation" {
+    
+    task project_docs "Project" {
+        note "Documents generated for the use of the team in development."
+
+        task proj_plan "Project Plan" {
+            # The start date for the plan
+            start 2011-11-07
+            end 2011-11-26
+            # The number of days to 
+            #        effort 60d
+            # Allocate the whole team to the task
+            ${allocate_team}
+        }
+        
+        task usrd "User requirements" {
+            note "Specification of the user requirements for the project."
+            
+            task id_usr_reqs "Identify user requirements." {
+                note "Correspondence / meetings with sponsors to determine requirements."
+                effort 4h
+                allocate bhuddle
+                allocate jvanderw
+                complete 50
+            }
+            task write_usrd "Write document" {
+                note "Write the user requirement document."
+            }
+        } # end usrd
+
+        task a_and_d_doc "Architecture and Design document" {
+            note "Architecture and design document detailing structure and implementation of project."
+            depends documentation.project_docs.proj_plan
+            depends a_and_d.a_and_d_research
+
+            task init_decom "Initial decomposition" {
+                note "First pass on the decomposition of components."
+                effort 3h
+                ${allocate_a_and_d}
+            }
+            task init_arch_doc "Initial document version" {
+                note "Write the first version of the architecture and design document."
+                effort 4h
+                ${allocate_a_and_d}
+            }
+            task arch_doc_maint "Document maintaince" {
+                note "Maintain the document with changes and updates to the architecture and design."
+                effort 22h
+                shift two_hr_weekly
+                ${allocate_a_and_d}
+            }   
+        } # end a_and_d_doc
+    } # end of project_docs
+} # end documentation
 
     task research "Research" {
         note "Team wide research tasks."
         # Depends on completing the project plan
-        depends !proj_plan
+        depends !documentation.project_docs.proj_plan
         
         task code_bases "Existing code bases" {
 
             task learn_xcb "Learn XCB basics" {
                 effort 36h
                 ${allocate_team}
-            } 
+            }
             task lightpipe "Examine lightpipe code" {
                 effort 24h
                 ${allocate_team}
@@ -101,24 +157,19 @@ task xorg_rsm "Rootless Window System" {
             effort 12h
             ${allocate_team}
         }
-
         task osx_learn "Become familiar with OS X enviornment" {
             effort 12h
             ${allocate_team}
         }
-
         task obj_c "Basic Objective-C familiarity" {
             effort 24h
             ${allocate_team}
         }
-
         task dev_env_installed "Working Development Envionment" {
             effort 24h
             ${allocate_team}
             note "Get a working development environment working on OS X systems."
         }
-
-
         task learn_apple_api "Learn Apple windowing API" {
             effort 54h
             depends !dev_env_installed
@@ -127,338 +178,338 @@ task xorg_rsm "Rootless Window System" {
     }
 
 
-    # Arch and Design tasks
-    task a_and_d "Archicture and Design" {
-        depends !proj_plan
-        ${allocate_a_and_d}
+# Arch and Design tasks
+task a_and_d "Archicture and Design" {
+    depends !documentation.project_docs.proj_plan
+    ${allocate_a_and_d}
 
-        # Research task associated with Architecture and Design
-        task a_and_d_research "Research" {
+    # Research task associated with Architecture and Design
+    task a_and_d_research "Research" {
 
-            task interface "External Interface" {
+        task interface "External Interface" {
 
-                task xcb_lib_research "XCB library" {
-                    effort 4h
-                    ${allocate_a_and_d}
-                }
-                task xlib_lib_research "Xlib library" {
-                    effort 4h
-                    ${allocate_a_and_d}
-                }
-                task xtest_lib_research "XTest library" {
-                    effort 4h
-                    ${allocate_a_and_d}
-                }
-                task comp_lib_research "Composite library" {
-                    effort 8h
-                    ${allocate_a_and_d}
-                }
-                task damage_lib_research "Damage library" {
-                    effort 8h
-                    ${allocate_a_and_d}
-                }
-            } # end interface
-
-            task examples_research "Code examples" {
-
-                task lighpipe_a_and_r "Lightpipe" {
-                    effort 8h
-                    ${allocate_a_and_d}
-                }
-                task xcomp_manager "XComp Manager" {
-                    effort 4h
-                    ${allocate_a_and_d}
-                }
-                task misc_win_managers "i3 and awesome" {
-                    effort 4h
-                    ${allocate_a_and_d}
-                }
-            } # end examples_research
-            
-            task id_comps_research "Identify Components" {
-                effort 6h
-                ${allocate_a_and_d}
-            }
-
-        } # end of a_and_d_research
-
-        task library_a_and_d "Module design" {
-            
-            task damage_interface "Interface with Damage" {
+            task xcb_lib_research "XCB library" {
                 effort 4h
                 ${allocate_a_and_d}
             }
-            task compositing "Interface with manual compositing" {
+            task xlib_lib_research "Xlib library" {
                 effort 4h
                 ${allocate_a_and_d}
             }
-            task io_interface "Interface with I/O libraries" {
+            task xtest_lib_research "XTest library" {
                 effort 4h
                 ${allocate_a_and_d}
             }
-
-            task module_a_and_d "Module archictecture and design" {
-                note "Archicture and design of module that are going to be specifically written by our team."
-                depends xorg_rsm.a_and_d.a_and_d_research
-                task a_and_d_mile1 "Milestone 1" {
-                    task mile1_identify "Identify modules" {
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile1_relations "Module relationships" {
-                        note "Identify and manage indentify relationships between modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile1_api "API design" {
-                        note "Design APIs for requires modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                } # end a_and_d_mile1
-
-                task a_and_d_mile2 "Milestone 2" {
-                    task mile2_identify "Identify modules" {
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile2_relations "Module relationships" {
-                        note "Identify and manage indentify relationships between modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile2_api "API design" {
-                        note "Design APIs for requires modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                } # end a_and_d_mile2
-
-                task a_and_d_mile3 "Milestone 3" {
-                    task mile3_identify "Identify modules" {
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile3_relations "Module relationships" {
-                        note "Identify and manage indentify relationships between modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile3_api "API design" {
-                        note "Design APIs for requires modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                } # end a_and_d_mile3
-
-                task a_and_d_mile4 "Milestone 4" {
-                    task mile4_identify "Identify modules" {
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile4_relations "Module relationships" {
-                        note "Identify and manage indentify relationships between modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                    task mile4_api "API design" {
-                        note "Design APIs for requires modules"
-                        effort 4h
-                        ${allocate_a_and_d}
-                    }
-                } # end a_and_d_mile4
-            } # end module_a_and_d
-        } # end library_a_and_d
-
-        task app_a_and_d "Application" {
-
-            task proc_arch "Process / control flow" {
-                effort 2h
+            task comp_lib_research "Composite library" {
+                effort 8h
+                ${allocate_a_and_d}
+                }
+            task damage_lib_research "Damage library" {
+                effort 8h
                 ${allocate_a_and_d}
             }
-            task osx_interface_a_and_d "Interface with OS X" {
-                effort 3h
+        } # end interface
+
+        task examples_research "Code examples" {
+
+            task lighpipe_a_and_r "Lightpipe" {
+                effort 8h
                 ${allocate_a_and_d}
             }
-            task app_interface "Interface with our API" {
-                effort 2h
+            task xcomp_manager "XComp Manager" {
+                effort 4h
                 ${allocate_a_and_d}
             }
-
-        } # end app_a_and_d
-    } # end of arch_design
-
-    # Development task - specifically these are implementation tasks
-    task dev "Development" {
-        
-        task dev_mile0 "Milestone 0 development" {
-            start 2011-11-26
-
-            task env_setup "Setup Environment Development" {
-                note "Setup a working development environment in OS X"
-                effort 36h
-                ${allocate_team}
+            task misc_win_managers "i3 and awesome" {
+                effort 4h
+                ${allocate_a_and_d}
             }
-            task render_simple_mac_win "Simple window in OS X" {
-                note "Render a simple window in OS X"
-                effort 24h
-                ${allocate_team}
-            }
+        } # end examples_research
+                            
+        task id_comps_research "Identify Components" {
+            effort 6h
+            ${allocate_a_and_d}
+        }
 
-        } # dev_mile0
+    } # end of a_and_d_research
 
-        task dev_mile1 "Milestone 1 development" {
-            note "Basic rooted window"
-            depends project_milestones.mile0
-            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
-
-            task dev_mile1_code "Coding" {
-                effort 105h
-                ${allocate_team}
-            }
-            task dev_mile1_doc "Documentation" {
-                effort 12h
-                ${allocate_team}
-            }
-            task dev_mile1_v_and_v "Testing" {
-                effort 6h
-                ${allocate_team}
-            }
-
-        } # end dev_mile1
-
-        task dev_mile2 "Milestone 2 development" {
-            note "Basic rooted window with input from keyboard and mouse"
-            depends project_milestones.mile1
-            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2
-
-            task dev_mile2_code "Coding" {
-                effort 105h
-                ${allocate_team}
-            }
-            task dev_mile2_doc "Documentation" {
-                effort 12h
-                ${allocate_team}
-            }
-            task dev_mile2_v_and_v "Testing" {
-                effort 6h
-                ${allocate_team}
-            }
-
-        } # end dev_mile2
-
-        task dev_mile3 "Milestone 3 development" {
-            note "Rootless window without input"
-            depends project_milestones.mile1
-            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3
-
-            task dev_mile3_code "Coding" {
-                effort 105h
-                ${allocate_team}
-            }
-            task dev_mile3_doc "Documentation" {
-                effort 12h
-                ${allocate_team}
-            }
-            task dev_mile3_v_and_v "Testing" {
-                effort 6h
-                ${allocate_team}
-            }
-
-        } # end dev_mile3
-
-        task dev_mile4 "Milestone 4 development" {
-            note "Rootless window with input"
-            depends project_milestones.mile2
-            depends project_milestones.mile3
-            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4
-
-            task dev_mile4_code "Coding" {
-                effort 105h
-                ${allocate_team}
-            }
-            task dev_mile4_doc "Documentation" {
-                effort 12h
-                ${allocate_team}
-            }
-            task dev_mile4_v_and_v "Testing" {
-                effort 6h
-                ${allocate_team}
-            }
-
-        } # end dev_mile4
-    } # end dev
+    task library_a_and_d "Module design" {
     
-    task v_and_v "Validation and Verfication" {
-
-        task v_and_v_mile0 "Milestone 0" {
-            note "Validate the verify the first Milestone"
-            depends xorg_rsm.dev.dev_mile0
-            effort 2h
-            ${allocate_v_and_v}
+        task damage_interface "Interface with Damage" {
+            effort 4h
+            ${allocate_a_and_d}
+        }
+        task compositing "Interface with manual compositing" {
+            effort 4h
+            ${allocate_a_and_d}
+        }
+        task io_interface "Interface with I/O libraries" {
+            effort 4h
+            ${allocate_a_and_d}
         }
 
-        task v_and_v_mile1 "Milestone 1" {
-            note "Validate the verify the first Milestone"
-            depends xorg_rsm.dev.dev_mile1
+        task module_a_and_d "Module archictecture and design" {
+            note "Archicture and design of module that are going to be specifically written by our team."
+                depends a_and_d.a_and_d_research
+                task a_and_d_mile1 "Milestone 1" {
+                task mile1_identify "Identify modules" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile1_relations "Module relationships" {
+                    note "Identify and manage indentify relationships between modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                }
+                task mile1_api "API design" {
+                    note "Design APIs for requires modules"
+                        effort 4h
+                        ${allocate_a_and_d}
+                }
+            } # end a_and_d_mile1
+
+            task a_and_d_mile2 "Milestone 2" {
+                task mile2_identify "Identify modules" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile2_relations "Module relationships" {
+                    note "Identify and manage indentify relationships between modules"
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile2_api "API design" {
+                    note "Design APIs for requires modules"
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+            } # end a_and_d_mile2
+
+            task a_and_d_mile3 "Milestone 3" {
+                task mile3_identify "Identify modules" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile3_relations "Module relationships" {
+                    note "Identify and manage indentify relationships between modules"
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile3_api "API design" {
+                    note "Design APIs for requires modules"
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+            } # end a_and_d_mile3
+
+            task a_and_d_mile4 "Milestone 4" {
+                task mile4_identify "Identify modules" {
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile4_relations "Module relationships" {
+                    note "Identify and manage indentify relationships between modules"
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+                task mile4_api "API design" {
+                    note "Design APIs for requires modules"
+                    effort 4h
+                    ${allocate_a_and_d}
+                }
+            } # end a_and_d_mile4
+        } # end module_a_and_d
+    } # end library_a_and_d
+
+    task app_a_and_d "Application" {
+
+        task proc_arch "Process / control flow" {
+            effort 2h
+            ${allocate_a_and_d}
+        }
+        task osx_interface_a_and_d "Interface with OS X" {
+            effort 3h
+            ${allocate_a_and_d}
+        }
+        task app_interface "Interface with our API" {
+            effort 2h
+            ${allocate_a_and_d}
+        }
+
+    } # end app_a_and_d
+} # end of arch_design
+
+# Development task - specifically these are implementation tasks
+task dev "Development" {
+    
+    task dev_mile0 "Milestone 0 development" {
+        start 2011-11-26
+
+        task env_setup "Setup Environment Development" {
+            note "Setup a working development environment in OS X"
+            effort 36h
+            ${allocate_team}
+        }
+        task render_simple_mac_win "Simple window in OS X" {
+            note "Render a simple window in OS X"
+            effort 24h
+            ${allocate_team}
+        }
+
+    } # dev_mile0
+
+    task dev_mile1 "Milestone 1 development" {
+        note "Basic rooted window"
+        depends project_milestones.mile0
+        depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
+
+        task dev_mile1_code "Coding" {
+            effort 105h
+            ${allocate_team}
+        }
+        task dev_mile1_doc "Documentation" {
+            effort 12h
+            ${allocate_team}
+        }
+        task dev_mile1_v_and_v "Testing" {
+            effort 6h
+            ${allocate_team}
+        }
+
+    } # end dev_mile1
+
+    task dev_mile2 "Milestone 2 development" {
+        note "Basic rooted window with input from keyboard and mouse"
+        depends project_milestones.mile1
+        depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2
+
+       task dev_mile2_code "Coding" {
+           effort 105h
+           ${allocate_team}
+        }
+        task dev_mile2_doc "Documentation" {
+            effort 12h
+            ${allocate_team}
+        }
+        task dev_mile2_v_and_v "Testing" {
+            effort 6h
+            ${allocate_team}
+        }
+
+    } # end dev_mile2
+
+    task dev_mile3 "Milestone 3 development" {
+        note "Rootless window without input"
+        depends project_milestones.mile1
+        depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3
+
+        task dev_mile3_code "Coding" {
+            effort 105h
+            ${allocate_team}
+        }
+        task dev_mile3_doc "Documentation" {
+            effort 12h
+            ${allocate_team}
+        }
+        task dev_mile3_v_and_v "Testing" {
+            effort 6h
+            ${allocate_team}
+        }
+
+    } # end dev_mile3
+
+    task dev_mile4 "Milestone 4 development" {
+        note "Rootless window with input"
+        depends project_milestones.mile2
+        depends project_milestones.mile3
+        depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4
+
+        task dev_mile4_code "Coding" {
+            effort 105h
+            ${allocate_team}
+        }
+        task dev_mile4_doc "Documentation" {
+            effort 12h
+            ${allocate_team}
+        }
+        task dev_mile4_v_and_v "Testing" {
+            effort 6h
+            ${allocate_team}
+        }
+
+    } # end dev_mile4
+} # end dev
+
+task v_and_v "Validation and Verfication" {
+
+    task v_and_v_mile0 "Milestone 0" {
+        note "Validate the verify the first Milestone"
+            depends dev.dev_mile0
             effort 2h
             ${allocate_v_and_v}
-        }
-        task v_and_v_mile2 "Milestone 2" {
-            note "Validate the verify the second Milestone"
-            depends xorg_rsm.dev.dev_mile2
+    }
+
+    task v_and_v_mile1 "Milestone 1" {
+        note "Validate the verify the first Milestone"
+            depends dev.dev_mile1
             effort 2h
             ${allocate_v_and_v}
-        }
-        task v_and_v_mile3 "Milestone 3" {
-            note "Validate the verify the third Milestone"
-            depends xorg_rsm.dev.dev_mile3
+    }
+    task v_and_v_mile2 "Milestone 2" {
+        note "Validate the verify the second Milestone"
+            depends dev.dev_mile2
             effort 2h
             ${allocate_v_and_v}
-        }
-        task v_and_v_mile4 "Milestone 4" {
-            note "Validate the verify the fourth Milestone"
-            depends xorg_rsm.dev.dev_mile4
+    }
+    task v_and_v_mile3 "Milestone 3" {
+        note "Validate the verify the third Milestone"
+            depends dev.dev_mile3
+            effort 2h
+            ${allocate_v_and_v}
+    }
+    task v_and_v_mile4 "Milestone 4" {
+        note "Validate the verify the fourth Milestone"
+            depends dev.dev_mile4
 
             task req_check "Check against requirements" {
-                note "Check the final milestone against the requirements that have been established"
+            note "Check the final milestone against the requirements that have been established"
                 effort 9h
                 allocate jvanderw
                 ${allocate_a_and_d}
-                ${allocate_v_and_v}
-            }
+            ${allocate_v_and_v}
+        }
 
-            task doc_check "Check documentation" {
-                note "Check that the documention to be supplied when deployed is complete."
-                
-                task readme_check "README review" {
-                    note "Make sure the README gives accurate build and usage instructions."
+        task doc_check "Check documentation" {
+            note "Check that the documention to be supplied when deployed is complete."
+                                
+            task readme_check "README review" {
+                note "Make sure the README gives accurate build and usage instructions."
                     effort 2h
                     allocate askomra
                     allocate jvanderw
-                }
-                task api_doc_check "API documention review" {
-                    note "Make sure the API doxegen documention for API is correct and complete."
-                    effort 2h
-                    ${allocate_a_and_d}
-                }
-            } # end doc_check
-
-            task deploy_check "Deployment Check" {
-                note "Make sure that code can be built on virgin machine per the instructions in the README."
-                effort 6h
-                allocate jvanderw
             }
-        } # end v_and_v_mile4
-    } # end validation and verfication
-} # end xorg_rsm
+            task api_doc_check "API documention review" {
+                note "Make sure the API doxegen documention for API is correct and complete."
+                effort 2h
+                ${allocate_a_and_d}
+            }
+        } # end doc_check
+
+        task deploy_check "Deployment Check" {
+            note "Make sure that code can be built on virgin machine per the instructions in the README."
+            effort 6h
+            allocate jvanderw
+                }
+    } # end v_and_v_mile4
+} # end validation and verfication
+
 
 # Project Milestones
 task project_milestones "Milestones" {
 
     task init_project_plan "Initial Project Plan Complete" {
         milestone
-        depends xorg_rsm.proj_plan
+        depends documentation.project_docs.proj_plan
         end 2011-11-29
         note "Initial Project Plan submitted to Bart Massey for review"
     }
@@ -466,33 +517,33 @@ task project_milestones "Milestones" {
     task mile0 "Milestone 0" {
         milestone
         note "Setup and first window"
-        depends xorg_rsm.v_and_v.v_and_v_mile0
+        depends v_and_v.v_and_v_mile0
     }
 
     task mile1 "Milestone 1" {
         milestone
         note "Rooted window"
-        depends xorg_rsm.v_and_v.v_and_v_mile1
+        depends v_and_v.v_and_v_mile1
     }
 
     task mile2 "Milestone 2" {
         milestone
         note "Rooted window with input"
-        depends xorg_rsm.v_and_v.v_and_v_mile2
+        depends v_and_v.v_and_v_mile2
     }
 
     task mile3 "Milestone 3" {
         milestone
         note "Rootless window"
-        depends xorg_rsm.v_and_v.v_and_v_mile3
+        depends v_and_v.v_and_v_mile3
     }
 
     task mile4 "Milestone 4" {
         milestone
         note "Rootless window with input"
-        depends xorg_rsm.v_and_v.v_and_v_mile4
+        depends v_and_v.v_and_v_mile4
     }
-}
+} # end milestones
 
 # A traditional Gantt chart with a project overview.
 taskreport overview "euclid_project_overview" {
