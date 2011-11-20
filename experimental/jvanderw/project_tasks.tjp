@@ -2,7 +2,7 @@
 #
 # Task Juggler Project for Team Euclid
 
-project euclid "X.org Project" "1.0" 2011-09-28 - 2012-04-24 {
+project euclid "X.org Project" "1.0" 2011-09-28 - 2012-05-24 {
 
     # Final date is March 24 - give or take a couple of days.
 
@@ -128,11 +128,38 @@ task documentation "Documentation" {
             }
             task arch_doc_maint "Document maintaince" {
                 note "Maintain the document with changes and updates to the architecture and design."
+                priority 750
                 effort 22h
                 shift two_hr_weekly
                 ${allocate_a_and_d}
             }   
         } # end a_and_d_doc
+
+        task v_and_v_doc "Validation and verification document" {
+            note "Document explaining methodology of validation, verification, and testing"
+            depends !proj_plan
+            
+            task v_and_v_tools_research "Tool research" {
+                effort 4h
+                ${allocate_v_and_v}
+            }
+            task v_and_v_framwork_research "Framework research" {
+                effort 4h
+                ${allocate_v_and_v}
+            }
+            task init_v_and_v_doc "Initial version of document" {
+                effort 3h
+                ${allocate_v_and_v}
+            }
+            task v_and_v_doc_maint "Document maintaince" {
+                start 2012-1-9
+                priority 750
+                effort 22h
+                ${allocate_v_and_v}
+                shift two_hr_weekly
+            }
+        } # end v_and_v_doc
+
     } # end of project_docs
 } # end documentation
 
@@ -556,7 +583,7 @@ taskreport overview "euclid_project_overview" {
     # of the date. %a is the tag for this.
     timeformat "%a %Y-%m-%d"
     loadunit hours
-    hideresource 1
+    hideresource 0
     caption 'All effort values are in human hours.'
 }
 
