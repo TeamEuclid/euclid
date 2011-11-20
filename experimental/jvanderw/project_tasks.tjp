@@ -2,14 +2,16 @@
 #
 # Task Juggler Project for Team Euclid
 
-project euclid "X.org Project" "1.0" 2011-09-28 - 2012-04-10 {
+project euclid "X.org Project" "1.0" 2011-09-28 - 2012-05-10 {
+
+    # Final date is March 24 - give or take a couple of days.
 
     timezone "America/Los_Angeles"
     timeformat "%Y-%m-%d"
     # Only plan to be working 2.5 hours per day
     dailyworkinghours 2.5
     weekstartsmonday
-    workinghours mon - fri 13:30 - 16:00
+    workinghours mon - fri 13:00 - 16:00
     workinghours sat, sun off
 }
 
@@ -71,8 +73,9 @@ task xorg_rsm "Rootless Window System" {
     task proj_plan "Project Plan" {
         # The start date for the plan
         start 2011-11-07
+        end 2011-11-26
         # The number of days to 
-        effort 60d
+#        effort 60d
         # Allocate the whole team to the task
         ${allocate_team}
     }
@@ -123,8 +126,9 @@ task xorg_rsm "Rootless Window System" {
         }
     }
 
+
     # Arch and Design tasks
-    task arch_design "Archicture and Design" {
+    task a_and_d "Archicture and Design" {
         depends !proj_plan
         ${allocate_a_and_d}
 
@@ -195,7 +199,7 @@ task xorg_rsm "Rootless Window System" {
 
             task module_a_and_d "Module archictecture and design" {
                 note "Archicture and design of module that are going to be specifically written by our team."
-
+                depends xorg_rsm.a_and_d.a_and_d_research
                 task a_and_d_mile1 "Milestone 1" {
                     task mile1_identify "Identify modules" {
                         effort 4h
@@ -263,9 +267,7 @@ task xorg_rsm "Rootless Window System" {
                         ${allocate_a_and_d}
                     }
                 } # end a_and_d_mile4
-
             } # end module_a_and_d
-
         } # end library_a_and_d
 
         task app_a_and_d "Application" {
@@ -285,7 +287,171 @@ task xorg_rsm "Rootless Window System" {
 
         } # end app_a_and_d
     } # end of arch_design
-}
+
+    # Development task - specifically these are implementation tasks
+    task dev "Development" {
+        
+        task dev_mile0 "Milestone 0 development" {
+            start 2011-11-26
+
+            task env_setup "Setup Environment Development" {
+                note "Setup a working development environment in OS X"
+                effort 36h
+                ${allocate_team}
+            }
+            task render_simple_mac_win "Simple window in OS X" {
+                note "Render a simple window in OS X"
+                effort 24h
+                ${allocate_team}
+            }
+
+        } # dev_mile0
+
+        task dev_mile1 "Milestone 1 development" {
+            note "Basic rooted window"
+            depends project_milestones.mile0
+            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
+
+            task dev_mile1_code "Coding" {
+                effort 105h
+                ${allocate_team}
+            }
+            task dev_mile1_doc "Documentation" {
+                effort 12h
+                ${allocate_team}
+            }
+            task dev_mile1_v_and_v "Testing" {
+                effort 6h
+                ${allocate_team}
+            }
+
+        } # end dev_mile1
+
+        task dev_mile2 "Milestone 2 development" {
+            note "Basic rooted window with input from keyboard and mouse"
+            depends project_milestones.mile1
+            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2
+
+            task dev_mile2_code "Coding" {
+                effort 105h
+                ${allocate_team}
+            }
+            task dev_mile2_doc "Documentation" {
+                effort 12h
+                ${allocate_team}
+            }
+            task dev_mile2_v_and_v "Testing" {
+                effort 6h
+                ${allocate_team}
+            }
+
+        } # end dev_mile2
+
+        task dev_mile3 "Milestone 3 development" {
+            note "Rootless window without input"
+            depends project_milestones.mile1
+            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3
+
+            task dev_mile3_code "Coding" {
+                effort 105h
+                ${allocate_team}
+            }
+            task dev_mile3_doc "Documentation" {
+                effort 12h
+                ${allocate_team}
+            }
+            task dev_mile3_v_and_v "Testing" {
+                effort 6h
+                ${allocate_team}
+            }
+
+        } # end dev_mile3
+
+        task dev_mile4 "Milestone 4 development" {
+            note "Rootless window with input"
+            depends project_milestones.mile2
+            depends project_milestones.mile3
+            depends xorg_rsm.a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4
+
+            task dev_mile4_code "Coding" {
+                effort 105h
+                ${allocate_team}
+            }
+            task dev_mile4_doc "Documentation" {
+                effort 12h
+                ${allocate_team}
+            }
+            task dev_mile4_v_and_v "Testing" {
+                effort 6h
+                ${allocate_team}
+            }
+
+        } # end dev_mile4
+    } # end dev
+    
+    task v_and_v "Validation and Verfication" {
+
+        task v_and_v_mile0 "Milestone 0" {
+            note "Validate the verify the first Milestone"
+            depends xorg_rsm.dev.dev_mile0
+            effort 2h
+            ${allocate_v_and_v}
+        }
+
+        task v_and_v_mile1 "Milestone 1" {
+            note "Validate the verify the first Milestone"
+            depends xorg_rsm.dev.dev_mile1
+            effort 2h
+            ${allocate_v_and_v}
+        }
+        task v_and_v_mile2 "Milestone 2" {
+            note "Validate the verify the second Milestone"
+            depends xorg_rsm.dev.dev_mile2
+            effort 2h
+            ${allocate_v_and_v}
+        }
+        task v_and_v_mile3 "Milestone 3" {
+            note "Validate the verify the third Milestone"
+            depends xorg_rsm.dev.dev_mile3
+            effort 2h
+            ${allocate_v_and_v}
+        }
+        task v_and_v_mile4 "Milestone 4" {
+            note "Validate the verify the fourth Milestone"
+            depends xorg_rsm.dev.dev_mile4
+
+            task req_check "Check against requirements" {
+                note "Check the final milestone against the requirements that have been established"
+                effort 9h
+                allocate jvanderw
+                ${allocate_a_and_d}
+                ${allocate_v_and_v}
+            }
+
+            task doc_check "Check documentation" {
+                note "Check that the documention to be supplied when deployed is complete."
+                
+                task readme_check "README review" {
+                    note "Make sure the README gives accurate build and usage instructions."
+                    effort 2h
+                    allocate askomra
+                    allocate jvanderw
+                }
+                task api_doc_check "API documention review" {
+                    note "Make sure the API doxegen documention for API is correct and complete."
+                    effort 2h
+                    ${allocate_a_and_d}
+                }
+            } # end doc_check
+
+            task deploy_check "Deployment Check" {
+                note "Make sure that code can be built on virgin machine per the instructions in the README."
+                effort 6h
+                allocate jvanderw
+            }
+        } # end v_and_v_mile4
+    } # end validation and verfication
+} # end xorg_rsm
 
 # Project Milestones
 task project_milestones "Milestones" {
@@ -297,28 +463,34 @@ task project_milestones "Milestones" {
         note "Initial Project Plan submitted to Bart Massey for review"
     }
 
+    task mile0 "Milestone 0" {
+        milestone
+        note "Setup and first window"
+        depends xorg_rsm.v_and_v.v_and_v_mile0
+    }
+
     task mile1 "Milestone 1" {
         milestone
         note "Rooted window"
-        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile1
+        depends xorg_rsm.v_and_v.v_and_v_mile1
     }
 
     task mile2 "Milestone 2" {
         milestone
         note "Rooted window with input"
-        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile2
+        depends xorg_rsm.v_and_v.v_and_v_mile2
     }
 
     task mile3 "Milestone 3" {
         milestone
         note "Rootless window"
-        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile3
+        depends xorg_rsm.v_and_v.v_and_v_mile3
     }
 
     task mile4 "Milestone 4" {
         milestone
         note "Rootless window with input"
-        depends !!xorg_rsm.arch_design.library_a_and_d.module_a_and_d.a_and_d_mile4
+        depends xorg_rsm.v_and_v.v_and_v_mile4
     }
 }
 
@@ -332,9 +504,9 @@ taskreport overview "euclid_project_overview" {
     # For this report we like to have the abbreviated weekday in front
     # of the date. %a is the tag for this.
     timeformat "%a %Y-%m-%d"
-#    loadunit days
+    loadunit hours
     hideresource 1
-    caption 'All effort values are in man days.'
+    caption 'All effort values are in human hours.'
 }
 
 taskreport development "euclid_dev" {
@@ -343,5 +515,6 @@ taskreport development "euclid_dev" {
     columns bsi {title 'WBS'}, name, start, end, effort, duration, chart {scale day width 1000}
     timeformat "%Y-%m-%d"
     hideresource ~(isleaf() & isleaf_())
+    loadunit hours
     sortresources name.up
 }
