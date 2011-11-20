@@ -3,7 +3,7 @@
 # Task Juggler Project for Team Euclid
 #
 
-project euclid "X.org Project" "1.0" 2011-11-14 - 2012-06-24 {
+project euclid "X.org Project" "1.0" 2011-11-14 - 2012-03-24 {
 
     # Final date is March 24 - give or take a couple of days.
 
@@ -17,7 +17,7 @@ project euclid "X.org Project" "1.0" 2011-11-14 - 2012-06-24 {
 }
 
 # Set up the vacations
-vacation "Winter Break" 2011-12-10 - 2012-01-09
+vacation "Winter Break" 2011-12-11 - 2012-01-08
 vacation "Veterans Day" 2011-11-11
 vacation "Thanksgiving Day" 2011-11-23
 vacation "Day after Thanksgiving" 2011-11-24
@@ -69,6 +69,11 @@ resource devs "Developers"
 }
 
 # Shifts so we can have recurring weekly tasks. Have them on Monday
+shift fri_half_hr_weekly "One hour per week on Friday" {
+    workinghours fri 13:00-13:30
+    workinghours mon, tue, wed, thu, sat, sun off
+}
+
 shift mon_one_hr_weekly "One hour per week for meetings" {
     workinghours mon 12:30-13:30
     workinghours tue, wed, thu, fri, sat, sun off
@@ -255,6 +260,7 @@ task documentation "Documentation" {
             }
             task init_arch_doc "Initial document version" {
                 note "Write the first version of the architecture and design document."
+                depends !init_decom
                 effort 4h
                 ${allocate_a_and_d}
             }
@@ -706,6 +712,7 @@ task sys_admin "System Administration" {
         task repo_maint "Repository maintenance" {
             note "Occasional maintainance on the repository."
             start 2011-11-28
+            priority 750
             effort 6h
             allocate carrbs
             shift tue_one_hr_weekly
@@ -721,9 +728,9 @@ task management "Management" {
         note "Weekly status and performance updates to be emailed to Bart"
         start 2011-11-14
         priority 750
-        effort 15h
+        effort 7h
         allocate jvanderw
-        shift fri_one_hr_weekly
+        shift fri_half_hr_weekly
     }
     task weekly_meeting "Weekly team meeting" {
         note "Required weekly team meeting."
@@ -752,6 +759,35 @@ task management "Management" {
         shift thu_one_hr_weekly
     }    
 } # end management
+
+#Deployment and presentations
+task deployment "Deployment and presentations" {
+
+    task hand_off "Hand off to sponsors" {
+        note "Hand off the project to the sponsors. Since this is an open source project, the documentation and public git repository should be enough."
+        depends !!v_and_v.v_and_v_mile4
+        effort 2h
+        allocate jvanderw
+        allocate bhuddle
+    }
+
+    task mid_term_presentation "Midterm presentation" {
+        note "Prepare and deliver the midterm presentation."
+        priority 800
+        end 2011-12-05
+        effort 1h
+        ${allocate_team}
+    }
+
+    task final_presentation "Final presentation" {
+        note "Prepare and deliver the final presentation."
+        priority 800
+        end 2012-03-19
+        effort 2h
+        ${allocate_team}
+    }
+
+} # end deployment
 
 # Project Milestones
 task project_milestones "Milestones" {
