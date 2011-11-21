@@ -131,7 +131,7 @@ task documentation "Documentation" {
                 ${allocate_team}
                 complete 90
             }
-            task gen_wbs "Inital WBS" {
+            task gen_wbs "Initial WBS" {
                 note "Initial version of the Work Breakdown Structure"
                 start 2011-11-14
                 effort 36h
@@ -172,7 +172,7 @@ task documentation "Documentation" {
                 }
             } # end gen_schedule
             
-            task id_develiverables "Identify and describe deliverables" {
+            task id_deliverables "Identify and describe deliverables" {
                 note "Identify and describe the deliverables expected by the sponsor."
                 start 2011-11-20
                 effort 4h
@@ -198,7 +198,7 @@ task documentation "Documentation" {
              } # end project_desc
 
              task mile_desc "Milestone descriptions" {
-                 note "Description of the Milestons for Project Plan"
+                 note "Description of the Milestones for Project Plan"
                  start 2011-11-20
                  effort 1h
                  allocate askomra
@@ -264,7 +264,7 @@ task documentation "Documentation" {
                 effort 4h
                 ${allocate_a_and_d}
             }
-            task arch_doc_maint "Document maintaince" {
+            task arch_doc_maint "Document maintenance" {
 
                 note "Maintain the document with changes and updates to the architecture and design."
                 depends !init_arch_doc
@@ -291,7 +291,7 @@ task documentation "Documentation" {
                 effort 3h
                 ${allocate_v_and_v}
             }
-            task v_and_v_doc_maint "Document maintaince" {
+            task v_and_v_doc_maint "Document maintenance" {
                 start 2012-1-9
                 priority 750
                 effort 22h
@@ -299,8 +299,41 @@ task documentation "Documentation" {
                 shift two_hr_weekly
             }
         } # end v_and_v_doc
-
     } # end of project_docs
+
+    # Documentation tasks for code
+    task code_docs "Code documentation" {
+        note "Documentation tasks that are directly concerned with the code and will be part of the final deliverable."
+
+        task readme_maint "Create and maintain README" {
+            note "Create an initial README and then update it with changes to program functionallity and build process."
+            depends dev.dev_mile0
+            priority 600
+            effort 6h
+            allocate askomra
+            shift fri_half_hr_weekly
+        }
+        task gen_api_docs "Generate and validate doxygen API docs" {
+            note "Generate the API documents from the doxygen comments that will be present in header files."
+            depends dev.dev_mile0
+            priority 600
+            effort 6h
+            allocate askomra
+            shift thu_one_hr_weekly
+        }
+        task license "LICENSE file in build folder" {
+            note "Create the LICENSE file and make sure its in the build folder."
+            start 2011-12-05
+            effort 1h
+            allocate askomra
+        }
+        task code_style_doc "Coding style document" {
+            note "Generate the code style document to be used for the project."
+            end 2011-12-10
+            effort 2h
+            allocate bwooley
+        }
+    } # endo of code_docs
 } # end documentation
 
     task research "Research" {
@@ -324,7 +357,7 @@ task documentation "Documentation" {
             effort 12h
             ${allocate_team}
         }
-        task osx_learn "Become familiar with OS X enviornment" {
+        task osx_learn "Become familiar with OS X environment" {
             effort 12h
             ${allocate_team}
         }
@@ -332,7 +365,7 @@ task documentation "Documentation" {
             effort 24h
             ${allocate_team}
         }
-        task dev_env_installed "Working Development Envionment" {
+        task dev_env_installed "Working Development Environment" {
             effort 24h
             ${allocate_team}
             note "Get a working development environment working on OS X systems."
@@ -346,7 +379,7 @@ task documentation "Documentation" {
 
 
 # Arch and Design tasks
-task a_and_d "Archicture and Design" {
+task a_and_d "Architecture and Design" {
     depends !documentation.project_docs.proj_plan
     ${allocate_a_and_d}
 
@@ -401,24 +434,29 @@ task a_and_d "Archicture and Design" {
     } # end of a_and_d_research
 
     task library_a_and_d "Module design" {
-    
-        task damage_interface "Interface with Damage" {
-            effort 4h
-            ${allocate_a_and_d}
-        }
-        task compositing "Interface with manual compositing" {
-            effort 4h
-            ${allocate_a_and_d}
-        }
-        task io_interface "Interface with I/O libraries" {
-            effort 4h
-            ${allocate_a_and_d}
-        }
 
-        task module_a_and_d "Module archictecture and design" {
-            note "Archicture and design of module that are going to be specifically written by our team."
+        task generic_a_and_d "Generic module design components" {
+            note "These are design componets that will be used across the entire project."
+
+            task damage_interface "Interface with Damage" {
+                effort 4h
+                ${allocate_a_and_d}
+            }
+            task compositing "Interface with manual compositing" {
+                effort 4h
+                ${allocate_a_and_d}
+            }
+            task io_interface "Interface with I/O libraries" {
+                effort 4h
+                ${allocate_a_and_d}
+            }
+        } # end of generic_a_and_d
+
+        task module_a_and_d "Milestone module architecture and design" {
+            note "Architecture and design of module that are going to be specifically written by our team."
             depends a_and_d.a_and_d_research
             depends !!!documentation.project_docs.a_and_d_doc.init_arch_doc
+            depends !!!a_and_d.library_a_and_d.generic_a_and_d
 
             task a_and_d_mile1 "Milestone 1" {
                 task mile1_identify "Identify modules" {
@@ -426,7 +464,7 @@ task a_and_d "Archicture and Design" {
                     ${allocate_a_and_d}
                 }
                 task mile1_relations "Module relationships" {
-                    note "Identify and manage indentify relationships between modules"
+                    note "Identify and manage identify relationships between modules"
                         effort 4h
                         ${allocate_a_and_d}
                 }
@@ -443,7 +481,7 @@ task a_and_d "Archicture and Design" {
                     ${allocate_a_and_d}
                 }
                 task mile2_relations "Module relationships" {
-                    note "Identify and manage indentify relationships between modules"
+                    note "Identify and manage identify relationships between modules"
                     effort 4h
                     ${allocate_a_and_d}
                 }
@@ -460,7 +498,7 @@ task a_and_d "Archicture and Design" {
                     ${allocate_a_and_d}
                 }
                 task mile3_relations "Module relationships" {
-                    note "Identify and manage indentify relationships between modules"
+                    note "Identify and manage identify relationships between modules"
                     effort 4h
                     ${allocate_a_and_d}
                 }
@@ -477,7 +515,7 @@ task a_and_d "Archicture and Design" {
                     ${allocate_a_and_d}
                 }
                 task mile4_relations "Module relationships" {
-                    note "Identify and manage indentify relationships between modules"
+                    note "Identify and manage identify relationships between modules"
                     effort 4h
                     ${allocate_a_and_d}
                 }
@@ -541,6 +579,7 @@ task dev "Development" {
             ${allocate_team}
         }
         task dev_mile1_v_and_v "Testing" {
+            depends !dev_mile1_code
             effort 6h
             ${allocate_team}
         }
@@ -561,6 +600,7 @@ task dev "Development" {
             ${allocate_team}
         }
         task dev_mile2_v_and_v "Testing" {
+            depends !dev_mile2_code
             effort 6h
             ${allocate_team}
         }
@@ -581,6 +621,7 @@ task dev "Development" {
             ${allocate_team}
         }
         task dev_mile3_v_and_v "Testing" {
+            depends !dev_mile3_code
             effort 6h
             ${allocate_team}
         }
@@ -609,7 +650,7 @@ task dev "Development" {
     } # end dev_mile4
 } # end dev
 
-task v_and_v "Validation and Verfication" {
+task v_and_v "Validation and Verification" {
 
     task v_and_v_mile0 "Milestone 0" {
         note "Validate the verify the first Milestone"
@@ -649,7 +690,7 @@ task v_and_v "Validation and Verfication" {
         }
 
         task doc_check "Check documentation" {
-            note "Check that the documention to be supplied when deployed is complete."
+            note "Check that the documentation to be supplied when deployed is complete."
                                 
             task readme_check "README review" {
                 note "Make sure the README gives accurate build and usage instructions."
@@ -657,8 +698,8 @@ task v_and_v "Validation and Verfication" {
                     allocate askomra
                     allocate jvanderw
             }
-            task api_doc_check "API documention review" {
-                note "Make sure the API doxegen documention for API is correct and complete."
+            task api_doc_check "API documentation review" {
+                note "Make sure the API doxegen documentation for API is correct and complete."
                 effort 2h
                 ${allocate_a_and_d}
             }
@@ -670,13 +711,13 @@ task v_and_v "Validation and Verfication" {
             allocate jvanderw
                 }
     } # end v_and_v_mile4
-} # end validation and verfication
+} # end validation and verification
 
 # System Administration tasks
 task sys_admin "System Administration" {
 
     task back_ups "Backup and recovery system" {
-        task back_up_plan "Indentify back-up plan" {
+        task back_up_plan "Identify back-up plan" {
             note "Identify what it is that we are going to do for a back-up plan"
             start 2011-11-14
             effort 4h
@@ -692,7 +733,7 @@ task sys_admin "System Administration" {
             shift thu_one_hr_weekly
         }
         task weekly_verification "Verification of weekly backup" {
-            note "Weekly recurring task of verifiying the the weekly backups."
+            note "Weekly recurring task of verifying the the weekly backups."
             start 2011-11-30
             effort 12h
             priority 750
@@ -710,7 +751,7 @@ task sys_admin "System Administration" {
             allocate carrbs
         }
         task repo_maint "Repository maintenance" {
-            note "Occasional maintainance on the repository."
+            note "Occasional maintenance on the repository."
             start 2011-11-28
             priority 750
             effort 6h
@@ -741,7 +782,7 @@ task management "Management" {
         shift mon_one_hr_weekly
     }
     task weekly_wbs_update "Weekly updating of the WBS" {
-        note "Weekly updating and maintaince on the Work Breakdown Schedule"
+        note "Weekly updating and maintenance on the Work Breakdown Schedule"
         depends !!documentation.project_docs.proj_plan.gen_wbs
         start 2011-11-28
         priority 750
@@ -833,7 +874,7 @@ task project_milestones "Milestones" {
 
 # A traditional Gantt chart with a project overview.
 taskreport overview "euclid_project_overview" {
-    formats html
+    formats html, csv
     headline "Team Euclid Work Breakdown Structure"
     columns bsi { title 'WBS' },
           name, start, end, effort
@@ -855,6 +896,16 @@ taskreport development "euclid_dev" {
     loadunit hours
     sortresources name.up
     caption 'All effort values are in human hours.'
+}
+
+taskreport milestone_report "milestone_report" {
+    formats html
+    headline "Milestones and Deliverables"
+    columns bsi {title 'WBS'}, name, start, end, effort, duration, complete
+    timeformat "%Y-%m-%d"
+    taskroot project_milestones
+    sorttasks tree.up
+    caption 'All effort values are in human hours'
 }
 
 icalreport euclid_project_cal "euclid_project_cal" {
