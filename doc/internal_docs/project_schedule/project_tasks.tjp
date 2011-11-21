@@ -265,7 +265,6 @@ task documentation "Documentation" {
                 ${allocate_a_and_d}
             }
             task arch_doc_maint "Document maintenance" {
-
                 note "Maintain the document with changes and updates to the architecture and design."
                 depends !init_arch_doc
                 priority 750
@@ -279,24 +278,29 @@ task documentation "Documentation" {
             note "Document explaining methodology of validation, verification, and testing"
             depends !proj_plan
             
-            task v_and_v_tools_research "Tool research" {
-                effort 4h
-                ${allocate_v_and_v}
-            }
-            task v_and_v_framwork_research "Framework research" {
-                effort 4h
-                ${allocate_v_and_v}
-            }
+            task v_and_v_research "Research for document" {
+                
+                task v_and_v_tools_research "Tools" {
+                    effort 4h
+                    ${allocate_v_and_v}
+                }
+                task v_and_v_framwork_research "Frameworks" {
+                    effort 4h
+                    ${allocate_v_and_v}
+                }
+            } # end v_and_v_research
+
             task init_v_and_v_doc "Initial version of document" {
+                depends !v_and_v_research
                 effort 3h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint "Document maintenance" {
-                start 2012-1-9
+                depends !init_v_and_v_doc
                 priority 750
-                effort 22h
+                effort 10h
                 ${allocate_v_and_v}
-                shift two_hr_weekly
+                shift fri_one_hr_weekly
             }
         } # end v_and_v_doc
     } # end of project_docs
@@ -336,28 +340,30 @@ task documentation "Documentation" {
     } # endo of code_docs
 } # end documentation
 
-    task research "Research" {
-        note "Team wide research tasks."
-        # Depends on completing the project plan
-        depends !documentation.project_docs.proj_plan
+task research "Research" {
+    note "Team wide research tasks."
+    # Depends on completing the project plan
+    depends !documentation.project_docs.proj_plan
         
-        task code_bases "Existing code bases" {
+    task code_bases "Existing code bases" {
 
-            task learn_xcb "Learn XCB basics" {
-                effort 36h
-                ${allocate_team}
-            }
-            task lightpipe "Examine lightpipe code" {
-                effort 24h
-                ${allocate_team}
-            }
+        task learn_xcb "Learn XCB basics" {
+            effort 36h
+            ${allocate_team}
         }
+        task lightpipe "Examine lightpipe code" {
+            effort 24h
+            ${allocate_team}
+        }
+    } # end code_bases
 
-        task xcode "Learn XCode" {
+    task osx_research "OS X" {
+        start 2011-11-26
+        task osx_learn "Become familiar with OS X environment" {
             effort 12h
             ${allocate_team}
         }
-        task osx_learn "Become familiar with OS X environment" {
+        task xcode "Learn XCode" {
             effort 12h
             ${allocate_team}
         }
@@ -365,17 +371,12 @@ task documentation "Documentation" {
             effort 24h
             ${allocate_team}
         }
-        task dev_env_installed "Working Development Environment" {
-            effort 24h
-            ${allocate_team}
-            note "Get a working development environment working on OS X systems."
-        }
         task learn_apple_api "Learn Apple windowing API" {
             effort 54h
-            depends !dev_env_installed
             ${allocate_team}
         }
-    }
+    }# end osx_research
+} # end research
 
 
 # Arch and Design tasks
@@ -550,8 +551,7 @@ task a_and_d "Architecture and Design" {
 task dev "Development" {
     
     task dev_mile0 "Milestone 0 development" {
-        start 2011-11-26
-
+        depends !!research.osx_research
         task env_setup "Setup Environment Development" {
             note "Setup a working development environment in OS X"
             effort 36h
@@ -654,9 +654,11 @@ task v_and_v "Validation and Verification" {
 
     task v_and_v_mile0 "Milestone 0" {
         note "Validate the verify the first Milestone"
-            depends dev.dev_mile0
-            effort 2h
-            ${allocate_v_and_v}
+        depends !!dev.dev_mile0
+        depends !!documentation.project_docs.v_and_v_doc.init_v_and_v_doc
+        effort 2h
+        ${allocate_v_and_v}
+        allocate askomra
     }
 
     task v_and_v_mile1 "Milestone 1" {
@@ -664,18 +666,21 @@ task v_and_v "Validation and Verification" {
             depends dev.dev_mile1
             effort 2h
             ${allocate_v_and_v}
+            allocate askomra
     }
     task v_and_v_mile2 "Milestone 2" {
         note "Validate the verify the second Milestone"
             depends dev.dev_mile2
             effort 2h
             ${allocate_v_and_v}
+            allocate askomra
     }
     task v_and_v_mile3 "Milestone 3" {
         note "Validate the verify the third Milestone"
             depends dev.dev_mile3
             effort 2h
             ${allocate_v_and_v}
+            allocate askomra
     }
     task v_and_v_mile4 "Milestone 4" {
         note "Validate the verify the fourth Milestone"
@@ -686,8 +691,8 @@ task v_and_v "Validation and Verification" {
                 effort 9h
                 allocate jvanderw
                 ${allocate_a_and_d}
-            ${allocate_v_and_v}
-        }
+                ${allocate_v_and_v}
+            }
 
         task doc_check "Check documentation" {
             note "Check that the documentation to be supplied when deployed is complete."
@@ -890,7 +895,7 @@ taskreport overview "euclid_project_overview" {
 taskreport development "euclid_dev" {
     formats html
     headline "Development and Resource Allocation"
-    columns bsi {title 'WBS'}, name, start, end, effort, duration, chart {scale day width 200}
+    columns bsi {title 'WBS'}, name, start, end, effort, chart {scale day width 500}
     timeformat "%Y-%m-%d"
     hideresource ~(isleaf() & isleaf_())
     loadunit hours
