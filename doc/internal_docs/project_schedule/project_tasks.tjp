@@ -842,16 +842,22 @@ taskreport overview "euclid_project_overview" {
     timeformat "%a %Y-%m-%d"
     loadunit hours
     hideresource 1
+    sorttasks tree.up
     caption 'All effort values are in human hours.'
 }
 
 taskreport development "euclid_dev" {
     formats html
     headline "Development and Resource Allocation"
-    columns bsi {title 'WBS'}, name, start, end, effort, duration, chart {scale day width 1000}
+    columns bsi {title 'WBS'}, name, start, end, effort, duration, chart {scale day width 200}
     timeformat "%Y-%m-%d"
     hideresource ~(isleaf() & isleaf_())
     loadunit hours
     sortresources name.up
     caption 'All effort values are in human hours.'
 }
+
+icalreport euclid_project_cal "euclid_project_cal" {
+    hideresource 1
+}
+    
