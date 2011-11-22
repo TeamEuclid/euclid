@@ -51,22 +51,46 @@ macro allocate_it [
 ]
 
 # Define resources
-resource devs "Developers"
-{
-    resource bwooley "Braden Wooley" {
+resource bwooley "Braden Wooley" {
+    resource bwooley_r "Braden Wooley" {
     }
-    resource bhuddle "Ben Huddle" {
-    }
-    resource jvanderw "Jess VanDerwalker" {
-    }
-    resource carrbs "Ben Carr" {
-    }
-    resource askomra "Aaron Skroma" {
-    }
-    resource dsnyder "David Snyder" {
-    }
-    flags team
 }
+resource bhuddle "Ben Huddle" {
+    resource bhuddle_r "Ben Huddle" {
+    }
+}
+resource jvanderw "Jess VanDerwalker" {
+    resource jvanderw_r "Jess VanDerwalker" {
+    }
+}
+resource carrbs "Ben Carr" {
+    resource carrbs_r "Ben Carr" {
+    }
+}
+resource askomra "Aaron Skroma" {
+    resource askomra_r "Aaron Skroma" {
+    }
+}
+resource dsnyder "David Snyder" {
+    resource dsnyder_r "David Snyder" {
+    }
+}
+# resource devs "Developers"
+# {
+#     resource bwooley "Braden Wooley" {
+#     }
+#     resource bhuddle "Ben Huddle" {
+#     }
+#     resource jvanderw "Jess VanDerwalker" {
+#     }
+#     resource carrbs "Ben Carr" {
+#     }
+#     resource askomra "Aaron Skroma" {
+#     }
+#     resource dsnyder "David Snyder" {
+#     }
+#     flags team
+# }
 
 # Shifts so we can have recurring weekly tasks. Have them on Monday
 shift fri_half_hr_weekly "One hour per week on Friday" {
@@ -74,9 +98,9 @@ shift fri_half_hr_weekly "One hour per week on Friday" {
     workinghours mon, tue, wed, thu, sat, sun off
 }
 
-shift mon_one_hr_weekly "One hour per week for meetings" {
-    workinghours mon 12:30-13:30
-    workinghours tue, wed, thu, fri, sat, sun off
+shift weekly_meeting_shift "Half hour per week for meetings" {
+    workinghours mon 18:00-18:30
+    workinghours mon, tue, thu, fri, sat, sun off
 }
 
 shift tue_one_hr_weekly "One hour per week on Tuesday" {
@@ -335,7 +359,7 @@ task documentation "Documentation" {
             note "Generate the code style document to be used for the project."
             end 2011-12-10
             effort 2h
-            allocate bwooley
+            allocate askomra
         }
     } # endo of code_docs
 } # end documentation
@@ -778,14 +802,14 @@ task management "Management" {
         allocate jvanderw
         shift fri_half_hr_weekly
     }
-    task weekly_meeting "Weekly team meeting" {
-        note "Required weekly team meeting."
-        start 2011-11-14
-        priority 760  # A little higher than other repeating tasks
-        effort 15h
-        ${allocate_team}
-        shift mon_one_hr_weekly
-    }
+    # task weekly_meeting "Weekly team meeting" {
+    #     note "Required weekly team meeting."
+    #     start 2012-01-9
+    #     priority 760  # A little higher than other repeating tasks
+    #     effort 36h
+    #     ${allocate_team}
+    #     shift weekly_meeting_shift
+    # }
     task weekly_wbs_update "Weekly updating of the WBS" {
         note "Weekly updating and maintenance on the Work Breakdown Schedule"
         depends !!documentation.project_docs.proj_plan.gen_wbs
@@ -877,6 +901,26 @@ task project_milestones "Milestones" {
     }
 } # end milestones
 
+# Macro for task tips
+macro TaskTip [
+  tooltip istask() -8<-
+    '''Start: ''' <-query attribute='start'->
+    '''End: ''' <-query attribute='end'->
+    ----
+    '''Resources:'''
+
+    <-query attribute='resources'->
+    ----
+    '''Precursors: '''
+
+    <-query attribute='precursors'->
+    ----
+    '''Followers: '''
+
+    <-query attribute='followers'->
+    ->8-
+]
+
 # A traditional Gantt chart with a project overview.
 taskreport overview "euclid_project_overview" {
     formats html, csv
@@ -900,6 +944,7 @@ taskreport development "euclid_dev" {
     hideresource ~(isleaf() & isleaf_())
     loadunit hours
     sortresources name.up
+    sorttasks tree.up
     caption 'All effort values are in human hours.'
 }
 
@@ -917,3 +962,83 @@ icalreport euclid_project_cal "euclid_project_cal" {
     hideresource 1
 }
     
+# Resource graph for all team members
+resourcereport euclid_resource_graph_all "euclid_resource_graph_all" {
+    formats html
+    headline "Resource Allocation Graph"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+}
+
+# Resource graph for Ben Carr
+resourcereport euclid_resource_graph_carrbs "euclid_resource_graph_carrbs" {
+    formats html
+    headline "Resource Allocation Graph - Ben Carr"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+    resourceroot carrbs
+}
+
+# Resource graph for Ben Huddle
+resourcereport euclid_resource_graph_bhuddle "euclid_resource_graph_bhuddle" {
+    formats html
+    headline "Resource Allocation Graph - Ben Huddle"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+    resourceroot bhuddle
+}
+# Resource graph for Braden Wooley
+resourcereport euclid_resource_graph_bwoolwy "euclid_resource_graph_bwooley" {
+    formats html
+    headline "Resource Allocation Graph - Braden Wooley"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+    resourceroot bwooley
+}
+# Resource graph for David Snyder
+resourcereport euclid_resource_graph_dsnyder "euclid_resource_graph_dsnyder" {
+    formats html
+    headline "Resource Allocation Graph - David Snyder"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+    resourceroot dsnyder
+}
+
+# Resource graph for Jess VanDerwalker
+resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
+    formats html
+    headline "Resource Allocation Graph - Jess VanDerwalker"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+    resourceroot jvanderw
+}
+
+# Resource graph for Aaron Skomra
+resourcereport euclid_resource_graph_askomra "euclid_resource_graph_askomra" {
+    formats html
+    headline "Resource Allocation Graph - Aaron Skomra"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    loadunit shortauto
+    # We only like to show leaf tasks for leaf resources.
+    hidetask ~(isleaf() & isleaf_())
+    sorttasks plan.start.up
+    resourceroot askomra
+}
