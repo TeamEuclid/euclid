@@ -10,9 +10,9 @@ project euclid "X.org Project" "1.0" 2011-11-14 - 2012-03-24 {
     timezone "America/Los_Angeles"
     timeformat "%Y-%m-%d"
     # Only plan to be working 2.5 hours per day and not on weekends
-    dailyworkinghours 2.5
+    dailyworkinghours 2.75
     weekstartsmonday
-    workinghours mon - fri 12:00 - 14:30
+    workinghours mon - fri 12:00 - 14:45
     workinghours sat, sun off
 }
 
@@ -153,7 +153,7 @@ task documentation "Documentation" {
                 start 2011-11-14
                 effort 6h
                 ${allocate_team}
-                complete 90
+                complete 100
             }
             task gen_wbs "Initial WBS" {
                 note "Initial version of the Work Breakdown Structure"
@@ -267,6 +267,7 @@ task documentation "Documentation" {
             task write_usrd "Generate document" {
                 note "Generate user requirement document."
                 depends !id_usr_reqs
+                depends !!proj_plan
                 effort 4h
                 allocate bhuddle
             }
@@ -372,11 +373,11 @@ task research "Research" {
     task code_bases "Existing code bases" {
 
         task learn_xcb "Learn XCB basics" {
-            effort 36h
+            effort 30h
             ${allocate_team}
         }
         task lightpipe "Examine lightpipe code" {
-            effort 24h
+            effort 18h
             ${allocate_team}
         }
     } # end code_bases
@@ -396,7 +397,7 @@ task research "Research" {
             ${allocate_team}
         }
         task learn_apple_api "Learn Apple windowing API" {
-            effort 54h
+            effort 42h
             ${allocate_team}
         }
     }# end osx_research
@@ -502,51 +503,51 @@ task a_and_d "Architecture and Design" {
 
             task a_and_d_mile2 "Milestone 2" {
                 task mile2_identify "Identify modules" {
-                    effort 4h
+                    effort 3h
                     ${allocate_a_and_d}
                 }
                 task mile2_relations "Module relationships" {
                     note "Identify and manage identify relationships between modules"
-                    effort 4h
+                    effort 3h
                     ${allocate_a_and_d}
                 }
                 task mile2_api "API design" {
                     note "Design APIs for requires modules"
-                    effort 4h
+                    effort 3h
                     ${allocate_a_and_d}
                 }
             } # end a_and_d_mile2
 
             task a_and_d_mile3 "Milestone 3" {
                 task mile3_identify "Identify modules" {
-                    effort 4h
+                    effort 2h
                     ${allocate_a_and_d}
                 }
                 task mile3_relations "Module relationships" {
                     note "Identify and manage identify relationships between modules"
-                    effort 4h
+                    effort 2h
                     ${allocate_a_and_d}
                 }
                 task mile3_api "API design" {
                     note "Design APIs for requires modules"
-                    effort 4h
+                    effort 2h
                     ${allocate_a_and_d}
                 }
             } # end a_and_d_mile3
 
             task a_and_d_mile4 "Milestone 4" {
                 task mile4_identify "Identify modules" {
-                    effort 4h
+                    effort 1h
                     ${allocate_a_and_d}
                 }
                 task mile4_relations "Module relationships" {
                     note "Identify and manage identify relationships between modules"
-                    effort 4h
+                    effort 1h
                     ${allocate_a_and_d}
                 }
                 task mile4_api "API design" {
                     note "Design APIs for requires modules"
-                    effort 4h
+                    effort 1h
                     ${allocate_a_and_d}
                 }
             } # end a_and_d_mile4
@@ -712,7 +713,7 @@ task v_and_v "Validation and Verification" {
 
             task req_check "Check against requirements" {
             note "Check the final milestone against the requirements that have been established"
-                effort 9h
+                effort 7h
                 allocate jvanderw
                 ${allocate_a_and_d}
                 ${allocate_v_and_v}
@@ -936,48 +937,75 @@ taskreport overview "euclid_project_overview" {
     caption 'All effort values are in human hours.'
 }
 
-taskreport development "euclid_dev" {
-    formats html
-    headline "Development and Resource Allocation"
-    columns bsi {title 'WBS'}, name, start, end, effort, chart {scale day width 500}
+taskreport gantt "euclid_gantt" {
+formats html
+    headline "Appendix B: Team Euclid Project Gantt Chart"
+    columns bsi { title 'WBS' },
+          name, start, end, effort, chart
+    # For this report we like to have the abbreviated weekday in front
+    # of the date. %a is the tag for this.
     timeformat "%Y-%m-%d"
-    hideresource ~(isleaf() & isleaf_())
-    loadunit hours
-    sortresources name.up
+    hideresource ~(isleaf()) & ~(isdependencyof(mile4, plan, 100))
+    loadunit days
+    hideresource 1
     sorttasks tree.up
     caption 'All effort values are in human hours.'
 }
-
-taskreport milestone_report "milestone_report" {
-    formats html
-    headline "Milestones and Deliverables"
-    columns bsi {title 'WBS'}, name, start, end, effort, duration, complete
-    timeformat "%Y-%m-%d"
-    taskroot project_milestones
-    sorttasks tree.up
-    caption 'All effort values are in human hours'
-}
-
-icalreport euclid_project_cal "euclid_project_cal" {
-    hideresource 1
-}
     
-# Resource graph for all team members
-resourcereport euclid_resource_graph_all "euclid_resource_graph_all" {
+# taskreport development "euclid_dev" {
+#     formats html
+#     headline "Development and Resource Allocation"
+#     columns bsi {title 'WBS'}, name, start, end, effort, chart {scale day width 500}
+#     timeformat "%Y-%m-%d"
+#     hideresource ~(isleaf() & isleaf_())
+#     loadunit hours
+#     sortresources name.up
+#     sorttasks tree.up
+#     caption 'All effort values are in human hours.'
+# }
+
+# taskreport milestone_report "milestone_report" {
+#     formats html
+#     headline "Milestones and Deliverables"
+#     columns bsi {title 'WBS'}, name, start, end, effort, duration, complete
+#     timeformat "%Y-%m-%d"
+#     taskroot project_milestones
+#     sorttasks tree.up
+#     caption 'All effort values are in human hours'
+# }
+
+# icalreport euclid_project_cal "euclid_project_cal" {
+#     hideresource 1
+# }
+    
+# # Resource graph for all team members
+# resourcereport euclid_resource_graph_all "euclid_resource_graph_all" {
+#     formats html
+#     headline "Resource Allocation Graph"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+# }
+
+# Resource graph for Aaron Skomra
+resourcereport euclid_resource_graph_askomra "euclid_resource_graph_askomra" {
     formats html
-    headline "Resource Allocation Graph"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    headline "Appendix C.1: Resource Allocation Graph - Aaron Skomra"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
     loadunit shortauto
     # We only like to show leaf tasks for leaf resources.
     hidetask ~(isleaf() & isleaf_())
     sorttasks plan.start.up
+    resourceroot askomra
 }
 
 # Resource graph for Ben Carr
 resourcereport euclid_resource_graph_carrbs "euclid_resource_graph_carrbs" {
     formats html
-    headline "Resource Allocation Graph - Ben Carr"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    headline "Appendix C.2: Resource Allocation Graph - Ben Carr"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
     loadunit shortauto
     # We only like to show leaf tasks for leaf resources.
     hidetask ~(isleaf() & isleaf_())
@@ -988,8 +1016,8 @@ resourcereport euclid_resource_graph_carrbs "euclid_resource_graph_carrbs" {
 # Resource graph for Ben Huddle
 resourcereport euclid_resource_graph_bhuddle "euclid_resource_graph_bhuddle" {
     formats html
-    headline "Resource Allocation Graph - Ben Huddle"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    headline "Appendix C.3: Resource Allocation Graph - Ben Huddle"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
     loadunit shortauto
     # We only like to show leaf tasks for leaf resources.
     hidetask ~(isleaf() & isleaf_())
@@ -999,8 +1027,8 @@ resourcereport euclid_resource_graph_bhuddle "euclid_resource_graph_bhuddle" {
 # Resource graph for Braden Wooley
 resourcereport euclid_resource_graph_bwoolwy "euclid_resource_graph_bwooley" {
     formats html
-    headline "Resource Allocation Graph - Braden Wooley"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    headline "Appendix C.4: Resource Allocation Graph - Braden Wooley"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
     loadunit shortauto
     # We only like to show leaf tasks for leaf resources.
     hidetask ~(isleaf() & isleaf_())
@@ -1010,8 +1038,8 @@ resourcereport euclid_resource_graph_bwoolwy "euclid_resource_graph_bwooley" {
 # Resource graph for David Snyder
 resourcereport euclid_resource_graph_dsnyder "euclid_resource_graph_dsnyder" {
     formats html
-    headline "Resource Allocation Graph - David Snyder"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    headline "Appendix C.5: Resource Allocation Graph - David Snyder"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
     loadunit shortauto
     # We only like to show leaf tasks for leaf resources.
     hidetask ~(isleaf() & isleaf_())
@@ -1022,8 +1050,8 @@ resourcereport euclid_resource_graph_dsnyder "euclid_resource_graph_dsnyder" {
 # Resource graph for Jess VanDerwalker
 resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
     formats html
-    headline "Resource Allocation Graph - Jess VanDerwalker"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
+    headline "Appendix C.6: Resource Allocation Graph - Jess VanDerwalker"
+    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
     loadunit shortauto
     # We only like to show leaf tasks for leaf resources.
     hidetask ~(isleaf() & isleaf_())
@@ -1031,14 +1059,3 @@ resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
     resourceroot jvanderw
 }
 
-# Resource graph for Aaron Skomra
-resourcereport euclid_resource_graph_askomra "euclid_resource_graph_askomra" {
-    formats html
-    headline "Resource Allocation Graph - Aaron Skomra"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} }
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot askomra
-}
