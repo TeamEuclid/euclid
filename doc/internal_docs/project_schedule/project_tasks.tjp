@@ -946,7 +946,7 @@ formats html
     # of the date. %a is the tag for this.
     timeformat "%Y-%m-%d"
     hideresource ~(isleaf()) & ~(isdependencyof(mile4, plan, 100))
-    loadunit days
+    loadunit hours
     hideresource 1
     sorttasks tree.up
     caption 'All effort values are in human hours.'
