@@ -15,13 +15,35 @@
 #include <xcb/xcb.h>
 
 
+/* Print out some information about the given window */
+void print_win_info(xcb_connection_t *conn, xcb_drawable_t win) {
 
+    xcb_get_geometry_reply_t *geom; /* Property reply structure */
+    xcb_get_geometry_cookie_t geomcookie; /* Response cookies for getting geometry */
+    xcb_generic_error_t *error;           /* Error reporting structure */
+
+    /* Get the window geometry */
+    geomcookie = xcb_get_geometry(conn, win);
+    geom = xcb_get_geometry_reply(conn, geomcookie, &error);
+    if (error) {
+        fprintf(stderr, "ERROR: Failed to get geometry of the window: %d\n",
+                error->error_code);
+    }
+    
+    printf("For window id: %ld\n", (unsigned int)((uint32_t)win) );
+    printf("x: %d, y: %d\n", geom->x, geom->y);
+    free(geom);
+
+}
+
+/* Main program loop */
 int main (int argc, char **argv) {
 
     xcb_connection_t *conn; /* The connection to the X server */
     xcb_screen_t *screen;         /* The screen window will go into */
     xcb_drawable_t win;           /* The ID of the window we are going
                                    * to draw into */
+    xcb_drawable_t winchild;    /* Child window */
     xcb_font_t font;            /* The font for the GC */
     xcb_gcontext_t gc;          /* ID of the graphical context */
     xcb_generic_event_t *evt;   /* */
@@ -32,6 +54,7 @@ int main (int argc, char **argv) {
     char fontname[] = "-adobe-courier-medium-o-normal--11-80-100-100-m-60-iso10646-1";
     xcb_void_cookie_t cookie_conf; /* Response cookie for call to configure */
     xcb_generic_error_t *error;    /* Struct for error information */
+    xcb_void_cookie_t cookie_win; /* Response cookie for call to window create */   
 
     /* Open the connection to the X server */
     conn = xcb_connect(NULL, NULL);
@@ -70,6 +93,24 @@ int main (int argc, char **argv) {
                       screen->root_visual, mask, values);
 
     /* Map the window to the screen and flush any pending messages */
+    xcb_map_window(conn, win);
+    xcb_flush(conn);
+    print_win_info(conn, win);
+
+    /* Create a second window an make it child of the previous one */
+    winchild = xcb_generate_id(conn);
+    values[0] = screen->black_pixel;
+    cookie_win = xcb_create_window_checked(conn, XCB_COPY_FROM_PARENT, winchild,
+                                           win,
+                                           20, 20, 100, 100, 10,
+                                           XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                                           screen->root_visual, mask, values);
+    error = xcb_request_check(conn, cookie_win);
+    if (error) {
+        fprintf(stderr, "ERROR: Failed to create window: %d\n",
+                error->error_code);
+    }
+    xcb_map_window(conn, winchild);
     xcb_map_window(conn, win);
     xcb_flush(conn);
 
