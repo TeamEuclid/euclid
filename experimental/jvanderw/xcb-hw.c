@@ -36,6 +36,39 @@ void print_win_info(xcb_connection_t *conn, xcb_drawable_t win) {
 
 }
 
+/* Print out information about the existing windows attached to our
+ * root. Most of this code is taken from src/manage.c from the i3 code
+ * by Michael Stapelberg */
+void print_all_win_info(xcb_connection_t *conn, xcb_window_t root) {
+
+    xcb_query_tree_reply_t *reply;
+    xcb_query_tree_cookie_t tree_cookie;
+    xcb_window_t *children;     /* The children of the given root */
+    xcb_get_window_attributes_cookie_t attr_cookie;
+    xcb_generic_error_t *error;
+    int len;
+    int i;
+
+    tree_cookie = xcb_query_tree(conn, root);
+    reply = xcb_query_tree_reply(conn, tree_cookie, &error);
+    if (error) {
+        fprintf(stderr, "ERROR: Failed to get query tree: %d\n",
+                error->error_code);
+        return;
+    }
+    /* Get the number of children */
+    len = xcb_query_tree_children_length(reply);
+    children = xcb_query_tree_children(reply);
+
+    /* Iterate thorough all the children and get their attributes */
+    for (i = 0; i < len; i++) {
+        print_win_info(conn, children[i]);
+    }
+
+    /* Free the stuff allocated by XCB */
+    free(reply);
+}
+
 /* Main program loop */
 int main (int argc, char **argv) {
 
@@ -113,6 +146,9 @@ int main (int argc, char **argv) {
     xcb_map_window(conn, winchild);
     xcb_map_window(conn, win);
     xcb_flush(conn);
+
+    /* Print out information on all the windows based on this root */
+    print_all_win_info(conn, screen->root);
 
     /* Setup a loop to handle events. Note that this uses the blocking
      * style of event handling loop */
