@@ -153,14 +153,12 @@ task documentation "Documentation" {
                 start 2011-11-14
                 effort 6h
                 ${allocate_team}
-                complete 100
             }
             task gen_wbs "Initial WBS" {
                 note "Initial version of the Work Breakdown Structure"
                 start 2011-11-14
                 effort 36h
                 ${allocate_team}
-                complete 90
             }
                 
             task gen_schedule "Schedule and calendar" {
@@ -171,28 +169,24 @@ task documentation "Documentation" {
                     start 2011-11-17
                     effort 6h
                     allocate jvanderw
-                    complete 50
                 }
                 task assign_resources "Assign resources" {
                     note "Assign resources in TaskJuggler"
                     start 2011-11-17
                     effort 3h
                     allocate jvanderw
-                    complete 50
                 }
                 task gen_mile_dates "Determine Milestone dates" {
                     note "Determine Milestone dates from results of TaskJuggler scheduling."
                     start 2011-11-17
                     effort 1h
                     allocate jvanderw
-                    complete 50
                 }
                 task gen_reports "Generate and distribute schedule" {
                     note "Generate a schedule and calendar and make available to the team and the sponsors."
                     start 2011-11-17
                     effort 1h
                     allocate jvanderw
-                    complete 0
                 }
             } # end gen_schedule
             
@@ -201,6 +195,7 @@ task documentation "Documentation" {
                 start 2011-11-20
                 effort 4h
                 allocate askomra
+                complete 100
             }
 
             task project_desc "Project description" {
@@ -218,6 +213,7 @@ task documentation "Documentation" {
                     start 2011-11-20
                     effort 1h
                     allocate bhuddle
+                    complete 100
                 }
              } # end project_desc
 
@@ -226,13 +222,15 @@ task documentation "Documentation" {
                  start 2011-11-20
                  effort 1h
                  allocate askomra
+                 complete 100
              }
 
              task meeting_desc "Meetings and communication" {
                  note "Description of regular meetings and communication methods used by the team internally and with the sponsors."
                  start 2011-11-20
                  effort 1h
-                 allocate dsnyder
+                 allocate bwooley
+                 complete 100
              }
              task asset_track_desc "Asset tracking" {
                  note "Describe assets and work product and how it is tracked/version controlled."
@@ -251,6 +249,7 @@ task documentation "Documentation" {
                  start 2011-11-20
                  effort 1h
                  allocate bwooley
+                 complete 100
              }
         } # end proj_plan
         
@@ -902,6 +901,9 @@ task project_milestones "Milestones" {
     }
 } # end milestones
 
+# Include of tji files for bookings
+include "Week1Bookings.tji"
+
 # Macro for task tips
 macro TaskTip [
   tooltip istask() -8<-
@@ -952,17 +954,17 @@ formats html
     caption 'All effort values are in human hours.'
 }
     
-# taskreport development "euclid_dev" {
-#     formats html
-#     headline "Development and Resource Allocation"
-#     columns bsi {title 'WBS'}, name, start, end, effort, chart {scale day width 500}
-#     timeformat "%Y-%m-%d"
-#     hideresource ~(isleaf() & isleaf_())
-#     loadunit hours
-#     sortresources name.up
-#     sorttasks tree.up
-#     caption 'All effort values are in human hours.'
-# }
+taskreport development "euclid_dev" {
+    formats html
+    headline "Development and Resource Allocation"
+    columns bsi {title 'WBS'}, name, start, end, effort, chart {scale day width 500}
+    timeformat "%Y-%m-%d"
+    hideresource ~(isleaf() & isleaf_())
+    loadunit hours
+    sortresources name.up
+    sorttasks tree.up
+    caption 'All effort values are in human hours.'
+}
 
 # taskreport milestone_report "milestone_report" {
 #     formats html
