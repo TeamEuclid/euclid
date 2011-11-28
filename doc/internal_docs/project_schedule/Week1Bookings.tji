@@ -62,20 +62,26 @@ supplement task documentation.project_docs.proj_plan.project_desc.project_desc_s
 supplement task documentation.project_docs.proj_plan.project_desc.gen_project_desc {
 }
 supplement task documentation.project_docs.proj_plan.mile_desc {
+    booking askomra_r 2011-11-21 +1hr
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.meeting_desc {
 }
 supplement task documentation.project_docs.proj_plan.asset_track_desc {
+    booking carrbs_r 2011-11-26 +1hr { sloppy 2 }
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.desc_v_and_v {
 }
 supplement task documentation.project_docs.proj_plan.deployment_desc {
 }
 supplement task documentation.project_docs.usrd {
+
 }
 supplement task documentation.project_docs.usrd.id_usr_reqs {
 }
 supplement task documentation.project_docs.usrd.write_usrd {
+    booking bhuddle_r 2011-11-26 +1 { sloppy 1 }
 }
 supplement task documentation.project_docs.a_and_d_doc {
 }
