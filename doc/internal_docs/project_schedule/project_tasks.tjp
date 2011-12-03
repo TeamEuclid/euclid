@@ -213,7 +213,6 @@ task documentation "Documentation" {
                     start 2011-11-20
                     effort 1h
                     allocate bhuddle
-                    complete 100
                 }
              } # end project_desc
 
@@ -222,7 +221,6 @@ task documentation "Documentation" {
                  start 2011-11-20
                  effort 1h
                  allocate askomra
-                 complete 100
              }
 
              task meeting_desc "Meetings and communication" {
@@ -230,7 +228,6 @@ task documentation "Documentation" {
                  start 2011-11-20
                  effort 1h
                  allocate bwooley
-                 complete 100
              }
              task asset_track_desc "Asset tracking" {
                  note "Describe assets and work product and how it is tracked/version controlled."
@@ -383,19 +380,23 @@ task research "Research" {
 
     task osx_research "OS X" {
         start 2011-11-26
+
         task osx_learn "Become familiar with OS X environment" {
             effort 12h
             ${allocate_team}
         }
         task xcode "Learn XCode" {
+            depends !osx_learn
             effort 12h
             ${allocate_team}
         }
         task obj_c "Basic Objective-C familiarity" {
+            depends !xcode
             effort 24h
             ${allocate_team}
         }
         task learn_apple_api "Learn Apple windowing API" {
+            depends !xcode
             effort 42h
             ${allocate_team}
         }
@@ -576,13 +577,24 @@ task dev "Development" {
     
     task dev_mile0 "Milestone 0 development" {
         depends !!research.osx_research
+
         task env_setup "Setup Environment Development" {
             note "Setup a working development environment in OS X"
-            effort 36h
-            ${allocate_team}
-        }
+
+            task compile_x_server "Compile X server from current X.org code" {
+                effort 18h
+                ${allocate_team}
+            }
+            task config_dummy_driver "xorg.conf and dummy driver" {
+                note "Configure xorg.conf for use with the X server dummy driver"
+                depends !compile_x_server
+                effort 18h
+                ${allocate_team}
+            }
+        } # end env_setup
+
         task render_simple_mac_win "Simple window in OS X" {
-            note "Render a simple window in OS X"
+            note "Render a simple window in OS X using XCB"
             effort 24h
             ${allocate_team}
         }
@@ -903,6 +915,7 @@ task project_milestones "Milestones" {
 
 # Include of tji files for bookings
 include "Week1Bookings.tji"
+#include "nov28_dec4.tji"
 
 # Macro for task tips
 macro TaskTip [
@@ -929,7 +942,7 @@ taskreport overview "euclid_project_overview" {
     formats html, csv
     headline "Team Euclid Work Breakdown Structure"
     columns bsi { title 'WBS' },
-          name, start, end, effort
+          name, start, end, effort, complete
     # For this report we like to have the abbreviated weekday in front
     # of the date. %a is the tag for this.
     timeformat "%a %Y-%m-%d"
@@ -957,7 +970,7 @@ formats html
 taskreport development "euclid_dev" {
     formats html
     headline "Development and Resource Allocation"
-    columns bsi {title 'WBS'}, name, start, end, effort, chart {scale day width 500}
+    columns bsi {title 'WBS'}, name, start, end, effort, complete, chart {scale day width 500}
     timeformat "%Y-%m-%d"
     hideresource ~(isleaf() & isleaf_())
     loadunit hours
@@ -1061,3 +1074,19 @@ resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
     resourceroot jvanderw
 }
 
+# Export the timesheets for the weeks
+export "nov28_dec4.tji" {
+  definitions -
+  start 2011-11-28
+  end 2011-12-04
+  taskattributes booking
+  hideresource 0
+}
+
+export "dec5_dec11.tji" {
+  definitions -
+  start 2011-12-05
+  end 2011-12-11
+  taskattributes booking
+  hideresource 0
+}
