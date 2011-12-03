@@ -3,7 +3,7 @@ supplement task documentation {
 supplement task documentation.project_docs {
 }
 supplement task documentation.project_docs.proj_plan {
-    complete 90
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.ram_personnel {
     booking jvanderw_r 2011-11-23 +1h { sloppy 2 }
@@ -54,26 +54,41 @@ supplement task documentation.project_docs.proj_plan.gen_schedule.gen_reports {
     complete 100
 }
 supplement task documentation.project_docs.proj_plan.id_deliverables {
+    booking askomra_r 2011-11-23 +1h { sloppy 2 }
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.project_desc {
 }
 supplement task documentation.project_docs.proj_plan.project_desc.project_desc_sp_meetings {
+    booking bhuddle_r 2011-11-21 +2h { sloppy 2 }
+    booking bwooley_r 2011-11-21 +2h { sloppy 2 }
+    booking jvanderw_r 2011-11-21 +2h { sloppy 2 }
+    booking carrbs_r 2011-11-21 +2h { sloppy 2 }
+    booking askomra_r 2011-11-21 +2h { sloppy 2 }
+    booking dsnyder_r 2011-11-21 +2h { sloppy 2 }
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.project_desc.gen_project_desc {
+    booking bhuddle_r 2011-11-22 +1h { sloppy 2 }
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.mile_desc {
     booking askomra_r 2011-11-21 +1h { sloppy 2 }
     complete 100
 }
 supplement task documentation.project_docs.proj_plan.meeting_desc {
+    booking bwooley_r 2011-11-23 +1h { sloppy 2 }
 }
 supplement task documentation.project_docs.proj_plan.asset_track_desc {
     booking carrbs_r 2011-11-26 +1h { sloppy 2 }
     complete 100
 }
 supplement task documentation.project_docs.proj_plan.desc_v_and_v {
+    booking bhuddle_r 2011-11-23 +1h { sloppy 2 }
+    complete 100
 }
 supplement task documentation.project_docs.proj_plan.deployment_desc {
+    booking bwooley_r 2011-11-23 +1h { sloppy 2 }
 }
 supplement task documentation.project_docs.usrd {
 
