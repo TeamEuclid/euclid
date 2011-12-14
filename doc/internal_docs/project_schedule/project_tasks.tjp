@@ -3,7 +3,7 @@
 # Task Juggler Project for Team Euclid
 #
 
-project euclid "X.org Project" "1.0" 2011-11-14 - 2012-03-24 {
+project euclid "X.org Project" "1.0" 2011-11-14 - 2012-06-24 {
 
     # Final date is March 24 - give or take a couple of days.
 
@@ -316,12 +316,26 @@ task documentation "Documentation" {
                 effort 3h
                 ${allocate_v_and_v}
             }
-            task v_and_v_doc_maint "Document maintenance" {
+            task v_and_v_doc_maint1 "Mile 1 document maintenance" {
                 depends !init_v_and_v_doc
-                priority 750
-                effort 10h
+                depends !!!!dev.dev_mile1.dev_mile1_code
+                effort 2h
                 ${allocate_v_and_v}
-                shift fri_one_hr_weekly
+            }
+            task v_and_v_doc_maint2 "Mile 2 document maintenance" {
+                depends !!!!dev.dev_mile1.dev_mile2_code
+                effort 2h
+                ${allocate_v_and_v}
+            }
+            task v_and_v_doc_maint3 "Mile 3 document maintenance" {
+                depends !!!!dev.dev_mile1.dev_mile3_code
+                effort 2h
+                ${allocate_v_and_v}
+            }
+            task v_and_v_doc_maint4 "Mile 4 document maintenance" {
+                depends !!!!dev.dev_mile1.dev_mile4_code
+                effort 2h
+                ${allocate_v_and_v}
             }
         } # end v_and_v_doc
     } # end of project_docs
@@ -576,12 +590,12 @@ task a_and_d "Architecture and Design" {
 task dev "Development" {
     
     task dev_mile0 "Milestone 0 development" {
-        depends !!research.osx_research
 
         task env_setup "Setup Environment Development" {
             note "Setup a working development environment in OS X"
 
-            task compile_x_server "Compile X server from current X.org code" {
+            task compile_x_server "Compile X server" {
+                note "Compile the X server on OSX with the current X.org code"
                 effort 18h
                 ${allocate_team}
             }
@@ -595,6 +609,8 @@ task dev "Development" {
 
         task render_simple_mac_win "Simple window in OS X" {
             note "Render a simple window in OS X using XCB"
+            depends !!!research.osx_research
+            depends !env_setup
             effort 24h
             ${allocate_team}
         }
@@ -606,15 +622,15 @@ task dev "Development" {
         depends project_milestones.mile0
         depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
 
-        task dev_mile1_code "Coding" {
+        task dev_mile1_code "Mile 1 Coding" {
             effort 105h
             ${allocate_team}
         }
-        task dev_mile1_doc "Documentation" {
+        task dev_mile1_doc "Mile 1 documentation" {
             effort 12h
             ${allocate_team}
         }
-        task dev_mile1_v_and_v "Testing" {
+        task dev_mile1_v_and_v "Mile 1 testing" {
             depends !dev_mile1_code
             effort 6h
             ${allocate_team}
@@ -627,15 +643,15 @@ task dev "Development" {
         depends project_milestones.mile1
         depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2
 
-       task dev_mile2_code "Coding" {
+       task dev_mile2_code "Mile 2 coding" {
            effort 105h
            ${allocate_team}
         }
-        task dev_mile2_doc "Documentation" {
+        task dev_mile2_doc "Mile 2 Documentation" {
             effort 12h
             ${allocate_team}
         }
-        task dev_mile2_v_and_v "Testing" {
+        task dev_mile2_v_and_v "Mile 2 Testing" {
             depends !dev_mile2_code
             effort 6h
             ${allocate_team}
@@ -648,15 +664,15 @@ task dev "Development" {
         depends project_milestones.mile1
         depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3
 
-        task dev_mile3_code "Coding" {
+        task dev_mile3_code "Mile 3 Coding" {
             effort 105h
             ${allocate_team}
         }
-        task dev_mile3_doc "Documentation" {
+        task dev_mile3_doc "Mile 3 Documentation" {
             effort 12h
             ${allocate_team}
         }
-        task dev_mile3_v_and_v "Testing" {
+        task dev_mile3_v_and_v "Mile 3 Testing" {
             depends !dev_mile3_code
             effort 6h
             ${allocate_team}
@@ -670,15 +686,15 @@ task dev "Development" {
         depends project_milestones.mile3
         depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4
 
-        task dev_mile4_code "Coding" {
+        task dev_mile4_code "Mile 4 Coding" {
             effort 105h
             ${allocate_team}
         }
-        task dev_mile4_doc "Documentation" {
+        task dev_mile4_doc "Mile 4 Documentation" {
             effort 12h
             ${allocate_team}
         }
-        task dev_mile4_v_and_v "Testing" {
+        task dev_mile4_v_and_v "Mile 4 Testing" {
             effort 6h
             ${allocate_team}
         }
@@ -691,15 +707,15 @@ task v_and_v "Validation and Verification" {
     task v_and_v_mile0 "Milestone 0" {
         note "Validate the verify the first Milestone"
         depends !!dev.dev_mile0
-        depends !!documentation.project_docs.v_and_v_doc.init_v_and_v_doc
         effort 2h
         ${allocate_v_and_v}
         allocate askomra
     }
 
-    task v_and_v_mile1 "Milestone 1" {
+    task v_and_v_mile1 "Milestone 1 V & V" {
         note "Validate the verify the first Milestone"
             depends dev.dev_mile1
+            depends !!documentation.project_docs.v_and_v_doc.init_v_and_v_doc
             effort 2h
             ${allocate_v_and_v}
             allocate askomra
@@ -856,7 +872,6 @@ task deployment "Deployment and presentations" {
     task mid_term_presentation "Midterm presentation" {
         note "Prepare and deliver the midterm presentation."
         priority 800
-        end 2011-12-05
         effort 1h
         ${allocate_team}
     }
@@ -915,7 +930,8 @@ task project_milestones "Milestones" {
 
 # Include of tji files for bookings
 include "Week1Bookings.tji"
-#include "nov28_dec4.tji"
+include "nov28_dec4.tji"
+include "dec5_dec11.tji"
 
 # Macro for task tips
 macro TaskTip [
@@ -1075,7 +1091,7 @@ resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
 }
 
 # Export the timesheets for the weeks
-export "nov28_dec4.tji" {
+export "nov28_dec4" {
   definitions -
   start 2011-11-28
   end 2011-12-04
@@ -1083,7 +1099,7 @@ export "nov28_dec4.tji" {
   hideresource 0
 }
 
-export "dec5_dec11.tji" {
+export "dec5_dec11" {
   definitions -
   start 2011-12-05
   end 2011-12-11
