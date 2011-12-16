@@ -1,0 +1,103 @@
+Coding Style
+============
+
+First draft: 2011-12-15
+Last revision: 
+
+The following are the coding style, as well as some coding
+requirements, to be followed when writing code for this project. Most
+style aspects are taken from the X.org coding style
+(http://www.x.org/wiki/CodingStyle).
+
+General Format
+==============
+
+Four-space indentation. Only space characters should be used, never
+tab characters.
+
+78-column limit. Lines longer than 78 characters must be broken across
+multiple lines.
+
+Statements with keywords should have a space between the keyword and
+the opening parentheses. There is no space between the opening and
+closing parenthesis and the statements they enclose. For example:     
+
+   if (x >= y)
+
+The opening curly brace is placed on the same line as the control
+keyword, and the closing line is aligned with the keyword that opened
+the braces. For example:
+
+    if (x >=y) {
+        /* some code */
+    }
+
+With if-else statements, the else goes on the same line as the closing
+brace of the if. For example:
+
+    if (x >= y) {
+        /* some code */
+    } else {
+        /* some more code */
+    }
+
+In a switch statement, the case is aligned with in the same column as
+the switch statement. For example:
+
+    switch (x) {
+    case 1:
+        /* some code */
+        break;
+    default:
+        /* some other code */
+        break;
+    }
+
+
+All structs are to be wrapped in typedefs. For example:
+
+typedef struct myData {    <-- this way
+    int x;
+    int y;
+} myData;
+
+struct myData {            <-- not this way
+    int x;
+    int y;
+};
+
+
+Variables
+=========
+
+Only one variable declaration per line.
+
+
+Functions
+=========
+
+Function names shall use camelCase.
+
+Function return type and any modifiers are on a line by
+themselves. For example:
+
+int
+myFunction (int x, int y)    <-- Not on line with function name
+
+The opening and closing curly braces for functions is aligned with the
+function name. For example:
+
+int
+myFunction (int x, int y)
+{
+    /* Some code */
+}
+
+When called, there shall be no space between the function name and the
+opening parentheses. For example:
+
+    myFunction(x, y);
+
+All functions must have a doxygen formatted comment with at least a
+one sentence description of the function and descriptions of all
+parameters and the return value.
