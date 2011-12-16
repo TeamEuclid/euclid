@@ -3,17 +3,17 @@
 
 CC = gcc
 CFLAGS = -Wall -g -c
-LDFLAGS = `pkg-config --libs xcb xcb-aux`
+LDFLAGS = `pkg-config --libs xcb xcb-aux xcb-damage`
 
 # Sources
-SOURCES    = lpxcb.c lpxcb_api.c
+SOURCES    = lpxcb.c lpxcb_api.c lpxcb_table.c
 OBJECTS    = $(SOURCES:.c=.o)
 
 # Name of executable target:
 EXECUTABLE = lpxcb-ex
 
 # XCB specific flags:
-CFLAGS	+= `pkg-config --libs xcb xcb-aux`
+CFLAGS	+= `pkg-config --libs xcb xcb-aux xcb-damage`
 
 
 all: $(SOURCES) $(EXECUTABLE)

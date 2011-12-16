@@ -116,8 +116,6 @@ supplement task documentation.project_docs.v_and_v_doc.v_and_v_research.v_and_v_
 }
 supplement task documentation.project_docs.v_and_v_doc.init_v_and_v_doc {
 }
-supplement task documentation.project_docs.v_and_v_doc.v_and_v_doc_maint {
-}
 supplement task documentation.code_docs {
 }
 supplement task documentation.code_docs.readme_maint {

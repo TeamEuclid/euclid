@@ -13,6 +13,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
+#include <xcb/xcb_image.h>
 
 
 /* Print out some information about the given window */
@@ -44,8 +45,9 @@ void print_all_win_info(xcb_connection_t *conn, xcb_window_t root) {
     xcb_query_tree_reply_t *reply;
     xcb_query_tree_cookie_t tree_cookie;
     xcb_window_t *children;     /* The children of the given root */
-    xcb_get_window_attributes_cookie_t attr_cookie;
     xcb_generic_error_t *error;
+    xcb_get_image_reply_t *image;
+    xcb_get_image_cookie_t image_cookie;
     int len;
     int i;
 
@@ -60,11 +62,90 @@ void print_all_win_info(xcb_connection_t *conn, xcb_window_t root) {
     len = xcb_query_tree_children_length(reply);
     children = xcb_query_tree_children(reply);
 
-    /* Iterate thorough all the children and get their attributes */
+    /* Iterate thorough all the children and get their pixmap (hopefully) */
     for (i = 0; i < len; i++) {
         print_win_info(conn, children[i]);
+        image_cookie = xcb_get_image(conn, XCB_IMAGE_FORMAT_XY_PIXMAP,
+                                     children[i], 0 , 0, 200, 200, -1);
+        image = xcb_get_image_reply(conn, image_cookie, &error);
+        if (error) {
+            fprintf(stderr, "ERROR: Failed to get image from drawable: %d\n",
+                error->error_code);
+        }
     }
+    
+    /* Free the stuff allocated by XCB */
+    free(reply);
+}
 
+/* Get the first valid pixmap from the children given, and "put" in
+ * the given drawable */
+void assign_pixmap(xcb_connection_t *conn, xcb_drawable_t drawable,
+                   xcb_drawable_t win, xcb_gcontext_t gc) {
+
+    xcb_query_tree_reply_t *reply;
+    xcb_query_tree_cookie_t tree_cookie;
+    xcb_window_t *children;     /* The children of the given win */
+    xcb_generic_error_t *error;
+    xcb_image_t *image;
+    xcb_void_cookie_t imcookie;
+    int len;
+    int i;
+
+    tree_cookie = xcb_query_tree(conn, win);
+    reply = xcb_query_tree_reply(conn, tree_cookie, &error);
+    if (error) {
+        fprintf(stderr, "ERROR: Failed to get query tree: %d\n",
+                error->error_code);
+        return;
+    }
+    /* Get the number of children */
+    len = xcb_query_tree_children_length(reply);
+    children = xcb_query_tree_children(reply);
+
+    /* Iterate thorough all the children and get their pixmap (hopefully) */
+    for (i = 0; i < len; i++) {
+        print_win_info(conn, children[i]);
+        image = xcb_image_get(conn, children[i], 0, 0, 200, 200, ~0,
+                              XCB_IMAGE_FORMAT_Z_PIXMAP);
+
+        /* if (image) { */
+        /*     if (*(image->data) == '\0') { */
+        /*         printf("No data in image\n"); */
+        /*         continue; */
+        /*     } */
+
+        /*     imcookie = xcb_image_put(conn, drawable, gc, image, 0, 0, 0); */
+
+        /*     error = xcb_request_check(conn, imcookie); */
+        /*     if (error) { */
+        /*         fprintf(stderr, "ERROR: Failed to put pixmap: %d\n", */
+        /*                 error->error_code); */
+        /*     } */
+        /*     free(reply); */
+        /*     return;             /\* Bail after assigning first one *\/ */
+        /* } */
+
+        /* Crazy testing stuff here */
+        /* create backing pixmap */
+        xcb_pixmap_t pmap;
+
+        pmap = xcb_generate_id(conn);
+        xcb_create_pixmap(conn, 24, pmap, drawable, 200, 200);
+
+
+
+        imcookie = xcb_copy_area(conn, children[i], pmap, gc, 0, 0, 0, 0,
+                                 200, 200);
+        error = xcb_request_check(conn, imcookie);
+        if (error) {
+            fprintf(stderr, "ERROR: Failed to copy pixmap: %d\n",
+                    error->error_code);
+        }
+        free(reply);
+        return;
+    }
+    
     /* Free the stuff allocated by XCB */
     free(reply);
 }
@@ -79,7 +160,7 @@ int main (int argc, char **argv) {
     xcb_drawable_t winchild;    /* Child window */
     xcb_font_t font;            /* The font for the GC */
     xcb_gcontext_t gc;          /* ID of the graphical context */
-    xcb_generic_event_t *evt;   /* */
+    xcb_generic_event_t *evt;
     uint32_t mask = 0;          /* Bit mask used to set options */
     uint32_t values[2];         /* Array that holds values used by GC
                                  * as called for by the value set in
@@ -143,12 +224,15 @@ int main (int argc, char **argv) {
         fprintf(stderr, "ERROR: Failed to create window: %d\n",
                 error->error_code);
     }
-    xcb_map_window(conn, winchild);
+    /* Assign an existing image to the window */
+    assign_pixmap(conn, win, screen->root, gc);
+
     xcb_map_window(conn, win);
+    xcb_map_window(conn, winchild);
     xcb_flush(conn);
 
     /* Print out information on all the windows based on this root */
-    print_all_win_info(conn, screen->root);
+    /* print_all_win_info(conn, screen->root); */
 
     /* Setup a loop to handle events. Note that this uses the blocking
      * style of event handling loop */
@@ -193,8 +277,8 @@ int main (int argc, char **argv) {
         }
         case XCB_MOTION_NOTIFY: {
             xcb_motion_notify_event_t *mnevnt = (xcb_motion_notify_event_t *)evt;
-            printf("Mouse moved in window %ld, at coordinates (%d, %d)\n",
-                   mnevnt->event, mnevnt->event_x, mnevnt->event_y);
+            /* printf("Mouse moved in window %ld, at coordinates (%d, %d)\n", */
+            /*        mnevnt->event, mnevnt->event_x, mnevnt->event_y); */
             break;
         }
         case XCB_KEY_PRESS: {

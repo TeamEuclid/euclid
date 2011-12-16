@@ -4,10 +4,10 @@
 //
 
 #import <stdio.h>
-#import "modutil.h"
+#import "ModUtil.h"
 
 @implementation ModUtil
--(void) setValueModPower: (int) x andSetMod: (int) n andSetPower (int) p {
+-(void) setValueModPower: (int) x andSetMod: (int) n andSetPower: (int) p {
   value = x;
   mod = n;
   pwr = p;
@@ -15,7 +15,7 @@
 
 -(int) getMod {
   rem = value % mod;
-  reutrn rem;
+  return rem;
 }
 
 @end
