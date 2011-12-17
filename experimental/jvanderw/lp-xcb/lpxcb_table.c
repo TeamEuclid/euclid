@@ -59,11 +59,12 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
         new->next = NULL;
     }
 
-    /* Check the damage version */
-    /* xcb_damage_query_version_cookie_t dmg_ver_cookie; */
-    /* xcb_damage_query_version_reply_t *dmg_ver_reply; */
-    /* dmg_ver_cookie = xcb_damage_query_version(conn, 1, 1); */
-    /* dmg_ver_reply = xcb_damage_query_version_reply(conn, dmg_ver_cookie, NULL); */
+    /* Check the damage version. For some reason we need to do this,
+     * or the attempt to create damage fails */
+    xcb_damage_query_version_cookie_t dmg_ver_cookie;
+    xcb_damage_query_version_reply_t *dmg_ver_reply;
+    dmg_ver_cookie = xcb_damage_query_version(conn, 1, 1);
+    dmg_ver_reply = xcb_damage_query_version_reply(conn, dmg_ver_cookie, NULL);
 
     /* Set up our damage */
     damage = xcb_generate_id(conn);
@@ -120,4 +121,60 @@ lpxcb_remove_window (xcb_connection_t *conn, xcb_window_t window)
         }
     }
     return;
+}
+
+/* Connection table functions */
+
+lpxcb_connection_t *
+lpxcb_find_connection (xcb_connection_t *conn)
+{
+    conn_node_t *curr;
+
+    curr = conn_table;
+    while (curr) {
+        if (&(curr->lpxcb_conn->conn) == &conn) {
+            return curr->lpxcb_conn;
+        }
+        curr = curr->next;
+    }
+
+    return lpxcb_add_connection(conn);
+}
+
+lpxcb_connection_t *
+lpxcb_add_connection (xcb_connection_t *conn)
+{
+    lpxcb_connection_t *lpxcb_conn = NULL;
+    conn_node_t *new;
+    conn_node_t *curr;
+    conn_node_t *prev = NULL;
+
+    new = malloc(sizeof conn_node_t);
+    if (!new) {
+        return NULL
+    }
+    new->next = NULL;
+    new->prev = NULL;
+
+    lpxcb_conn = malloc(sizeof lpxcb_connection_t);
+    if (!lpxcb_conn) {
+        return NULL;
+    }
+    lpxcb_conn->conn = conn;
+    lpxcb_conn->damaged = NULL;
+
+    if (!conn_table)  {
+        conn_table = new;
+        return lpxcb_conn;
+    }
+
+    curr = conn_table;
+    while (curr) {
+        prev = curr;
+        curr = curr->next;
+    }
+    prev->next = new;
+    new->prev = prev;
+    
+    return lpxcb_conn;
 }

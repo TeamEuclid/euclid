@@ -97,7 +97,10 @@ main (int argc, char **argv)
     /* Start the event loop before we create our window */
     while ((event = xcb_wait_for_event(conn))) {
         if (!new_window && xcb_wait_for_event(new_conn)) {
-            
+            if (!new_window) {
+                /* Right now, assume the same screen as the first connection */
+                new_conn = xcb_connect_(NULL, &conn_screen);
+                new_window = xcb_generate_id(new_conn);
         }
             
     }

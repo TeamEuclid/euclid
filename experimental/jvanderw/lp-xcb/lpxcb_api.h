@@ -30,6 +30,29 @@ typedef struct lpxcb_window_t {
     /* Should we have something for the pixmap? */
 } lpxcb_window_t;
 
+/* Display */
+typedef struct lpxcb_connection_t {
+    /* The XCB connection */
+    xcb_connection_t *conn;
+    /* Damaged lpxcb_window_t */
+    lpxcb_window_t *damaged;
+} lpxcb_connection_t;
 
+/**
+ * Return the lpxcb_connection_t that contains the given
+ * xcb_connection_t
+ * @param conn The connection
+ * @return The matching lpxcb_connection_t
+ */
+lpxcb_connection_t *
+lpxcb_find_connection (xcb_connection_t *conn);
+
+/**
+ * Add a connection to the connection table.
+ * @param conn The connection to add
+ * @return The lpxcb_connection containing conn
+ */
+lpxcb_connection_t *
+lpxcb_add_connection (xcb_connection_t *conn);
 
 #endif  /* _LPXCB_API_H_ */
