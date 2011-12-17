@@ -1,0 +1,13 @@
+# Files for git to ignore
+#
+
+# Ignore the .DS_Store files that Apple seems to want in every directory
+.DS_Store
+
+# Ignore emacs temp files and emacs desktop files
+*~
+.emacs.desktop
+.emacs.desktop.lock
+
+# Ignore object files
+*.o
