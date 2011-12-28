@@ -10,6 +10,7 @@
 #include <xcb/xcb.h>
 #include "lpxcb_api.h"
 #include "lpxcb_table.h"
+#include "lpxcb_util.h"
 
 int
 main (int argc, char **argv)
@@ -23,14 +24,13 @@ main (int argc, char **argv)
     xcb_drawable_t new_window = 0;
     lpxcb_window_t *lpxcb_window;
     uint8_t root_depth;
-    xcb_get_geometry_cookie_t geom_cookie;
     xcb_query_pointer_cookie_t ptr_cookie;
     xcb_void_cookie_t void_cookie;
+    xcb_get_geometry_reply_t *geom_reply;
     uint32_t mask;
     uint32_t values[1];
-    xcb_get_geometry_reply_t *geom_reply;
-    xcb_generic_error_t *error;
     xcb_generic_event_t *event;
+    int error;
 
     /* Get the connection, root screen and root window - as well as
      * geometry of root window, its depth and the query pointer? */
@@ -38,10 +38,9 @@ main (int argc, char **argv)
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
     root_depth = root_screen->root_depth;
-    geom_cookie = xcb_get_geometry(conn, root_window);
     ptr_cookie = xcb_query_pointer(conn, root_window);
 
-    geom_reply = xcb_get_geometry_reply(conn, geom_cookie, NULL);
+    geom_reply = lpxcb_get_window_geometry(conn, root_window);
     if (geom_reply == NULL) {
         fprintf(stderr, "ERROR: Could not get geometry of the root window, exiting\n");
         return 1;
@@ -57,14 +56,12 @@ main (int argc, char **argv)
         XCB_EVENT_MASK_ENTER_WINDOW;
 
     void_cookie = xcb_change_window_attributes_checked(conn, root_window, mask, values);
-    error = xcb_request_check(conn, void_cookie);
+    error = lpxcb_check_request(conn, void_cookie,
+                                "Couldn't change window attibutes on root window");
 
     /* If we can't change attributes for root, create a "new" root */
     if (error) {
-        printf("Couldn't change window attibutes on root window: %d\n",
-                error->error_code);
         printf("Creating new \"root\" window.\n");
-        
         new_window = xcb_generate_id(conn);
         void_cookie = xcb_create_window_checked(conn, XCB_COPY_FROM_PARENT,
                                                 new_window, root_window,
@@ -73,10 +70,9 @@ main (int argc, char **argv)
                                                 geom_reply->border_width,
                                                 XCB_WINDOW_CLASS_INPUT_OUTPUT,
                                                 root_screen->root_visual, mask, values);
-        error = xcb_request_check(conn, void_cookie);
+        error = lpxcb_check_request(conn, void_cookie,
+                                    "Could not create new \"root\" window");
         if (error) {
-            fprintf(stderr, "ERROR: Could not create new \"root\" window: %d\n",
-                    error->error_code);
             free(geom_reply);
             return 1;
         }

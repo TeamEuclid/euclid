@@ -6,7 +6,7 @@ CFLAGS = -Wall -g -c
 LDFLAGS = `pkg-config --libs xcb xcb-aux xcb-damage`
 
 # Sources
-SOURCES    = lpxcb.c lpxcb_api.c lpxcb_table.c lpxcb_damage.c lpxcb_event.c
+SOURCES    = lpxcb.c lpxcb_api.c lpxcb_table.c lpxcb_damage.c lpxcb_event.c lpxcb_util.c
 OBJECTS    = $(SOURCES:.c=.o)
 
 # Name of executable target:

@@ -18,13 +18,14 @@ lpxcb_check_request (xcb_connection_t *conn,
                      char *msg);
 
 /**
- * Get geometry for the given window.
+ * Get geometry for the given window. The returned structure must be
+ * freed by the caller.
  */
-xcb_get_geometry_reply_t
+xcb_get_geometry_reply_t *
 lpxcb_get_window_geometry (xcb_connection_t *conn, xcb_window_t window);
 
 /**
- * Set the x, y, width, and height for a given window.
+ * Set the x, y, width, height, and border width for a given window.
  */
 void
 lpxcb_set_window_dimensions (xcb_connection_t *conn,
@@ -37,4 +38,4 @@ lpxcb_set_window_dimensions (xcb_connection_t *conn,
 
 
 
-#endif _LPXCB_UTIL_H_           /* _LPXCB_UTIL_H_ */
+#endif _LPXCB_UTIL_H_
