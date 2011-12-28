@@ -26,7 +26,9 @@ typedef struct lpxcb_window_t {
     xcb_damage_damage_t damage;
     /* Region - I think we'll use this to add damage to window */
     xcb_xfixes_region_t region;
-
+    /* The next window with damage - still unsure about how this is
+     * going to work out */
+    struct lpxcb_window_t *next_damaged;
     /* Should we have something for the pixmap? */
 } lpxcb_window_t;
 
@@ -34,7 +36,7 @@ typedef struct lpxcb_window_t {
 /**
  * Return an lpxcb_window_t if there is damage, otherwise 0
  */
-lpxcb_window_t
+lpxcb_window_t *
 lpxcb_check_window (xcb_connection_t *conn, xcb_window_t window);
 
 #endif  /* _LPXCB_API_H_ */

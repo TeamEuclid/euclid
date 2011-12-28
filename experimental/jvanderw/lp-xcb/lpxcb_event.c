@@ -6,11 +6,11 @@
 #include "lpxcb_event.h"
 
 void
-lpxcb_process_event(xcb_connection_t *conn)
+lpxcb_handle_events(xcb_connection_t *conn)
 {
     xcb_generic_event_t *event;
 
-    while ((event = xcb_poll_for_event(conn, 0))) {
+    while ((event = xcb_poll_for_event(conn))) {
         /* Handle the events here */
     }
 }

@@ -98,11 +98,12 @@ main (int argc, char **argv)
             lpxcb_window = lpxcb_check_window(conn, root_window);
             if (!new_window) {
                 /* Right now, assume the same screen as the first connection */
-                new_conn = xcb_connect_(NULL, &conn_screen);
+                new_conn = xcb_connect(NULL, &conn_screen);
                 new_window = xcb_generate_id(new_conn);
+            }
         }
-            
     }
+    
     xcb_disconnect(conn);
     return 0;
 }

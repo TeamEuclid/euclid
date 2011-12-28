@@ -8,12 +8,13 @@
 
 
 #include <xcb/xcb.h>
+#include "lpxcb_api.h"
 
 /**
- * Process all the pending events for the given connection
+ * Handle all the pending events for the given connection
  */
 void
-lpxcb_process_event (xcb_connection_t *conn);
+lpxcb_handle_event (xcb_connection_t *conn);
 
 /**
  *

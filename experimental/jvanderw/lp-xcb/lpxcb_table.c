@@ -149,14 +149,14 @@ lpxcb_add_connection (xcb_connection_t *conn)
     conn_node_t *curr;
     conn_node_t *prev = NULL;
 
-    new = malloc(sizeof conn_node_t);
+    new = malloc(sizeof(conn_node_t));
     if (!new) {
-        return NULL
+        return NULL;
     }
     new->next = NULL;
     new->prev = NULL;
 
-    lpxcb_conn = malloc(sizeof lpxcb_connection_t);
+    lpxcb_conn = malloc(sizeof(lpxcb_connection_t));
     if (!lpxcb_conn) {
         return NULL;
     }

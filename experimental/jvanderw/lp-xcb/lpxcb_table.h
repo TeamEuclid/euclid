@@ -30,8 +30,8 @@ typedef struct lpxcb_connection_t {
 /* Node for connection data structure */
 typedef struct conn_node_t {
     lpxcb_connection_t *lpxcb_conn;
-    struct conn_node_t next;
-    struct conn_node_t prev;
+    struct conn_node_t *next;
+    struct conn_node_t *prev;
 } conn_node_t;
 
 /* Data structure to hold the connections */
