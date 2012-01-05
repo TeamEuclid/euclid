@@ -37,5 +37,11 @@ lpxcb_set_window_dimensions (xcb_connection_t *conn,
                              uint16_t border_width);
 
 
+/**
+ * Get the window attributes for the given window. Retuned structure
+ * must be freed by the caller
+ */
+xcb_get_window_attributes_reply_t *
+lpxcb_get_window_attrs (xcb_connection_t *conn, xcb_window_t window);
 
-#endif _LPXCB_UTIL_H_
+#endif  /* _LPXCB_UTIL_H_ */

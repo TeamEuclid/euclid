@@ -29,8 +29,6 @@ xcb_get_geometry_reply_t *
 lpxcb_get_window_geometry (xcb_connection_t *conn, xcb_window_t window)
 {
     xcb_get_geometry_cookie_t cookie;
-
-
     cookie = xcb_get_geometry(conn, window);
     return xcb_get_geometry_reply(conn, cookie, NULL);
 }
@@ -51,4 +49,21 @@ lpxcb_set_window_dimensions (xcb_connection_t *conn, xcb_window_t window,
                                           XCB_CONFIG_WINDOW_HEIGHT,
                                           values);
     lpxcb_check_request(conn, cookie, "Failed to set new window position and dimentions");
+}
+
+xcb_get_window_attributes_reply_t *
+lpxcb_get_window_attrs (xcb_connection_t *conn, xcb_window_t window)
+{
+    xcb_get_window_attributes_cookie_t cookie;
+    xcb_generic_error *error;
+    xcb_get_window_attributes_reply_t *reply;
+    
+    cookie = xcb_get_window_attributes(conn, window);
+    reply = xcb_get_window_attributes_reply(conn, cookie, &error);
+    if (error) {
+        fprintf(stderr, "ERROR: Failed to get window attributes: %d\n",
+                error->error);
+        return NULL;
+    }
+    return reply;
 }
