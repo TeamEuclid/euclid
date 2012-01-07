@@ -21,8 +21,6 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
     table_node_t *prev;
     xcb_void_cookie_t cookie;
     xcb_damage_damage_t damage;
-    xcb_damage_query_version_cookie_t dmg_ver_cookie;
-    xcb_damage_query_version_reply_t *dmg_ver_reply;
     xcb_get_window_attributes_reply_t *attrs;
     xcb_rectangle_t rect;
     
@@ -75,15 +73,6 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
         new->next = NULL;
     }
 
-    /* Check the damage version. For some reason we need to do this,
-     * or the attempt to create damage fails */
-    dmg_ver_cookie = xcb_damage_query_version(conn, 1, 1);
-    dmg_ver_reply = xcb_damage_query_version_reply(conn, dmg_ver_cookie, NULL);
-    xcb_xfixes_query_version_cookie_t xfix_ver_cookie;
-    xfix_ver_cookie = xcb_xfixes_query_version(conn, 4, 0);
-    xcb_xfixes_query_version_reply_t *xfix_ver_reply;
-    xfix_ver_reply = xcb_xfixes_query_version_reply(conn, xfix_ver_cookie, NULL);
-
     /* Set up our damage */
     damage = xcb_generate_id(conn);
     cookie = xcb_damage_create_checked(conn, damage, window,
@@ -120,8 +109,6 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
     }
     free(geom);
     free(attrs);
-    free(dmg_ver_reply);
-    free(xfix_ver_reply);
     
     return lpxcb_window;
 }       
@@ -190,6 +177,10 @@ lpxcb_add_connection (xcb_connection_t *conn)
     conn_node_t *new;
     conn_node_t *curr;
     conn_node_t *prev = NULL;
+    xcb_damage_query_version_cookie_t dmg_ver_cookie;
+    xcb_damage_query_version_reply_t *dmg_ver_reply;
+    xcb_xfixes_query_version_cookie_t xfix_ver_cookie;
+    xcb_xfixes_query_version_reply_t *xfix_ver_reply;
 
     new = malloc(sizeof(conn_node_t));
     if (!new) {
@@ -205,6 +196,15 @@ lpxcb_add_connection (xcb_connection_t *conn)
     lpxcb_conn->conn = conn;
     lpxcb_conn->damaged = NULL;
     new->lpxcb_conn = lpxcb_conn;
+
+    /* Do the initializations for xfixes and damage extensions */
+    dmg_ver_cookie = xcb_damage_query_version(conn, 1, 1);
+    dmg_ver_reply = xcb_damage_query_version_reply(conn, dmg_ver_cookie, NULL);
+
+    xfix_ver_cookie = xcb_xfixes_query_version(conn, 4, 0);
+    xfix_ver_reply = xcb_xfixes_query_version_reply(conn, xfix_ver_cookie, NULL);
+    free(xfix_ver_reply);
+
 
     if (!conn_table)  {
         conn_table = new;
