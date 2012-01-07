@@ -55,15 +55,35 @@ xcb_get_window_attributes_reply_t *
 lpxcb_get_window_attrs (xcb_connection_t *conn, xcb_window_t window)
 {
     xcb_get_window_attributes_cookie_t cookie;
-    xcb_generic_error *error;
+    xcb_generic_error_t *error;
     xcb_get_window_attributes_reply_t *reply;
     
     cookie = xcb_get_window_attributes(conn, window);
     reply = xcb_get_window_attributes_reply(conn, cookie, &error);
     if (error) {
         fprintf(stderr, "ERROR: Failed to get window attributes: %d\n",
-                error->error);
+                error->error_code);
         return NULL;
     }
     return reply;
 }
+
+void
+lpxcb_get_region_rects (xcb_connection_t *conn, xcb_xfixes_region_t region)
+{
+    xcb_xfixes_fetch_region_cookie_t cookie;
+    xcb_xfixes_fetch_region_reply_t *reply;
+    xcb_rectangle_t *rects;
+    int num_rects;
+
+    cookie = xcb_xfixes_fetch_region(conn, region);
+    reply = xcb_xfixes_fetch_region_reply(conn, cookie, NULL);
+    rects = xcb_xfixes_fetch_region_rectangles(reply);
+    num_rects = xcb_xfixes_fetch_region_rectangles_length(reply);
+
+    fprintf(stderr, "Region number: %ld\n", region);
+    fprintf(stderr, "Number of rectangles: %d\n", num_rects);
+
+    return;
+}
+    

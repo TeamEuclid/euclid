@@ -7,6 +7,7 @@
 #define _LPXCB_UTIL_H_
 
 #include <xcb/xcb.h>
+#include <xcb/xfixes.h>
 
 /**
  * Check a request with given cookie and return the error code if
@@ -43,5 +44,11 @@ lpxcb_set_window_dimensions (xcb_connection_t *conn,
  */
 xcb_get_window_attributes_reply_t *
 lpxcb_get_window_attrs (xcb_connection_t *conn, xcb_window_t window);
+
+/**
+ * Get the array of rectangles from a given region. This is just for debugging.
+ */
+void
+lpxcb_get_region_rects (xcb_connection_t *conn, xcb_xfixes_region_t region);
 
 #endif  /* _LPXCB_UTIL_H_ */

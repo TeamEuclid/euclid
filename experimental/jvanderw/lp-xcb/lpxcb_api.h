@@ -12,7 +12,7 @@
 #include <xcb/damage.h>
 #include <xcb/composite.h>
 #include <xcb/xfixes.h>
-
+#include "lpxcb_event.h"
 
 /* Holds information for a window */
 typedef struct lpxcb_window_t {
@@ -22,12 +22,14 @@ typedef struct lpxcb_window_t {
     xcb_drawable_t window;
     /* The id of this parent's window, if it has one. */
     xcb_drawable_t parent;
+    /* Rectangle used to manage damage */
+    xcb_rectangle_t damage_rect;
     /* Damage associated with this window */
     xcb_damage_damage_t damage;
-    /* Region - I think we'll use this to add damage to window */
+    /* Region of window marked as damage area */
     xcb_xfixes_region_t region;
-    /* The next window with damage - still unsure about how this is
-     * going to work out */
+    xcb_xfixes_region_t repair;
+    /* The next window with damage */
     struct lpxcb_window_t *next_damaged;
     /* Should we have something for the pixmap? */
 } lpxcb_window_t;

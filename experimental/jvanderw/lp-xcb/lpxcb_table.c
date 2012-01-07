@@ -4,7 +4,9 @@
  */
 
 #include <stdlib.h>
+#include "lpxcb_util.h"
 #include "lpxcb_table.h"
+#include "lpxcb_damage.h"
 
 /* We'll use a simple double linked list for now as our data structure
  * to hold the windows were "managing" */
@@ -13,13 +15,17 @@ lpxcb_window_t *
 lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
 {
     lpxcb_window_t *lpxcb_window = NULL;
+    xcb_get_geometry_reply_t *geom;
     table_node_t *new;
     table_node_t *curr;
     table_node_t *prev;
-    xcb_void_cookie_t dmg_cookie;
+    xcb_void_cookie_t cookie;
     xcb_damage_damage_t damage;
-    xcb_generic_error_t *error;
-
+    xcb_damage_query_version_cookie_t dmg_ver_cookie;
+    xcb_damage_query_version_reply_t *dmg_ver_reply;
+    xcb_get_window_attributes_reply_t *attrs;
+    xcb_rectangle_t rect;
+    
     /* Does the window already exist */
     lpxcb_window = lpxcb_find_window(conn, window);
     if (lpxcb_window) {
@@ -35,7 +41,17 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
     lpxcb_window->window = window;
     lpxcb_window->parent = 0; /* Not used at the moment */
     lpxcb_window->damage = 0;
+    geom = lpxcb_get_window_geometry(conn, window);
+    lpxcb_set_window_dimensions(conn, window,
+                                geom->x, geom->y, geom->height,
+                                geom->width, geom->border_width);
 
+    /* Set the damage rectangle */
+    lpxcb_window->damage_rect.x = 0;
+    lpxcb_window->damage_rect.y = 0;
+    lpxcb_window->damage_rect.width = 0;
+    lpxcb_window->damage_rect.height = 0;
+    
     /* Create node to hold the new lpxcb_window */
     new = malloc(sizeof(table_node_t));
     if (!new) {
@@ -61,26 +77,52 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
 
     /* Check the damage version. For some reason we need to do this,
      * or the attempt to create damage fails */
-    xcb_damage_query_version_cookie_t dmg_ver_cookie;
-    xcb_damage_query_version_reply_t *dmg_ver_reply;
     dmg_ver_cookie = xcb_damage_query_version(conn, 1, 1);
     dmg_ver_reply = xcb_damage_query_version_reply(conn, dmg_ver_cookie, NULL);
+    xcb_xfixes_query_version_cookie_t xfix_ver_cookie;
+    xfix_ver_cookie = xcb_xfixes_query_version(conn, 4, 0);
+    xcb_xfixes_query_version_reply_t *xfix_ver_reply;
+    xfix_ver_reply = xcb_xfixes_query_version_reply(conn, xfix_ver_cookie, NULL);
 
     /* Set up our damage */
     damage = xcb_generate_id(conn);
-    dmg_cookie = xcb_damage_create_checked(conn, damage, window,
+    cookie = xcb_damage_create_checked(conn, damage, window,
                                            XCB_DAMAGE_REPORT_LEVEL_BOUNDING_BOX);
-    error = xcb_request_check(conn, dmg_cookie);
-    if (error) {
-        fprintf(stderr, "ERROR: Could not create new Damage: %d\n",
-                error->error_code);
+    if (lpxcb_check_request(conn, cookie, "Could not create new Damage")) {
         return NULL;
     }
     lpxcb_window->damage = damage;
     
-    /* Create region that I think we'll use to track damage */
+    /* Create region that I think we'll use to track the damage area */
     lpxcb_window->region = xcb_generate_id(conn);
+    rect.x = 0;
+    rect.y = 0;
+    rect.width = 0;
+    rect.height= 0;
 
+    cookie = xcb_xfixes_create_region_checked(conn, lpxcb_window->region, 1, &rect);
+    if (lpxcb_check_request(conn, cookie, "Could not set region")) {
+            return NULL;
+    }
+
+    lpxcb_window->repair = xcb_generate_id(conn);
+    cookie = xcb_xfixes_create_region_checked(conn, lpxcb_window->repair, 1, &rect);
+    if (lpxcb_check_request(conn, cookie, "Could not set region")) {
+            return NULL;
+    }
+
+    /* If the window is viewable, then add damage to it */
+    attrs = lpxcb_get_window_attrs(conn, lpxcb_window->window);
+    if (attrs->map_state == XCB_MAP_STATE_VIEWABLE) {
+        /* TODO: Need to figure out why we are using the dimentions
+         * that we are */
+        lpxcb_damage_window(lpxcb_window, 0, 0, geom->width, geom->height);
+    }
+    free(geom);
+    free(attrs);
+    free(dmg_ver_reply);
+    free(xfix_ver_reply);
+    
     return lpxcb_window;
 }       
 
@@ -132,7 +174,7 @@ lpxcb_find_connection (xcb_connection_t *conn)
 
     curr = conn_table;
     while (curr) {
-        if (&(curr->lpxcb_conn->conn) == &conn) {
+        if (curr->lpxcb_conn->conn == conn) {
             return curr->lpxcb_conn;
         }
         curr = curr->next;
@@ -162,6 +204,7 @@ lpxcb_add_connection (xcb_connection_t *conn)
     }
     lpxcb_conn->conn = conn;
     lpxcb_conn->damaged = NULL;
+    new->lpxcb_conn = lpxcb_conn;
 
     if (!conn_table)  {
         conn_table = new;
