@@ -26,6 +26,15 @@ conn_node_t *conn_table;
 void
 lpxcb_set_root_window (xcb_window_t window);
 
+/**
+ * Allocate and initialize a new lpxcb_window_t using the given the connection and window.
+ * @param *conn The connection
+ * @param win The window
+ * @return The initialized lpxcb_window_t structure
+ */
+lpxcb_window_t *
+lpxcb_init_window (xcb_connection_t *conn, xcb_window_t win);
+
 /* Find a window in the table */
 lpxcb_window_t *
 lpxcb_find_window (xcb_connection_t *conn, xcb_window_t window);
