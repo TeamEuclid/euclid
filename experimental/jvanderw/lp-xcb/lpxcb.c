@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <xcb/xcb.h>
+#include "lpxcb_data.h"
 #include "lpxcb_api.h"
 #include "lpxcb_table.h"
 #include "lpxcb_util.h"
@@ -37,6 +38,7 @@ main (int argc, char **argv)
     conn = xcb_connect(NULL, &conn_screen);
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
+    lpxcb_set_root_window(root_window);
     root_depth = root_screen->root_depth;
     ptr_cookie = xcb_query_pointer(conn, root_window);
 
@@ -54,6 +56,7 @@ main (int argc, char **argv)
         XCB_EVENT_MASK_POINTER_MOTION |
         XCB_EVENT_MASK_PROPERTY_CHANGE |
         XCB_EVENT_MASK_ENTER_WINDOW;
+
 
     free(geom_reply);
 
@@ -90,6 +93,7 @@ main (int argc, char **argv)
             }
             xcb_map_window(new_conn, new_window);
             lpxcb_remove_damage(lpxcb_window);
+            xcb_flush(new_conn);
         }
     }
     

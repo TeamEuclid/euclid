@@ -8,6 +8,7 @@
 
 #include <xcb/xcb.h>
 #include <xcb/xfixes.h>
+#include "lpxcb_data.h"
 
 /**
  * Check a request with given cookie and return the error code if

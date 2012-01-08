@@ -6,36 +6,25 @@
 #ifndef _LPXCB_TABLE_H_
 #define _LPXCB_TABLE_H_
 
+#include <xcb/xproto.h>
+#include <xcb/composite.h>
 #include <xcb/damage.h>
-#include "lpxcb_api.h"
+#include "lpxcb_data.h"
 
-/* Node to hold window in table */
-typedef struct table_node_t {
-    lpxcb_window_t *entry;
-    struct table_node_t *prev;
-    struct table_node_t *next;
-} table_node_t;
+/* The root window */
+xcb_window_t root_window;
 
 /* Data structure to hold managed windows */
 table_node_t *window_table;
 
-/* Connection */
-typedef struct lpxcb_connection_t {
-    /* The XCB connection */
-    xcb_connection_t *conn;
-    /* Damaged lpxcb_window_t */
-    lpxcb_window_t *damaged;
-} lpxcb_connection_t;
-
-/* Node for connection data structure */
-typedef struct conn_node_t {
-    lpxcb_connection_t *lpxcb_conn;
-    struct conn_node_t *next;
-    struct conn_node_t *prev;
-} conn_node_t;
-
 /* Data structure to hold the connections */
 conn_node_t *conn_table;
+
+/**
+ * Set the root window.
+ */
+void
+lpxcb_set_root_window (xcb_window_t window);
 
 /* Find a window in the table */
 lpxcb_window_t *

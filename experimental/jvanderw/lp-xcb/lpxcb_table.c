@@ -4,9 +4,18 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <xcb/composite.h>
 #include "lpxcb_util.h"
 #include "lpxcb_table.h"
 #include "lpxcb_damage.h"
+
+
+void
+lpxcb_set_root_window (xcb_window_t window)
+{
+    root_window = window;
+}
 
 /* We'll use a simple double linked list for now as our data structure
  * to hold the windows were "managing" */
@@ -14,6 +23,7 @@
 lpxcb_window_t *
 lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
 {
+    lpxcb_connection_t *lpxcb_conn;
     lpxcb_window_t *lpxcb_window = NULL;
     xcb_get_geometry_reply_t *geom;
     table_node_t *new;
@@ -24,6 +34,8 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
     xcb_get_window_attributes_reply_t *attrs;
     xcb_rectangle_t rect;
     
+    lpxcb_conn = lpxcb_find_connection(conn);
+
     /* Does the window already exist */
     lpxcb_window = lpxcb_find_window(conn, window);
     if (lpxcb_window) {
@@ -89,13 +101,17 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
     rect.width = 0;
     rect.height= 0;
 
-    cookie = xcb_xfixes_create_region_checked(conn, lpxcb_window->region, 1, &rect);
+    cookie = xcb_xfixes_create_region_checked(conn,
+                                              lpxcb_window->region, 
+                                              1, &rect);
     if (lpxcb_check_request(conn, cookie, "Could not set region")) {
             return NULL;
     }
 
     lpxcb_window->repair = xcb_generate_id(conn);
-    cookie = xcb_xfixes_create_region_checked(conn, lpxcb_window->repair, 1, &rect);
+    cookie = xcb_xfixes_create_region_checked(conn,
+                                              lpxcb_window->repair,
+                                              1, &rect);
     if (lpxcb_check_request(conn, cookie, "Could not set region")) {
             return NULL;
     }
@@ -107,6 +123,21 @@ lpxcb_add_window (xcb_connection_t *conn, xcb_window_t window)
          * that we are */
         lpxcb_damage_window(lpxcb_window, 0, 0, geom->width, geom->height);
     }
+
+    if (lpxcb_window->window != root_window) {
+        uint32_t values[] = { 1 };
+        xcb_change_window_attributes (conn, lpxcb_window->window,
+                                      XCB_CW_OVERRIDE_REDIRECT,
+                                      values);
+        cookie = xcb_composite_redirect_window_checked(conn,
+                                                       lpxcb_window->window,
+                                                       1);
+        if (lpxcb_check_request(conn, cookie,
+                                "Failed to set up compositing for window")) {
+        }
+    }
+
+    /* Free memory */
     free(geom);
     free(attrs);
     
@@ -181,6 +212,8 @@ lpxcb_add_connection (xcb_connection_t *conn)
     xcb_damage_query_version_reply_t *dmg_ver_reply;
     xcb_xfixes_query_version_cookie_t xfix_ver_cookie;
     xcb_xfixes_query_version_reply_t *xfix_ver_reply;
+    xcb_composite_query_version_cookie_t comp_ver_cookie;
+    xcb_composite_query_version_reply_t *comp_ver_reply;
 
     new = malloc(sizeof(conn_node_t));
     if (!new) {
@@ -205,6 +238,15 @@ lpxcb_add_connection (xcb_connection_t *conn)
     xfix_ver_reply = xcb_xfixes_query_version_reply(conn, xfix_ver_cookie, NULL);
     free(xfix_ver_reply);
 
+    comp_ver_cookie = xcb_composite_query_version(conn,
+                                                  XCB_COMPOSITE_MAJOR_VERSION,
+                                                  XCB_COMPOSITE_MINOR_VERSION);
+    comp_ver_reply = xcb_composite_query_version_reply(conn, comp_ver_cookie, NULL);
+    if (!comp_ver_reply) {
+        fprintf(stderr, "Composite extenstion is not available");
+    } else {
+        free(comp_ver_reply);
+    }
 
     if (!conn_table)  {
         conn_table = new;

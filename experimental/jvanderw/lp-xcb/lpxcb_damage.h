@@ -7,7 +7,7 @@
 #define _LPXCB_DAMAGE_H_
 
 #include <xcb/xcb.h>
-#include "lpxcb_api.h"
+#include "lpxcb_data.h"
 #include "lpxcb_table.h"
 #include "lpxcb_util.h"
 
