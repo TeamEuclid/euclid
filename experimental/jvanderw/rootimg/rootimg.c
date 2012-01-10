@@ -50,7 +50,7 @@ main (int argc, char **argv)
     xcb_drawable_t root_window;
     xcb_drawable_t window;
 
-    xcb_void_cookie cookie;
+    xcb_void_cookie_t cookie;
 
     xcb_get_geometry_reply_t *geom_reply;
 
@@ -71,8 +71,8 @@ main (int argc, char **argv)
                           root_window,
                           geom_reply->x,
                           geom_reply->y,
-                          geom_reply->width;
-                          geom_reply->height;
+                          geom_reply->width,
+                          geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
 
