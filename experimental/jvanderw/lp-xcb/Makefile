@@ -3,7 +3,7 @@
 
 CC = gcc
 CFLAGS = -Wall -g -c
-LDFLAGS = `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite`
+LDFLAGS = `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite xcb-image`
 
 # Sources
 SOURCES    = lpxcb.c  lpxcb_table.c lpxcb_damage.c lpxcb_event.c lpxcb_util.c lpxcb_api.c lpxcb_data.h
@@ -13,7 +13,7 @@ OBJECTS    = $(SOURCES:.c=.o)
 EXECUTABLE = lpxcb-ex
 
 # XCB specific flags:
-CFLAGS	+= `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite`
+CFLAGS	+= `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite xcb-image`
 
 
 all: $(SOURCES) $(EXECUTABLE)

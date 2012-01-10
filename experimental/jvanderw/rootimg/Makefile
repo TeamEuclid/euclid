@@ -12,7 +12,7 @@ SOURCES    = rootimg.c
 OBJECTS    = $(SOURCES:.c=.o)
 
 # Name of executable target:
-EXECUTABLE = lpxcb-ex
+EXECUTABLE = rootimg
 
 # XCB specific flags:
 CFLAGS	+= `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite xcb-image`
