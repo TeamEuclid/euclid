@@ -76,16 +76,16 @@ main (int argc, char **argv)
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
 
-    /* Create our new window */
+    /* Create our new window. Make it half the size */
     window = xcb_generate_id(conn);
     cookie = xcb_create_window_checked(conn,
                                        XCB_COPY_FROM_PARENT,
                                        window,
                                        root_window,
-                                       geom_reply->x,
-                                       geom_reply->y,
-                                       geom_reply->width,
-                                       geom_reply->height,
+                                       geom_reply->x / 2,
+                                       geom_reply->y / 2,
+                                       geom_reply->width / 2,
+                                       geom_reply->height / 2,
                                        geom_reply->border_width,
                                        XCB_WINDOW_CLASS_INPUT_OUTPUT,
                                        root_screen->root_visual,
@@ -94,6 +94,10 @@ main (int argc, char **argv)
     if (RequestCheck(conn, cookie, "Falied to create new window")) {
         exit(1);
     }
+
+    /* Map the window and flush the connection so it draws to the screen */
+    xcb_map_window(conn, window);
+    xcb_flush(conn);
 
     /* Create the pixmap and associate it with our new window. */
     pixmap = xcb_generate_id(conn);
@@ -133,9 +137,10 @@ main (int argc, char **argv)
                            0,
                            geom_reply->width,
                            geom_reply->height);
+    if (RequestCheck(conn, cookie, "Failed to put image into pixmap")) {
+        exit(1);
+    }
 
-    /* Map the window and flush the connection so it draws to the screen */
-    xcb_map_window(conn, window);
     xcb_flush(conn);
 
     /* Enter infinte loop so the window stays open */
