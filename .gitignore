@@ -20,3 +20,6 @@
 lpxcb-ex
 rootimg
 
+# Xcode files to ignore
+project.pbxproj
+*.xcuserdatad
