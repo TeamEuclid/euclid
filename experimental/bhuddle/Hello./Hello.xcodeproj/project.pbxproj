@@ -17,6 +17,9 @@
 		48295EBB148C9DD600C9D6F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48295E9B148C9DD500C9D6F9 /* Cocoa.framework */; };
 		48295EC3148C9DD600C9D6F9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48295EC1148C9DD600C9D6F9 /* InfoPlist.strings */; };
 		48295EC6148C9DD600C9D6F9 /* HelloTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 48295EC5148C9DD600C9D6F9 /* HelloTests.m */; };
+		E1DEF12614C22AC90014C189 /* HelloView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1DEF12514C22AC90014C189 /* HelloView.m */; };
+		E1DEF12914C22FF60014C189 /* Mac-Logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E1DEF12714C22FF60014C189 /* Mac-Logo.jpg */; };
+		E1DEF12A14C22FF60014C189 /* Mac-Logo2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E1DEF12814C22FF60014C189 /* Mac-Logo2.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,10 @@
 		48295EC2148C9DD600C9D6F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48295EC4148C9DD600C9D6F9 /* HelloTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelloTests.h; sourceTree = "<group>"; };
 		48295EC5148C9DD600C9D6F9 /* HelloTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelloTests.m; sourceTree = "<group>"; };
+		E1DEF12414C22AC90014C189 /* HelloView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloView.h; sourceTree = "<group>"; };
+		E1DEF12514C22AC90014C189 /* HelloView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloView.m; sourceTree = "<group>"; };
+		E1DEF12714C22FF60014C189 /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
+		E1DEF12814C22FF60014C189 /* Mac-Logo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo2.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +121,8 @@
 		48295EA1148C9DD500C9D6F9 /* Hello */ = {
 			isa = PBXGroup;
 			children = (
+				E1DEF12414C22AC90014C189 /* HelloView.h */,
+				E1DEF12514C22AC90014C189 /* HelloView.m */,
 				48295EAD148C9DD500C9D6F9 /* AppDelegate.h */,
 				48295EAE148C9DD500C9D6F9 /* AppDelegate.m */,
 				48295EB0148C9DD500C9D6F9 /* MainMenu.xib */,
@@ -125,6 +134,8 @@
 		48295EA2148C9DD500C9D6F9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E1DEF12714C22FF60014C189 /* Mac-Logo.jpg */,
+				E1DEF12814C22FF60014C189 /* Mac-Logo2.jpg */,
 				48295EA3148C9DD500C9D6F9 /* Hello-Info.plist */,
 				48295EA4148C9DD500C9D6F9 /* InfoPlist.strings */,
 				48295EA7148C9DD500C9D6F9 /* main.m */,
@@ -226,6 +237,8 @@
 				48295EA6148C9DD500C9D6F9 /* InfoPlist.strings in Resources */,
 				48295EAC148C9DD500C9D6F9 /* Credits.rtf in Resources */,
 				48295EB2148C9DD500C9D6F9 /* MainMenu.xib in Resources */,
+				E1DEF12914C22FF60014C189 /* Mac-Logo.jpg in Resources */,
+				E1DEF12A14C22FF60014C189 /* Mac-Logo2.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +275,7 @@
 			files = (
 				48295EA8148C9DD500C9D6F9 /* main.m in Sources */,
 				48295EAF148C9DD500C9D6F9 /* AppDelegate.m in Sources */,
+				E1DEF12614C22AC90014C189 /* HelloView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +449,7 @@
 				48295ECB148C9DD600C9D6F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		48295ECC148C9DD600C9D6F9 /* Build configuration list for PBXNativeTarget "HelloTests" */ = {
 			isa = XCConfigurationList;
@@ -443,6 +458,7 @@
 				48295ECE148C9DD600C9D6F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

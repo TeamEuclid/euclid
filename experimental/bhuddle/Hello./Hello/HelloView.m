@@ -25,8 +25,8 @@ initWithFrame:(NSRect)frame {
     if (self) {
         ourBool = YES;
         // This must be changed to users personal directory.
-        file = @"/Users/aas/learn/Hello./Mac-Logo.jpg";
-        file2 = @"/Users/aas/learn/Hello./Mac-Logo2.jpg"; 
+        file = @"Hello.app/Contents/Resources/Mac-Logo.jpg";
+        file2 = @"Hello.app/Contents/Resources/Mac-Logo2.jpg"; 
         image = [[NSImage alloc] initWithContentsOfFile:file];
         image2 = [[NSImage alloc] initWithContentsOfFile:file2];
     }
