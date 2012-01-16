@@ -4,7 +4,7 @@
 #
 
 CC = gcc
-CFLAGS = -Wall -g -c
+CFLAGS = -I/opt/X11/include/ -Wall -g -c
 LDFLAGS = `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite xcb-image`
 
 # Sources
