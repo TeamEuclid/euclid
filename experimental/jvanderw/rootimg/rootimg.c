@@ -76,6 +76,7 @@ main (int argc, char **argv)
     xcb_flush(conn);
     img_data = GetWindowImageData(conn, root_window);
 
+	xcb_flush(conn);
     /* Get the image of the root window */
     image = xcb_image_get(conn,
                           root_window,
@@ -85,7 +86,7 @@ main (int argc, char **argv)
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
-
+	xcb_flush(conn);
     /* Set up the events the window will recognize */
     mask = XCB_CW_EVENT_MASK;
     values[0] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS;
