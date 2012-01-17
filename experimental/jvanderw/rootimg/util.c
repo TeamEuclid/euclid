@@ -87,7 +87,7 @@ GetWindowImageData (xcb_connection_t *conn, xcb_drawable_t window)
     image_data.length = xcb_get_image_data_length(reply);
 
     free(geom_reply);
-    free(reply);
+    /* free(reply); */
 
     return image_data;
 }

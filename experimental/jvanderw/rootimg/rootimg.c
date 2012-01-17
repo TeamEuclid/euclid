@@ -73,6 +73,7 @@ main (int argc, char **argv)
     geom_reply = GetWindowGeometry(conn, root_window);
     
     WriteWindowInfo(conn, root_window);
+    xcb_flush(conn);
     img_data = GetWindowImageData(conn, root_window);
 
     /* Get the image of the root window */
@@ -98,8 +99,8 @@ main (int argc, char **argv)
                                        XCB_COPY_FROM_PARENT,
                                        window,
                                        root_two_window,
-                                       geom_reply->x / 2,
-                                       geom_reply->y / 2,
+                                       geom_reply->x,
+                                       geom_reply->y,
                                        geom_reply->width / 2,
                                        geom_reply->height / 2,
                                        geom_reply->border_width,
@@ -130,21 +131,36 @@ main (int argc, char **argv)
         exit(1);
     }
 
-    /* Put the root_window image into the pixmap. Note that a gc is
-     * created, but I believe it is ignored. */
+    /* /\* Put the root_window image into the pixmap. Note that a gc is */
+    /*  * created, but I believe it is ignored. *\/ */
     gc = xcb_generate_id(conn_two);
     xcb_create_gc(conn, gc, window, 0, 0);
-    cookie = xcb_image_put(conn_two,
+    /* cookie = xcb_image_put(conn_two, */
+    /*                        pixmap, */
+    /*                        gc, */
+    /*                        image, */
+    /*                        0, */
+    /*                        0, */
+    /*                        0); */
+    /* if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) { */
+    /*     exit(1); */
+    /* } */
+
+    cookie = xcb_put_image(conn_two,
+                           XCB_IMAGE_FORMAT_Z_PIXMAP,
                            pixmap,
                            gc,
-                           image,
+                           geom_reply->width,
+                           geom_reply->height,
                            0,
                            0,
-                           0);
-    if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
+                           0,
+                           geom_reply->depth,
+                           img_data.length,
+                           img_data.data);
+    if (RequestCheck(conn_two, cookie, "Failed to put image")) {
         exit(1);
     }
-
     /* Copy the pixmap into the new window */
     cookie = xcb_copy_area(conn_two,
                            pixmap,
@@ -154,25 +170,19 @@ main (int argc, char **argv)
                            0,
                            0,
                            0,
-                           geom_reply->width,
-                           geom_reply->height);
+                           geom_reply->width / 2,
+                           geom_reply->height / 2);
     if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
         exit(1);
     }
-    WriteWindowInfo(conn_two, window);
+
+                           
     xcb_flush(conn_two);
+    /* xcb_flush(conn); */
+    WriteWindowInfo(conn_two, window);
 
     /* Enter infinte loop so the window stays open */
-    while ((event = xcb_wait_for_event(conn_two))) {
-        switch (event->response_type & ~0x80) {
-        case XCB_KEY_PRESS: {
-            xcb_key_press_event_t *kpevent = (xcb_key_press_event_t *) event;
-            printf("A key was pressed\n");
-        }
-        default: {
-            break;
-        }
-        }
+    while (1) {
     }
 
     /* Never get here, but if we could, would still want to clean up memory */
