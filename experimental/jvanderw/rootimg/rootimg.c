@@ -29,37 +29,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
-
-
-/* Utility function to ease checking for request errors */
-int
-RequestCheck (xcb_connection_t *conn, xcb_void_cookie_t cookie,
-                     char *msg)
-{
-    xcb_generic_error_t *error;
-
-    error = xcb_request_check(conn, cookie);
-    if (error) {
-        if (msg) {
-            fprintf(stderr, "ERROR: ");
-            fprintf(stderr, msg);
-            fprintf(stderr, "\nError code: %d\n", error->error_code);
-        }
-        return error->error_code;
-    }
-    return 0;
-}
-
-/* Utility function to get the geometry of the given window. Memory
- * allocated for the xcb_get_geometry_reply_t must be freed by the
- * caller */
-xcb_get_geometry_reply_t *
-GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window)
-{
-    xcb_get_geometry_cookie_t cookie;
-    cookie = xcb_get_geometry(conn, window);
-    return xcb_get_geometry_reply(conn, cookie, NULL);
-}
+#include "util.h"
 
 /* Main driver */
 int

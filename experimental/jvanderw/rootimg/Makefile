@@ -8,7 +8,7 @@ CFLAGS = -I/opt/X11/include/ -Wall -g -c
 LDFLAGS = `pkg-config --libs xcb xcb-aux xcb-damage xcb-composite xcb-image`
 
 # Sources
-SOURCES    = rootimg.c
+SOURCES    = rootimg.c util.c
 OBJECTS    = $(SOURCES:.c=.o)
 
 # Name of executable target:

@@ -18,7 +18,7 @@
 
 # Executables to ignore
 lpxcb-ex
-rootimg
+#rootimg
 
 # Xcode files to ignore 
 #project.pbxproj
