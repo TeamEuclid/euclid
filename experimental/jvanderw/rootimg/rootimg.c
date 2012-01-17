@@ -73,6 +73,7 @@ main (int argc, char **argv)
     geom_reply = GetWindowGeometry(conn, root_window);
     
     WriteWindowInfo(conn, root_window);
+	WriteAllChildrenWindowInfo(conn, root_window);
     xcb_flush(conn);
     img_data = GetWindowImageData(conn, root_window);
 
@@ -132,8 +133,8 @@ main (int argc, char **argv)
         exit(1);
     }
 
-    /* /\* Put the root_window image into the pixmap. Note that a gc is */
-    /*  * created, but I believe it is ignored. *\/ */
+    /* Put the root_window image into the pixmap. Note that a gc is
+     * created, but I believe it is ignored. */
     gc = xcb_generate_id(conn_two);
     xcb_create_gc(conn, gc, window, 0, 0);
     /* cookie = xcb_image_put(conn_two, */

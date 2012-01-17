@@ -56,6 +56,14 @@ xcb_get_geometry_reply_t *
 GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window);
 
 /**
+ * Print out information about the existing windows attached to our
+ * root. Most of this code is taken from src/manage.c from the i3 code
+ * by Michael Stapelberg
+ */
+void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
+								 xcb_window_t root);
+
+/**
  * Get the image data for a window.
  * @param conn The connection to the xserver.
  * @param window The window.

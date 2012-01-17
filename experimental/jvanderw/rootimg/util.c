@@ -50,6 +50,46 @@ GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window)
     return xcb_get_geometry_reply(conn, cookie, NULL);
 }
 
+
+void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
+								 xcb_window_t root)
+{
+
+    xcb_query_tree_reply_t *reply;
+    xcb_query_tree_cookie_t tree_cookie;
+    xcb_window_t *children;     /* The children of the given root */
+	image_data_t img_data;
+	xcb_generic_error_t *error;
+    int len;
+    int i;
+
+    tree_cookie = xcb_query_tree(conn, root);
+    reply = xcb_query_tree_reply(conn, tree_cookie, &error);
+    if (error) {
+        fprintf(stderr, "ERROR: Failed to get query tree: %d\n",
+                error->error_code);
+        return;
+    }
+    /* Get the number of children */
+    len = xcb_query_tree_children_length(reply);
+    children = xcb_query_tree_children(reply);
+
+    /* Iterate thorough all the children and get their pixmap (hopefully) */
+	printf("--- Iterating through children of window %ld ---\n",
+		   root);
+    for (i = 0; i < len; i++) {
+        WriteWindowInfo(conn, children[i]);
+		img_data = GetWindowImageData(conn, children[i]);
+		if (!img_data.data) {
+			printf("Image data is empty\n");
+		}
+    }
+	printf("--- End window iteration ---\n");
+    
+    /* Free the stuff allocated by XCB */
+    free(reply);
+}
+
 image_data_t
 GetWindowImageData (xcb_connection_t *conn, xcb_drawable_t window)
 {
@@ -144,4 +184,3 @@ RequestCheck (xcb_connection_t *conn, xcb_void_cookie_t cookie,
     }
     return 0;
 }
-
