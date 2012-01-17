@@ -30,8 +30,14 @@
 #include <stdio.h>
 #include <xcb/xcb.h>
 
+typedef struct image_data_t {
+    uint8_t *data;
+    int length;
+}  image_data_t;
+
 /**
- * Return the given windows attributes reply.
+ * Return the given windows attributes reply. Caller must free memory
+ * allocated for reply.
  * @param conn The windows connection.
  * @param window The window.
  * @return The window attributes reply. Null if the request fails.
@@ -40,13 +46,32 @@ xcb_get_window_attributes_reply_t *
 GetWindowAttributes (xcb_connection_t *conn, xcb_window_t window);
 
 /**
- * Return the geometry of the window in a geometry reply.
+ * Return the geometry of the window in a geometry reply. Caller must free
+ * memory allocated for reply.
  * @param conn The windows connection.
  * @param window The window.
  * @return The window's geometry reply. Null if the request for reply fails.
  */
 xcb_get_geometry_reply_t *
 GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window);
+
+/**
+ * Get the image data for a window.
+ * @param conn The connection to the xserver.
+ * @param window The window.
+ * @return Structure containing data and data length
+ */
+image_data_t
+GetWindowImageData (xcb_connection_t *conn, xcb_window_t window);
+
+/**
+ * Write information about a window out to stdio.
+ * TODO: Add the ability to pass in the stream to write to.
+ * @param conn The connection with the window.
+ * @param window The window.
+ */
+void
+WriteWindowInfo (xcb_connection_t *conn, xcb_window_t window);
 
 /**
  * Check the request cookie and determine if there is an error.

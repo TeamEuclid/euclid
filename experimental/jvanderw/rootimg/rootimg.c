@@ -54,6 +54,7 @@ main (int argc, char **argv)
 
     xcb_generic_event_t *event;
 
+    image_data_t img_data;
     xcb_image_t *image;
     xcb_pixmap_t pixmap;
     xcb_gcontext_t gc;
@@ -70,6 +71,9 @@ main (int argc, char **argv)
 
     /* Get the geometry of the root window */
     geom_reply = GetWindowGeometry(conn, root_window);
+    
+    WriteWindowInfo(conn, root_window);
+    img_data = GetWindowImageData(conn, root_window);
 
     /* Get the image of the root window */
     image = xcb_image_get(conn,
@@ -107,10 +111,12 @@ main (int argc, char **argv)
         exit(1);
     }
 
+    WriteWindowInfo(conn_two, window);
     /* Map the window and flush the connection so it draws to the screen */
     xcb_map_window(conn_two, window);
     xcb_flush(conn_two);
     xcb_flush(conn);
+    WriteWindowInfo(conn_two, window);
 
     /* Create the pixmap and associate it with our new window. */
     pixmap = xcb_generate_id(conn_two);
@@ -153,7 +159,7 @@ main (int argc, char **argv)
     if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
         exit(1);
     }
-
+    WriteWindowInfo(conn_two, window);
     xcb_flush(conn_two);
 
     /* Enter infinte loop so the window stays open */
