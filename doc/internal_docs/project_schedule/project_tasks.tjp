@@ -264,7 +264,7 @@ task documentation "Documentation" {
                 note "Generate user requirement document."
                 depends !id_usr_reqs
                 depends !!proj_plan
-                effort 4h
+                effort 5h
                 allocate bhuddle
             }
         } # end usrd
@@ -318,22 +318,22 @@ task documentation "Documentation" {
             }
             task v_and_v_doc_maint1 "Mile 1 document maintenance" {
                 depends !init_v_and_v_doc
-                depends !!!!dev.dev_mile1.dev_mile1_code
+                depends dev.dev_mile1.dev_mile1_code
                 effort 2h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint2 "Mile 2 document maintenance" {
-                depends !!!!dev.dev_mile1.dev_mile2_code
+                depends !!!!dev.dev_mile2.dev_mile2_code
                 effort 2h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint3 "Mile 3 document maintenance" {
-                depends !!!!dev.dev_mile1.dev_mile3_code
+                depends !!!!dev.dev_mile3.dev_mile3_code
                 effort 2h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint4 "Mile 4 document maintenance" {
-                depends !!!!dev.dev_mile1.dev_mile4_code
+                depends !!!!dev.dev_mile4.dev_mile4_code
                 effort 2h
                 ${allocate_v_and_v}
             }
@@ -1105,4 +1105,28 @@ export "dec5_dec11" {
   end 2011-12-11
   taskattributes booking
   hideresource 0
+}
+
+export "dec12-jan8" {
+    definitions -
+    start 2011-12-12
+    end 2012-01-8
+    taskattributes booking
+    hideresource 0
+}
+
+export "jan9-jan15"
+    definitions -
+    start2012-01-9
+    end 2012-01-16
+    taskattributes booking
+    hideresource 0
+}
+
+export "jan16-jan22"
+    definitions -
+    start2012-01-9
+    end 2012-01-16
+    taskattributes booking
+    hideresource 0
 }

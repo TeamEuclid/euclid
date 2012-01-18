@@ -76,7 +76,6 @@ main (int argc, char **argv)
 	WriteAllChildrenWindowInfo(conn, root_window);
     img_data = GetWindowImageData(conn, root_window);
 
-	xcb_flush(conn);
     /* Get the image of the root window */
     image = xcb_image_get(conn,
                           root_window,
@@ -86,6 +85,7 @@ main (int argc, char **argv)
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
+
     /* Set up the events the window will recognize */
     mask = XCB_CW_EVENT_MASK;
     values[0] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS;
@@ -137,11 +137,15 @@ main (int argc, char **argv)
     cookie = xcb_image_put(conn_two,
                            pixmap,
                            gc,
-                           image,
+                           geom_reply->width,
+                           geom_reply->height,
                            0,
                            0,
-                           0);
-    if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
+                           0,
+                           geom_reply->depth,
+                           img_data.length,
+                           img_data.data);
+    if (RequestCheck(conn_two, cookie, "Failed to put image")) {
         exit(1);
     }
 
