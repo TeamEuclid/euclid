@@ -74,7 +74,6 @@ main (int argc, char **argv)
     
     WriteWindowInfo(conn, root_window);
 	WriteAllChildrenWindowInfo(conn, root_window);
-    xcb_flush(conn);
     img_data = GetWindowImageData(conn, root_window);
 
 	xcb_flush(conn);
@@ -87,7 +86,6 @@ main (int argc, char **argv)
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
-	xcb_flush(conn);
     /* Set up the events the window will recognize */
     mask = XCB_CW_EVENT_MASK;
     values[0] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS;
@@ -118,7 +116,6 @@ main (int argc, char **argv)
     /* Map the window and flush the connection so it draws to the screen */
     xcb_map_window(conn_two, window);
     xcb_flush(conn_two);
-    xcb_flush(conn);
     WriteWindowInfo(conn_two, window);
 
     /* Create the pixmap and associate it with our new window. */
@@ -136,33 +133,18 @@ main (int argc, char **argv)
     /* Put the root_window image into the pixmap. Note that a gc is
      * created, but I believe it is ignored. */
     gc = xcb_generate_id(conn_two);
-    xcb_create_gc(conn, gc, window, 0, 0);
-    /* cookie = xcb_image_put(conn_two, */
-    /*                        pixmap, */
-    /*                        gc, */
-    /*                        image, */
-    /*                        0, */
-    /*                        0, */
-    /*                        0); */
-    /* if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) { */
-    /*     exit(1); */
-    /* } */
-
-    cookie = xcb_put_image(conn_two,
-                           XCB_IMAGE_FORMAT_Z_PIXMAP,
+    xcb_create_gc(conn_two, gc, window, 0, 0);
+    cookie = xcb_image_put(conn_two,
                            pixmap,
                            gc,
-                           geom_reply->width,
-                           geom_reply->height,
+                           image,
                            0,
                            0,
-                           0,
-                           geom_reply->depth,
-                           img_data.length,
-                           img_data.data);
-    if (RequestCheck(conn_two, cookie, "Failed to put image")) {
+                           0);
+    if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
         exit(1);
     }
+
     /* Copy the pixmap into the new window */
     cookie = xcb_copy_area(conn_two,
                            pixmap,
@@ -177,10 +159,8 @@ main (int argc, char **argv)
     if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
         exit(1);
     }
-
                            
     xcb_flush(conn_two);
-    /* xcb_flush(conn); */
     WriteWindowInfo(conn_two, window);
 
     /* Enter infinte loop so the window stays open */
