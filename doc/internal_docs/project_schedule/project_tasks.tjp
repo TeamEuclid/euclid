@@ -272,7 +272,7 @@ task documentation "Documentation" {
         task a_and_d_doc "Architecture and Design document" {
             note "Architecture and design document detailing structure and implementation of project."
             depends documentation.project_docs.proj_plan
-            depends a_and_d.a_and_d_research
+# TODO: how to handle dependency            depends a_and_d.a_and_d_research
 
             task init_decom "Initial decomposition" {
                 note "First pass on the decomposition of components."
@@ -312,7 +312,7 @@ task documentation "Documentation" {
             } # end v_and_v_research
 
             task init_v_and_v_doc "Initial version of document" {
-                depends !v_and_v_research
+#                depends !v_and_v_research
                 effort 3h
                 ${allocate_v_and_v}
             }
@@ -368,9 +368,8 @@ task documentation "Documentation" {
         }
         task code_style_doc "Coding style document" {
             note "Generate the code style document to be used for the project."
-            end 2011-12-10
             effort 2h
-            allocate askomra
+            allocate jvanderw
         }
     } # endo of code_docs
 } # end documentation
@@ -803,7 +802,6 @@ task sys_admin "System Administration" {
         
         task sync_github_redmine "Sync Redmine and Github repositories" {
             note "Implement synchronization between Redmine and Github repositories."
-            end 2011-11-28
             effort 3h
             allocate carrbs
         }
@@ -932,6 +930,9 @@ task project_milestones "Milestones" {
 include "Week1Bookings.tji"
 include "nov28_dec4.tji"
 include "dec5_dec11.tji"
+include "dec12-jan8.tji"
+include "jan9-jan15.tji"
+include "jan16-jan22.tji"
 
 # Macro for task tips
 macro TaskTip [
@@ -1090,43 +1091,43 @@ resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
     resourceroot jvanderw
 }
 
-# Export the timesheets for the weeks
-export "nov28_dec4" {
-  definitions -
-  start 2011-11-28
-  end 2011-12-04
-  taskattributes booking
-  hideresource 0
-}
+# # Export the timesheets for the weeks
+# export "nov28_dec4" {
+#   definitions -
+#   start 2011-11-28
+#   end 2011-12-04
+#   taskattributes booking
+#   hideresource 0
+# }
 
-export "dec5_dec11" {
-  definitions -
-  start 2011-12-05
-  end 2011-12-11
-  taskattributes booking
-  hideresource 0
-}
+# export "dec5_dec11" {
+#   definitions -
+#   start 2011-12-05
+#   end 2011-12-11
+#   taskattributes booking
+#   hideresource 0
+# }
 
-export "dec12-jan8" {
-    definitions -
-    start 2011-12-12
-    end 2012-01-8
-    taskattributes booking
-    hideresource 0
-}
+# export "dec12-jan8" {
+#     definitions -
+#     start 2011-12-12
+#     end 2012-01-8
+#     taskattributes booking
+#     hideresource 0
+# }
 
-export "jan9-jan15"
-    definitions -
-    start2012-01-9
-    end 2012-01-16
-    taskattributes booking
-    hideresource 0
-}
+# export "jan9-jan15" {
+#     definitions -
+#     start 2012-01-9
+#     end 2012-01-15
+#     taskattributes booking
+#     hideresource 0
+# }
 
-export "jan16-jan22"
-    definitions -
-    start2012-01-9
-    end 2012-01-16
-    taskattributes booking
-    hideresource 0
-}
+# export "jan16-jan22" {
+#     definitions -
+#     start 2012-01-16
+#     end 2012-01-22
+#     taskattributes booking
+#     hideresource 0
+# }

@@ -330,109 +330,109 @@ supplement task project_milestones.mile4 {
 }
 supplement resource bwooley {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource bwooley_r {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource bhuddle {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource bhuddle_r {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource jvanderw {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource jvanderw_r {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource carrbs {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource carrbs_r {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource askomra {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource askomra_r {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource dsnyder {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
 supplement resource dsnyder_r {
   workinghours sun off
-               workinghours mon 12:00 - 14:1800
-               workinghours tue 12:00 - 14:1800
-               workinghours wed 12:00 - 14:1800
-               workinghours thu 12:00 - 14:1800
-               workinghours fri 12:00 - 14:1800
+               workinghours mon 12:00 - 14:30
+               workinghours tue 12:00 - 14:30
+               workinghours wed 12:00 - 14:30
+               workinghours thu 12:00 - 14:30
+               workinghours fri 12:00 - 14:30
                workinghours sat off
 }
