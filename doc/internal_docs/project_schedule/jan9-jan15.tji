@@ -98,10 +98,16 @@ supplement task research.code_bases.lightpipe {
 supplement task research.osx_research {
 }
 supplement task research.osx_research.osx_learn {
+    booking jvanderw_r 2012-01-12 +2h {sloppy 2}
+    booking carrbs_r 2012-01-12 +0.5h {sloppy 2}
+    complete 100
 }
 supplement task research.osx_research.xcode {
 }
 supplement task research.osx_research.obj_c {
+    booking carrbs_r 2012-01-13 +4h {sloppy 2}
+    booking bhuddle_r 2012-01-15 +2h {sloppy 2}
+    complete 100
 }
 supplement task research.osx_research.learn_apple_api {
 }
@@ -278,6 +284,7 @@ supplement task sys_admin.repo_mangement.repo_maint {
 supplement task management {
 }
 supplement task management.weekly_status_updates {
+    booking jvanderw_r 2012-01-13 +2h {sloppy 2}
 }
 supplement task management.weekly_wbs_update {
 }

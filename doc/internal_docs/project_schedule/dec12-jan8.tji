@@ -101,6 +101,11 @@ supplement task research.osx_research.osx_learn {
 supplement task research.osx_research.xcode {
 }
 supplement task research.osx_research.obj_c {
+    booking bhuddle_r 2011-12-16 +2h {sloppy 2}
+    booking jvanderw_r 2011-12-16 +4h {sloppy 2}
+    booking askomra_r 2011-12-29 +4h {sloppy 2}
+    booking dsnyder_r 2011-12-28 +4h {sloppy 2}
+    booking bwooley_r 2011-12-15 +4h {sloppy 2}
 }
 supplement task research.osx_research.learn_apple_api {
 }

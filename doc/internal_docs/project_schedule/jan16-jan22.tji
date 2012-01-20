@@ -294,6 +294,7 @@ supplement task management.weekly_status_updates {
   booking jvanderw_r 2012-01-20-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task management.weekly_wbs_update {
+    booking jvanderw_r 2012-01-19 +2h {sloppy 2}
 }
 supplement task management.weekly_schedule_update {
   booking jvanderw_r 2012-01-19-13:00--0800 + 1.0h { overtime 2 }

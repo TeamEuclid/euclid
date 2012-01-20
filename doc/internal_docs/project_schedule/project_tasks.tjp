@@ -127,7 +127,7 @@ shift two_hr_weekly "Two hours per week" {
 
 # Project Documentation tasks
 task documentation "Documentation" {
-    
+    scheduling asap
     task project_docs "Project" {
         note "Documents generated for the use of the team in development."
 
@@ -375,6 +375,7 @@ task documentation "Documentation" {
 } # end documentation
 
 task research "Research" {
+    scheduling asap
     note "Team wide research tasks."
     # Depends on completing the project plan
     depends !documentation.project_docs.proj_plan
@@ -404,7 +405,6 @@ task research "Research" {
             ${allocate_team}
         }
         task obj_c "Basic Objective-C familiarity" {
-            depends !xcode
             effort 24h
             ${allocate_team}
         }
@@ -421,6 +421,7 @@ task research "Research" {
 task a_and_d "Architecture and Design" {
     depends !documentation.project_docs.proj_plan
     ${allocate_a_and_d}
+    scheduling asap
 
     # Research task associated with Architecture and Design
     task a_and_d_research "Research" {
@@ -587,7 +588,7 @@ task a_and_d "Architecture and Design" {
 
 # Development task - specifically these are implementation tasks
 task dev "Development" {
-    
+    scheduling asap    
     task dev_mile0 "Milestone 0 development" {
 
         task env_setup "Setup Environment Development" {
@@ -702,7 +703,7 @@ task dev "Development" {
 } # end dev
 
 task v_and_v "Validation and Verification" {
-
+    scheduling asap
     task v_and_v_mile0 "Milestone 0" {
         note "Validate the verify the first Milestone"
         depends !!dev.dev_mile0
@@ -771,7 +772,7 @@ task v_and_v "Validation and Verification" {
 
 # System Administration tasks
 task sys_admin "System Administration" {
-
+    scheduling asap
     task back_ups "Backup and recovery system" {
         task back_up_plan "Identify back-up plan" {
             note "Identify what it is that we are going to do for a back-up plan"
@@ -819,7 +820,7 @@ task sys_admin "System Administration" {
 # Management tasks and meetings
 task management "Management" {
     # All of these tasks are currently weekly repeating
-    
+    scheduling asap    
     task weekly_status_updates "Status and performance update" {
         note "Weekly status and performance updates to be emailed to Bart"
         start 2011-11-14
@@ -858,7 +859,7 @@ task management "Management" {
 
 #Deployment and presentations
 task deployment "Deployment and presentations" {
-
+    scheduling asap
     task hand_off "Hand off to sponsors" {
         note "Hand off the project to the sponsors. Since this is an open source project, the documentation and public git repository should be enough."
         depends !!v_and_v.v_and_v_mile4
@@ -886,7 +887,7 @@ task deployment "Deployment and presentations" {
 
 # Project Milestones
 task project_milestones "Milestones" {
-
+    scheduling asap
     task init_project_plan "Initial Project Plan Complete" {
         milestone
         depends documentation.project_docs.proj_plan
