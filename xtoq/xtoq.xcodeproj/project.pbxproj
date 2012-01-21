@@ -1,0 +1,310 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E1EBB2C614CB5366007496CF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EBB2C514CB5366007496CF /* Cocoa.framework */; };
+		E1EBB2D014CB5366007496CF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2CE14CB5366007496CF /* InfoPlist.strings */; };
+		E1EBB2D214CB5366007496CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EBB2D114CB5366007496CF /* main.m */; };
+		E1EBB2D614CB5366007496CF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2D414CB5366007496CF /* Credits.rtf */; };
+		E1EBB2D914CB5366007496CF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EBB2D814CB5366007496CF /* AppDelegate.m */; };
+		E1EBB2DC14CB5366007496CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2DA14CB5366007496CF /* MainMenu.xib */; };
+		E1EBB2E814CB54F9007496CF /* XtoqView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EBB2E714CB54F9007496CF /* XtoqView.m */; };
+		E1EBB2EC14CB55FF007496CF /* Mac-Logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2EA14CB55FF007496CF /* Mac-Logo.jpg */; };
+		E1EBB2ED14CB55FF007496CF /* Mac-Logo2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2EB14CB55FF007496CF /* Mac-Logo2.jpg */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E1EBB2C114CB5366007496CF /* xtoq.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xtoq.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1EBB2C514CB5366007496CF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		E1EBB2C814CB5366007496CF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		E1EBB2C914CB5366007496CF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E1EBB2CA14CB5366007496CF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E1EBB2CD14CB5366007496CF /* xtoq-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "xtoq-Info.plist"; sourceTree = "<group>"; };
+		E1EBB2CF14CB5366007496CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E1EBB2D114CB5366007496CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E1EBB2D314CB5366007496CF /* xtoq-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xtoq-Prefix.pch"; sourceTree = "<group>"; };
+		E1EBB2D514CB5366007496CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		E1EBB2D714CB5366007496CF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E1EBB2D814CB5366007496CF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E1EBB2DB14CB5366007496CF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E1EBB2E614CB54F9007496CF /* XtoqView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqView.h; sourceTree = "<group>"; };
+		E1EBB2E714CB54F9007496CF /* XtoqView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqView.m; sourceTree = "<group>"; };
+		E1EBB2EA14CB55FF007496CF /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
+		E1EBB2EB14CB55FF007496CF /* Mac-Logo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo2.jpg"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E1EBB2BE14CB5366007496CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1EBB2C614CB5366007496CF /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E1EBB2B614CB5366007496CF = {
+			isa = PBXGroup;
+			children = (
+				E1EBB2CB14CB5366007496CF /* xtoq */,
+				E1EBB2C414CB5366007496CF /* Frameworks */,
+				E1EBB2C214CB5366007496CF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E1EBB2C214CB5366007496CF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E1EBB2C114CB5366007496CF /* xtoq.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E1EBB2C414CB5366007496CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1EBB2C514CB5366007496CF /* Cocoa.framework */,
+				E1EBB2C714CB5366007496CF /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E1EBB2C714CB5366007496CF /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1EBB2C814CB5366007496CF /* AppKit.framework */,
+				E1EBB2C914CB5366007496CF /* CoreData.framework */,
+				E1EBB2CA14CB5366007496CF /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		E1EBB2CB14CB5366007496CF /* xtoq */ = {
+			isa = PBXGroup;
+			children = (
+				E1EBB2E614CB54F9007496CF /* XtoqView.h */,
+				E1EBB2E714CB54F9007496CF /* XtoqView.m */,
+				E1EBB2D714CB5366007496CF /* AppDelegate.h */,
+				E1EBB2D814CB5366007496CF /* AppDelegate.m */,
+				E1EBB2DA14CB5366007496CF /* MainMenu.xib */,
+				E1EBB2CC14CB5366007496CF /* Supporting Files */,
+			);
+			path = xtoq;
+			sourceTree = "<group>";
+		};
+		E1EBB2CC14CB5366007496CF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E1EBB2EA14CB55FF007496CF /* Mac-Logo.jpg */,
+				E1EBB2EB14CB55FF007496CF /* Mac-Logo2.jpg */,
+				E1EBB2CD14CB5366007496CF /* xtoq-Info.plist */,
+				E1EBB2CE14CB5366007496CF /* InfoPlist.strings */,
+				E1EBB2D114CB5366007496CF /* main.m */,
+				E1EBB2D314CB5366007496CF /* xtoq-Prefix.pch */,
+				E1EBB2D414CB5366007496CF /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E1EBB2C014CB5366007496CF /* xtoq */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1EBB2DF14CB5366007496CF /* Build configuration list for PBXNativeTarget "xtoq" */;
+			buildPhases = (
+				E1EBB2BD14CB5366007496CF /* Sources */,
+				E1EBB2BE14CB5366007496CF /* Frameworks */,
+				E1EBB2BF14CB5366007496CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = xtoq;
+			productName = xtoq;
+			productReference = E1EBB2C114CB5366007496CF /* xtoq.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E1EBB2B814CB5366007496CF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = E1EBB2BB14CB5366007496CF /* Build configuration list for PBXProject "xtoq" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E1EBB2B614CB5366007496CF;
+			productRefGroup = E1EBB2C214CB5366007496CF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E1EBB2C014CB5366007496CF /* xtoq */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E1EBB2BF14CB5366007496CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1EBB2D014CB5366007496CF /* InfoPlist.strings in Resources */,
+				E1EBB2D614CB5366007496CF /* Credits.rtf in Resources */,
+				E1EBB2DC14CB5366007496CF /* MainMenu.xib in Resources */,
+				E1EBB2EC14CB55FF007496CF /* Mac-Logo.jpg in Resources */,
+				E1EBB2ED14CB55FF007496CF /* Mac-Logo2.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E1EBB2BD14CB5366007496CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1EBB2D214CB5366007496CF /* main.m in Sources */,
+				E1EBB2D914CB5366007496CF /* AppDelegate.m in Sources */,
+				E1EBB2E814CB54F9007496CF /* XtoqView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E1EBB2CE14CB5366007496CF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1EBB2CF14CB5366007496CF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E1EBB2D414CB5366007496CF /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1EBB2D514CB5366007496CF /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		E1EBB2DA14CB5366007496CF /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1EBB2DB14CB5366007496CF /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E1EBB2DD14CB5366007496CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E1EBB2DE14CB5366007496CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E1EBB2E014CB5366007496CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xtoq/xtoq-Prefix.pch";
+				INFOPLIST_FILE = "xtoq/xtoq-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E1EBB2E114CB5366007496CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xtoq/xtoq-Prefix.pch";
+				INFOPLIST_FILE = "xtoq/xtoq-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E1EBB2BB14CB5366007496CF /* Build configuration list for PBXProject "xtoq" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1EBB2DD14CB5366007496CF /* Debug */,
+				E1EBB2DE14CB5366007496CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1EBB2DF14CB5366007496CF /* Build configuration list for PBXNativeTarget "xtoq" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1EBB2E014CB5366007496CF /* Debug */,
+				E1EBB2E114CB5366007496CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E1EBB2B814CB5366007496CF /* Project object */;
+}
