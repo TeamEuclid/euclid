@@ -37,6 +37,7 @@ initWithFrame:(NSRect)frame {
         file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg"; 
         image = [[NSImage alloc] initWithContentsOfFile:file];
         image2 = [[NSImage alloc] initWithContentsOfFile:file2];
+        
     }
     
     return self;

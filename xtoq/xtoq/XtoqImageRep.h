@@ -25,7 +25,10 @@
 
 #import <AppKit/AppKit.h>
 
-@interface XtoqImageRep : NSImageRep
+@interface XtoqImageRep : NSImageRep {
+    NSArray *imageTypes;
+    CGImageRef image;
+}
 
 - (NSArray *)imageUnfilteredTypes;
 - (BOOL)canInitWithData:(NSData *)data;

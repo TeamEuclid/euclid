@@ -35,6 +35,7 @@ SOFTWARE.
     BOOL ourBool;
     NSImage *image;
     NSImage *image2;
+    
 }
 @end
 

@@ -28,18 +28,30 @@
 @implementation XtoqImageRep
 
 - (NSArray *)imageUnfilteredTypes{
-
+    imageTypes = [[NSArray alloc] initWithObjects:@".bmp",@".ppm",@".gif",nil]; 
+    return imageTypes;
 }
 
 - (BOOL)canInitWithData:(NSData *)data {
-
+    return NO;
 }
 
 - (id)initWithData:(NSData *)data{
-
+    self = [super init];
+	if (!self) {
+		return nil;
+    }
+    return self;
 }
 
 - (BOOL)draw{
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+	if (!context || !image) {
+		return NO;
+	}
+	NSSize size = [self size];
+	CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), image);
+	return YES;
 
 }
 
