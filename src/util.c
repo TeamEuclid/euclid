@@ -24,6 +24,8 @@
  */
 
 #include "util.h"
+#include <xcb/xcb.h>
+
 
 xcb_get_window_attributes_reply_t *
 GetWindowAttributes (xcb_connection_t *conn, xcb_window_t window)

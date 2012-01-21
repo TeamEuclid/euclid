@@ -28,6 +28,7 @@ SOFTWARE.
  */
 
 #import <Cocoa/Cocoa.h>
+#import "util.h"
 
 @interface XtoqView : NSView {
     NSString *file;
