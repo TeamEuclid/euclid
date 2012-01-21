@@ -45,8 +45,8 @@ typedef struct context_t {
  * Sets up the connection and grabs the root window from the specified screen
  * @param screen The screen that we wish to connect to
  */
-init_data_t
-init(int screen);
+context_t
+init(char  *screen);
 
 int
 get_image(context_t context);
