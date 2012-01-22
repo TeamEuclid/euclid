@@ -24,15 +24,47 @@
  */
 
 #import <AppKit/AppKit.h>
+#import "xcb_image.h"
 
 @interface XtoqImageRep : NSImageRep {
     NSArray *imageTypes;
     CGImageRef image;
+    xcb_image_t xcbImage;
 }
-
+/**
+ * Returns an array of UTI strings identifying the image types 
+ * supported directly by the receiver. 
+ * @return array An array of NSStrings containing UTI identifying 
+ *          supported image types.
+ */
 - (NSArray *)imageUnfilteredTypes;
+
+/**
+ * Returns a Boolean value indicating whether the receiver can 
+ * initialize itself from the specified data.
+ * @param data The NSData object containing the image data.
+ * @return BOOL YES if the receiver understands the format 
+ *          of the specified data and can use it to initialize 
+ *          itself; otherwise, NO.
+ */
 - (BOOL)canInitWithData:(NSData *)data;
+
+/**
+ * Initializes and returns an NSImage instance with the contents 
+ * of the specified NSData object.
+ * @param data The NSData object containing the image data. 
+ * @return id An initialized NSImage instance, or nil if the 
+ *          method cannot create an image representation from the
+ *          contents of the specified data object.
+ */
 - (id)initWithData:(NSData *)data;
+
+/**
+ * Draws the image in the current coordinate system.
+ * @param data The NSData object containing the image data.
+ * @return BOOL YES if the image was successfully drawn; otherwise,
+ *          NO if there was a problem.
+ */
 - (BOOL)draw;
 
 @end
