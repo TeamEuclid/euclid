@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <xcb/xcb.h>
+#include <xcb/xcb_image.h>
 
 typedef struct image_data_t {
     uint8_t *data;
