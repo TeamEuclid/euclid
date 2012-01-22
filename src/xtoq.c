@@ -221,4 +221,4 @@ GetImageDummy(context_t context) {
     return 0;
 }
 
-#endif _XTOQ_C_
+#endif //_XTOQ_C_
