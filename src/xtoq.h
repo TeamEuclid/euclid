@@ -49,6 +49,9 @@ context_t
 Init(char  *screen);
 
 int
+GetImageDummy(context_t context);
+
+xcb_image_t *
 GetImage(context_t context);
 
 #endif _XTOQ_H_
