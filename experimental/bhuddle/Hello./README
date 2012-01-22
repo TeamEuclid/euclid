@@ -1,0 +1,16 @@
+Hello
+
+This is a setup project to make a Coco application 
+which switches between two images when given keyboard
+input (the down arrow key).
+
+To run the project in Xcode follow these steps:
+
+To the run image flipper from the repo:
+1. Cleared recent projects in x code (If you've recently
+   opened this project).
+2. In Xcode Go to file > open and navigate the source 
+   tree to the "Hello.xcodeproj" file. Open this project.
+3. You may need to change some of the views (Views >
+   navigator > show project navigator) after opening
+   the project this way.
