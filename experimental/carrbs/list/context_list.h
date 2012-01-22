@@ -1,6 +1,6 @@
-/* Copyright (c) 2012 David Snyder
+/* Copyright (c) 2012 Benjamin Carr
  *
- * rootimg_api.h
+ * context_list.h
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,8 +24,8 @@
  */
 
 
-#ifndef _XTOQ_H_
-#define _XTOQ_H_
+#ifndef _ROOTIMG_API_H_
+#define _ROOTIMG_API_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -33,25 +33,22 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include "util.h"
+#include "rootimg_api.h"
+
+struct context_node {
+    struct context_t context;
+    struct context_node * next;
+};
+
+struct context_list {
+    struct context_node * head;
+};
+
+void AddContextNode(struct context_list * list, struct context_node * node);
+
+void RemoveContextNode(struct context_list * list, xcb_window_t window_id);
+
+context_node *
+getContextNodeByWindowId (context_list * list, xcb_window_t window_id);
 
 
-typedef struct context_t {
-    xcb_connection_t *conn;
-    xcb_drawable_t window;
-} context_t;
-
-
-/**
- * Sets up the connection and grabs the root window from the specified screen
- * @param screen The screen that we wish to connect to
- */
-context_t
-Init(char  *screen);
-
-int
-GetImageDummy(context_t context);
-
-xcb_image_t *
-GetImage(context_t context);
-
-#endif _XTOQ_H_

@@ -64,8 +64,35 @@ Init(char *screen) {
     return init_reply;
 }
 
-int
+xcb_image_t *
 GetImage(context_t context) {
+    
+    xcb_get_geometry_reply_t *geom_reply;
+    
+    //image_data_t img_data;
+    xcb_image_t *image;
+    
+    geom_reply = GetWindowGeometry(context.conn, context.window);
+    
+    WriteWindowInfo(context.conn, context.window);
+	WriteAllChildrenWindowInfo(context.conn, context.window);
+    //img_data = GetWindowImageData(context.conn, context.window);
+    
+	xcb_flush(context.conn);
+    /* Get the image of the root window */
+    image = xcb_image_get(context.conn,
+                          context.window,
+                          geom_reply->x,
+                          geom_reply->y,
+                          geom_reply->width,
+                          geom_reply->height,
+                          (unsigned int) ~0L,
+                          XCB_IMAGE_FORMAT_Z_PIXMAP);
+    return image;
+}
+
+int
+GetImageDummy(context_t context) {
     
     // TEMP until we can return an image
     xcb_connection_t *conn_two;
