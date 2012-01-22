@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4280B15814CB816C0061CD45 /* XtoqImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 4280B15714CB816C0061CD45 /* XtoqImageRep.m */; };
+		4294EA2D14CB8A6D0026C164 /* xtoq.c in Sources */ = {isa = PBXBuildFile; fileRef = 4294EA2B14CB8A6D0026C164 /* xtoq.c */; };
 		E1BFDF1914CB79E400E2B08B /* libxcb-util.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDEC814CB79E400E2B08B /* libxcb-util.0.dylib */; };
 		E1BFDF1A14CB79E400E2B08B /* libxcb-util.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDEC914CB79E400E2B08B /* libxcb-util.0.dylib */; };
 		E1BFDF1B14CB79E400E2B08B /* libxcb-composite.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDECA14CB79E400E2B08B /* libxcb-composite.0.dylib */; };
@@ -104,6 +105,8 @@
 /* Begin PBXFileReference section */
 		4280B15614CB816C0061CD45 /* XtoqImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqImageRep.h; sourceTree = "<group>"; };
 		4280B15714CB816C0061CD45 /* XtoqImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqImageRep.m; sourceTree = "<group>"; };
+		4294EA2B14CB8A6D0026C164 /* xtoq.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xtoq.c; path = ../src/xtoq.c; sourceTree = "<group>"; };
+		4294EA2C14CB8A6D0026C164 /* xtoq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xtoq.h; path = ../src/xtoq.h; sourceTree = "<group>"; };
 		E1BFDEA114CB71A200E2B08B /* bigreq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigreq.h; sourceTree = "<group>"; };
 		E1BFDEA214CB71A200E2B08B /* composite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = composite.h; sourceTree = "<group>"; };
 		E1BFDEA314CB71A200E2B08B /* damage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = damage.h; sourceTree = "<group>"; };
@@ -544,6 +547,8 @@
 		E1EBB2F914CB6681007496CF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4294EA2B14CB8A6D0026C164 /* xtoq.c */,
+				4294EA2C14CB8A6D0026C164 /* xtoq.h */,
 				E1EBB2FA14CB66AD007496CF /* util.c */,
 				E1EBB2FB14CB66AD007496CF /* util.h */,
 			);
@@ -620,6 +625,7 @@
 				E1EBB2E814CB54F9007496CF /* XtoqView.m in Sources */,
 				E1EBB2FC14CB66AD007496CF /* util.c in Sources */,
 				4280B15814CB816C0061CD45 /* XtoqImageRep.m in Sources */,
+				4294EA2D14CB8A6D0026C164 /* xtoq.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
