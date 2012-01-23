@@ -1,14 +1,11 @@
 # Makefile for /Hello folder
 
-
-CFLAGS = -g -O0 --verbose
+CFLAGS = -g -O0
 FRAMEWORKS = -framework Cocoa
 IBTOOL = ibtool
 
 SOURCES = main.m AppDelegate.m HelloView.m
 XIBDIR = en.lproj
-# XIBS = $(XIBDIR)MainMenu.xib
-# NIBS = $(XIBDIR) $(XIBS:.xib=.nib)
 
 all: imageflip
 
@@ -30,5 +27,6 @@ clean:
 	rm -f $(PACKAGE)
 	rm -rf $(PACKAGE).dSYM
 	rm -f Info.plist
+	rm -r $(XIBDIR)/MainMenu.nib
 
 .PHONY: all clean
