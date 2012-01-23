@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		4280B15814CB816C0061CD45 /* XtoqImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 4280B15714CB816C0061CD45 /* XtoqImageRep.m */; };
 		4294EA2D14CB8A6D0026C164 /* xtoq.c in Sources */ = {isa = PBXBuildFile; fileRef = 4294EA2B14CB8A6D0026C164 /* xtoq.c */; };
+		4817709714CCD243004556BA /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817709314CCD243004556BA /* AppController.m */; };
+		4817709814CCD243004556BA /* DisplayNumberController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817709514CCD243004556BA /* DisplayNumberController.m */; };
+		4817709914CCD243004556BA /* DisplayNumberDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4817709614CCD243004556BA /* DisplayNumberDialog.xib */; };
+		484292A214CD10A500F70CE4 /* temp in Resources */ = {isa = PBXBuildFile; fileRef = 484292A114CD10A500F70CE4 /* temp */; };
 		E1BFDF1914CB79E400E2B08B /* libxcb-util.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDEC814CB79E400E2B08B /* libxcb-util.0.dylib */; };
 		E1BFDF1A14CB79E400E2B08B /* libxcb-util.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDEC914CB79E400E2B08B /* libxcb-util.0.dylib */; };
 		E1BFDF1B14CB79E400E2B08B /* libxcb-composite.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDECA14CB79E400E2B08B /* libxcb-composite.0.dylib */; };
@@ -107,6 +111,12 @@
 		4280B15714CB816C0061CD45 /* XtoqImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqImageRep.m; sourceTree = "<group>"; };
 		4294EA2B14CB8A6D0026C164 /* xtoq.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xtoq.c; path = ../src/xtoq.c; sourceTree = "<group>"; };
 		4294EA2C14CB8A6D0026C164 /* xtoq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xtoq.h; path = ../src/xtoq.h; sourceTree = "<group>"; };
+		4817709214CCD243004556BA /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		4817709314CCD243004556BA /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		4817709414CCD243004556BA /* DisplayNumberController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayNumberController.h; sourceTree = "<group>"; };
+		4817709514CCD243004556BA /* DisplayNumberController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayNumberController.m; sourceTree = "<group>"; };
+		4817709614CCD243004556BA /* DisplayNumberDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayNumberDialog.xib; sourceTree = "<group>"; };
+		484292A114CD10A500F70CE4 /* temp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = temp; sourceTree = "<group>"; };
 		E1BFDEA114CB71A200E2B08B /* bigreq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigreq.h; sourceTree = "<group>"; };
 		E1BFDEA214CB71A200E2B08B /* composite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = composite.h; sourceTree = "<group>"; };
 		E1BFDEA314CB71A200E2B08B /* damage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = damage.h; sourceTree = "<group>"; };
@@ -518,11 +528,17 @@
 		E1EBB2CB14CB5366007496CF /* xtoq */ = {
 			isa = PBXGroup;
 			children = (
+				4817709214CCD243004556BA /* AppController.h */,
+				4817709314CCD243004556BA /* AppController.m */,
+				4817709414CCD243004556BA /* DisplayNumberController.h */,
+				4817709514CCD243004556BA /* DisplayNumberController.m */,
+				4817709614CCD243004556BA /* DisplayNumberDialog.xib */,
 				4280B15614CB816C0061CD45 /* XtoqImageRep.h */,
 				4280B15714CB816C0061CD45 /* XtoqImageRep.m */,
 				E1EBB2E614CB54F9007496CF /* XtoqView.h */,
 				E1EBB2E714CB54F9007496CF /* XtoqView.m */,
 				E1EBB2D714CB5366007496CF /* AppDelegate.h */,
+				484292A114CD10A500F70CE4 /* temp */,
 				E1EBB2D814CB5366007496CF /* AppDelegate.m */,
 				E1EBB2DA14CB5366007496CF /* MainMenu.xib */,
 				E1EBB2CC14CB5366007496CF /* Supporting Files */,
@@ -610,6 +626,8 @@
 				E1EBB2DC14CB5366007496CF /* MainMenu.xib in Resources */,
 				E1EBB2EC14CB55FF007496CF /* Mac-Logo.jpg in Resources */,
 				E1EBB2ED14CB55FF007496CF /* Mac-Logo2.jpg in Resources */,
+				4817709914CCD243004556BA /* DisplayNumberDialog.xib in Resources */,
+				484292A214CD10A500F70CE4 /* temp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,6 +644,8 @@
 				E1EBB2FC14CB66AD007496CF /* util.c in Sources */,
 				4280B15814CB816C0061CD45 /* XtoqImageRep.m in Sources */,
 				4294EA2D14CB8A6D0026C164 /* xtoq.c in Sources */,
+				4817709714CCD243004556BA /* AppController.m in Sources */,
+				4817709814CCD243004556BA /* DisplayNumberController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
