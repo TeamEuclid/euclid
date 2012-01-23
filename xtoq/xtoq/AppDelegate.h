@@ -26,6 +26,7 @@
 //  AppDelegate.h
 //  xtoq
 //
+//  Auto generated XCode project file
 
 #import <Cocoa/Cocoa.h>
 

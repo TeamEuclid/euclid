@@ -26,7 +26,8 @@
 //  AppDelegate.m
 //  xtoq
 //
-//  Controller for DisplayNumberController
+//  Auto generated XCode project file
+//  Added AppController creation. 
 //
 
 #import "AppDelegate.h"
