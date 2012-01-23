@@ -33,6 +33,7 @@
 
 @implementation AppController
 
+ 
 - (IBAction)showDisplayChooser
 {
    if (!displayNumberController){
@@ -40,6 +41,7 @@
     }
     NSLog(@"showing %@", displayNumberController);
     [displayNumberController showWindow:self];
+    NSLog(@"opened %@", displayNumberController);	
 }
 
 @end

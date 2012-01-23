@@ -36,6 +36,10 @@
     DisplayNumberController *displayNumberController;
 }
 
+/**
+ * Create the Display Number Controller
+ */
+
 - (IBAction)showDisplayChooser;
 
 @end

@@ -34,12 +34,18 @@ extern NSString * const DisplayNotification;
 
 @interface DisplayNumberController : NSWindowController {
     IBOutlet NSTextField *displayValueField;
-
     int displayNumber;
+    id windowId;
 }
 
+/**
+ * Create the popup for user input
+ */
 - (IBAction)setDisplayNumber:(id)sender;
 
+/**
+ * Return the user input
+ */
 - (int)getDisplayNumber;
 
 @end
