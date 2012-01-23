@@ -35,7 +35,7 @@
 
 - (IBAction)showDisplayChooser
 {
-    if (!displayNumberController){
+   if (!displayNumberController){
         displayNumberController = [[DisplayNumberController alloc] init];
     }
     NSLog(@"showing %@", displayNumberController);
