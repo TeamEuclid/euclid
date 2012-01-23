@@ -7,14 +7,20 @@
 //
 
 #import "AppDelegate.h"
+#import "AppController.h"
 
-@implementation AppDelegate
+@implementation AppDelegate{
+    AppController * ac; 
+    
+}
 
 @synthesize window = _window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
+    ac = [[AppController alloc] init];
+    [ac showDisplayChooser];    
 }
 
 @end
