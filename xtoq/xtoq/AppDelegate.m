@@ -31,11 +31,8 @@
 //
 
 #import "AppDelegate.h"
-#import "AppController.h"
 
-@implementation AppDelegate{
-    AppController * ac; 
-}
+@implementation AppDelegate
 
 @synthesize window = _window;
 
