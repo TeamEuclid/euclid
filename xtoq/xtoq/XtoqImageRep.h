@@ -24,7 +24,7 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "xcb_image.h"
+#import <xcb/xcb_image.h>
 
 @interface XtoqImageRep : NSImageRep {
     NSArray *imageTypes;
