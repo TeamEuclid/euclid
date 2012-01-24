@@ -61,7 +61,6 @@
 
 /**
  * Draws the image in the current coordinate system.
- * @param data The NSData object containing the image data.
  * @return BOOL YES if the image was successfully drawn; otherwise,
  *          NO if there was a problem.
  */
