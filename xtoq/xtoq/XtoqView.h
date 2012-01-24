@@ -29,13 +29,16 @@ SOFTWARE.
 
 #import <Cocoa/Cocoa.h>
 #import "util.h"
+#import "XtoqImageRep.h"
 
 @interface XtoqView : NSView {
     NSString *file;
     NSString *file2;
     BOOL ourBool;
-    NSImage *image;
+    XtoqImageRep *image;
     NSImage *image2;
+    
+    
     
 }
 @end

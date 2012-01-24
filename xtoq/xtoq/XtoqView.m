@@ -34,11 +34,13 @@ initWithFrame:(NSRect)frame {
     if (self) {
         ourBool = YES;
         // This must be changed to users personal directory.
-        file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg"; 
-        image = [[NSImage alloc] initWithContentsOfFile:file];
-        image2 = [[NSImage alloc] initWithContentsOfFile:file2];
+        //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
+        //image = [[NSImage alloc] initWithContentsOfFile:file];
         
+        
+        
+        file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg";
+        image2 = [[NSImage alloc] initWithContentsOfFile:file2];
     }
     
     return self;
@@ -51,11 +53,10 @@ initWithFrame:(NSRect)frame {
 drawRect:(NSRect)dirtyRect {
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
-    
     NSSize imageSize = { 350, 300 };
     NSRect destRect;
     destRect.size = imageSize;
-    [image drawInRect:destRect fromRect:NSZeroRect 
+    [image2 drawInRect:destRect fromRect:NSZeroRect 
             operation:NSCompositeSourceOver fraction:1.0];
 }
 
@@ -87,8 +88,8 @@ keyDown:(NSEvent *)theEvent {
                      operation:NSCompositeSourceOver fraction:1.0];
         } else {
             ourBool = YES;
-            [image drawInRect:destRect fromRect:NSZeroRect 
-                    operation:NSCompositeSourceOver fraction:1.0];
+            [image drawInRect:destRect]; //fromRect:NSZeroRect 
+                    //operation:NSCompositeSourceOver fraction:1.0];
         }
         [[self window] flushWindow];
     } else {

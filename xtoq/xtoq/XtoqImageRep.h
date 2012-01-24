@@ -25,11 +25,17 @@
 
 #import <AppKit/AppKit.h>
 #import <xcb/xcb_image.h>
+#import "xtoq.h"
 
 @interface XtoqImageRep : NSImageRep {
     NSArray *imageTypes;
-    CGImageRef image;
-    xcb_image_t xcbImage;
+    NSImageRep *image;
+    //CGImageRef image;
+    // xcb connection
+    char *screen;
+    context_t context;
+    xcb_image_t *imageT;
+    NSData *data;
 }
 /**
  * Returns an array of UTI strings identifying the image types 
@@ -65,5 +71,7 @@
  *          NO if there was a problem.
  */
 - (BOOL)draw;
+
+- (BOOL)drawInRect:(NSRect)rect;
 
 @end

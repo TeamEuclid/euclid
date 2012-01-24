@@ -33,10 +33,12 @@
 }
 
 - (BOOL)canInitWithData:(NSData *)data {
-    return NO;
+    return YES;
 }
 
 - (id)initWithData:(NSData *)data{
+    //Replace :1 with the popup window var
+    screen = ":1";
     self = [super init];
 	if (!self) {
 		return nil;
@@ -45,14 +47,25 @@
 }
 
 - (BOOL)draw{
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-	if (!context || !image) {
-		return NO;
-	}
-	NSSize size = [self size];
-	CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), image);
+    //CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+	//if (!context || !image) {
+	//	return NO;
+	//}
+	//NSSize size = [self size];
+	//CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), image);
 	return YES;
 
 }
 
+
+- (BOOL)drawInRect:(NSRect)rect {
+        context = Init(screen);
+    imageT = GetImage(context);
+    // might want to use initWithBytesNoCopy:length
+    data = [[NSData alloc] initWithBytes:imageT->data length:imageT->size];
+    image = [[XtoqImageRep alloc] initWithData:data];
+    NSLog(@"data Files stuff:  %i", imageT->size);
+    [super drawInRect:rect];
+    return YES;
+}
 @end
