@@ -24,18 +24,32 @@
  */
 
 #import <AppKit/AppKit.h>
+#import <Cocoa/Cocoa.h>
 #import <xcb/xcb_image.h>
 #import "xtoq.h"
 
+
 @interface XtoqImageRep : NSImageRep {
     NSArray *imageTypes;
-    NSImageRep *image;
+    //NSImageRep *imageForDisplay;
+    struct CGImage *cgImage;
+    NSBitmapImageRep *myBitMapRep;
     //CGImageRef image;
     // xcb connection
     char *screen;
-    context_t context;
+    context_t xcbContext;
     xcb_image_t *imageT;
-    NSData *data;
+    NSData *theData;
+    NSSize windowSize;
+    
+    
+    
+    //aaron test
+    NSString * file;
+    NSImage * junkImage;
+    NSImage *nsImage;
+    
+    
 }
 /**
  * Returns an array of UTI strings identifying the image types 
@@ -62,8 +76,9 @@
  * @return id An initialized NSImage instance, or nil if the 
  *          method cannot create an image representation from the
  *          contents of the specified data object.
- */
-- (id)initWithData:(NSData *)data;
+#import <Cocoa/Cocoa.h> */
+//- (id)initWithData:(NSData *)data;
+- (id)init;
 
 /**
  * Draws the image in the current coordinate system.
@@ -73,5 +88,7 @@
 - (BOOL)draw;
 
 - (BOOL)drawInRect:(NSRect)rect;
+
+- (CGContextRef)MyCreateBitmapContext:(int)pixelsWide :(int)pixelsHigh;
 
 @end

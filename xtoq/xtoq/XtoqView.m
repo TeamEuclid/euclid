@@ -36,9 +36,14 @@ initWithFrame:(NSRect)frame {
         // This must be changed to users personal directory.
         //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
         //image = [[NSImage alloc] initWithContentsOfFile:file];
-        image = [XtoqImageRep alloc];
-        
-        
+  //      context = Init(screen);
+  //      imageT = GetImage(context);
+        // might want to use initWithBytesNoCopy:length
+ //       data = [[NSData alloc] initWithBytes:imageT->data length:imageT->size];
+ //       image = [[XtoqImageRep alloc] initWithData:data];
+        //    NSLog(@"VIEW data Files stuff:  %i", imageT->size);
+        image = [[XtoqImageRep alloc] init];
+        [image draw];
         file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg";
         image2 = [[NSImage alloc] initWithContentsOfFile:file2];
     }
@@ -53,7 +58,7 @@ initWithFrame:(NSRect)frame {
 drawRect:(NSRect)dirtyRect {
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
-    NSSize imageSize = { 350, 300 };
+    NSSize imageSize = { 1024,768 };
     NSRect destRect;
     destRect.size = imageSize;
     [image drawInRect:destRect];
@@ -74,9 +79,12 @@ acceptsFirstResponder {
  */
 - (void)
 keyDown:(NSEvent *)theEvent {
+    [[NSGraphicsContext currentContext]
+     setImageInterpolation:NSImageInterpolationHigh];
+    
     NSString *characters = [theEvent characters];
     int key = [characters characterAtIndex:0];
-    NSSize imageSize = { 350, 300 };
+    NSSize imageSize = { 1024, 768};
     NSRect destRect;
     destRect.size = imageSize;
     
@@ -87,7 +95,8 @@ keyDown:(NSEvent *)theEvent {
                      operation:NSCompositeSourceOver fraction:1.0];
         } else {
             ourBool = YES;
-            [image drawInRect:destRect]; //fromRect:NSZeroRect 
+                [image drawInRect:destRect];
+            //[image drawInRect:destRect]; //fromRect:NSZeroRect 
                     //operation:NSCompositeSourceOver fraction:1.0];
         }
         [[self window] flushWindow];

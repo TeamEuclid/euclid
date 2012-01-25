@@ -32,6 +32,14 @@ SOFTWARE.
 #import "XtoqImageRep.h"
 
 @interface XtoqView : NSView {
+    
+    // xcb connection
+    char *screen;
+    context_t context;
+    xcb_image_t *imageT;
+    NSData *data;
+    
+    //////////////
     NSString *file;
     NSString *file2;
     BOOL ourBool;
