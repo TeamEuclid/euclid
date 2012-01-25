@@ -59,6 +59,7 @@
 
 
 - (BOOL)drawInRect:(NSRect)rect {
+        NSLog(@"asdf");
         context = Init(screen);
     imageT = GetImage(context);
     // might want to use initWithBytesNoCopy:length
