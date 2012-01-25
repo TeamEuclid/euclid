@@ -36,7 +36,7 @@ initWithFrame:(NSRect)frame {
         // This must be changed to users personal directory.
         //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
         //image = [[NSImage alloc] initWithContentsOfFile:file];
-        
+        image = [XtoqImageRep alloc];
         
         
         file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg";
@@ -56,8 +56,7 @@ drawRect:(NSRect)dirtyRect {
     NSSize imageSize = { 350, 300 };
     NSRect destRect;
     destRect.size = imageSize;
-    [image2 drawInRect:destRect fromRect:NSZeroRect 
-            operation:NSCompositeSourceOver fraction:1.0];
+    [image drawInRect:destRect];
 }
 
 /**
