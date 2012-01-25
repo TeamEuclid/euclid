@@ -33,15 +33,11 @@ initWithFrame:(NSRect)frame {
     
     if (self) {
         ourBool = YES;
-        // This must be changed to users personal directory.
-        //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        //image = [[NSImage alloc] initWithContentsOfFile:file];
+
+  //image = [[NSImage alloc] initWithContentsOfFile:file];
   //      context = Init(screen);
   //      imageT = GetImage(context);
-        // might want to use initWithBytesNoCopy:length
- //       data = [[NSData alloc] initWithBytes:imageT->data length:imageT->size];
- //       image = [[XtoqImageRep alloc] initWithData:data];
-        //    NSLog(@"VIEW data Files stuff:  %i", imageT->size);
+  
         image = [[XtoqImageRep alloc] init];
         [image draw];
         file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg";
@@ -96,7 +92,7 @@ keyDown:(NSEvent *)theEvent {
         } else {
             ourBool = YES;
                 [image drawInRect:destRect];
-            //[image drawInRect:destRect]; //fromRect:NSZeroRect 
+            //[image drawInRect:destRect]; fromRect:NSZeroRect 
                     //operation:NSCompositeSourceOver fraction:1.0];
         }
         [[self window] flushWindow];

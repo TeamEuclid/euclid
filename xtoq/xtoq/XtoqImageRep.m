@@ -60,12 +60,12 @@
                                                     );
     
     CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
-    //?ImageIO: <ERROR>  CGImageSourceCreateWithData data parameter is nil?
+    //?ImageIO: <ERROR>  CGImageSourceCreateWithData data parameter is nil? - this is fixed
     cgImage = CGImageCreate (
  /*                          size_t width,
                            size_t height,
                            size_t bitsPerComponent,
-  size_t bitsPerPixel,
+                            size_t bitsPerPixel,
                            size_t bytesPerRow,
                            CGColorSpaceRef colorspace,
                            CGBitmapInfo bitmapInfo,
@@ -107,79 +107,7 @@
 
 }
 
-//http://developer.apple.com/library/IOs/#documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_context/dq_context.html
-- (CGContextRef)MyCreateBitmapContext:(int)pixelsWide :(int)pixelsHigh 
-//         (void)setProperty:(NSString *)property withValue:(id)value
 
-{
-
-
-    CGContextRef    context = NULL;
-    
-    CGColorSpaceRef colorSpace;
-    
-    void *          bitmapData;
-    
-    int             bitmapByteCount;
-    
-    int             bitmapBytesPerRow;
-    
-    
-    NSLog(@"2222222");
-
-    bitmapBytesPerRow   = (pixelsWide * 4);// 1
-    
-    bitmapByteCount     = (bitmapBytesPerRow * pixelsHigh);
-    
-    
-    
-    colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);// 2
-    
-    //bitmapData = calloc( bitmapByteCount );// 3
-    bitmapData =  imageT->data;
-    
-    if (bitmapData == NULL)
-        
-    {
-        
-        fprintf (stderr, "Memory not allocated!");
-        
-        return NULL;
-        
-    }
-    NSLog(@"333333");
-
-    context = CGBitmapContextCreate (bitmapData,// 4
-                                     
-                                     pixelsWide,
-                                     
-                                     pixelsHigh,
-                                     
-                                     8,      // bits per component
-                                     
-                                     bitmapBytesPerRow,
-                                     
-                                     colorSpace,
-                                
-                                     kCGImageAlphaPremultipliedLast);
-    
-    if (context== NULL)
-        
-    {
-        free (bitmapData);// 5
-        
-        fprintf (stderr, "Context not created!");
-        return NULL;
-        
-    }
-    
-    CGColorSpaceRelease( colorSpace );// 6
-    
-    
-    
-    return context;// 7
-    
-}
 
 - (BOOL)drawInRect:(NSRect)rect {
     
@@ -206,14 +134,7 @@
                 colorSpaceName:NSDeviceRGBColorSpace 
                 bytesPerRow:(imageT->width)*3 
                 bitsPerPixel:8*3]; */
-    //image = [[XtoqImageRep alloc] initWithData:data];
-    //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-    //junkImage = [[NSImage alloc] initWithContentsOfFile:file];
-    
-   // [junkImage drawInRect:rect fromRect:NSZeroRect 
-    //            operation:NSCompositeSourceOver fraction:1.0];
 
-    //[myBitMapRep drawInRect:rect];
     [nsImage drawInRect:rect fromRect:NSZeroRect 
               operation:NSCompositeSourceOver fraction:1.0];
     return YES;

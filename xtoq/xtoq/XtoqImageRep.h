@@ -89,6 +89,6 @@
 
 - (BOOL)drawInRect:(NSRect)rect;
 
-- (CGContextRef)MyCreateBitmapContext:(int)pixelsWide :(int)pixelsHigh;
+
 
 @end
