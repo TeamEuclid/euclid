@@ -29,8 +29,8 @@
 #include "xtoq.h"
 
 
-context_t
-Init(char *screen) {
+xtoq_context_t
+xtoq_init(char *screen) {
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
@@ -57,7 +57,7 @@ Init(char *screen) {
     
 	xcb_flush(conn);
     
-    context_t init_reply;
+    xtoq_context_t init_reply;
     init_reply.conn = conn;
     init_reply.window = root_window;
     
@@ -65,7 +65,7 @@ Init(char *screen) {
 }
 
 xcb_image_t *
-GetImage(context_t context) {
+xtoq_get_image(xtoq_context_t context) {
     
     xcb_get_geometry_reply_t *geom_reply;
     
@@ -92,7 +92,7 @@ GetImage(context_t context) {
 }
 
 int
-GetImageDummy(context_t context) {
+dummy_xtoq_get_image(xtoq_context_t context) {
     
     // TEMP until we can return an image
     xcb_connection_t *conn_two;
@@ -219,6 +219,22 @@ GetImageDummy(context_t context) {
     xcb_disconnect(conn_two);
     
     return 0;
+}
+
+xtoq_event_t
+dummy_xtoq_wait_for_event(xtoq_context_t context) {
+    
+    sleep(4);
+    xtoq_event_t event;
+    xtoq_context_t new_context;
+    
+    new_context.window = context.window;
+    new_context.conn = context.conn;
+    
+    event.context = new_context;
+    event.event_type = XTOQ_DAMAGE;
+    
+    return event;
 }
 
 #endif _XTOQ_C_
