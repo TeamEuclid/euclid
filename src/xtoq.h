@@ -58,11 +58,17 @@ xtoq_init(char *screen);
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);
 
+/*
+xtoq_event_t
+xtoq_wait_for_event(xtoq_context_t context);
+*/
+
 int
 dummy_xtoq_get_image(xtoq_context_t context);
 
 xtoq_event_t
 dummy_xtoq_wait_for_event(xtoq_context_t context);
+
 
 
 

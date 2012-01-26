@@ -29,6 +29,8 @@
 #include "xtoq.h"
 
 
+// This init function needs set the window to be registered for events!
+// First one we should handle is damage
 xtoq_context_t
 xtoq_init(char *screen) {
     xcb_connection_t *conn;
@@ -52,8 +54,8 @@ xtoq_init(char *screen) {
     /* Get the geometry of the root window */
     geom_reply = GetWindowGeometry(conn, root_window);
     
-    WriteWindowInfo(conn, root_window);
-	WriteAllChildrenWindowInfo(conn, root_window);
+    //WriteWindowInfo(conn, root_window);
+	//WriteAllChildrenWindowInfo(conn, root_window);
     
 	xcb_flush(conn);
     
@@ -74,8 +76,8 @@ xtoq_get_image(xtoq_context_t context) {
     
     geom_reply = GetWindowGeometry(context.conn, context.window);
     
-    WriteWindowInfo(context.conn, context.window);
-	WriteAllChildrenWindowInfo(context.conn, context.window);
+    //WriteWindowInfo(context.conn, context.window);
+	//WriteAllChildrenWindowInfo(context.conn, context.window);
     //img_data = GetWindowImageData(context.conn, context.window);
     
 	xcb_flush(context.conn);
