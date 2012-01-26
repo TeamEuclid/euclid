@@ -237,4 +237,4 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     return event;
 }
 
-#endif _XTOQ_C_
+#endif //_XTOQ_C_

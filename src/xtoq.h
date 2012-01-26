@@ -66,4 +66,4 @@ dummy_xtoq_wait_for_event(xtoq_context_t context);
 
 
 
-#endif _XTOQ_H_
+#endif // _XTOQ_H_

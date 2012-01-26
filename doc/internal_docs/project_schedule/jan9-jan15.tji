@@ -61,14 +61,10 @@ supplement task documentation.project_docs.v_and_v_doc {
 supplement task documentation.project_docs.v_and_v_doc.v_and_v_research {
 }
 supplement task documentation.project_docs.v_and_v_doc.v_and_v_research.v_and_v_tools_research {
-  booking bhuddle_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
 }
 supplement task documentation.project_docs.v_and_v_doc.v_and_v_research.v_and_v_framwork_research {
-  booking bhuddle_r 2011-11-28-14:00--0800 + 1.0h,
-          2011-11-29-12:00--0800 + 3.0h { overtime 2 }
 }
 supplement task documentation.project_docs.v_and_v_doc.init_v_and_v_doc {
-  booking bhuddle_r 2011-11-30-12:00--0800 + 3.0h { overtime 2 }
 }
 supplement task documentation.project_docs.v_and_v_doc.v_and_v_doc_maint1 {
 }
@@ -85,6 +81,8 @@ supplement task documentation.code_docs.readme_maint {
 supplement task documentation.code_docs.gen_api_docs {
 }
 supplement task documentation.code_docs.license {
+    booking jvanderw_r 2012-01-10 +0.5h {sloppy 2}
+    complete 100
 }
 supplement task documentation.code_docs.code_style_doc {
 }
@@ -93,33 +91,23 @@ supplement task research {
 supplement task research.code_bases {
 }
 supplement task research.code_bases.learn_xcb {
-  booking askomra_r 2011-11-28-14:00--0800 + 1.0h,
-          2011-11-29-12:00--0800 + 3.0h,
-          2011-11-30-12:00--0800 + 3.0h { overtime 2 }
-  booking bhuddle_r 2011-12-01-12:00--0800 + 1.0h { overtime 2 }
-  booking carrbs_r 2011-11-28-12:00--0800 + 3.0h,
-          2011-11-29-12:00--0800 + 1.0h,
-          2011-11-29-14:00--0800 + 1.0h,
-          2011-11-30-12:00--0800 + 3.0h { overtime 2 }
-  booking jvanderw_r 2011-11-28-12:00--0800 + 3.0h,
-          2011-11-29-12:00--0800 + 1.0h,
-          2011-11-29-14:00--0800 + 1.0h,
-          2011-11-30-12:00--0800 + 3.0h { overtime 2 }
+    complete 100
 }
 supplement task research.code_bases.lightpipe {
-  booking jvanderw_r 2011-12-01-12:00--0800 + 1.0h,
-          2011-12-01-14:00--0800 + 1.0h,
-          2011-12-02-12:00--0800 + 1.0h,
-          2011-12-02-14:00--0800 + 1.0h { overtime 2 }
 }
 supplement task research.osx_research {
 }
 supplement task research.osx_research.osx_learn {
-  booking askomra_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
+    booking jvanderw_r 2012-01-12 +2h {sloppy 2}
+    booking carrbs_r 2012-01-12 +0.5h {sloppy 2}
+    complete 100
 }
 supplement task research.osx_research.xcode {
 }
 supplement task research.osx_research.obj_c {
+    booking carrbs_r 2012-01-13 +4h {sloppy 2}
+    booking bhuddle_r 2012-01-15 +2h {sloppy 2}
+    complete 100
 }
 supplement task research.osx_research.learn_apple_api {
 }
@@ -130,40 +118,29 @@ supplement task a_and_d.a_and_d_research {
 supplement task a_and_d.a_and_d_research.interface {
 }
 supplement task a_and_d.a_and_d_research.interface.xcb_lib_research {
-  booking bwooley_r 2011-12-02-13:00--0800 + 2.0h { overtime 2 }
-  booking dsnyder_r 2011-12-02-13:00--0800 + 2.0h { overtime 2 }
 }
 supplement task a_and_d.a_and_d_research.interface.xlib_lib_research {
 }
 supplement task a_and_d.a_and_d_research.interface.xtest_lib_research {
 }
 supplement task a_and_d.a_and_d_research.interface.comp_lib_research {
-  booking bwooley_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
-  booking dsnyder_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
+    booking dsnyder_r 2012-01-13 +1h {sloppy 2}
+    booking bwooley_r 2012-01-14 +0.5h {sloppy 2}
+    complete 100
 }
 supplement task a_and_d.a_and_d_research.interface.damage_lib_research {
-  booking bwooley_r 2011-11-28-14:00--0800 + 1.0h,
-          2011-11-29-12:00--0800 + 3.0h { overtime 2 }
-  booking dsnyder_r 2011-11-28-14:00--0800 + 1.0h,
-          2011-11-29-12:00--0800 + 3.0h { overtime 2 }
 }
 supplement task a_and_d.a_and_d_research.examples_research {
 }
 supplement task a_and_d.a_and_d_research.examples_research.lighpipe_a_and_r {
-  booking bwooley_r 2011-11-30-12:00--0800 + 3.0h,
-          2011-12-01-12:00--0800 + 1.0h { overtime 2 }
-  booking dsnyder_r 2011-11-30-12:00--0800 + 3.0h,
-          2011-12-01-12:00--0800 + 1.0h { overtime 2 }
 }
 supplement task a_and_d.a_and_d_research.examples_research.xcomp_manager {
 }
 supplement task a_and_d.a_and_d_research.examples_research.misc_win_managers {
 }
 supplement task a_and_d.a_and_d_research.id_comps_research {
-  booking bwooley_r 2011-12-01-13:00--0800 + 2.0h,
-          2011-12-02-12:00--0800 + 1.0h { overtime 2 }
-  booking dsnyder_r 2011-12-01-13:00--0800 + 2.0h,
-          2011-12-02-12:00--0800 + 1.0h { overtime 2 }
+    booking dsnyder_r 2012-01-14 +5h {sloppy 2}
+    complete 100
 }
 supplement task a_and_d.library_a_and_d {
 }
@@ -216,6 +193,7 @@ supplement task a_and_d.app_a_and_d.proc_arch {
 supplement task a_and_d.app_a_and_d.osx_interface_a_and_d {
 }
 supplement task a_and_d.app_a_and_d.app_interface {
+  booking dsnyder_r 2012-01-09-12:00--0800 + 1.0h { overtime 2 }
 }
 supplement task dev {
 }
@@ -224,10 +202,13 @@ supplement task dev.dev_mile0 {
 supplement task dev.dev_mile0.env_setup {
 }
 supplement task dev.dev_mile0.env_setup.compile_x_server {
+    complete 100
 }
 supplement task dev.dev_mile0.env_setup.config_dummy_driver {
+    complete 100
 }
 supplement task dev.dev_mile0.render_simple_mac_win {
+    complete 90
 }
 supplement task dev.dev_mile1 {
 }
@@ -290,30 +271,24 @@ supplement task sys_admin.back_ups {
 supplement task sys_admin.back_ups.back_up_plan {
 }
 supplement task sys_admin.back_ups.weekly_backup {
-  booking carrbs_r 2011-12-01-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task sys_admin.back_ups.weekly_verification {
-  booking carrbs_r 2011-12-02-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task sys_admin.repo_mangement {
+    complete 50
 }
 supplement task sys_admin.repo_mangement.sync_github_redmine {
-  booking carrbs_r 2011-12-01 +1h {sloppy 2}
-  complete 100
 }
 supplement task sys_admin.repo_mangement.repo_maint {
-  booking carrbs_r 2011-11-29-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task management {
 }
 supplement task management.weekly_status_updates {
-  booking jvanderw_r 2011-12-02-13:00--0800 + 1.0h { overtime 2 }
+    booking jvanderw_r 2012-01-13 +2h {sloppy 2}
 }
 supplement task management.weekly_wbs_update {
-  booking jvanderw_r 2011-11-29-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task management.weekly_schedule_update {
-  booking jvanderw_r 2011-12-01-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task deployment {
 }

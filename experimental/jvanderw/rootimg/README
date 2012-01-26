@@ -1,0 +1,39 @@
+Copyright (c) 2012 Jess VanDerwalker <washu@sonic.net>
+
+rootimg
+=======
+
+The rootimg program is a simple command line application that takes
+the number of a display, and creates a new window on the default
+display with the image from the root window display given on the
+command line. If no argument is given on the command line, the value
+of $DISPLAY is assumed.
+
+Builing and Running
+===================
+
+1) cd into the rootimg directory and enter "make". There are some
+   warnings regarding types in the printf statements, but there should
+   be no errors.
+   *** NOTE: You have to set the PKG_CONFIG_PATH env  variable with:
+   $ PKG_CONFIG_PATH = "/opt/X11/lib/pkgconfig"
+   $ export PKG_CONFIG_PATH
+
+2) In a new terminal window start Xorg with:
+   $ Xorg :1
+
+3) In another terminal window start an X application that takes the
+   "-display" command line argument. Such as:
+   $ xeyes -display :1 &
+
+4) Now run rootimg with
+   $ ./rootimg :1
+   You should see the xeyes image in a new Xquartz window.
+
+
+ISSUES
+======
+
+I have encountered an odd bug where, if I have not already opened an
+Xquartz window, when rootimg is run, Xquartz tries to open but fails,
+then tries to open again and fails.

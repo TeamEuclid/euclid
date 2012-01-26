@@ -127,7 +127,7 @@ shift two_hr_weekly "Two hours per week" {
 
 # Project Documentation tasks
 task documentation "Documentation" {
-    
+    scheduling asap
     task project_docs "Project" {
         note "Documents generated for the use of the team in development."
 
@@ -264,7 +264,7 @@ task documentation "Documentation" {
                 note "Generate user requirement document."
                 depends !id_usr_reqs
                 depends !!proj_plan
-                effort 4h
+                effort 5h
                 allocate bhuddle
             }
         } # end usrd
@@ -272,7 +272,7 @@ task documentation "Documentation" {
         task a_and_d_doc "Architecture and Design document" {
             note "Architecture and design document detailing structure and implementation of project."
             depends documentation.project_docs.proj_plan
-            depends a_and_d.a_and_d_research
+# TODO: how to handle dependency            depends a_and_d.a_and_d_research
 
             task init_decom "Initial decomposition" {
                 note "First pass on the decomposition of components."
@@ -312,28 +312,28 @@ task documentation "Documentation" {
             } # end v_and_v_research
 
             task init_v_and_v_doc "Initial version of document" {
-                depends !v_and_v_research
+#                depends !v_and_v_research
                 effort 3h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint1 "Mile 1 document maintenance" {
                 depends !init_v_and_v_doc
-                depends !!!!dev.dev_mile1.dev_mile1_code
+                depends dev.dev_mile1.dev_mile1_code
                 effort 2h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint2 "Mile 2 document maintenance" {
-                depends !!!!dev.dev_mile1.dev_mile2_code
+                depends !!!!dev.dev_mile2.dev_mile2_code
                 effort 2h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint3 "Mile 3 document maintenance" {
-                depends !!!!dev.dev_mile1.dev_mile3_code
+                depends !!!!dev.dev_mile3.dev_mile3_code
                 effort 2h
                 ${allocate_v_and_v}
             }
             task v_and_v_doc_maint4 "Mile 4 document maintenance" {
-                depends !!!!dev.dev_mile1.dev_mile4_code
+                depends !!!!dev.dev_mile4.dev_mile4_code
                 effort 2h
                 ${allocate_v_and_v}
             }
@@ -368,14 +368,14 @@ task documentation "Documentation" {
         }
         task code_style_doc "Coding style document" {
             note "Generate the code style document to be used for the project."
-            end 2011-12-10
             effort 2h
-            allocate askomra
+            allocate jvanderw
         }
     } # endo of code_docs
 } # end documentation
 
 task research "Research" {
+    scheduling asap
     note "Team wide research tasks."
     # Depends on completing the project plan
     depends !documentation.project_docs.proj_plan
@@ -405,7 +405,6 @@ task research "Research" {
             ${allocate_team}
         }
         task obj_c "Basic Objective-C familiarity" {
-            depends !xcode
             effort 24h
             ${allocate_team}
         }
@@ -422,6 +421,7 @@ task research "Research" {
 task a_and_d "Architecture and Design" {
     depends !documentation.project_docs.proj_plan
     ${allocate_a_and_d}
+    scheduling asap
 
     # Research task associated with Architecture and Design
     task a_and_d_research "Research" {
@@ -588,7 +588,7 @@ task a_and_d "Architecture and Design" {
 
 # Development task - specifically these are implementation tasks
 task dev "Development" {
-    
+    scheduling asap    
     task dev_mile0 "Milestone 0 development" {
 
         task env_setup "Setup Environment Development" {
@@ -703,7 +703,7 @@ task dev "Development" {
 } # end dev
 
 task v_and_v "Validation and Verification" {
-
+    scheduling asap
     task v_and_v_mile0 "Milestone 0" {
         note "Validate the verify the first Milestone"
         depends !!dev.dev_mile0
@@ -772,7 +772,7 @@ task v_and_v "Validation and Verification" {
 
 # System Administration tasks
 task sys_admin "System Administration" {
-
+    scheduling asap
     task back_ups "Backup and recovery system" {
         task back_up_plan "Identify back-up plan" {
             note "Identify what it is that we are going to do for a back-up plan"
@@ -803,7 +803,6 @@ task sys_admin "System Administration" {
         
         task sync_github_redmine "Sync Redmine and Github repositories" {
             note "Implement synchronization between Redmine and Github repositories."
-            end 2011-11-28
             effort 3h
             allocate carrbs
         }
@@ -821,7 +820,7 @@ task sys_admin "System Administration" {
 # Management tasks and meetings
 task management "Management" {
     # All of these tasks are currently weekly repeating
-    
+    scheduling asap    
     task weekly_status_updates "Status and performance update" {
         note "Weekly status and performance updates to be emailed to Bart"
         start 2011-11-14
@@ -860,7 +859,7 @@ task management "Management" {
 
 #Deployment and presentations
 task deployment "Deployment and presentations" {
-
+    scheduling asap
     task hand_off "Hand off to sponsors" {
         note "Hand off the project to the sponsors. Since this is an open source project, the documentation and public git repository should be enough."
         depends !!v_and_v.v_and_v_mile4
@@ -888,7 +887,7 @@ task deployment "Deployment and presentations" {
 
 # Project Milestones
 task project_milestones "Milestones" {
-
+    scheduling asap
     task init_project_plan "Initial Project Plan Complete" {
         milestone
         depends documentation.project_docs.proj_plan
@@ -932,6 +931,9 @@ task project_milestones "Milestones" {
 include "Week1Bookings.tji"
 include "nov28_dec4.tji"
 include "dec5_dec11.tji"
+include "dec12-jan8.tji"
+include "jan9-jan15.tji"
+include "jan16-jan22.tji"
 
 # Macro for task tips
 macro TaskTip [
@@ -1090,19 +1092,43 @@ resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
     resourceroot jvanderw
 }
 
-# Export the timesheets for the weeks
-export "nov28_dec4" {
-  definitions -
-  start 2011-11-28
-  end 2011-12-04
-  taskattributes booking
-  hideresource 0
-}
+# # Export the timesheets for the weeks
+# export "nov28_dec4" {
+#   definitions -
+#   start 2011-11-28
+#   end 2011-12-04
+#   taskattributes booking
+#   hideresource 0
+# }
 
-export "dec5_dec11" {
-  definitions -
-  start 2011-12-05
-  end 2011-12-11
-  taskattributes booking
-  hideresource 0
-}
+# export "dec5_dec11" {
+#   definitions -
+#   start 2011-12-05
+#   end 2011-12-11
+#   taskattributes booking
+#   hideresource 0
+# }
+
+# export "dec12-jan8" {
+#     definitions -
+#     start 2011-12-12
+#     end 2012-01-8
+#     taskattributes booking
+#     hideresource 0
+# }
+
+# export "jan9-jan15" {
+#     definitions -
+#     start 2012-01-9
+#     end 2012-01-15
+#     taskattributes booking
+#     hideresource 0
+# }
+
+# export "jan16-jan22" {
+#     definitions -
+#     start 2012-01-16
+#     end 2012-01-22
+#     taskattributes booking
+#     hideresource 0
+# }

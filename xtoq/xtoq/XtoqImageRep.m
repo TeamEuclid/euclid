@@ -28,7 +28,7 @@
 @implementation XtoqImageRep
 
 - (NSArray *)imageUnfilteredTypes{
-    imageTypes = [[NSArray alloc] initWithObjects:@".bmp",@".ppm",@".gif",nil]; 
+    imageTypes = [[NSArray alloc] initWithObjects:@".xbm",@".ppm",@".bmp",nil]; 
     return imageTypes;
 }
 
