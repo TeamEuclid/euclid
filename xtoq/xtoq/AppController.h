@@ -42,4 +42,6 @@
 
 - (IBAction)showDisplayChooser;
 
+- (void)wait_for_xtoq_event;
+
 @end

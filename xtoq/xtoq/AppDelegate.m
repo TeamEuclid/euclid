@@ -47,6 +47,7 @@
     // Insert code here to initialize your application
     ac = [[AppController alloc] init];
     [ac showDisplayChooser];    
+    [ac wait_for_xtoq_event];
 }
 
 @end

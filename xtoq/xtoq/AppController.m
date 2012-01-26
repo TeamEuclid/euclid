@@ -30,6 +30,7 @@
 
 #import "AppController.h"
 #import "DisplayNumberController.h"
+#import "xtoq.h"
 
 @implementation AppController
 
@@ -44,4 +45,26 @@
     NSLog(@"opened %@", displayNumberController);	
 }
 
+/**
+ *
+ * Following the steps from David's email, I produced this which does some
+ * weird stuff.
+ *
+ */
+- (void)wait_for_xtoq_event {
+    /*xtoq_context_t xqcontxt;
+    xtoq_event_t xqevent;
+    char *screen;// = "1";
+    
+    screen = getenv("DISPLAY"); //change with dialog display number later
+    
+    xqcontxt = xtoq_init(screen);
+    xqevent = dummy_xtoq_wait_for_event(xqcontxt);
+    
+    if (xqevent.event_type == XTOQ_DAMAGE) {
+        dummy_xtoq_get_image(xqevent.context);
+    }
+    else { NSLog(@"HEy I'm Not damage!"); }*/
+    
+}
 @end
