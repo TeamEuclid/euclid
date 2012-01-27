@@ -58,6 +58,7 @@
 
 /**
  * Return whether the window was drawn
+ * 'draw' draws the image at the coordinate system's origin 
  * @return bool Yes if the image was drawn, No if it was not.
  */
 - (BOOL)draw;
