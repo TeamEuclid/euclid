@@ -37,7 +37,7 @@ SOFTWARE.
     //The X :1 paramater
     char *screen;
     
-    context_t xcbContext;
+    xtoq_context_t xcbContext;
     xcb_image_t *imageT;
     XtoqImageRep *image;
     

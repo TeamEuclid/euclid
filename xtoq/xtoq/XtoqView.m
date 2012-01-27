@@ -32,8 +32,8 @@ initWithFrame:(NSRect)frame {
     
     if (self) {
         screen = ":1";
-        xcbContext = Init(screen);
-        imageT = GetImage(xcbContext);
+        xcbContext = xtoq_init(screen);
+        imageT = xtoq_get_image(xcbContext);
         image = [[XtoqImageRep alloc] initWithData:imageT];
         
 // Leaving these in for testing
@@ -88,7 +88,7 @@ keyDown:(NSEvent *)theEvent {
     
     if (key == NSDownArrowFunctionKey) {        
         // Get update image
-        imageT = GetImage(xcbContext);
+        imageT = xtoq_get_image(xcbContext);
         
         image = [[XtoqImageRep alloc] initWithData:imageT];
         [image drawInRect:destRect];
