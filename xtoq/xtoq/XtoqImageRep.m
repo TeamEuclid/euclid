@@ -28,31 +28,65 @@
 @implementation XtoqImageRep
 
 - (NSArray *)imageUnfilteredTypes{
-    imageTypes = [[NSArray alloc] initWithObjects:@".xbm",@".ppm",@".bmp",nil]; 
+    imageTypes = [[NSArray alloc] initWithObjects:nil]; 
     return imageTypes;
 }
 
-- (BOOL)canInitWithData:(NSData *)data {
-    return NO;
+- (BOOL)canInitWithData:(xcb_image_t *)imageData {
+    if (imageData == NULL) {
+        return NO;
+    }    
+    return YES;
 }
 
-- (id)initWithData:(NSData *)data{
+
+- (id)initWithData:(xcb_image_t *)imageData{
+    // We might need implement GetSize
+    windowSize =  NSMakeSize(imageData->width, imageData->size);
+
     self = [super init];
 	if (!self) {
 		return nil;
     }
+    CGDataProviderRef cgdat =  CGDataProviderCreateWithData (
+                                                    NULL,
+                                                    imageData->data,
+                                                    imageData->size,
+                                                    NULL
+                                                    );
+    
+    CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
+
+    cgImage = CGImageCreate (imageData->width,// size_t width,
+                             imageData->height, //size_t height,
+                             8, //size_t bitsPerComponent,
+                             32,//size_t bitsPerPixel,
+                             imageData->stride,//size_t bytesPerRow,
+                             csp, //CGColorSpaceRef colorspace,
+                             kCGBitmapByteOrderDefault,//CGBitmapInfo bitmapInfo,
+                             cgdat,//CGDataProviderRef provider,
+                             NULL, //const CGFloat decode[],
+                             YES, //bool shouldInterpolate,
+                             kCGRenderingIntentDefault //CGColorRenderingIntent intent
+                             );
     return self;
 }
 
-- (BOOL)draw{
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-	if (!context || !image) {
+- (BOOL)draw{   
+    CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
+    if (contextMac == NULL)
+               NSLog(@"NULL context in draw");
+	if ( !cgImage) {
+        NSLog(@"bang image");
 		return NO;
 	}
-	NSSize size = [self size];
-	CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), image);
+
+    float 
+    width = CGImageGetWidth(cgImage),
+    height = CGImageGetHeight(cgImage);
+
+    CGContextDrawImage(contextMac, CGRectMake(0, 0, width, height), cgImage);
+
 	return YES;
-
 }
-
 @end

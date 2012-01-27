@@ -21,7 +21,6 @@
 
 #import "XtoqView.h"
 
-
 @implementation XtoqView
 
 /**
@@ -32,15 +31,16 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        ourBool = YES;
-        // This must be changed to users personal directory.
-        file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        file2 = @"Xtoq.app/Contents/Resources/Mac-Logo2.jpg"; 
-        image = [[NSImage alloc] initWithContentsOfFile:file];
-        image2 = [[NSImage alloc] initWithContentsOfFile:file2];
+        screen = ":1";
+        xcbContext = xtoq_init(screen);
+        imageT = xtoq_get_image(xcbContext);
+        image = [[XtoqImageRep alloc] initWithData:imageT];
         
+// Leaving these in for testing
+// file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
+// image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+
     }
-    
     return self;
 }
 
@@ -50,13 +50,16 @@ initWithFrame:(NSRect)frame {
 - (void)
 drawRect:(NSRect)dirtyRect {
     [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
+         setImageInterpolation:NSImageInterpolationHigh];
     
-    NSSize imageSize = { 350, 300 };
+// NEED TO CHANGE to remove hard coded size
+    NSSize imageSize = { 1024,768 };
     NSRect destRect;
     destRect.size = imageSize;
-    [image drawInRect:destRect fromRect:NSZeroRect 
-            operation:NSCompositeSourceOver fraction:1.0];
+    [image draw];
+    
+// Leaving in for testing
+//[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 }
 
 /**
@@ -70,27 +73,28 @@ acceptsFirstResponder {
 /**
  *  This is the function that captures the event which is 
  *  the down arrow key, not the numpad down arrow key.
- *  It changes the image on the screen when the down arrow is pressed.
+ *  It updates the image on the screen when the down arrow is pressed.
  */
 - (void)
-keyDown:(NSEvent *)theEvent {
+keyDown:(NSEvent *)theEvent {      
     NSString *characters = [theEvent characters];
     int key = [characters characterAtIndex:0];
-    NSSize imageSize = { 350, 300 };
+    
+// NEED TO CHANGE to remove hard coded size
+    NSSize imageSize = {1024, 768};
+    
     NSRect destRect;
     destRect.size = imageSize;
     
-    if (key == NSDownArrowFunctionKey) {
-        if (ourBool == YES) {
-            ourBool = NO;
-            [image2 drawInRect:destRect fromRect:NSZeroRect 
-                     operation:NSCompositeSourceOver fraction:1.0];
-        } else {
-            ourBool = YES;
-            [image drawInRect:destRect fromRect:NSZeroRect 
-                    operation:NSCompositeSourceOver fraction:1.0];
-        }
+    if (key == NSDownArrowFunctionKey) {        
+        // Get update image
+        imageT = xtoq_get_image(xcbContext);
+        
+        image = [[XtoqImageRep alloc] initWithData:imageT];
+        [image drawInRect:destRect];
+        [image draw];        
         [[self window] flushWindow];
+        
     } else {
         [super keyDown:theEvent];
     }
