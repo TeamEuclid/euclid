@@ -30,24 +30,19 @@ SOFTWARE.
 #import <Cocoa/Cocoa.h>
 #import "util.h"
 #import "XtoqImageRep.h"
+#import "xtoq.h"
 
 @interface XtoqView : NSView {
     
-    // xcb connection
+    //The X :1 paramater
     char *screen;
-    context_t context;
+    
+    context_t xcbContext;
     xcb_image_t *imageT;
-    NSData *data;
-    
-    //////////////
-    NSString *file;
-    NSString *file2;
-    BOOL ourBool;
     XtoqImageRep *image;
+    
     NSImage *image2;
-    
-    
-    
+    NSString *file;
 }
 @end
 
