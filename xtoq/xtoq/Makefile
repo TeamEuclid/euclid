@@ -2,7 +2,7 @@
 CFLAGS = -Wall -g -O0
 INCLUDES = -I../../src -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lxcb-util -lxcb-damage -lxcb-composite -lxcb-xfixes -lxcb-render -lxcb-shape -lxcb-image -lxcb-shm -lxcb
-FRAMEWORKS = Foundation
+FRAMEWORKS = Cocoa
 IBTOOL = ibtool
 
 SOURCES = main.m AppController.m AppDelegate.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
