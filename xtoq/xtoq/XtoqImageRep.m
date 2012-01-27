@@ -28,115 +28,65 @@
 @implementation XtoqImageRep
 
 - (NSArray *)imageUnfilteredTypes{
-    imageTypes = [[NSArray alloc] initWithObjects:@".xbm",@".ppm",@".bmp",nil]; 
+    imageTypes = [[NSArray alloc] initWithObjects:nil]; 
     return imageTypes;
 }
 
-- (BOOL)canInitWithData:(NSData *)data {
+- (BOOL)canInitWithData:(xcb_image_t *)imageData {
+    if (imageData == NULL) {
+        return NO;
+    }    
     return YES;
 }
 
-//- (id)initWithData:(NSData *)data{
-- (id)init{
-    //Replace :1 with the popup window var
-    screen = ":1";
-    xcbContext = Init(screen);
-    imageT = GetImage(xcbContext);
-       NSLog(@"data Files stuff in itit with data:  %i", imageT->size);
-    windowSize =  NSMakeSize(imageT->width, imageT->size);
-    // might want to use initWithBytesNoCopy:length
-    //theData = [[NSData alloc] initWithBytes:imageT->data length:imageT->size];
- 
-    
+
+- (id)initWithData:(xcb_image_t *)imageData{
+    // We might need implement GetSize
+    windowSize =  NSMakeSize(imageData->width, imageData->size);
+
     self = [super init];
 	if (!self) {
 		return nil;
     }
     CGDataProviderRef cgdat =  CGDataProviderCreateWithData (
                                                     NULL,
-                                                    imageT->data,
-                                                    imageT->size,
+                                                    imageData->data,
+                                                    imageData->size,
                                                     NULL
                                                     );
     
     CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
-    //?ImageIO: <ERROR>  CGImageSourceCreateWithData data parameter is nil? - this is fixed
-    cgImage = CGImageCreate (
- /*                          size_t width,
-                           size_t height,
-                           size_t bitsPerComponent,
-                            size_t bitsPerPixel,
-                           size_t bytesPerRow,
-                           CGColorSpaceRef colorspace,
-                           CGBitmapInfo bitmapInfo,
-                           CGDataProviderRef provider,
-                           const CGFloat decode[],
-                           bool shouldInterpolate,
-                           CGColorRenderingIntent intent
-                           );*/
-                            imageT->width,// size_t width,
-                            imageT->height, //size_t height,
-                            8, //size_t bitsPerComponent,
-                            32,//size_t bitsPerPixel,
-                            imageT->stride,//size_t bytesPerRow,
-                            csp, //CGColorSpaceRef colorspace,
-                            kCGBitmapByteOrderDefault,//CGBitmapInfo bitmapInfo,
-                            cgdat,//CGDataProviderRef provider,
-                            NULL, //const CGFloat decode[],
-                            YES, //bool shouldInterpolate,
-                            kCGRenderingIntentDefault //CGColorRenderingIntent intent
-                            );    
-            NSLog(@"bbbbbbb");
+
+    cgImage = CGImageCreate (imageData->width,// size_t width,
+                             imageData->height, //size_t height,
+                             8, //size_t bitsPerComponent,
+                             32,//size_t bitsPerPixel,
+                             imageData->stride,//size_t bytesPerRow,
+                             csp, //CGColorSpaceRef colorspace,
+                             kCGBitmapByteOrderDefault,//CGBitmapInfo bitmapInfo,
+                             cgdat,//CGDataProviderRef provider,
+                             NULL, //const CGFloat decode[],
+                             YES, //bool shouldInterpolate,
+                             kCGRenderingIntentDefault //CGColorRenderingIntent intent
+                             );
     return self;
 }
 
-- (BOOL)draw{
-        NSLog(@"11111111");
-    //CGContextRef contextMac = [self MyCreateBitmapContext :780 :560];
-    //CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
-    //if (contextMac == NULL)
-    //            NSLog(@"NULLLLll");
+- (BOOL)draw{   
+    CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
+    if (contextMac == NULL)
+               NSLog(@"NULL context in draw");
 	if ( !cgImage) {
         NSLog(@"bang image");
 		return NO;
 	}
-	NSSize size = [self size];
-	//CGContextDrawImage(contextMac, CGRectMake(0, 0, size.width, size.height), cgImage);
-        NSLog(@"999999");
+
+    float 
+    width = CGImageGetWidth(cgImage),
+    height = CGImageGetHeight(cgImage);
+
+    CGContextDrawImage(contextMac, CGRectMake(0, 0, width, height), cgImage);
+
 	return YES;
-
-}
-
-
-
-- (BOOL)drawInRect:(NSRect)rect {
-    
-    NSLog(@"asdf");
-
-    
-    [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
-
-    nsImage = [[NSImage alloc] initWithCGImage:cgImage size:windowSize];
-    
-  //  unsigned char ** wtf;
-   // wtf[0] = imageT->data;
-    //myBitMapRep = [[NSBitmapImageRep alloc] initWithData:theData];
-    
-    /*myBitMap = [[NSBitmapImageRep alloc]             
-                initWithBitmapDataPlanes: (unsigned char **) wtf
-                pixelsWide:imageT->width 
-                pixelsHigh:imageT->height 
-                bitsPerSample:8 
-                samplesPerPixel:3 
-                hasAlpha:NO 
-                isPlanar:NO 
-                colorSpaceName:NSDeviceRGBColorSpace 
-                bytesPerRow:(imageT->width)*3 
-                bitsPerPixel:8*3]; */
-
-    [nsImage drawInRect:rect fromRect:NSZeroRect 
-              operation:NSCompositeSourceOver fraction:1.0];
-    return YES;
 }
 @end
