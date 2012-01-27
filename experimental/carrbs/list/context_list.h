@@ -24,8 +24,8 @@
  */
 
 
-#ifndef _ROOTIMG_API_H_
-#define _ROOTIMG_API_H_
+#ifndef _CONTEXT_LIST_H_
+#define _CONTEXT_LIST_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,19 +36,20 @@
 #include "rootimg_api.h"
 
 struct context_node {
-    struct context_t context;
+    struct context_t *context;
     struct context_node * next;
-};
+} context_node;
 
 struct context_list {
     struct context_node * head;
-};
+} context_list;
 
-void AddContextNode(struct context_list * list, struct context_node * node);
+void add_context_node(struct context_list * list, struct context_node * node);
 
-void RemoveContextNode(struct context_list * list, xcb_window_t window_id);
+void remove_context_node(struct context_list * list, xcb_window_t window_id);
 
-context_node *
-getContextNodeByWindowId (context_list * list, xcb_window_t window_id);
+struct context_node *
+get_context_node_by_window_id (struct context_list * list, xcb_window_t window_id);
 
 
+#endif
