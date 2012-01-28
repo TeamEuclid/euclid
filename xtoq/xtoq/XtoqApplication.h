@@ -20,7 +20,11 @@
  */
 
 #import <AppKit/AppKit.h>
+#import "AppController.h"
 
 @interface XtoqApplication : NSApplication
+
+int XtoqApplicationMain(int argc, const char** argv);
+
 
 @end

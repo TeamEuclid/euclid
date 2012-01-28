@@ -23,4 +23,16 @@
 
 @implementation XtoqApplication
 
+int XtoqApplicationMain(int argc, const char** argv){
+    
+    [XtoqApplication sharedApplication];
+    AppController *controller = [[AppController alloc] init];
+    
+    [NSApp setDelegate: controller];    
+    [NSApp run];
+    
+    return 1;
+}
+
+
 @end
