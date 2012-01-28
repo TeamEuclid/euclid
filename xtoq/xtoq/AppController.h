@@ -34,6 +34,7 @@
 
 @interface AppController : NSObject {
     DisplayNumberController *displayNumberController;
+    NSWindow *xtoqWindow;
 }
 
 /**

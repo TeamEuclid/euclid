@@ -31,10 +31,26 @@
 #import "AppController.h"
 #import "DisplayNumberController.h"
 #import "xtoq.h"
+#import "XtoqView.h"
 
 @implementation AppController
 
- 
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+    xtoqWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(300, 300, 200, 100)
+                                             styleMask: (NSTitledWindowMask |
+                                                         NSMiniaturizableWindowMask |
+                                                         NSResizableWindowMask)
+                                               backing: NSBackingStoreBuffered
+                                                 defer: YES];
+    [xtoqWindow setTitle: @"Xtoq"];
+    [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] init]];
+    
+    [self showDisplayChooser];
+    [self wait_for_xtoq_event];
+}
+
 - (IBAction)showDisplayChooser
 {
    if (!displayNumberController){
@@ -44,6 +60,7 @@
     [displayNumberController showWindow:self];
     NSLog(@"opened %@", displayNumberController);	
 }
+
 
 /**
  *
