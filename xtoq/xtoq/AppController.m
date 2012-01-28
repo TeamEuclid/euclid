@@ -67,7 +67,7 @@
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
     [xtoqWindow makeKeyAndOrderFront: self];
- //  [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
+    [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
 }
 
 - (IBAction)showDisplayChooser
@@ -95,7 +95,7 @@
         xqevent = dummy_xtoq_wait_for_event(xqcontxt);
     
         if (xqevent.event_type == XTOQ_DAMAGE) {
-            dummy_xtoq_get_image(xqevent.context);
+            NSLog(@"Got damage event");
         }
         else { NSLog(@"HEy I'm Not damage!"); }
 
