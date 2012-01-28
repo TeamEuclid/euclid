@@ -36,19 +36,38 @@
 @implementation AppController
 
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
-    xtoqWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(300, 300, 200, 100)
+    xtoqWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 1028, 768)
                                              styleMask: (NSTitledWindowMask |
                                                          NSMiniaturizableWindowMask |
                                                          NSResizableWindowMask)
                                                backing: NSBackingStoreBuffered
                                                  defer: YES];
-    [xtoqWindow setTitle: @"Xtoq"];
-    [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] init]];
+    menu = [NSMenu new];
+    [menu addItemWithTitle: @"Info"
+                    action: NULL
+             keyEquivalent: @""];
+    [menu addItemWithTitle: @"Hide"
+                    action: @selector(hide:)
+             keyEquivalent: @"h"];
+    [menu addItemWithTitle: @"Quit"
+                    action: @selector(terminate:)
+             keyEquivalent: @"q"];
     
-    [self showDisplayChooser];
-    [self wait_for_xtoq_event];
+    [xtoqWindow setTitle: @"Xtoq"];
+    [NSApp setMainMenu:menu];
+    
+    [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] initWithFrame: NSMakeRect(0, 0, 300, 300)]];
+    
+  //  [self showDisplayChooser];
+
+}
+
+- (void) applicationDidFinishLaunching: (NSNotification *) aNotification
+{
+    [xtoqWindow makeKeyAndOrderFront: self];
+ //  [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
 }
 
 - (IBAction)showDisplayChooser
@@ -68,20 +87,18 @@
  * weird stuff.
  *
  */
-- (void)wait_for_xtoq_event {
-    /*xtoq_context_t xqcontxt;
+- (void) wait_for_xtoq_event {
+    xtoq_context_t xqcontxt;
     xtoq_event_t xqevent;
-    char *screen;// = "1";
+
+    while (1) {
+        xqevent = dummy_xtoq_wait_for_event(xqcontxt);
     
-    screen = getenv("DISPLAY"); //change with dialog display number later
-    
-    xqcontxt = xtoq_init(screen);
-    xqevent = dummy_xtoq_wait_for_event(xqcontxt);
-    
-    if (xqevent.event_type == XTOQ_DAMAGE) {
-        dummy_xtoq_get_image(xqevent.context);
+        if (xqevent.event_type == XTOQ_DAMAGE) {
+            dummy_xtoq_get_image(xqevent.context);
+        }
+        else { NSLog(@"HEy I'm Not damage!"); }
+
     }
-    else { NSLog(@"HEy I'm Not damage!"); }*/
-    
 }
 @end

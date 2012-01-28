@@ -30,12 +30,18 @@
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
+
 @class DisplayNumberController;
 
 @interface AppController : NSObject {
     DisplayNumberController *displayNumberController;
     NSWindow *xtoqWindow;
+    NSMenu *menu;
 }
+
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
 /**
  * Create the Display Number Controller
