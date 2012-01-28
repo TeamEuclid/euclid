@@ -38,7 +38,7 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
-    xtoqWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 1028, 768)
+    xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(0, 0, 1028, 768)
                                              styleMask: (NSTitledWindowMask |
                                                          NSMiniaturizableWindowMask |
                                                          NSResizableWindowMask)
