@@ -32,6 +32,7 @@ initWithFrame:(NSRect)frame {
     
     if (self) {
         screen = ":1";
+        NSLog(@"screen = %s", screen);
         xcbContext = xtoq_init(screen);
         imageT = xtoq_get_image(xcbContext);
         image = [[XtoqImageRep alloc] initWithData:imageT];
