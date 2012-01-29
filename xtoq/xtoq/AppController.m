@@ -24,26 +24,28 @@
  *  AppController.m
  *  xtoq
  *
+ * 
  *  This is the controller for the Popup to retreive the display number
  *  from the user.
+
  */
 
 #import "AppController.h"
-#import "DisplayNumberController.h"
-#import "xtoq.h"
-#import "XtoqView.h"
+
 
 @implementation AppController
 
 
-- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
-{
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+    [[NSGraphicsContext currentContext]
+     setImageInterpolation:NSImageInterpolationHigh];
+    
     xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(0, 0, 1028, 768)
-                                             styleMask: (NSTitledWindowMask |
-                                                         NSMiniaturizableWindowMask |
-                                                         NSResizableWindowMask)
-                                               backing: NSBackingStoreBuffered
-                                                 defer: YES];
+                                               styleMask: (NSTitledWindowMask |
+                                                           NSMiniaturizableWindowMask |
+                                                           NSResizableWindowMask)
+                                                 backing: NSBackingStoreBuffered
+                                                   defer: YES];
     menu = [NSMenu new];
     [menu addItemWithTitle: @"Info"
                     action: NULL
@@ -56,11 +58,19 @@
              keyEquivalent: @"q"];
     
     [xtoqWindow setTitle: @"Xtoq"];
-    [NSApp setMainMenu:menu];
+    [NSApp setMainMenu:menu];        
     
-    [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] initWithFrame: NSMakeRect(0, 0, 300, 300)]];
+    // This was pulled from XqtoqView
+    screen = ":1";
+    NSLog(@"screen = %s", screen);
+    xcbContext = xtoq_init(screen);
+    imageT = xtoq_get_image(xcbContext);
+    image = [[XtoqImageRep alloc] initWithData:imageT];
     
-  //  [self showDisplayChooser];
+    
+    [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] initWithImage:image]];
+    
+    
 
 }
 
@@ -68,6 +78,8 @@
 {
     [xtoqWindow makeKeyAndOrderFront: self];
     [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
+
+    
 }
 
 - (IBAction)showDisplayChooser
@@ -79,6 +91,7 @@
     [displayNumberController showWindow:self];
     NSLog(@"opened %@", displayNumberController);	
 }
+
 
 
 /**
