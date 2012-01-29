@@ -37,10 +37,37 @@ initWithFrame:(NSRect)frame {
         imageT = xtoq_get_image(xcbContext);
         image = [[XtoqImageRep alloc] initWithData:imageT];
         
-// Leaving these in for testing
-// file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-// image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+        // Leaving these in for testing
+        // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
+        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+        
+    }
+    return self;
+}
 
+
+/**
+ *  This is the initializer.
+ */
+- (id)
+initWithImage:(XtoqImageRep *)newImage {
+    
+    frame = NSMakeRect(0, 0, newImage.size.width, newImage.size.height);
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        
+//        screen = ":1";
+//        NSLog(@"screen = %s", screen);
+//        xcbContext = xtoq_init(screen);
+//        imageT = xtoq_get_image(xcbContext);
+        image = newImage;//[[XtoqImageRep alloc] initWithData:imageT];
+        [image draw];
+        [[self window] flushWindow];
+        // Leaving these in for testing
+        // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
+        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+        
     }
     return self;
 }
@@ -51,16 +78,16 @@ initWithFrame:(NSRect)frame {
 - (void)
 drawRect:(NSRect)dirtyRect {
     [[NSGraphicsContext currentContext]
-         setImageInterpolation:NSImageInterpolationHigh];
+     setImageInterpolation:NSImageInterpolationHigh];
     
-// NEED TO CHANGE to remove hard coded size
-    NSSize imageSize = { 1024,768 };
-    NSRect destRect;
-    destRect.size = imageSize;
+    // NEED TO CHANGE to remove hard coded size
+   // NSSize imageSize = { 1024,768 };
+  //  NSRect destRect;
+  //  destRect.size = imageSize;
     [image draw];
-    
-// Leaving in for testing
-//[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    [[self window] flushWindow];
+    // Leaving in for testing
+    //[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 }
 
 /**
@@ -81,7 +108,7 @@ keyDown:(NSEvent *)theEvent {
     NSString *characters = [theEvent characters];
     int key = [characters characterAtIndex:0];
     
-// NEED TO CHANGE to remove hard coded size
+    // NEED TO CHANGE to remove hard coded size
     NSSize imageSize = {1024, 768};
     
     NSRect destRect;
@@ -89,7 +116,7 @@ keyDown:(NSEvent *)theEvent {
     
     if (key == NSDownArrowFunctionKey) {        
         // Get update image
-        imageT = xtoq_get_image(xcbContext);
+  //      imageT = xtoq_get_image(xcbContext);
         
         image = [[XtoqImageRep alloc] initWithData:imageT];
         [image drawInRect:destRect];
@@ -99,6 +126,14 @@ keyDown:(NSEvent *)theEvent {
     } else {
         [super keyDown:theEvent];
     }
+}
+
+- (void)setImage:(XtoqImageRep *)newImage {
+    //[newImage retain];
+    //[image release];
+    image = newImage;
+    [[self window] flushWindow];
+    [self setNeedsDisplay:YES];
 }
 
 @end

@@ -19,6 +19,8 @@
  SOFTWARE.
  */
 
+// Placehoder
+
 #import <AppKit/AppKit.h>
 
 @interface XtoqWindow : NSWindow

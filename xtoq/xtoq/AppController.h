@@ -24,20 +24,38 @@
  *  AppController.h
  *  xtoq
  *
- *  This is the controller for the Popup to retreive the display number
+  *  TODO: rename this class to XtoqController
+ *  This was controller for the Popup to retreive the display number
  *  from the user.
+ *
+ *  This is the window controller // clean up some of the names
  */
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 #import <AppKit/AppKit.h>
+#import "DisplayNumberController.h"
+#import "XtoqWindow.h"
+#import "XtoqImageRep.h"
+#import "XtoqView.h"
+#import "xtoq.h"
 
 @class DisplayNumberController;
 
 @interface AppController : NSObject {
     DisplayNumberController *displayNumberController;
-    NSWindow *xtoqWindow;
+    XtoqWindow *xtoqWindow;
     NSMenu *menu;
+    
+    //The X :1 paramater
+    char *screen;
+    
+    xtoq_context_t xcbContext;
+    xcb_image_t *imageT;
+    XtoqImageRep *image;
+    XtoqView *view;
+    NSString *file;
+    NSImage *image2;
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
