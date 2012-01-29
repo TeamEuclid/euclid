@@ -1,5 +1,5 @@
 
-/*Copyright (C) 2012 Aaron Skomra 
+/*Copyright (C) 2012 Aaron Skomra and Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -45,7 +45,6 @@
 @interface AppController : NSObject {
     DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
-    NSMenu *menu;
     
     //The X :1 paramater
     char *screen;

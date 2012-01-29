@@ -1,5 +1,5 @@
 
-/*Copyright (C) 2012 Aaron Skomra 
+/*Copyright (C) 2012 Aaron Skomra and Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -46,19 +46,42 @@
                                                            NSResizableWindowMask)
                                                  backing: NSBackingStoreBuffered
                                                    defer: YES];
-    menu = [NSMenu new];
-    [menu addItemWithTitle: @"Info"
-                    action: NULL
-             keyEquivalent: @""];
-    [menu addItemWithTitle: @"Hide"
-                    action: @selector(hide:)
-             keyEquivalent: @"h"];
-    [menu addItemWithTitle: @"Quit"
-                    action: @selector(terminate:)
-             keyEquivalent: @"q"];
     
-    [xtoqWindow setTitle: @"Xtoq"];
-    [NSApp setMainMenu:menu];        
+    
+    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+    
+    id menubar = [NSMenu new];
+    id appMenuItem = [NSMenuItem new];
+    [menubar addItem:appMenuItem];
+    [NSApp setMainMenu:menubar];    
+    
+    id appMenu = [NSMenu new];
+    id appName = [[NSProcessInfo processInfo] processName];
+    
+    // About
+    id aboutTitle = [@"About " stringByAppendingString:appName];        
+    id aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    [appMenu addItem:aboutMenuItem];
+    [appMenuItem setSubmenu:appMenu];
+    
+    // Quit    
+    id quitTitle = [@"Quit " stringByAppendingString:appName];
+    id quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    [appMenu addItem:quitMenuItem];
+    [appMenuItem setSubmenu:appMenu];
+    
+    id window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
+    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
+    [window setTitle:appName];
+    
+    appMenu = [NSMenu new];
+    appMenuItem = [NSMenuItem new];
+    [menubar addItem:appMenuItem];
+    [NSApp setMainMenu:menubar];    
+    // [window makeKeyAndOrderFront:nil];
+    // [NSApp activateIgnoringOtherApps:YES];
+
     
     // This was pulled from XqtoqView
     screen = ":1";
