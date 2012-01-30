@@ -68,4 +68,9 @@
 
 - (void)wait_for_xtoq_event;
 
+/**
+ * Put a new image in the window / view
+ */
+- (void) putImage;
+
 @end

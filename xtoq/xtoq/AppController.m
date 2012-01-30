@@ -92,8 +92,6 @@
     
     
     [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] initWithImage:image]];
-    
-    
 
 }
 
@@ -137,4 +135,9 @@
 
     }
 }
+
+- (void) putImage {
+    
+}
+
 @end
