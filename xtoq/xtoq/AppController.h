@@ -72,6 +72,6 @@
 /**
  * Put a new image in the window / view
  */
-- (void) putImage;
+- (void) updateImage;
 
 @end

@@ -64,9 +64,7 @@ initWithImage:(XtoqImageRep *)newImage {
         image = newImage;//[[XtoqImageRep alloc] initWithData:imageT];
         [image draw];
         [[self window] flushWindow];
-        // Leaving these in for testing
-        // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+
         
     }
     return self;

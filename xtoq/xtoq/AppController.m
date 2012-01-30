@@ -92,6 +92,11 @@
     
     ourView = [[XtoqView alloc] initWithImage:image];
     [[xtoqWindow contentView]  addSubview: ourView];
+    
+    // Leaving these in for testing
+    file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
+    image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+    
 
 }
 
@@ -124,22 +129,27 @@
 - (void) wait_for_xtoq_event {
     xtoq_context_t xqcontxt;
     xtoq_event_t xqevent;
-
+    
     while (1) {
         xqevent = dummy_xtoq_wait_for_event(xqcontxt);
     
         if (xqevent.event_type == XTOQ_DAMAGE) {
             NSLog(@"Got damage event");
+            [self updateImage];
         }
-        else { NSLog(@"HEy I'm Not damage!"); }
+        else { 
+            NSLog(@"HEy I'm Not damage!"); 
+            [self updateImage];
+        }
 
     }
 }
 
-- (void) putImage {
-        NSLog(@"Put Image");
+- (void) updateImage {
+        NSLog(@"update Image");
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
+    [ourView setImage:image];
 
 }
 
