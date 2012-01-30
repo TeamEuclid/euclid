@@ -91,6 +91,7 @@ supplement task research.code_bases {
 supplement task research.code_bases.learn_xcb {
 }
 supplement task research.code_bases.lightpipe {
+    complete 100
 }
 supplement task research.osx_research {
 }
@@ -215,6 +216,21 @@ supplement task dev.dev_mile0.env_setup.compile_x_server {
 supplement task dev.dev_mile0.env_setup.config_dummy_driver {
 }
 supplement task dev.dev_mile0.render_simple_mac_win {
+    complete 100
+}
+supplement task dev.dev_mile0.display_rootimg_in_osx_win {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.key_handler_for_update {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.convert_pixmap_to_image {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.redraw_image_on_keydown {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.xcb_get_image_function {
+}
+supplement task dev.dev_mile0.xtoq_window_data_structure {
 }
 supplement task dev.dev_mile1 {
 }
@@ -294,7 +310,6 @@ supplement task management.weekly_status_updates {
   booking jvanderw_r 2012-01-20-13:00--0800 + 1.0h { overtime 2 }
 }
 supplement task management.weekly_wbs_update {
-    booking jvanderw_r 2012-01-19 +2h {sloppy 2}
 }
 supplement task management.weekly_schedule_update {
   booking jvanderw_r 2012-01-19-13:00--0800 + 1.0h { overtime 2 }

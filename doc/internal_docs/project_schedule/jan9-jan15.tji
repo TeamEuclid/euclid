@@ -110,6 +110,7 @@ supplement task research.osx_research.obj_c {
     complete 100
 }
 supplement task research.osx_research.learn_apple_api {
+    complete 100
 }
 supplement task a_and_d {
 }
