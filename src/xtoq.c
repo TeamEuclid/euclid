@@ -29,20 +29,16 @@
 #include "xtoq.h"
 
 
-context_t
-Init(char *screen) {
+// This init function needs set the window to be registered for events!
+// First one we should handle is damage
+xtoq_context_t
+xtoq_init(char *screen) {
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
-    xcb_drawable_t window; // Is this one needed here?
-    xcb_void_cookie_t cookie;
     
     xcb_get_geometry_reply_t *geom_reply;
-    
-    xcb_generic_event_t *event;
-    
-    xcb_gcontext_t gc;
  
     conn = xcb_connect(screen, &conn_screen);
     
@@ -50,14 +46,14 @@ Init(char *screen) {
     root_window = root_screen->root;
     
     /* Get the geometry of the root window */
-    geom_reply = GetWindowGeometry(conn, root_window);
+    geom_reply = _xtoq_get_window_geometry(conn, root_window);
     
-    WriteWindowInfo(conn, root_window);
-	WriteAllChildrenWindowInfo(conn, root_window);
+    //WriteWindowInfo(conn, root_window);
+	//WriteAllChildrenWindowInfo(conn, root_window);
     
 	xcb_flush(conn);
     
-    context_t init_reply;
+    xtoq_context_t init_reply;
     init_reply.conn = conn;
     init_reply.window = root_window;
     
@@ -65,17 +61,17 @@ Init(char *screen) {
 }
 
 xcb_image_t *
-GetImage(context_t context) {
+xtoq_get_image(xtoq_context_t context) {
     
     xcb_get_geometry_reply_t *geom_reply;
     
     //image_data_t img_data;
     xcb_image_t *image;
     
-    geom_reply = GetWindowGeometry(context.conn, context.window);
+    geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
-    WriteWindowInfo(context.conn, context.window);
-	WriteAllChildrenWindowInfo(context.conn, context.window);
+    //WriteWindowInfo(context.conn, context.window);
+	//WriteAllChildrenWindowInfo(context.conn, context.window);
     //img_data = GetWindowImageData(context.conn, context.window);
     
 	xcb_flush(context.conn);
@@ -92,7 +88,7 @@ GetImage(context_t context) {
 }
 
 int
-GetImageDummy(context_t context) {
+dummy_xtoq_get_image(xtoq_context_t context) {
     
     // TEMP until we can return an image
     xcb_connection_t *conn_two;
@@ -112,11 +108,11 @@ GetImageDummy(context_t context) {
     image_data_t img_data;
     xcb_image_t *image;
     
-    geom_reply = GetWindowGeometry(context.conn, context.window);
+    geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
-    WriteWindowInfo(context.conn, context.window);
-	WriteAllChildrenWindowInfo(context.conn, context.window);
-    img_data = GetWindowImageData(context.conn, context.window);
+    _xtoq_write_window_info(context.conn, context.window);
+	_xtoq_write_all_children_window_info(context.conn, context.window);
+    img_data = _xtoq_get_window_image_data(context.conn, context.window);
     
 	xcb_flush(context.conn);
     /* Get the image of the root window */
@@ -150,15 +146,15 @@ GetImageDummy(context_t context) {
                                        root_two_screen->root_visual,
                                        mask,
                                        values);
-    if (RequestCheck(conn_two, cookie, "Falied to create new window")) {
+    if (_xtoq_request_check(conn_two, cookie, "Falied to create new window")) {
         exit(1);
     }
     
-    WriteWindowInfo(conn_two, window);
+    _xtoq_write_window_info(conn_two, window);
     /* Map the window and flush the connection so it draws to the screen */
     xcb_map_window(conn_two, window);
     xcb_flush(conn_two);
-    WriteWindowInfo(conn_two, window);
+    _xtoq_write_window_info(conn_two, window);
     
     /* Create the pixmap and associate it with our new window. */
     pixmap = xcb_generate_id(conn_two);
@@ -168,7 +164,7 @@ GetImageDummy(context_t context) {
                                window,
                                geom_reply->width,
                                geom_reply->height);
-    if (RequestCheck(conn_two, cookie, "Failed to create pixmap")) {
+    if (_xtoq_request_check(conn_two, cookie, "Failed to create pixmap")) {
         exit(1);
     }
     
@@ -183,7 +179,7 @@ GetImageDummy(context_t context) {
                            0,
                            0,
                            0);
-    if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
+    if (_xtoq_request_check(conn_two, cookie, "Failed to put image into pixmap")) {
         exit(1);
     }
     
@@ -198,12 +194,12 @@ GetImageDummy(context_t context) {
                            0,
                            geom_reply->width / 2,
                            geom_reply->height / 2);
-    if (RequestCheck(conn_two, cookie, "Failed to put image into pixmap")) {
+    if (_xtoq_request_check(conn_two, cookie, "Failed to put image into pixmap")) {
         exit(1);
     }
     
     xcb_flush(conn_two);
-    WriteWindowInfo(conn_two, window);
+    _xtoq_write_window_info(conn_two, window);
     
     //Remove later
     /* Enter infinte loop so the window stays open */
@@ -219,6 +215,15 @@ GetImageDummy(context_t context) {
     xcb_disconnect(conn_two);
     
     return 0;
+}
+
+xtoq_event_t
+dummy_xtoq_wait_for_event(xtoq_context_t context) {
+    
+    sleep(4);
+    xtoq_event_t event;
+    
+    return event;
 }
 
 #endif //_XTOQ_C_

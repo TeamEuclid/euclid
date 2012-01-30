@@ -28,7 +28,7 @@
 
 
 xcb_get_window_attributes_reply_t *
-GetWindowAttributes (xcb_connection_t *conn, xcb_window_t window)
+_xtoq_get_window_attributes (xcb_connection_t *conn, xcb_window_t window)
 {
     xcb_get_window_attributes_reply_t *reply;
     xcb_generic_error_t *error;
@@ -45,7 +45,7 @@ GetWindowAttributes (xcb_connection_t *conn, xcb_window_t window)
 }
 
 xcb_get_geometry_reply_t *
-GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window)
+_xtoq_get_window_geometry (xcb_connection_t *conn, xcb_window_t window)
 {
     xcb_get_geometry_cookie_t cookie;
     cookie = xcb_get_geometry(conn, window);
@@ -53,8 +53,9 @@ GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window)
 }
 
 
-void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
-								 xcb_window_t root)
+void
+_xtoq_write_all_children_window_info (xcb_connection_t *conn,
+									  xcb_window_t root)
 {
 
     xcb_query_tree_reply_t *reply;
@@ -77,11 +78,11 @@ void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
     children = xcb_query_tree_children(reply);
 
     /* Iterate thorough all the children and get their pixmap (hopefully) */
-	printf("--- Iterating through children of window %ld ---\n",
+	printf("--- Iterating through children of window %u ---\n",
 		   root);
     for (i = 0; i < len; i++) {
-        WriteWindowInfo(conn, children[i]);
-		img_data = GetWindowImageData(conn, children[i]);
+        _xtoq_write_window_info(conn, children[i]);
+		img_data = _xtoq_get_window_image_data(conn, children[i]);
 		if (!img_data.data) {
 			printf("Image data is empty\n");
 		}
@@ -93,7 +94,7 @@ void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
 }
 
 image_data_t
-GetWindowImageData (xcb_connection_t *conn, xcb_drawable_t window)
+_xtoq_get_window_image_data (xcb_connection_t *conn, xcb_drawable_t window)
 {
     image_data_t image_data;
     xcb_get_image_cookie_t img_cookie;
@@ -104,7 +105,7 @@ GetWindowImageData (xcb_connection_t *conn, xcb_drawable_t window)
     image_data.data = NULL;
     image_data.length = 0;
 
-    geom_reply = GetWindowGeometry(conn, window);
+    geom_reply = _xtoq_get_window_geometry(conn, window);
     if (!geom_reply) {
         fprintf(stderr, "ERROR: Failed to get window image data.\n");
         return image_data;
@@ -135,24 +136,24 @@ GetWindowImageData (xcb_connection_t *conn, xcb_drawable_t window)
 }
 
 void
-WriteWindowInfo (xcb_connection_t *conn, xcb_window_t window)
+_xtoq_write_window_info (xcb_connection_t *conn, xcb_window_t window)
 {
     xcb_get_geometry_reply_t *geom_reply;
     xcb_get_window_attributes_reply_t *attr_reply;
 
-    geom_reply = GetWindowGeometry(conn, window);
+    geom_reply = _xtoq_get_window_geometry(conn, window);
     if (!geom_reply) {
-        printf("Failed to get geometry for window %ld\n", window);
+        printf("Failed to get geometry for window %u\n", window);
         return;
     }
-    attr_reply = GetWindowAttributes(conn, window);
+    attr_reply = _xtoq_get_window_attributes(conn, window);
     if (!attr_reply) {
-        printf("Failed to get attributes for window %ld\n", window);
+        printf("Failed to get attributes for window %u\n", window);
         return;
     }
 
     /* Print out the geometry and attributes we're interested in */
-    printf("Window Id: %ld\n", window);
+    printf("Window Id: %u\n", window);
     printf("x: %d\ty: %d\n", geom_reply->x, geom_reply->y);
     printf("width: %d\theight: %d\n", geom_reply->width, geom_reply->height);
 
@@ -170,7 +171,7 @@ WriteWindowInfo (xcb_connection_t *conn, xcb_window_t window)
 }
 
 int
-RequestCheck (xcb_connection_t *conn, xcb_void_cookie_t cookie,
+_xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
                      char *msg)
 {
     xcb_generic_error_t *error;
@@ -179,7 +180,7 @@ RequestCheck (xcb_connection_t *conn, xcb_void_cookie_t cookie,
     if (error) {
         if (msg) {
             fprintf(stderr, "ERROR: ");
-            fprintf(stderr, msg);
+            fprintf(stderr,"%s", msg);
             fprintf(stderr, "\nError code: %d\n", error->error_code);
         }
         return error->error_code;

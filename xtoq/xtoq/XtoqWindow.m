@@ -1,9 +1,4 @@
-/** 
- *  DisplayNumberController.m
- *  xtoq
- *
- 
-  Copyright (C) 2012 Aaron Skomra 
+/*Copyright (C) 2012 
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -24,46 +19,8 @@
  SOFTWARE.
  */
 
-/** 
- *  AppController.h
- *  xtoq
- *
- *  This is the controller for the Popup to retreive the display number
- *  from the user.
- *
- */
+#import "XtoqWindow.h"
 
-#import "DisplayNumberController.h"
-
-NSString * const DisplayNotification = @"DisplayNotify";
-
-@implementation DisplayNumberController
-
-- (id)init
-{
-        NSLog(@"DisplayNumberControllerInit");
-    if (!( windowId = [super initWithWindowNibName:@"DisplayNumberDialog"]))
-        return nil;
-
-    return self;
-}
-
-- (void)windowDidLoad
-{
-    NSLog(@"Nib file is loaded");
-    [super windowDidLoad];
-}
-
-- (IBAction)setDisplayNumber:(id)sender{
-    displayNumber = (int) [[displayValueField stringValue] intValue]; 
-    NSLog(@"Display changed %d", displayNumber );
-    
-    //FIXME windowId close doesn't close the Dialog
-    //[windowId close];
-}
-
-- (int)getDisplayNumber{
-    return displayNumber;
-}
+@implementation XtoqWindow
 
 @end

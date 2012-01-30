@@ -44,7 +44,7 @@ typedef struct image_data_t {
  * @return The window attributes reply. Null if the request fails.
  */
 xcb_get_window_attributes_reply_t *
-GetWindowAttributes (xcb_connection_t *conn, xcb_window_t window);
+_xtoq_get_window_attributes (xcb_connection_t *conn, xcb_window_t window);
 
 /**
  * Return the geometry of the window in a geometry reply. Caller must free
@@ -54,14 +54,15 @@ GetWindowAttributes (xcb_connection_t *conn, xcb_window_t window);
  * @return The window's geometry reply. Null if the request for reply fails.
  */
 xcb_get_geometry_reply_t *
-GetWindowGeometry (xcb_connection_t *conn, xcb_window_t window);
+_xtoq_get_window_geometry (xcb_connection_t *conn, xcb_window_t window);
 
 /**
  * Print out information about the existing windows attached to our
  * root. Most of this code is taken from src/manage.c from the i3 code
  * by Michael Stapelberg
  */
-void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
+void
+_xtoq_write_all_children_window_info (xcb_connection_t *conn,
 								 xcb_window_t root);
 
 /**
@@ -71,7 +72,7 @@ void WriteAllChildrenWindowInfo (xcb_connection_t *conn,
  * @return Structure containing data and data length
  */
 image_data_t
-GetWindowImageData (xcb_connection_t *conn, xcb_window_t window);
+_xtoq_get_window_image_data (xcb_connection_t *conn, xcb_window_t window);
 
 /**
  * Write information about a window out to stdio.
@@ -80,7 +81,7 @@ GetWindowImageData (xcb_connection_t *conn, xcb_window_t window);
  * @param window The window.
  */
 void
-WriteWindowInfo (xcb_connection_t *conn, xcb_window_t window);
+_xtoq_write_window_info (xcb_connection_t *conn, xcb_window_t window);
 
 /**
  * Check the request cookie and determine if there is an error.
@@ -90,7 +91,7 @@ WriteWindowInfo (xcb_connection_t *conn, xcb_window_t window);
  * @return int The number of the error code, if any. Otherwise zero.
  */
 int
-RequestCheck (xcb_connection_t *conn, xcb_void_cookie_t cookie,
+_xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
               char *msg);
 
 #endif  /* _UTIL_H_ */

@@ -29,14 +29,27 @@ SOFTWARE.
 
 #import <Cocoa/Cocoa.h>
 #import "util.h"
+#import "XtoqImageRep.h"
+#import "xtoq.h"
 
 @interface XtoqView : NSView {
-    NSString *file;
-    NSString *file2;
-    BOOL ourBool;
-    NSImage *image;
-    NSImage *image2;
+    XtoqImageRep *image;  
     
+    NSImage *image2;
+    NSString *file;
+    NSRect frame;
+    
+    //The X :1 paramater
+    char *screen;
+    
+    xtoq_context_t xcbContext;
+    xcb_image_t *imageT;
+
 }
+
+- (void)setImage:(XtoqImageRep *)newImage;
+- (id)initWithImage:(XtoqImageRep *)initImage;
+- (id)initWithFrame:(NSRect)frame;
+
 @end
 

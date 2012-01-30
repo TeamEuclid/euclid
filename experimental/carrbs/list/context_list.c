@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Benjamin Carr
  *
- * context_list.h
+ * context_list.c
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,10 +23,6 @@
  * SOFTWARE.
  */
 
-
-#ifndef _ROOTIMG_API_H_
-#define _ROOTIMG_API_H_
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <xcb/xcb.h>
@@ -37,13 +33,14 @@
 #include "context_list.h"
 
 
-void AddContextNode(struct context_list * list, struct context_node * node) {
+void
+add_context_node(struct context_list * list, struct context_node * node) {
     if (list->head == NULL) {
         list->head = node;
         node->next = NULL;
     }
     else {
-        temp = list->head;
+        struct context_node * temp = list->head;
         while (temp->next != NULL)
             temp = temp->next;
         temp->next = node;
@@ -51,38 +48,45 @@ void AddContextNode(struct context_list * list, struct context_node * node) {
     }
 }
 
-void RemoveContextNode(struct context_list * list, xcb_window_t window_id) {
+void
+remove_context_node(struct context_list * list, xcb_window_t window_id) {
     if (list->head == NULL) {
         //error empty list
+        printf("Error, empty list\n");
     }
-    context_node * curr, * prev = list->head;
-    if (curr->context.window == window_id) {
+    struct context_node * curr, * prev = list->head;
+    if (curr->context->window == window_id) {
         list->head = curr->next;
-        break;
+        return;
     }
     while (curr->next != NULL) {
         curr = curr->next;
-        if (curr->context.window == window_id) {
+        if (curr->context->window == window_id) {
             prev->next = curr->next;
-            break;
+            return;
         }
         prev = curr;
         curr = curr->next;
     }
     // error, no node with window_id
+    //printf("Error, no node with window_id: %d", (int)window_id);
 }
 
-context_node * getContextNodeByWindowId (context_list * list, xcb_window_t window_id) {
+struct context_node *
+get_context_node_by_window_id (struct context_list * list, xcb_window_t window_id) {
     if (list->head == NULL) {
         //error, empty list
+        printf("Error, empty list\n");
     }
-    context_node * temp = list->head;
+    struct context_node * temp = list->head;
     while (temp->next != NULL) {
-        if (temp->context.window == window_id)
+        if (temp->context->window == window_id)
             return temp;
         temp = temp->next;
     }
     // error, no window with that id
+    // printf("Error, no node with window_id: %d", (int)window_id);
+    return NULL;
 }
 
 /* this will surely break: */

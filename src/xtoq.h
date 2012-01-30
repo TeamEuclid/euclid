@@ -29,29 +29,47 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include "util.h"
 
+#define XTOQ_DAMAGE 0
 
-typedef struct context_t {
+typedef struct xtoq_context_t {
     xcb_connection_t *conn;
     xcb_drawable_t window;
-} context_t;
+} xtoq_context_t;
+
+typedef struct xtoq_event_t {
+    xtoq_context_t context;
+    int event_type;
+} xtoq_event_t;
 
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
  * @param screen The screen that we wish to connect to
  */
-context_t
-Init(char  *screen);
-
-int
-GetImageDummy(context_t context);
+xtoq_context_t
+xtoq_init(char *screen);
 
 xcb_image_t *
-GetImage(context_t context);
+xtoq_get_image(xtoq_context_t context);
+
+/*
+xtoq_event_t
+xtoq_wait_for_event(xtoq_context_t context);
+*/
+
+int
+dummy_xtoq_get_image(xtoq_context_t context);
+
+xtoq_event_t
+dummy_xtoq_wait_for_event(xtoq_context_t context);
+
+
+
 
 #endif // _XTOQ_H_

@@ -24,47 +24,52 @@
  */
 
 #import <AppKit/AppKit.h>
+#import <Cocoa/Cocoa.h>
 #import <xcb/xcb_image.h>
+#import "xtoq.h"
+
 
 @interface XtoqImageRep : NSImageRep {
+    struct CGImage *cgImage;
+    xcb_image_t *imageT;
+    NSSize size;
+    CGFloat width;
+    CGFloat height;
     NSArray *imageTypes;
-    CGImageRef image;
-    xcb_image_t xcbImage;
+    NSSize windowSize;    
 }
 /**
- * Returns an array of UTI strings identifying the image types 
- * supported directly by the receiver. 
- * @return array An array of NSStrings containing UTI identifying 
- *          supported image types.
+ * Return an NSArray of supported file types, currently nil
+ * @return An array of supported image file types.
  */
 - (NSArray *)imageUnfilteredTypes;
 
-/**
- * Returns a Boolean value indicating whether the receiver can 
- * initialize itself from the specified data.
- * @param data The NSData object containing the image data.
- * @return BOOL YES if the receiver understands the format 
- *          of the specified data and can use it to initialize 
- *          itself; otherwise, NO.
- */
-- (BOOL)canInitWithData:(NSData *)data;
 
 /**
- * Initializes and returns an NSImage instance with the contents 
- * of the specified NSData object.
- * @param data The NSData object containing the image data. 
- * @return id An initialized NSImage instance, or nil if the 
- *          method cannot create an image representation from the
- *          contents of the specified data object.
+ * Return Yes if the xcb_image_t it is passed is not null, else No.
+ * @param imageData The image from the Xserver that you want drawn
+ * @return No if image from the xserver is null else Yes
  */
-- (id)initWithData:(NSData *)data;
+- (BOOL)canInitWithData:(xcb_image_t *)imageData;
 
 /**
- * Draws the image in the current coordinate system.
- * @param data The NSData object containing the image data.
- * @return BOOL YES if the image was successfully drawn; otherwise,
- *          NO if there was a problem.
+ * Return the image it has constructed from the imageData
+ * @param imageData The image from the Xserver that you want drawn
+ * @return id It returns its own id
+ */
+- (id)initWithData:(xcb_image_t *)imageData;
+
+/**
+ * Return whether the window was drawn
+ * 'draw' draws the image at the coordinate system's origin 
+ * @return bool Yes if the image was drawn, No if it was not.
  */
 - (BOOL)draw;
+
+/**
+ * Return an NSSize with the dimensions of the image
+ * @return NSSize with the dimensions of the image
+ */
+- (NSSize)size;
 
 @end

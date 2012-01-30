@@ -20,7 +20,7 @@ export RESDIR
 export MACOSTARGET
 
 all clean $(PACKAGE):
-	cd $(XTOQSRCDIR) && $(MAKE) $@
+#	cd $(XTOQSRCDIR) && $(MAKE) $@
 	cd $(XCODESRCDIR) && $(MAKE) $@
 
 $(APPNAME): FORCE
