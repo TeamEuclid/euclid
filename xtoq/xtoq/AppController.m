@@ -90,8 +90,8 @@
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
     
-    
-    [[xtoqWindow contentView]  addSubview: [[XtoqView alloc] initWithImage:image]];
+    ourView = [[XtoqView alloc] initWithImage:image];
+    [[xtoqWindow contentView]  addSubview: ourView];
 
 }
 
@@ -137,7 +137,10 @@
 }
 
 - (void) putImage {
-    
+        NSLog(@"Put Image");
+    imageT = xtoq_get_image(xcbContext);
+    image = [[XtoqImageRep alloc] initWithData:imageT];
+
 }
 
 @end

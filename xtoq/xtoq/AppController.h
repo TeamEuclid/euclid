@@ -45,6 +45,7 @@
 @interface AppController : NSObject {
     DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
+    XtoqView * ourView;
     
     //The X :1 paramater
     char *screen;
