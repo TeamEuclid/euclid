@@ -100,7 +100,6 @@
 		E1EBB2D214CB5366007496CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EBB2D114CB5366007496CF /* main.m */; };
 		E1EBB2D614CB5366007496CF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2D414CB5366007496CF /* Credits.rtf */; };
 		E1EBB2D914CB5366007496CF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EBB2D814CB5366007496CF /* AppDelegate.m */; };
-		E1EBB2DC14CB5366007496CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2DA14CB5366007496CF /* MainMenu.xib */; };
 		E1EBB2E814CB54F9007496CF /* XtoqView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EBB2E714CB54F9007496CF /* XtoqView.m */; };
 		E1EBB2EC14CB55FF007496CF /* Mac-Logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2EA14CB55FF007496CF /* Mac-Logo.jpg */; };
 		E1EBB2ED14CB55FF007496CF /* Mac-Logo2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E1EBB2EB14CB55FF007496CF /* Mac-Logo2.jpg */; };
@@ -253,7 +252,6 @@
 		E1EBB2D514CB5366007496CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		E1EBB2D714CB5366007496CF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E1EBB2D814CB5366007496CF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		E1EBB2DB14CB5366007496CF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		E1EBB2E614CB54F9007496CF /* XtoqView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqView.h; sourceTree = "<group>"; };
 		E1EBB2E714CB54F9007496CF /* XtoqView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqView.m; sourceTree = "<group>"; };
 		E1EBB2EA14CB55FF007496CF /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
@@ -546,8 +544,6 @@
 				4280B15714CB816C0061CD45 /* XtoqImageRep.m */,
 				E1EBB2E614CB54F9007496CF /* XtoqView.h */,
 				E1EBB2E714CB54F9007496CF /* XtoqView.m */,
-				42DE13D614D44D53008C148A /* XtoqWindow.h */,
-				42DE13D714D44D53008C148A /* XtoqWindow.m */,
 				E1EBB2CC14CB5366007496CF /* Supporting Files */,
 			);
 			path = xtoq;
@@ -630,7 +626,6 @@
 			files = (
 				E1EBB2D014CB5366007496CF /* InfoPlist.strings in Resources */,
 				E1EBB2D614CB5366007496CF /* Credits.rtf in Resources */,
-				E1EBB2DC14CB5366007496CF /* MainMenu.xib in Resources */,
 				E1EBB2EC14CB55FF007496CF /* Mac-Logo.jpg in Resources */,
 				E1EBB2ED14CB55FF007496CF /* Mac-Logo2.jpg in Resources */,
 				4817709914CCD243004556BA /* DisplayNumberDialog.xib in Resources */,
@@ -674,14 +669,6 @@
 				E1EBB2D514CB5366007496CF /* en */,
 			);
 			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		E1EBB2DA14CB5366007496CF /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E1EBB2DB14CB5366007496CF /* en */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -106,24 +106,30 @@ keyDown:(NSEvent *)theEvent {
     NSString *characters = [theEvent characters];
     int key = [characters characterAtIndex:0];
     
-    // NEED TO CHANGE to remove hard coded size
-    NSSize imageSize = {1024, 768};
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"viewKeyDownEvent" object:self 
+     userInfo: [[NSDictionary alloc]
+                initWithObjectsAndKeys:[[NSArray alloc]
+                                        initWithObjects: theEvent, nil], @"1", nil]];
     
-    NSRect destRect;
-    destRect.size = imageSize;
-    
-    if (key == NSDownArrowFunctionKey) {        
-        // Get update image
-  //      imageT = xtoq_get_image(xcbContext);
-        
-        image = [[XtoqImageRep alloc] initWithData:imageT];
-        [image drawInRect:destRect];
-        [image draw];        
-        [[self window] flushWindow];
-        
-    } else {
+//    // NEED TO CHANGE to remove hard coded size
+//    NSSize imageSize = {1024, 768};
+//    
+//    NSRect destRect;
+//    destRect.size = imageSize;
+//    
+//    if (key == NSDownArrowFunctionKey) {        
+//        // Get update image
+//  //      imageT = xtoq_get_image(xcbContext);
+//        
+//        image = [[XtoqImageRep alloc] initWithData:imageT];
+//        [image drawInRect:destRect];
+//        [image draw];        
+//        [[self window] flushWindow];
+//        
+//    } else {
         [super keyDown:theEvent];
-    }
+//    }
 }
 
 - (void)setImage:(XtoqImageRep *)newImage {

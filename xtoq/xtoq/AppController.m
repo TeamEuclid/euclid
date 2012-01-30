@@ -1,5 +1,5 @@
 
-/*Copyright (C) 2012 Aaron Skomra and Braden Wooley
+/*Copyright (C) 2012 Aaron Skomra 
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -96,6 +96,11 @@
     file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
     image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
     
+    // Register for the key down notifications from the view
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(keyDownInView:)
+                                                 name: @"viewKeyDownEvent"
+                                               object: nil];
 
 }
 
@@ -115,7 +120,12 @@
     NSLog(@"opened %@", displayNumberController);	
 }
 
-
+- (void) keyDownInView: (NSNotification *) aNotification
+{
+    NSDictionary *keyInfo = [aNotification userInfo];
+    NSLog(@"Got a viewKeyDownEvent");
+    NSLog(@"Key was: %@", [keyInfo objectForKey: @"1"]);
+}
 
 /**
  *

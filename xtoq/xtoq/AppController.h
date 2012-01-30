@@ -61,6 +61,8 @@
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
+- (void) keyDownInView: (NSNotification *) aNotification;
+
 /**
  * Create the Display Number Controller
  */
