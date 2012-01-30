@@ -229,6 +229,20 @@ supplement task dev.dev_mile0.env_setup.config_dummy_driver {
 }
 supplement task dev.dev_mile0.render_simple_mac_win {
 }
+supplement task dev.dev_mile0.display_rootimg_in_osx_win {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.key_handler_for_update {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.convert_pixmap_to_image {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.redraw_image_on_keydown {
+}
+supplement task dev.dev_mile0.update_rootimg_in_osx_win.xcb_get_image_function {
+}
+supplement task dev.dev_mile0.xtoq_window_data_structure {
+}
 supplement task dev.dev_mile1 {
 }
 supplement task dev.dev_mile1.dev_mile1_code {
@@ -298,8 +312,6 @@ supplement task sys_admin.back_ups.weekly_verification {
 supplement task sys_admin.repo_mangement {
 }
 supplement task sys_admin.repo_mangement.sync_github_redmine {
-  booking carrbs_r 2011-12-01 +1h {sloppy 2}
-  complete 100
 }
 supplement task sys_admin.repo_mangement.repo_maint {
   booking carrbs_r 2011-11-29-13:00--0800 + 1.0h { overtime 2 }

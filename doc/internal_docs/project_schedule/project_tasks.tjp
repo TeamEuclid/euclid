@@ -588,7 +588,6 @@ task a_and_d "Architecture and Design" {
 
 # Development task - specifically these are implementation tasks
 task dev "Development" {
-    end 2012-01-20
     task dev_mile0 "Milestone 0 development" {
 
         task env_setup "Setup Environment Development" {
@@ -609,7 +608,6 @@ task dev "Development" {
 
         task render_simple_mac_win "Simple window in OS X" {
             note "Render a simple window in OS X using XCB"
-            depends !!!research.osx_research
             depends !env_setup
             effort 24h
             ${allocate_team}
@@ -1135,52 +1133,52 @@ formats html
 #     resourceroot jvanderw
 # }
 
-# # Export the timesheets for the weeks
-# export "nov28_dec4" {
-#   definitions -
-#   start 2011-11-28
-#   end 2011-12-04
-#   taskattributes booking
-#   hideresource 0
-# }
+# Export the timesheets for the weeks
+export "nov28_dec4" {
+  definitions -
+  start 2011-11-28
+  end 2011-12-04
+  taskattributes booking
+  hideresource 0
+}
 
-# export "dec5_dec11" {
-#   definitions -
-#   start 2011-12-05
-#   end 2011-12-11
-#   taskattributes booking
-#   hideresource 0
-# }
+export "dec5_dec11" {
+  definitions -
+  start 2011-12-05
+  end 2011-12-11
+  taskattributes booking
+  hideresource 0
+}
 
-# export "dec12-jan8" {
-#     definitions -
-#     start 2011-12-12
-#     end 2012-01-8
-#     taskattributes booking
-#     hideresource 0
-# }
+export "dec12-jan8" {
+    definitions -
+    start 2011-12-12
+    end 2012-01-8
+    taskattributes booking
+    hideresource 0
+}
 
-# export "jan9-jan15" {
-#     definitions -
-#     start 2012-01-9
-#     end 2012-01-15
-#     taskattributes booking
-#     hideresource 0
-# }
+export "jan9-jan15" {
+    definitions -
+    start 2012-01-9
+    end 2012-01-15
+    taskattributes booking
+    hideresource 0
+}
 
-# export "jan16-jan22" {
-#     definitions -
-#     start 2012-01-16
-#     end 2012-01-22
-#     taskattributes booking
-#     hideresource 0
-# }
+export "jan16-jan22" {
+    definitions -
+    start 2012-01-16
+    end 2012-01-22
+    taskattributes booking
+    hideresource 0
+}
 
-# Export "jan23-jan29" {
-#     definitions -
-#     start 2012-01-23
-#     end 2012-01-29
-#     taskattributes booking
-#     hideresource 0
-# }
+export "jan23-jan29" {
+    definitions -
+    start 2012-01-23
+    end 2012-01-29
+    taskattributes booking
+    hideresource 0
+}
 

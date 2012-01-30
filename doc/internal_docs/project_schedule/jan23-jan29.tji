@@ -215,21 +215,15 @@ supplement task dev.dev_mile0.display_rootimg_in_osx_win {
 supplement task dev.dev_mile0.update_rootimg_in_osx_win {
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.key_handler_for_update {
-    complete 100
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.convert_pixmap_to_image {
-    complete 100
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.redraw_image_on_keydown {
-    complete 100
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.xcb_get_image_function {
-    complete 100
 }
 supplement task dev.dev_mile0.xtoq_window_data_structure {
-    complete 75
 }
-
 supplement task dev.dev_mile1 {
 }
 supplement task dev.dev_mile1.dev_mile1_code {
