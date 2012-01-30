@@ -1,65 +1,3 @@
-supplement task documentation {
-}
-supplement task documentation.project_docs {
-}
-supplement task documentation.project_docs.proj_plan {
-}
-supplement task documentation.project_docs.proj_plan.ram_personnel {
-}
-supplement task documentation.project_docs.proj_plan.ram_it {
-}
-supplement task documentation.project_docs.proj_plan.ram_dev {
-}
-supplement task documentation.project_docs.proj_plan.role_desc {
-}
-supplement task documentation.project_docs.proj_plan.gen_wbs {
-}
-supplement task documentation.project_docs.proj_plan.gen_schedule {
-}
-supplement task documentation.project_docs.proj_plan.gen_schedule.wbs_into_tj3 {
-}
-supplement task documentation.project_docs.proj_plan.gen_schedule.assign_resources {
-}
-supplement task documentation.project_docs.proj_plan.gen_schedule.gen_mile_dates {
-}
-supplement task documentation.project_docs.proj_plan.gen_schedule.gen_reports {
-}
-supplement task documentation.project_docs.proj_plan.id_deliverables {
-}
-supplement task documentation.project_docs.proj_plan.project_desc {
-}
-supplement task documentation.project_docs.proj_plan.project_desc.project_desc_sp_meetings {
-}
-supplement task documentation.project_docs.proj_plan.project_desc.gen_project_desc {
-}
-supplement task documentation.project_docs.proj_plan.mile_desc {
-}
-supplement task documentation.project_docs.proj_plan.meeting_desc {
-}
-supplement task documentation.project_docs.proj_plan.asset_track_desc {
-}
-supplement task documentation.project_docs.proj_plan.desc_v_and_v {
-}
-supplement task documentation.project_docs.proj_plan.deployment_desc {
-}
-supplement task documentation.project_docs.usrd {
-}
-supplement task documentation.project_docs.usrd.id_usr_reqs {
-}
-supplement task documentation.project_docs.usrd.write_usrd {
-}
-supplement task documentation.project_docs.a_and_d_doc {
-}
-supplement task documentation.project_docs.a_and_d_doc.init_decom {
-}
-supplement task documentation.project_docs.a_and_d_doc.init_arch_doc {
-}
-supplement task documentation.project_docs.a_and_d_doc.arch_doc_maint {
-}
-supplement task documentation.project_docs.v_and_v_doc {
-}
-supplement task documentation.project_docs.v_and_v_doc.v_and_v_research {
-}
 supplement task documentation.project_docs.v_and_v_doc.v_and_v_research.v_and_v_tools_research {
   booking bhuddle_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
 }
@@ -69,28 +7,6 @@ supplement task documentation.project_docs.v_and_v_doc.v_and_v_research.v_and_v_
 }
 supplement task documentation.project_docs.v_and_v_doc.init_v_and_v_doc {
   booking bhuddle_r 2011-11-30-12:00--0800 + 3.0h { overtime 2 }
-}
-supplement task documentation.project_docs.v_and_v_doc.v_and_v_doc_maint1 {
-}
-supplement task documentation.project_docs.v_and_v_doc.v_and_v_doc_maint2 {
-}
-supplement task documentation.project_docs.v_and_v_doc.v_and_v_doc_maint3 {
-}
-supplement task documentation.project_docs.v_and_v_doc.v_and_v_doc_maint4 {
-}
-supplement task documentation.code_docs {
-}
-supplement task documentation.code_docs.readme_maint {
-}
-supplement task documentation.code_docs.gen_api_docs {
-}
-supplement task documentation.code_docs.license {
-}
-supplement task documentation.code_docs.code_style_doc {
-}
-supplement task research {
-}
-supplement task research.code_bases {
 }
 supplement task research.code_bases.learn_xcb {
   booking askomra_r 2011-11-28-14:00--0800 + 1.0h,
@@ -112,30 +28,12 @@ supplement task research.code_bases.lightpipe {
           2011-12-02-12:00--0800 + 1.0h,
           2011-12-02-14:00--0800 + 1.0h { overtime 2 }
 }
-supplement task research.osx_research {
-}
 supplement task research.osx_research.osx_learn {
   booking askomra_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
-}
-supplement task research.osx_research.xcode {
-}
-supplement task research.osx_research.obj_c {
-}
-supplement task research.osx_research.learn_apple_api {
-}
-supplement task a_and_d {
-}
-supplement task a_and_d.a_and_d_research {
-}
-supplement task a_and_d.a_and_d_research.interface {
 }
 supplement task a_and_d.a_and_d_research.interface.xcb_lib_research {
   booking bwooley_r 2011-12-02-13:00--0800 + 2.0h { overtime 2 }
   booking dsnyder_r 2011-12-02-13:00--0800 + 2.0h { overtime 2 }
-}
-supplement task a_and_d.a_and_d_research.interface.xlib_lib_research {
-}
-supplement task a_and_d.a_and_d_research.interface.xtest_lib_research {
 }
 supplement task a_and_d.a_and_d_research.interface.comp_lib_research {
   booking bwooley_r 2011-11-28-12:00--0800 + 2.0h { overtime 2 }
@@ -147,161 +45,17 @@ supplement task a_and_d.a_and_d_research.interface.damage_lib_research {
   booking dsnyder_r 2011-11-28-14:00--0800 + 1.0h,
           2011-11-29-12:00--0800 + 3.0h { overtime 2 }
 }
-supplement task a_and_d.a_and_d_research.examples_research {
-}
 supplement task a_and_d.a_and_d_research.examples_research.lighpipe_a_and_r {
   booking bwooley_r 2011-11-30-12:00--0800 + 3.0h,
           2011-12-01-12:00--0800 + 1.0h { overtime 2 }
   booking dsnyder_r 2011-11-30-12:00--0800 + 3.0h,
           2011-12-01-12:00--0800 + 1.0h { overtime 2 }
 }
-supplement task a_and_d.a_and_d_research.examples_research.xcomp_manager {
-}
-supplement task a_and_d.a_and_d_research.examples_research.misc_win_managers {
-}
 supplement task a_and_d.a_and_d_research.id_comps_research {
   booking bwooley_r 2011-12-01-13:00--0800 + 2.0h,
           2011-12-02-12:00--0800 + 1.0h { overtime 2 }
   booking dsnyder_r 2011-12-01-13:00--0800 + 2.0h,
           2011-12-02-12:00--0800 + 1.0h { overtime 2 }
-}
-supplement task a_and_d.library_a_and_d {
-}
-supplement task a_and_d.library_a_and_d.generic_a_and_d {
-}
-supplement task a_and_d.library_a_and_d.generic_a_and_d.damage_interface {
-}
-supplement task a_and_d.library_a_and_d.generic_a_and_d.compositing {
-}
-supplement task a_and_d.library_a_and_d.generic_a_and_d.io_interface {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1 {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1.mile1_identify {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1.mile1_relations {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1.mile1_api {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2 {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2.mile2_identify {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2.mile2_relations {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile2.mile2_api {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3 {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3.mile3_identify {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3.mile3_relations {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile3.mile3_api {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4 {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4.mile4_identify {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4.mile4_relations {
-}
-supplement task a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile4.mile4_api {
-}
-supplement task a_and_d.app_a_and_d {
-}
-supplement task a_and_d.app_a_and_d.proc_arch {
-}
-supplement task a_and_d.app_a_and_d.osx_interface_a_and_d {
-}
-supplement task a_and_d.app_a_and_d.app_interface {
-}
-supplement task dev {
-}
-supplement task dev.dev_mile0 {
-}
-supplement task dev.dev_mile0.env_setup {
-}
-supplement task dev.dev_mile0.env_setup.compile_x_server {
-}
-supplement task dev.dev_mile0.env_setup.config_dummy_driver {
-}
-supplement task dev.dev_mile0.render_simple_mac_win {
-}
-supplement task dev.dev_mile0.display_rootimg_in_osx_win {
-}
-supplement task dev.dev_mile0.update_rootimg_in_osx_win {
-}
-supplement task dev.dev_mile0.update_rootimg_in_osx_win.key_handler_for_update {
-}
-supplement task dev.dev_mile0.update_rootimg_in_osx_win.convert_pixmap_to_image {
-}
-supplement task dev.dev_mile0.update_rootimg_in_osx_win.redraw_image_on_keydown {
-}
-supplement task dev.dev_mile0.update_rootimg_in_osx_win.xcb_get_image_function {
-}
-supplement task dev.dev_mile0.xtoq_window_data_structure {
-}
-supplement task dev.dev_mile1 {
-}
-supplement task dev.dev_mile1.dev_mile1_code {
-}
-supplement task dev.dev_mile1.dev_mile1_doc {
-}
-supplement task dev.dev_mile1.dev_mile1_v_and_v {
-}
-supplement task dev.dev_mile2 {
-}
-supplement task dev.dev_mile2.dev_mile2_code {
-}
-supplement task dev.dev_mile2.dev_mile2_doc {
-}
-supplement task dev.dev_mile2.dev_mile2_v_and_v {
-}
-supplement task dev.dev_mile3 {
-}
-supplement task dev.dev_mile3.dev_mile3_code {
-}
-supplement task dev.dev_mile3.dev_mile3_doc {
-}
-supplement task dev.dev_mile3.dev_mile3_v_and_v {
-}
-supplement task dev.dev_mile4 {
-}
-supplement task dev.dev_mile4.dev_mile4_code {
-}
-supplement task dev.dev_mile4.dev_mile4_doc {
-}
-supplement task dev.dev_mile4.dev_mile4_v_and_v {
-}
-supplement task v_and_v {
-}
-supplement task v_and_v.v_and_v_mile0 {
-}
-supplement task v_and_v.v_and_v_mile1 {
-}
-supplement task v_and_v.v_and_v_mile2 {
-}
-supplement task v_and_v.v_and_v_mile3 {
-}
-supplement task v_and_v.v_and_v_mile4 {
-}
-supplement task v_and_v.v_and_v_mile4.req_check {
-}
-supplement task v_and_v.v_and_v_mile4.doc_check {
-}
-supplement task v_and_v.v_and_v_mile4.doc_check.readme_check {
-}
-supplement task v_and_v.v_and_v_mile4.doc_check.api_doc_check {
-}
-supplement task v_and_v.v_and_v_mile4.deploy_check {
-}
-supplement task sys_admin {
-}
-supplement task sys_admin.back_ups {
-}
-supplement task sys_admin.back_ups.back_up_plan {
 }
 supplement task sys_admin.back_ups.weekly_backup {
   booking carrbs_r 2011-12-01-13:00--0800 + 1.0h { overtime 2 }
@@ -326,28 +80,6 @@ supplement task management.weekly_wbs_update {
 }
 supplement task management.weekly_schedule_update {
   booking jvanderw_r 2011-12-01-13:00--0800 + 1.0h { overtime 2 }
-}
-supplement task deployment {
-}
-supplement task deployment.hand_off {
-}
-supplement task deployment.mid_term_presentation {
-}
-supplement task deployment.final_presentation {
-}
-supplement task project_milestones {
-}
-supplement task project_milestones.init_project_plan {
-}
-supplement task project_milestones.mile0 {
-}
-supplement task project_milestones.mile1 {
-}
-supplement task project_milestones.mile2 {
-}
-supplement task project_milestones.mile3 {
-}
-supplement task project_milestones.mile4 {
 }
 supplement resource bwooley {
   workinghours sun off

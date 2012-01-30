@@ -258,7 +258,7 @@ task documentation "Documentation" {
                 effort 4h
                 allocate bhuddle
                 allocate jvanderw
-                complete 50
+                complete 100
             }
             task write_usrd "Generate document" {
                 note "Generate user requirement document."
@@ -385,10 +385,12 @@ task research "Research" {
         task learn_xcb "Learn XCB basics" {
             effort 30h
             ${allocate_team}
+            complete 100
         }
         task lightpipe "Examine lightpipe code" {
             effort 18h
             ${allocate_team}
+            complete 100
         }
     } # end code_bases
 
@@ -398,20 +400,22 @@ task research "Research" {
         task osx_learn "Become familiar with OS X environment" {
             effort 12h
             ${allocate_team}
+            complete 100
         }
         task xcode "Learn XCode" {
-            depends !osx_learn
             effort 12h
             ${allocate_team}
+            complete 100
         }
         task obj_c "Basic Objective-C familiarity" {
             effort 24h
             ${allocate_team}
+            complete 100
         }
         task learn_apple_api "Learn Apple windowing API" {
-            depends !xcode
             effort 42h
             ${allocate_team}
+            complete 100
         }
     }# end osx_research
 } # end research
@@ -485,6 +489,9 @@ task a_and_d "Architecture and Design" {
             task compositing "Interface with manual compositing" {
                 effort 4h
                 ${allocate_a_and_d}
+                booking dsnyder_r 2012-01-12 +1h {sloppy 2}
+                booking bwooley_r 2012-01-12 +1h {sloppy 2}
+                complete 100
             }
             task io_interface "Interface with I/O libraries" {
                 effort 4h
@@ -622,37 +629,41 @@ task dev "Development" {
         
         task update_rootimg_in_osx_win "Update root window image in OSX" {
             note "Update the displayed root window in the OS X window when key is pressed"
-            depends !display_rootimg_in_osx_win
             
             task key_handler_for_update "Create key down handler in NSView" {
                 effort 4h
                 allocate bwooley
                 allocate askomra
+                booking askomra_r 2012-01-24-12:00--0800 + 2.0h { overtime 2 }
+                booking bwooley_r 2012-01-24-12:00--0800 + 2.0h { overtime 2 }
+                complete 100
             }
 
             task convert_pixmap_to_image "Covert pixmap to usable image" {
                 effort 6h
                 allocate bwooley
                 allocate askomra
+                booking askomra_r 2012-01-25-12:00--0800 + 6.0h { overtime 2 }
+                booking bhuddle_r 2012-01-25-12:00--0800 + 2.0h { overtime 2 }
+                complete 100
             }
 
             task redraw_image_on_keydown "Redraw view with new image on keydown" {
                 effort 4h
                 allocate bwooley
                 allocate askomra
+                booking askomra_r 2012-01-26-12:00--0800 + 6.0h { overtime 2 }
+                booking bhuddle_r 2012-01-26-12:00--0800 + 2.0h { overtime 2 }
+                complete 100
             }
 
             task xcb_get_image_function "Create xtoq_get_image function that returns root image" {
                 note "Create a xtoq function that when called returns the current image of the root window."
                 effort 2h
                 allocate dsnyder
+                booking dsnyder_r 2012-01-24-12:00--0800 + 6.0h { overtime 2 }
+                complete 100
             }
-        }
-
-            task xtoq_window_data_structure "Create a data structure class that manages xtoq windows" {
-                effort 6h
-                allocate carrbs
-            
         }
 
     } # dev_mile0
@@ -660,11 +671,19 @@ task dev "Development" {
     task dev_mile1 "Milestone 1 development" {
         note "Basic rooted window"
         depends project_milestones.mile0
-        depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
+        #depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
 
+        task xtoq_window_data_structure "Create a data structure class that manages xtoq windows" {
+            effort 6h
+            allocate carrbs
+#            booking carrbs_r 2012-01-24-12:00--0800 + 4.0h { overtime 2 }
+            complete 75
+            
+        }
         task dev_mile1_code "Mile 1 Coding" {
             effort 105h
             ${allocate_team}
+
         }
         task dev_mile1_doc "Mile 1 documentation" {
             effort 12h
@@ -743,13 +762,14 @@ task dev "Development" {
 } # end dev
 
 task v_and_v "Validation and Verification" {
-    scheduling asap
     task v_and_v_mile0 "Milestone 0" {
-        note "Validate the verify the first Milestone"
         depends !!dev.dev_mile0
+        note "Validate the verify the first Milestone"
         effort 2h
         ${allocate_v_and_v}
         allocate askomra
+        booking jvanderw_r 2012-01-22 +1h {sloppy 2}
+        complete 100
     }
 
     task v_and_v_mile1 "Milestone 1 V & V" {
@@ -974,7 +994,6 @@ include "dec5_dec11.tji"
 include "dec12-jan8.tji"
 include "jan9-jan15.tji"
 include "jan16-jan22.tji"
-include "jan23-jan29.tji"
 
 # Macro for task tips
 macro TaskTip [
@@ -1133,52 +1152,52 @@ formats html
 #     resourceroot jvanderw
 # }
 
-# Export the timesheets for the weeks
-export "nov28_dec4" {
-  definitions -
-  start 2011-11-28
-  end 2011-12-04
-  taskattributes booking
-  hideresource 0
-}
+# # Export the timesheets for the weeks
+# export "nov28_dec4" {
+#   definitions -
+#   start 2011-11-28
+#   end 2011-12-04
+#   taskattributes booking
+#   hideresource 0
+# }
 
-export "dec5_dec11" {
-  definitions -
-  start 2011-12-05
-  end 2011-12-11
-  taskattributes booking
-  hideresource 0
-}
+# export "dec5_dec11" {
+#   definitions -
+#   start 2011-12-05
+#   end 2011-12-11
+#   taskattributes booking
+#   hideresource 0
+# }
 
-export "dec12-jan8" {
-    definitions -
-    start 2011-12-12
-    end 2012-01-8
-    taskattributes booking
-    hideresource 0
-}
+# export "dec12-jan8" {
+#     definitions -
+#     start 2011-12-12
+#     end 2012-01-8
+#     taskattributes booking
+#     hideresource 0
+# }
 
-export "jan9-jan15" {
-    definitions -
-    start 2012-01-9
-    end 2012-01-15
-    taskattributes booking
-    hideresource 0
-}
+# export "jan9-jan15" {
+#     definitions -
+#     start 2012-01-9
+#     end 2012-01-15
+#     taskattributes booking
+#     hideresource 0
+# }
 
-export "jan16-jan22" {
-    definitions -
-    start 2012-01-16
-    end 2012-01-22
-    taskattributes booking
-    hideresource 0
-}
+# export "jan16-jan22" {
+#     definitions -
+#     start 2012-01-16
+#     end 2012-01-22
+#     taskattributes booking
+#     hideresource 0
+# }
 
-export "jan23-jan29" {
-    definitions -
-    start 2012-01-23
-    end 2012-01-29
-    taskattributes booking
-    hideresource 0
-}
+# export "jan23-jan29" {
+#     definitions -
+#     start 2012-01-23
+#     end 2012-01-29
+#     taskattributes booking
+#     hideresource 0
+# }
 

@@ -101,24 +101,6 @@ supplement task research.osx_research.xcode {
 supplement task research.osx_research.obj_c {
 }
 supplement task research.osx_research.learn_apple_api {
-  booking askomra_r 2012-01-23-12:00--0800 + 3.0h,
-          2012-01-24-12:00--0800 + 3.0h,
-          2012-01-25-12:00--0800 + 1.0h { overtime 2 }
-  booking bhuddle_r 2012-01-23-12:00--0800 + 3.0h,
-          2012-01-24-12:00--0800 + 3.0h,
-          2012-01-25-12:00--0800 + 1.0h { overtime 2 }
-  booking bwooley_r 2012-01-23-12:00--0800 + 3.0h,
-          2012-01-24-12:00--0800 + 3.0h,
-          2012-01-25-12:00--0800 + 1.0h { overtime 2 }
-  booking carrbs_r 2012-01-23-12:00--0800 + 3.0h,
-          2012-01-24-12:00--0800 + 3.0h,
-          2012-01-25-12:00--0800 + 1.0h { overtime 2 }
-  booking dsnyder_r 2012-01-23-12:00--0800 + 3.0h,
-          2012-01-24-12:00--0800 + 3.0h,
-          2012-01-25-12:00--0800 + 1.0h { overtime 2 }
-  booking jvanderw_r 2012-01-23-12:00--0800 + 3.0h,
-          2012-01-24-12:00--0800 + 3.0h,
-          2012-01-25-12:00--0800 + 1.0h { overtime 2 }
 }
 supplement task a_and_d {
 }
@@ -217,12 +199,23 @@ supplement task dev.dev_mile0.update_rootimg_in_osx_win {
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.key_handler_for_update {
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.convert_pixmap_to_image {
+  booking askomra_r 2012-01-25-12:00--0800 + 6.0h { overtime 2 }
+  booking bhuddle_r 2012-01-25-12:00--0800 + 2.0h { overtime 2 }
+  complete 100
+
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.redraw_image_on_keydown {
+  booking askomra_r 2012-01-26-12:00--0800 + 6.0h { overtime 2 }
+  booking bhuddle_r 2012-01-26-12:00--0800 + 2.0h { overtime 2 }
+  complete 100
 }
 supplement task dev.dev_mile0.update_rootimg_in_osx_win.xcb_get_image_function {
+  booking dsnyder_r 2012-01-24-12:00--0800 + 6.0h { overtime 2 }
+  complete 100
 }
 supplement task dev.dev_mile0.xtoq_window_data_structure {
+  booking carrbs_r 2012-01-24-12:00--0800 + 4.0h { overtime 2 }
+  complete 75
 }
 supplement task dev.dev_mile1 {
 }
