@@ -47,7 +47,6 @@
                                                  backing: NSBackingStoreBuffered
                                                    defer: YES];
     
-    
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     
@@ -104,8 +103,6 @@
 {
     [xtoqWindow makeKeyAndOrderFront: self];
     [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
-
-    
 }
 
 - (IBAction)showDisplayChooser
@@ -150,7 +147,6 @@
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
     [ourView setImage:image];
-
 }
 
 @end
