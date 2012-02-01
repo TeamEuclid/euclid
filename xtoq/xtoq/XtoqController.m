@@ -155,8 +155,8 @@
     [ourView setImage:image];
 }
 
-- (void) setWindowInList:(id)anObject forKey:(id)akey {
-    [winList setObject:anObject forKey:akey];
+- (void) setWindowInList:(id)windowId forKey:(id)akey {
+    [winList setObject:windowId forKey:akey];
 }
 
 - (id) getWindowInList:(id)aKey {

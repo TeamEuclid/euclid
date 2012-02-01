@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 
+/*Copyright (C) 2012 Ben Huddle
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,14 @@
 // Placehoder
 
 #import <AppKit/AppKit.h>
+#import "xtoq.h"
+#import "XtoqController.h"
 
-@interface XtoqWindow : NSWindow
+@interface XtoqWindow : NSWindow {
+    xtoq_context_t winContext;
+    id winId;
+}
+
+-(void) setContext: (xtoq_context_t) aContext withId: (id) theId;
 
 @end

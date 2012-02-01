@@ -56,7 +56,7 @@
     XtoqView *view;
     NSString *file;
     NSImage *image2;
-    NSMutableDictionary *winList;
+    NSMutableDictionary *winList; // The window list data structure.
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
@@ -82,8 +82,9 @@
 
 /**
  * a function for setting a window in the window list
+ * might need to be modified to actually set context if possible.
  */
-- (void) setWindowInList: (id) anObject forKey: (id) akey;
+- (void) setWindowInList: (id) windowId forKey: (id) akey;
 
 /**
  * a method for getting a window in the list by the key
