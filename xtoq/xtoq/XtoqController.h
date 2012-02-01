@@ -56,6 +56,7 @@
     XtoqView *view;
     NSString *file;
     NSImage *image2;
+    NSMutableDictionary *winList;
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
@@ -72,11 +73,21 @@
 /**
  * Wait for the event.
  */
-- (void)wait_for_xtoq_event;
+- (void) wait_for_xtoq_event;
 
 /**
  * Put a new image in the window / view
  */
 - (void) updateImage;
+
+/**
+ * a function for setting a window in the window list
+ */
+- (void) setWindowInList: (id) anObject forKey: (id) akey;
+
+/**
+ * a method for getting a window in the list by the key
+ */
+- (id) getWindowInList: (id) aKey;
 
 @end

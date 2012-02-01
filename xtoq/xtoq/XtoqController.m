@@ -37,6 +37,8 @@
 
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+    winList = [[NSMutableDictionary alloc] init];
+    
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
     
@@ -151,6 +153,14 @@
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
     [ourView setImage:image];
+}
+
+- (void) setWindowInList:(id)anObject forKey:(id)akey {
+    [winList setObject:anObject forKey:akey];
+}
+
+- (id) getWindowInList:(id)aKey {
+    return [winList objectForKey:aKey];
 }
 
 @end
