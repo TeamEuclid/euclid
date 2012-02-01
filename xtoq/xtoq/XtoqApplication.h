@@ -20,7 +20,7 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "AppController.h"
+#import "XtoqController.h"
 
 @interface XtoqApplication : NSApplication
 

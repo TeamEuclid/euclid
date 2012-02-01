@@ -27,7 +27,7 @@ int XtoqApplicationMain(int argc, const char** argv){
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
-    AppController *controller = [[AppController alloc] init];
+    XtoqController *controller = [[XtoqController alloc] init];
     
     [NSApp setDelegate: controller];    
     [NSApp run];

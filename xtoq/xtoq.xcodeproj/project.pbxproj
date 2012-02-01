@@ -10,7 +10,7 @@
 		4280B15814CB816C0061CD45 /* XtoqImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 4280B15714CB816C0061CD45 /* XtoqImageRep.m */; };
 		4294EA2D14CB8A6D0026C164 /* xtoq.c in Sources */ = {isa = PBXBuildFile; fileRef = 4294EA2B14CB8A6D0026C164 /* xtoq.c */; };
 		42DE13D414D44D1B008C148A /* XtoqApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DE13D314D44D1B008C148A /* XtoqApplication.m */; };
-		4817709714CCD243004556BA /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817709314CCD243004556BA /* AppController.m */; };
+		4817709714CCD243004556BA /* XtoqController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817709314CCD243004556BA /* XtoqController.m */; };
 		4817709814CCD243004556BA /* DisplayNumberController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817709514CCD243004556BA /* DisplayNumberController.m */; };
 		4817709914CCD243004556BA /* DisplayNumberDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4817709614CCD243004556BA /* DisplayNumberDialog.xib */; };
 		E119D52C14D73852008FC58C /* XtoqWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E119D52B14D73852008FC58C /* XtoqWindow.m */; };
@@ -113,8 +113,8 @@
 		4294EA2C14CB8A6D0026C164 /* xtoq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xtoq.h; path = ../src/xtoq.h; sourceTree = "<group>"; };
 		42DE13D214D44D1B008C148A /* XtoqApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqApplication.h; sourceTree = "<group>"; };
 		42DE13D314D44D1B008C148A /* XtoqApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqApplication.m; sourceTree = "<group>"; };
-		4817709214CCD243004556BA /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
-		4817709314CCD243004556BA /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		4817709214CCD243004556BA /* XtoqController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = XtoqController.h; sourceTree = "<group>"; };
+		4817709314CCD243004556BA /* XtoqController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqController.m; sourceTree = "<group>"; };
 		4817709414CCD243004556BA /* DisplayNumberController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayNumberController.h; sourceTree = "<group>"; };
 		4817709514CCD243004556BA /* DisplayNumberController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayNumberController.m; sourceTree = "<group>"; };
 		4817709614CCD243004556BA /* DisplayNumberDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayNumberDialog.xib; sourceTree = "<group>"; };
@@ -532,8 +532,8 @@
 			children = (
 				E119D52A14D73852008FC58C /* XtoqWindow.h */,
 				E119D52B14D73852008FC58C /* XtoqWindow.m */,
-				4817709214CCD243004556BA /* AppController.h */,
-				4817709314CCD243004556BA /* AppController.m */,
+				4817709214CCD243004556BA /* XtoqController.h */,
+				4817709314CCD243004556BA /* XtoqController.m */,
 				E1EBB2D714CB5366007496CF /* AppDelegate.h */,
 				E1EBB2D814CB5366007496CF /* AppDelegate.m */,
 				4817709414CCD243004556BA /* DisplayNumberController.h */,
@@ -646,7 +646,7 @@
 				E1EBB2FC14CB66AD007496CF /* util.c in Sources */,
 				4280B15814CB816C0061CD45 /* XtoqImageRep.m in Sources */,
 				4294EA2D14CB8A6D0026C164 /* xtoq.c in Sources */,
-				4817709714CCD243004556BA /* AppController.m in Sources */,
+				4817709714CCD243004556BA /* XtoqController.m in Sources */,
 				4817709814CCD243004556BA /* DisplayNumberController.m in Sources */,
 				42DE13D414D44D1B008C148A /* XtoqApplication.m in Sources */,
 				E119D52C14D73852008FC58C /* XtoqWindow.m in Sources */,
