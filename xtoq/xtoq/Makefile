@@ -1,20 +1,29 @@
+# Copyright (c) Jess VanDerwalker <washu@sonic.net>
+#
+# Cocoa/Obj-C makefile
+#
 
+CC = clang
 CFLAGS = -Wall -g -O0
 INCLUDES = -I../../src -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lxcb-util -lxcb-damage -lxcb-composite -lxcb-xfixes -lxcb-render -lxcb-shape -lxcb-image -lxcb-shm -lxcb
-FRAMEWORKS = Cocoa
+FRAMEWORKS = Cocoa AppKit
 IBTOOL = ibtool
 
-SOURCES = main.m AppController.m AppDelegate.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
-XIBDIR = en.lproj
+SOURCES = main.m XtoqApplication.m AppController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
+CSOURCES = ../../src/xtoq.c ../../src/util.c
+COBJS = $(CSOURCES:.c=.o)
+Xibdir = en.lproj
 
+# Build the list of frameworks
+FRAMEWORKFLAGS = $(addprefix -framework , $(FRAMEWORKS))
 all: $(PACKAGE)
 
-$(PACKAGE): $(SOURCES) $(XIBDIR)/MainMenu.nib Info.plist
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $@ $(SOURCES) -framework $(FRAMEWORKS)
+$(PACKAGE): $(SOURCES) $(SOURCES) Info.plist
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $@ $(SOURCES) $(COBJS) $(FRAMEWORKFLAGS)
 
-$(XIBDIR)/MainMenu.nib: $(XIBDIR)/MainMenu.xib
-	$(IBTOOL) $(XIBDIR)/MainMenu.xib --compile $(XIBDIR)/MainMenu.nib
+$CSOURCES:
+	cd ../../src && $(MAKE)
 
 $(XIBDIR)/DisplayNumberDialog.nib: DisplayNumberDialog.xib
 	$(IBTOOL) DisplayNumberDialog.xib --compile $(XIBDIR)/DisplayNumberDialog.nib

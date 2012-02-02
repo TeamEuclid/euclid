@@ -69,24 +69,28 @@
                              YES, //bool shouldInterpolate,
                              kCGRenderingIntentDefault //CGColorRenderingIntent intent
                              );
+    width = CGImageGetWidth(cgImage);
+    height = CGImageGetHeight(cgImage);
+    size = NSMakeSize (width, height);
+    
     return self;
 }
 
 - (BOOL)draw{   
     CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
     if (contextMac == NULL)
-               NSLog(@"NULL context in draw");
+        NSLog(@"NULL context in draw");
 	if ( !cgImage) {
-        NSLog(@"bang image");
+        NSLog(@"No image");
 		return NO;
 	}
-
-    float 
-    width = CGImageGetWidth(cgImage),
-    height = CGImageGetHeight(cgImage);
-
+    
     CGContextDrawImage(contextMac, CGRectMake(0, 0, width, height), cgImage);
-
+    
 	return YES;
+}
+
+- (NSSize)size{
+    return size;
 }
 @end

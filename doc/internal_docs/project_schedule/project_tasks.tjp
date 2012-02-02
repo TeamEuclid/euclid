@@ -258,7 +258,7 @@ task documentation "Documentation" {
                 effort 4h
                 allocate bhuddle
                 allocate jvanderw
-                complete 50
+                complete 100
             }
             task write_usrd "Generate document" {
                 note "Generate user requirement document."
@@ -385,10 +385,12 @@ task research "Research" {
         task learn_xcb "Learn XCB basics" {
             effort 30h
             ${allocate_team}
+            complete 100
         }
         task lightpipe "Examine lightpipe code" {
             effort 18h
             ${allocate_team}
+            complete 100
         }
     } # end code_bases
 
@@ -398,20 +400,22 @@ task research "Research" {
         task osx_learn "Become familiar with OS X environment" {
             effort 12h
             ${allocate_team}
+            complete 100
         }
         task xcode "Learn XCode" {
-            depends !osx_learn
             effort 12h
             ${allocate_team}
+            complete 100
         }
         task obj_c "Basic Objective-C familiarity" {
             effort 24h
             ${allocate_team}
+            complete 100
         }
         task learn_apple_api "Learn Apple windowing API" {
-            depends !xcode
             effort 42h
             ${allocate_team}
+            complete 100
         }
     }# end osx_research
 } # end research
@@ -485,6 +489,9 @@ task a_and_d "Architecture and Design" {
             task compositing "Interface with manual compositing" {
                 effort 4h
                 ${allocate_a_and_d}
+                booking dsnyder_r 2012-01-12 +1h {sloppy 2}
+                booking bwooley_r 2012-01-12 +1h {sloppy 2}
+                complete 100
             }
             task io_interface "Interface with I/O libraries" {
                 effort 4h
@@ -588,7 +595,6 @@ task a_and_d "Architecture and Design" {
 
 # Development task - specifically these are implementation tasks
 task dev "Development" {
-    scheduling asap    
     task dev_mile0 "Milestone 0 development" {
 
         task env_setup "Setup Environment Development" {
@@ -609,10 +615,55 @@ task dev "Development" {
 
         task render_simple_mac_win "Simple window in OS X" {
             note "Render a simple window in OS X using XCB"
-            depends !!!research.osx_research
             depends !env_setup
             effort 24h
             ${allocate_team}
+        }
+
+        task display_rootimg_in_osx_win "Display root window image in OSX" {
+            note "Display the root window image from the dummy driver in an OS X window"
+            depends !env_setup
+            effort 10h
+            ${allocate_team}
+        }
+        
+        task update_rootimg_in_osx_win "Update root window image in OSX" {
+            note "Update the displayed root window in the OS X window when key is pressed"
+            
+            task key_handler_for_update "Create key down handler in NSView" {
+                effort 4h
+                allocate bwooley
+                allocate askomra
+                booking askomra_r 2012-01-24-12:00--0800 + 2.0h { overtime 2 }
+                booking bwooley_r 2012-01-24-12:00--0800 + 2.0h { overtime 2 }
+                complete 100
+            }
+
+            task convert_pixmap_to_image "Covert pixmap to usable image" {
+                effort 6h
+                allocate bwooley
+                allocate askomra
+                booking askomra_r 2012-01-25-12:00--0800 + 6.0h { overtime 2 }
+                booking bhuddle_r 2012-01-25-12:00--0800 + 2.0h { overtime 2 }
+                complete 100
+            }
+
+            task redraw_image_on_keydown "Redraw view with new image on keydown" {
+                effort 4h
+                allocate bwooley
+                allocate askomra
+                booking askomra_r 2012-01-26-12:00--0800 + 6.0h { overtime 2 }
+                booking bhuddle_r 2012-01-26-12:00--0800 + 2.0h { overtime 2 }
+                complete 100
+            }
+
+            task xcb_get_image_function "Create xtoq_get_image function that returns root image" {
+                note "Create a xtoq function that when called returns the current image of the root window."
+                effort 2h
+                allocate dsnyder
+                booking dsnyder_r 2012-01-24-12:00--0800 + 6.0h { overtime 2 }
+                complete 100
+            }
         }
 
     } # dev_mile0
@@ -620,11 +671,19 @@ task dev "Development" {
     task dev_mile1 "Milestone 1 development" {
         note "Basic rooted window"
         depends project_milestones.mile0
-        depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
+        #depends a_and_d.library_a_and_d.module_a_and_d.a_and_d_mile1
 
+        task xtoq_window_data_structure "Create a data structure class that manages xtoq windows" {
+            effort 6h
+            allocate carrbs
+#            booking carrbs_r 2012-01-24-12:00--0800 + 4.0h { overtime 2 }
+            complete 75
+            
+        }
         task dev_mile1_code "Mile 1 Coding" {
             effort 105h
             ${allocate_team}
+
         }
         task dev_mile1_doc "Mile 1 documentation" {
             effort 12h
@@ -703,13 +762,14 @@ task dev "Development" {
 } # end dev
 
 task v_and_v "Validation and Verification" {
-    scheduling asap
     task v_and_v_mile0 "Milestone 0" {
-        note "Validate the verify the first Milestone"
         depends !!dev.dev_mile0
+        note "Validate the verify the first Milestone"
         effort 2h
         ${allocate_v_and_v}
         allocate askomra
+        booking jvanderw_r 2012-01-22 +1h {sloppy 2}
+        complete 100
     }
 
     task v_and_v_mile1 "Milestone 1 V & V" {
@@ -985,17 +1045,17 @@ formats html
     caption 'All effort values are in human hours.'
 }
     
-taskreport development "euclid_dev" {
-    formats html
-    headline "Development and Resource Allocation"
-    columns bsi {title 'WBS'}, name, start, end, effort, complete, chart {scale day width 500}
-    timeformat "%Y-%m-%d"
-    hideresource ~(isleaf() & isleaf_())
-    loadunit hours
-    sortresources name.up
-    sorttasks tree.up
-    caption 'All effort values are in human hours.'
-}
+# taskreport development "euclid_dev" {
+#     formats html
+#     headline "Development and Resource Allocation"
+#     columns bsi {title 'WBS'}, name, start, end, effort, complete, chart {scale day width 500}
+#     timeformat "%Y-%m-%d"
+#     hideresource ~(isleaf() & isleaf_())
+#     loadunit hours
+#     sortresources name.up
+#     sorttasks tree.up
+#     caption 'All effort values are in human hours.'
+# }
 
 # taskreport milestone_report "milestone_report" {
 #     formats html
@@ -1022,75 +1082,75 @@ taskreport development "euclid_dev" {
 #     sorttasks plan.start.up
 # }
 
-# Resource graph for Aaron Skomra
-resourcereport euclid_resource_graph_askomra "euclid_resource_graph_askomra" {
-    formats html
-    headline "Appendix C.1: Resource Allocation Graph - Aaron Skomra"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot askomra
-}
+# # Resource graph for Aaron Skomra
+# resourcereport euclid_resource_graph_askomra "euclid_resource_graph_askomra" {
+#     formats html
+#     headline "Appendix C.1: Resource Allocation Graph - Aaron Skomra"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+#     resourceroot askomra
+# }
 
-# Resource graph for Ben Carr
-resourcereport euclid_resource_graph_carrbs "euclid_resource_graph_carrbs" {
-    formats html
-    headline "Appendix C.2: Resource Allocation Graph - Ben Carr"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot carrbs
-}
+# # Resource graph for Ben Carr
+# resourcereport euclid_resource_graph_carrbs "euclid_resource_graph_carrbs" {
+#     formats html
+#     headline "Appendix C.2: Resource Allocation Graph - Ben Carr"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+#     resourceroot carrbs
+# }
 
-# Resource graph for Ben Huddle
-resourcereport euclid_resource_graph_bhuddle "euclid_resource_graph_bhuddle" {
-    formats html
-    headline "Appendix C.3: Resource Allocation Graph - Ben Huddle"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot bhuddle
-}
-# Resource graph for Braden Wooley
-resourcereport euclid_resource_graph_bwoolwy "euclid_resource_graph_bwooley" {
-    formats html
-    headline "Appendix C.4: Resource Allocation Graph - Braden Wooley"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot bwooley
-}
-# Resource graph for David Snyder
-resourcereport euclid_resource_graph_dsnyder "euclid_resource_graph_dsnyder" {
-    formats html
-    headline "Appendix C.5: Resource Allocation Graph - David Snyder"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot dsnyder
-}
+# # Resource graph for Ben Huddle
+# resourcereport euclid_resource_graph_bhuddle "euclid_resource_graph_bhuddle" {
+#     formats html
+#     headline "Appendix C.3: Resource Allocation Graph - Ben Huddle"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+#     resourceroot bhuddle
+# }
+# # Resource graph for Braden Wooley
+# resourcereport euclid_resource_graph_bwoolwy "euclid_resource_graph_bwooley" {
+#     formats html
+#     headline "Appendix C.4: Resource Allocation Graph - Braden Wooley"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+#     resourceroot bwooley
+# }
+# # Resource graph for David Snyder
+# resourcereport euclid_resource_graph_dsnyder "euclid_resource_graph_dsnyder" {
+#     formats html
+#     headline "Appendix C.5: Resource Allocation Graph - David Snyder"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+#     resourceroot dsnyder
+# }
 
-# Resource graph for Jess VanDerwalker
-resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
-    formats html
-    headline "Appendix C.6: Resource Allocation Graph - Jess VanDerwalker"
-    columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
-    loadunit shortauto
-    # We only like to show leaf tasks for leaf resources.
-    hidetask ~(isleaf() & isleaf_())
-    sorttasks plan.start.up
-    resourceroot jvanderw
-}
+# # Resource graph for Jess VanDerwalker
+# resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
+#     formats html
+#     headline "Appendix C.6: Resource Allocation Graph - Jess VanDerwalker"
+#     columns bsi {title 'WBS'}, name, effort, rate, weekly { ${TaskTip} scale day width 1000}
+#     loadunit shortauto
+#     # We only like to show leaf tasks for leaf resources.
+#     hidetask ~(isleaf() & isleaf_())
+#     sorttasks plan.start.up
+#     resourceroot jvanderw
+# }
 
 # # Export the timesheets for the weeks
 # export "nov28_dec4" {
@@ -1132,3 +1192,12 @@ resourcereport euclid_resource_graph_jvanderw "euclid_resource_graph_jvanderw" {
 #     taskattributes booking
 #     hideresource 0
 # }
+
+# export "jan23-jan29" {
+#     definitions -
+#     start 2012-01-23
+#     end 2012-01-29
+#     taskattributes booking
+#     hideresource 0
+# }
+

@@ -180,7 +180,7 @@ _xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
     if (error) {
         if (msg) {
             fprintf(stderr, "ERROR: ");
-            fprintf(stderr, msg);
+            fprintf(stderr,"%s", msg);
             fprintf(stderr, "\nError code: %d\n", error->error_code);
         }
         return error->error_code;

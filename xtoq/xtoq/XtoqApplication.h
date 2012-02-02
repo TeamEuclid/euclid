@@ -1,5 +1,4 @@
-
-/*Copyright (C) 2012 Aaron Skomra 
+/*Copyright (C) 2012 
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -20,28 +19,12 @@
  SOFTWARE.
  */
 
-/** 
- *  AppController.h
- *  xtoq
- *
- *  This is the controller for the Popup to retreive the display number
- *  from the user.
- */
+#import <AppKit/AppKit.h>
+#import "XtoqController.h"
 
-#import <Foundation/Foundation.h>
-#import <Cocoa/Cocoa.h>
-@class DisplayNumberController;
+@interface XtoqApplication : NSApplication
 
-@interface AppController : NSObject {
-    DisplayNumberController *displayNumberController;
-}
+int XtoqApplicationMain(int argc, const char** argv);
 
-/**
- * Create the Display Number Controller
- */
-
-- (IBAction)showDisplayChooser;
-
-- (void)wait_for_xtoq_event;
 
 @end

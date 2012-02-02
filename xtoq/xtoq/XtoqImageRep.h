@@ -32,6 +32,9 @@
 @interface XtoqImageRep : NSImageRep {
     struct CGImage *cgImage;
     xcb_image_t *imageT;
+    NSSize size;
+    CGFloat width;
+    CGFloat height;
     NSArray *imageTypes;
     NSSize windowSize;    
 }
@@ -62,5 +65,11 @@
  * @return bool Yes if the image was drawn, No if it was not.
  */
 - (BOOL)draw;
+
+/**
+ * Return an NSSize with the dimensions of the image
+ * @return NSSize with the dimensions of the image
+ */
+- (NSSize)size;
 
 @end
