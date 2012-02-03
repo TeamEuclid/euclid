@@ -84,11 +84,16 @@
  * a function for setting a window in the window list
  * might need to be modified to actually set context if possible.
  */
-- (void) setWindowInList: (id) windowId forKey: (id) akey;
+- (void) setWindowInList: (XtoqWindow *) windowId forKey: (id) akey;
 
 /**
- * a method for getting a window in the list by the key
+ * a method for getting a window in the list by searching all keys
+ * returns nil if no key is found.
  */
-- (id) getWindowInList: (id) aKey;
+- (XtoqWindow *) getWindowInList: (id) aKey 
+                      withContxt: (xtoq_context_t) xtoqContxt;
+
+
+- (void) sendRects;
 
 @end

@@ -31,11 +31,15 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        screen = ":1";
-        NSLog(@"screen = %s", screen);
-        xcbContext = xtoq_init(screen);
-        imageT = xtoq_get_image(xcbContext);
-        image = [[XtoqImageRep alloc] initWithData:imageT];
+        
+        [[self window] flushWindow];
+        [self setNeedsDisplay:YES];
+        
+      //  screen = ":1";
+       // NSLog(@"screen = %s", screen);
+        //xcbContext = xtoq_init(screen);
+        //imageT = xtoq_get_image(xcbContext);
+        //image = [[XtoqImageRep alloc] initWithData:imageT];
         
         // Leaving these in for testing
         // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
@@ -44,7 +48,6 @@ initWithFrame:(NSRect)frame {
     }
     return self;
 }
-
 
 /**
  *  This is the initializer.
@@ -75,14 +78,33 @@ initWithImage:(XtoqImageRep *)newImage {
  */
 - (void)
 drawRect:(NSRect)dirtyRect {
-    [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
+
+    const NSRect ** rectList;
+    NSInteger * rectInt = 0;
+    
+    [self getRectsBeingDrawn:rectList count:rectInt];
+    
+    NSLog(@"rectInt = %ld", (long)rectInt);
+    
+    NSRect rect = NSMakeRect(10, 10, 100, 100);
+   // [[NSColor purpleColor] setFill];
+    NSRectFill(rect);
+    
+    [image drawInRect:dirtyRect];
+    
+    if (rectInt > 0){
+        
+    
+    }
+    
     
     // NEED TO CHANGE to remove hard coded size
    // NSSize imageSize = { 1024,768 };
   //  NSRect destRect;
   //  destRect.size = imageSize;
-    [image draw];
+ 
+  //  [image draw];
+    
     [[self window] flushWindow];
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
@@ -132,6 +154,7 @@ keyDown:(NSEvent *)theEvent {
 //    }
 }
 
+// This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
     //[newImage retain];
     //[image release];
@@ -139,6 +162,8 @@ keyDown:(NSEvent *)theEvent {
     [[self window] flushWindow];
     [self setNeedsDisplay:YES];
 }
+
+
 
 @end
 

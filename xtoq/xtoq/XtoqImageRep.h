@@ -72,4 +72,9 @@
  */
 - (NSSize)size;
 
+- (CGFloat)getWidth;
+
+- (CGFloat)getHeight;
+- (BOOL)drawInRect:(NSRect)rect;
+
 @end

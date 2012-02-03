@@ -90,7 +90,31 @@
 	return YES;
 }
 
+- (BOOL)drawInRect:(NSRect)rect{   
+    CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
+    if (contextMac == NULL)
+        NSLog(@"NULL context in draw");
+	if ( !cgImage) {
+        NSLog(@"No image");
+		return NO;
+	}
+    
+    CGContextDrawImage(contextMac, rect, cgImage);
+    
+	return YES;
+}
+
 - (NSSize)size{
     return size;
 }
+
+- (CGFloat)getWidth{
+    return width;
+}
+
+- (CGFloat)getHeight{
+    return height;
+}
+
+
 @end
