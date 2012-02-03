@@ -58,7 +58,7 @@ xtoq_init(char *screen) {
     init_reply.window = root_window;
     
     // not sure about this error ...
-   // _xtoq_add_context_t(init_reply);
+    //_xtoq_add_context_t(init_reply);
     
     return init_reply;
 }
