@@ -93,4 +93,7 @@
 - (XtoqWindow *) getWindowInList: (id) aKey 
                       withContxt: (xtoq_context_t) xtoqContxt;
 
+
+- (void) sendRects;
+
 @end

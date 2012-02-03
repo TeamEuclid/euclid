@@ -90,10 +90,18 @@
     xcbContext = xtoq_init(screen);
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
+
+    //ourView = [[XtoqView alloc] initWithImage:image];
     
-    ourView = [[XtoqView alloc] initWithImage:image];
-    [[xtoqWindow contentView]  addSubview: ourView];
+    NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
+    [image drawInRect:imageRec];
     
+// not sure whats going on  
+    //[[NSColor greenColor] setFill];
+    //NSRectFill(imageRec);
+    ourView = [[XtoqView alloc] initWithFrame:imageRec];
+    
+    [[xtoqWindow contentView]  addSubview: ourView];    
     // Leaving these in for testing
     file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
     image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
@@ -142,11 +150,24 @@
         }
         else { 
             NSLog(@"HEy I'm Not damage!"); 
-            [self updateImage];
+           // [self updateImage];
+           [self sendRects];
         }
 
     }
 }
+
+- (void) sendRects {
+   // [[NSGraphicsContext currentContext]
+   //  setImageInterpolation:NSImageInterpolationHigh];
+    
+        NSRect rect = NSMakeRect(10, 10, 100, 100);
+        [[NSColor redColor] setFill];
+        NSRectFill(rect);
+        [ourView setNeedsDisplayInRect:rect];
+
+}
+
 
 - (void) updateImage {
         NSLog(@"update Image");
