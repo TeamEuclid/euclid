@@ -62,7 +62,7 @@ void
 _xtoq_remove_context_node(xcb_window_t window_id);
 
 _xtoq_context_node *
-get_context_node_by_window_id (xcb_window_t window_id);
+_xtoq_get_context_node_by_window_id (xcb_window_t window_id);
 
 
 #endif
