@@ -33,6 +33,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
+#include "context_list.h"
 #include "util.h"
 
 #define XTOQ_DAMAGE 0

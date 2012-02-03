@@ -32,24 +32,37 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
+#include "xtoq.h"
 #include "util.h"
-#include "rootimg_api.h"
 
-struct context_node {
-    struct context_t *context;
-    struct context_node * next;
-} context_node;
+typedef struct _xtoq_context_node {
+    xtoq_context_t *context;
+    struct _xtoq_context_node * next;
+} _xtoq_context_node;
 
-struct context_list {
-    struct context_node * head;
-} context_list;
+typedef struct _xtoq_context_list {
+    struct _xtoq_context_node * head;
+    int count;
+} _xtoq_context_list;
 
-void add_context_node(struct context_list * list, struct context_node * node);
+_xtoq_context_list _xtoq_window_list;
 
-void remove_context_node(struct context_list * list, xcb_window_t window_id);
+void _xtoq_init_list();
 
-struct context_node *
-get_context_node_by_window_id (struct context_list * list, xcb_window_t window_id);
+
+void 
+testList();
+
+
+// _xtoq_add_context_t should be taking a context_t
+void
+_xtoq_add_context_t(xtoq_context_t context);
+ 
+void
+_xtoq_remove_context_node(xcb_window_t window_id);
+
+_xtoq_context_node *
+get_context_node_by_window_id (xcb_window_t window_id);
 
 
 #endif
