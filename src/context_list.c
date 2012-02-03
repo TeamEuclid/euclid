@@ -29,7 +29,7 @@ void _xtoq_init_list(){
     _xtoq_window_list.head = NULL;
     _xtoq_window_list.count = 0;
 }
-
+/*
 void 
 testList(){
     xcb_connection_t *conn;
@@ -44,7 +44,7 @@ testList(){
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
     
-    /* Get the geometry of the root window */
+    // Get the geometry of the root window 
     geom_reply = _xtoq_get_window_geometry(conn, root_window);
     
     //WriteWindowInfo(conn, root_window);
@@ -60,7 +60,7 @@ testList(){
     _xtoq_add_context_t(init_reply);
 
 }
-
+*/
 
 void
 _xtoq_add_context_t(xtoq_context_t context) {
@@ -79,7 +79,7 @@ _xtoq_add_context_t(xtoq_context_t context) {
 
 void
 _xtoq_remove_context_node(xcb_window_t window_id) {
-    if (list->head == NULL) {
+ /*   if (list->head == NULL) {
         //error empty list
         printf("Error, empty list\n");
     }
@@ -99,11 +99,12 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     }
     // error, no node with window_id
     //printf("Error, no node with window_id: %d", (int)window_id);
+  */
 }
 
 _xtoq_context_node *
 _xtoq_get_context_node_by_window_id (xcb_window_t window_id) {
-    if (list->head == NULL) {
+/*    if (list->head == NULL) {
         //error, empty list
         printf("Error, empty list\n");
     }
@@ -116,6 +117,7 @@ _xtoq_get_context_node_by_window_id (xcb_window_t window_id) {
     // error, no window with that id
     // printf("Error, no node with window_id: %d", (int)window_id);
     return NULL;
+ */
 }
 
 /* this will surely break: */
