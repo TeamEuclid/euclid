@@ -155,12 +155,29 @@
     [ourView setImage:image];
 }
 
-- (void) setWindowInList:(id)windowId forKey:(id)akey {
+- (void) setWindowInList:(XtoqWindow *)windowId forKey:(id)akey {
     [winList setObject:windowId forKey:akey];
 }
 
-- (id) getWindowInList:(id)aKey {
-    return [winList objectForKey:aKey];
+- (XtoqWindow *) getWindowInList:(id)aKey 
+                      withContxt:(xtoq_context_t)xtoqContxt {
+    
+    id key;
+    int index;
+    xtoq_context_t *xqWinContxt;
+    NSArray *keyArray = [winList allKeys];
+    XtoqWindow *xqWin;
+    
+    for (index = 0; index < [keyArray count]; index++) {
+        key = [keyArray objectAtIndex:index];
+        xqWin = [winList objectForKey:key];
+        xqWinContxt = [xqWin getContext:xqWin];
+        if (xqWinContxt->window == xtoqContxt.window) {
+            return xqWin;
+        }
+    }
+    
+    return nil;
 }
 
 @end

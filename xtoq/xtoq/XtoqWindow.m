@@ -23,9 +23,29 @@
 
 @implementation XtoqWindow
 
--(void) setContext:(xtoq_context_t)aContext withId:(id)theId {
+-(id) initWithContentRect:(NSRect)contentRect 
+                styleMask:(NSUInteger)aStyle 
+                  backing:(NSBackingStoreType)bufferingType 
+                    defer:(BOOL)flag {
+    
+    XtoqWindow *result = [super initWithContentRect:contentRect
+                                        styleMask:aStyle
+                                          backing:bufferingType
+                                            defer:flag];
+    return result;
+}
+
+-(void) makeKeyAndOrderFront:(id)sender {
+    [super makeKeyAndOrderFront:sender];
+}
+
+-(void) setContext:(xtoq_context_t *)aContext withId:(id)theId {
     winContext = aContext;
     winId = theId;
+}
+
+-(xtoq_context_t *) getContext:(XtoqWindow *)win {
+    return win->winContext;
 }
 
 @end
