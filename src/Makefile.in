@@ -2,6 +2,15 @@
 #
 # Makefile for the src/ directory
 
+# @configure_input@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+PACKAGE = @PACKAGE_NAME@
+VERSION = @PACKAGE_VERSION@
+
 CFLAGS = -Wall -g -O0 -c
 INCLUDES = -I/opt/X11/include
 # May need to change this
@@ -17,5 +26,12 @@ all: $(SOURCES) $(OBJECTS)
 
 clean:
 	rm -f *.o
+
+# Rebuild Makefile if necessary
+Makefile: Makefile.in ../config.status
+	cd .. && ./config.status src/$@
+
+config.status: ../configure
+	cd .. && ./config.status --recheck
 
 .PHONY: all clean install uninstall

@@ -1,7 +1,18 @@
 # Copyright (c) Jess VanDerwalker <washu@sonic.net>
 #
-# Cocoa/Obj-C makefile
+# Cocoa/Obj-C makefile in xtoq/xtoq/ directory
 #
+
+# @configure_input@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+PACKAGE = @PACKAGE_NAME@
+VERSION = @PACKAGE_VERSION@
+
+PATHTOXTOQSRC = ../../src
 
 CC = clang
 CFLAGS = -Wall -g -O0
@@ -11,14 +22,15 @@ FRAMEWORKS = Cocoa AppKit
 IBTOOL = ibtool
 
 SOURCES = main.m XtoqApplication.m XtoqController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
-CSOURCES = ../../src/xtoq.c ../../src/util.c
+CSOURCES = $(PATHTOXTOQSRC)/xtoq.c $(PATHTOXTOQSRC)/util.c
 COBJS = $(CSOURCES:.c=.o)
 Xibdir = en.lproj
 
 # Build the list of frameworks
 FRAMEWORKFLAGS = $(addprefix -framework , $(FRAMEWORKS))
-all: $(PACKAGE)
+all: @PACKAGE_NAME@
 
+# Compile files and build sources
 $(PACKAGE): $(SOURCES) $(SOURCES) Info.plist
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $@ $(SOURCES) $(COBJS) $(FRAMEWORKFLAGS)
 
@@ -28,23 +40,31 @@ $CSOURCES:
 $(XIBDIR)/DisplayNumberDialog.nib: DisplayNumberDialog.xib
 	$(IBTOOL) DisplayNumberDialog.xib --compile $(XIBDIR)/DisplayNumberDialog.nib
 
-Info.plist: $(PACKAGE)-Info.plist
-	cp $(PACKAGE)-Info.plist Info.plist
+# Replace necessary strings in Info.plist and rename
+Info.plist: @PACKAGE_NAME@-Info.plist
+	cp @PACKAGE_NAME@-Info.plist Info.plist
 	sed -e 's/$${EXECUTABLE_NAME}/$(PACKAGE)/' \
         -e 's/$${PRODUCT_NAME.*}/$(PACKAGE)/' \
-        -e 's/$${MACOSX_DEPLOYMENT_TARGET}/$(MACOSXTARGET)/' \
-        -e 's/$${NETSURF_VERSION}/$(VERSION)/' \
-        < $(PACKAGE)-Info.plist > Info.plist
+        -e 's/$${MACOSX_DEPLOYMENT_TARGET}/$(MACOSXTARGET))/' \
+        < @PACKAGE_NAME@-Info.plist > Info.plist
 
+# Rebuild config.status and Makefiles is configure changes
+Makefile: Makefile.in ../../config.status
+	cd ../.. && ./config.status $(XCODESRCDIR)/$@
+
+config.status: ../../configure
+	cd ../.. && ./config.status --recheck
+
+# Installation
 install:
 	install -d $(bindir)/$(APPNAME)
 	install -m 0755 xtoq $(bindir)/$(APPNAME)
-	install -m 0655 xtoq-Info.plist $(bindir)/bin/$(APPNAME)
+	install -m 0655 xtoq-Info.plist $(bindir)/$(APPNAME)
 	install -d $(bindir)/$(APPNAME)/en.lproj
 	install -m 0655 en.lproj/* $(bindir)/$(APPNAME)/en.lproj
 
 uninstall:
-	-rm $(bindir)/$(APPNAME)
+	-rm -r $(bindir)/$(APPNAME)
 
 clean:
 	rm -f $(PACKAGE)
