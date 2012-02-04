@@ -18,4 +18,4 @@ all: $(SOURCES) $(OBJECTS)
 clean:
 	rm -f *.o
 
-.PHONY: all clean
+.PHONY: all clean install uninstall

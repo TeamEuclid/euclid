@@ -10,7 +10,7 @@ LDFLAGS = -L/opt/X11/lib -lxcb-util -lxcb-damage -lxcb-composite -lxcb-xfixes -l
 FRAMEWORKS = Cocoa AppKit
 IBTOOL = ibtool
 
-SOURCES = main.m XtoqApplication.m AppController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
+SOURCES = main.m XtoqApplication.m XtoqController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
 CSOURCES = ../../src/xtoq.c ../../src/util.c
 COBJS = $(CSOURCES:.c=.o)
 Xibdir = en.lproj
@@ -36,9 +36,19 @@ Info.plist: $(PACKAGE)-Info.plist
         -e 's/$${NETSURF_VERSION}/$(VERSION)/' \
         < $(PACKAGE)-Info.plist > Info.plist
 
+install:
+	install -d $(bindir)/$(APPNAME)
+	install -m 0755 xtoq $(bindir)/$(APPNAME)
+	install -m 0655 xtoq-Info.plist $(bindir)/bin/$(APPNAME)
+	install -d $(bindir)/$(APPNAME)/en.lproj
+	install -m 0655 en.lproj/* $(bindir)/$(APPNAME)/en.lproj
+
+uninstall:
+	-rm $(bindir)/$(APPNAME)
+
 clean:
 	rm -f $(PACKAGE)
 	rm -rf $(PACKAGE).dSYM
 	rm -f Info.plist
 
-.PHONY: all clean
+.PHONY: all clean install uninstall

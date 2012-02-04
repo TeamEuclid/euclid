@@ -3,6 +3,15 @@
 # Top level Makefile for the xtoq project
 #
 
+# May want to change prefix to local directory when testing
+prefix = /usr/local
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+
+export prefix
+export exec_prefix
+export bindir
+
 PACKAGE = xtoq
 VERSION = 0.1
 APPNAME = $(PACKAGE).app
@@ -19,7 +28,7 @@ export XTOQSRCDIR
 export RESDIR
 export MACOSTARGET
 
-all clean $(PACKAGE):
+all clean $(PACKAGE) install uninstall:
 	cd $(XTOQSRCDIR) && $(MAKE) $@
 	cd $(XCODESRCDIR) && $(MAKE) $@
 
@@ -35,4 +44,4 @@ $(APPNAME): FORCE
 FORCE:
 	rm -rf $(APPNAME)
 
-.PHONY: FORCE all clean
+.PHONY: FORCE all clean install
