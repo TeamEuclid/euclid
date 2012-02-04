@@ -47,7 +47,7 @@
     XtoqWindow *xtoqWindow;
     XtoqView * ourView;
     
-    //The X :1 paramater
+    //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
     xtoq_context_t xcbContext;
@@ -92,6 +92,11 @@
  */
 - (XtoqWindow *) getWindowInList: (id) aKey 
                       withContxt: (xtoq_context_t) xtoqContxt;
+
+/**
+ * Sets the screen to command line argument.
+ */
+- (void) setScreen: (char *) scrn;
 
 
 - (void) sendRects;

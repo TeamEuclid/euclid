@@ -85,7 +85,6 @@
 
     
     // This was pulled from XqtoqView
-    screen = ":1";
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
     imageT = xtoq_get_image(xcbContext);
@@ -199,6 +198,10 @@
     }
     
     return nil;
+}
+
+- (void) setScreen:(char *)scrn {
+    screen = scrn;
 }
 
 @end
