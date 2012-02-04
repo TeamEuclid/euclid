@@ -22,7 +22,7 @@ FRAMEWORKS = Cocoa AppKit
 IBTOOL = ibtool
 
 SOURCES = main.m XtoqApplication.m XtoqController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
-CSOURCES = $(PATHTOXTOQSRC)/xtoq.c $(PATHTOXTOQSRC)/util.c
+CSOURCES = $(PATHTOXTOQSRC)/xtoq.c $(PATHTOXTOQSRC)/util.c $(PATHTOXTOQSRC)/context_list.c
 COBJS = $(CSOURCES:.c=.o)
 Xibdir = en.lproj
 
