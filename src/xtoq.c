@@ -27,6 +27,7 @@
 #define _XTOQ_C_
 
 #include "xtoq.h"
+#include <string.h>
 
 
 // This init function needs set the window to be registered for events!
@@ -37,19 +38,33 @@ xtoq_init(char *screen) {
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
+    uint32_t mask_values[1];
     
     xcb_get_geometry_reply_t *geom_reply;
  
     conn = xcb_connect(screen, &conn_screen);
+
+    _xtoq_init_damage(conn);
     
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
+    
+    // Set the mask for the root window so we know when new windows
+    // are created on the root. This is where we add masks for the events
+    // we care about catching on the root window.
+    mask_values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    xcb_change_window_attributes (conn, root_window,
+                                  XCB_CW_EVENT_MASK, mask_values);
+
     
     /* Get the geometry of the root window */
     geom_reply = _xtoq_get_window_geometry(conn, root_window);
     
     //WriteWindowInfo(conn, root_window);
 	//WriteAllChildrenWindowInfo(conn, root_window);
+    
+    
+
     
 	xcb_flush(conn);
     
@@ -62,6 +77,53 @@ xtoq_init(char *screen) {
     
     return init_reply;
 }
+
+xcb_query_extension_reply_t * _xtoq_init_extension(xcb_connection_t *conn, char *extension_name) {
+    xcb_query_extension_cookie_t cookie = xcb_query_extension(conn, strlen(extension_name), extension_name);
+	xcb_query_extension_reply_t *reply = xcb_query_extension_reply(conn, cookie, NULL);
+	if (!reply->present)
+	{
+		free(reply);
+        printf("%s extension not present", extension_name);
+        exit(1);
+	}
+    
+	return reply;
+}
+
+void _xtoq_init_damage(xcb_connection_t *conn) {
+    
+    xcb_query_extension_reply_t *reply =_xtoq_init_extension(conn, "DAMAGE");
+    
+    xcb_damage_query_version_cookie_t version_cookie = 
+    xcb_damage_query_version(conn, 
+                             XCB_DAMAGE_MAJOR_VERSION,
+                             XCB_DAMAGE_MINOR_VERSION);
+	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(conn, version_cookie, NULL);
+/*	if (!XCBCheckExtensionVersion(
+                                  XCB_DAMAGE_MAJOR_VERSION,
+                                  XCB_DAMAGE_MINOR_VERSION,
+                                  version_reply->major_version,
+                                  version_reply->minor_version))
+	{
+		free(reply);
+		free(version_reply);
+		[[NSException 
+          exceptionWithName: XCBExtensionNotPresentException
+          reason: @"Unable to find the damage extension with the version required."
+          userInfo: [NSDictionary dictionary]]
+         raise];
+	} */
+    
+	/*[XCBConn setSelector: @selector(damageNotify:)
+               forXEvent: reply->first_event + XCB_DAMAGE_NOTIFY];
+	NSDebugLLog(@"XCBDamage", @"Registering damageNotify: handler for delegate.");
+	
+	NSLog(@"Initialized damage extension for connection %@", connection); */
+	free(version_reply);
+	free(reply);	
+}
+
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context) {
@@ -225,8 +287,55 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     
     sleep(4);
     xtoq_event_t event;
+    xtoq_context_t new_context;
+    new_context.window = context.window;
+    new_context.conn = context.conn;
+    event.context = new_context;
+    event.event_type = XTOQ_DAMAGE;
     
     return event;
+}
+
+xtoq_event_t
+xtoq_wait_for_event (xtoq_context_t context)
+{
+    xcb_generic_event_t *evt;
+    xtoq_event_t return_evt;
+    
+    return_evt.context = context;
+    
+    while ((evt = xcb_wait_for_event(context.conn))) {
+        switch (evt->response_type & ~0x80) {
+            case XCB_EXPOSE: {
+                xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
+                
+                printf("Window %u exposed. Region to be redrawn at location (%d, %d), ",
+                       exevnt->window, exevnt->x, exevnt->y);
+                printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
+                
+                return_evt.event_type = XTOQ_EXPOSE;
+                return return_evt;
+                break;
+            }
+            case XCB_CREATE_NOTIFY: {
+                // New window created in root window
+                printf("XCB_CREATE_NOTIFY\n");
+                return_evt.event_type = XTOQ_CREATE;
+                break;
+            }
+            case XCB_DESTROY_NOTIFY: {
+                // Window destroyed in root window
+                printf("XCB_DESTROY_NOTIFY\n");
+                return_evt.event_type = XTOQ_DESTROY;
+            }
+            default:
+                return_evt.event_type = XTOQ_DAMAGE;
+                return return_evt;
+        }
+        return return_evt;
+    }
+        
+        return return_evt;
 }
 
 #endif //_XTOQ_C_

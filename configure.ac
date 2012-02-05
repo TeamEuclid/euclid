@@ -14,7 +14,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 
 # Checks for libraries.
-AC_CHECK_LIB([xcb], [xcb_connect])
+AC_SEARCH_LIBS([xcb_connect], [xcb])
 
 # Checks for header files.
 AC_HEADER_STDC
