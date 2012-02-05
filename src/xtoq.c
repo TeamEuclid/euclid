@@ -43,11 +43,14 @@ xtoq_init(char *screen) {
     xcb_get_geometry_reply_t *geom_reply;
  
     conn = xcb_connect(screen, &conn_screen);
-
-    _xtoq_init_damage(conn);
     
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
+    
+    //xtoq_context_t contxt;
+    //contxt.window = root_window;
+    //contxt.conn = conn;
+    //_xtoq_init_damage(contxt);
     
     // Set the mask for the root window so we know when new windows
     // are created on the root. This is where we add masks for the events
@@ -71,6 +74,7 @@ xtoq_init(char *screen) {
     xtoq_context_t init_reply;
     init_reply.conn = conn;
     init_reply.window = root_window;
+    _xtoq_init_damage(init_reply);
     
     // not sure about this error ...
     //_xtoq_add_context_t(init_reply);
@@ -81,47 +85,37 @@ xtoq_init(char *screen) {
 xcb_query_extension_reply_t * _xtoq_init_extension(xcb_connection_t *conn, char *extension_name) {
     xcb_query_extension_cookie_t cookie = xcb_query_extension(conn, strlen(extension_name), extension_name);
 	xcb_query_extension_reply_t *reply = xcb_query_extension_reply(conn, cookie, NULL);
-	if (!reply->present)
-	{
+	if (!reply->present) {
 		free(reply);
         printf("%s extension not present", extension_name);
         exit(1);
-	}
+	} else {
+        printf("%s extension present", extension_name);
+    }
     
 	return reply;
 }
 
-void _xtoq_init_damage(xcb_connection_t *conn) {
+void _xtoq_init_damage(xtoq_context_t contxt) {
     
-    xcb_query_extension_reply_t *reply =_xtoq_init_extension(conn, "DAMAGE");
+    xcb_query_extension_reply_t *reply =_xtoq_init_extension(contxt.conn, "DAMAGE");
     
     xcb_damage_query_version_cookie_t version_cookie = 
-    xcb_damage_query_version(conn, 
+    xcb_damage_query_version(contxt.conn, 
                              XCB_DAMAGE_MAJOR_VERSION,
                              XCB_DAMAGE_MINOR_VERSION);
-	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(conn, version_cookie, NULL);
-/*	if (!XCBCheckExtensionVersion(
-                                  XCB_DAMAGE_MAJOR_VERSION,
-                                  XCB_DAMAGE_MINOR_VERSION,
-                                  version_reply->major_version,
-                                  version_reply->minor_version))
-	{
-		free(reply);
-		free(version_reply);
-		[[NSException 
-          exceptionWithName: XCBExtensionNotPresentException
-          reason: @"Unable to find the damage extension with the version required."
-          userInfo: [NSDictionary dictionary]]
-         raise];
-	} */
-    
-	/*[XCBConn setSelector: @selector(damageNotify:)
-               forXEvent: reply->first_event + XCB_DAMAGE_NOTIFY];
-	NSDebugLLog(@"XCBDamage", @"Registering damageNotify: handler for delegate.");
-	
-	NSLog(@"Initialized damage extension for connection %@", connection); */
+	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(contxt.conn, version_cookie, NULL);
+
 	free(version_reply);
-	free(reply);	
+	free(reply);
+    xcb_damage_damage_t damage = xcb_generate_id(contxt.conn);
+    
+    // Refer to the Damage Protocol. level = 0 corresponds to the level
+    // DamageReportRawRectangles.  Another level may be more appropriate.
+    uint8_t level = 0;
+    xcb_void_cookie_t v = xcb_damage_create(contxt.conn,
+                                        damage, contxt.window, level);
+	
 }
 
 
@@ -327,8 +321,10 @@ xtoq_wait_for_event (xtoq_context_t context)
                 // Window destroyed in root window
                 printf("XCB_DESTROY_NOTIFY\n");
                 return_evt.event_type = XTOQ_DESTROY;
+                break;
             }
             default:
+                printf("DEFAULT EVENT, POSSIBLY DAMAGE");
                 return_evt.event_type = XTOQ_DAMAGE;
                 return return_evt;
         }
