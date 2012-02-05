@@ -83,7 +83,6 @@
     // [window makeKeyAndOrderFront:nil];
     // [NSApp activateIgnoringOtherApps:YES];
 
-    
     // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
@@ -100,30 +99,17 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }
     
-    imageT = xtoq_get_image(xcbContext);
-    
     //create an XtoqImageRep with the information from X
+    imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
-
-    // no longer passing an image to the view, using a rect now
-    //ourView = [[XtoqView alloc] initWithImage:image];
-    
     //draw the image into a rect
     NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
-    [image drawInRect:imageRec];
-    
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
-    
     // add view to its window
-    [[xtoqWindow contentView]  addSubview: ourView];   
+    [[xtoqWindow contentView]  addSubview: ourView];  
+    // set the initial image in the window
     [ourView setImage:image];
-    
-    // Leaving these in for testing
-    //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-    //image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
-    // [[NSColor greenColor] setFill];
-    //  NSRectFill(imageRec);
     
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
