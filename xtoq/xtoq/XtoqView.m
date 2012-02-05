@@ -86,25 +86,18 @@ drawRect:(NSRect)dirtyRect {
     
     NSLog(@"rectInt = %ld", (long)rectInt);
     
-    NSRect rect = NSMakeRect(10, 10, 100, 100);
-   // [[NSColor purpleColor] setFill];
+   NSRect rect = NSMakeRect(10, 10, 100, 100);
+    [[NSColor purpleColor] setFill];
     NSRectFill(rect);
     
     [image drawInRect:dirtyRect];
     
-    if (rectInt > 0){
+    //if (rectInt > 0){
         
     
-    }
+    //}
     
-    
-    // NEED TO CHANGE to remove hard coded size
-   // NSSize imageSize = { 1024,768 };
-  //  NSRect destRect;
-  //  destRect.size = imageSize;
- 
-  //  [image draw];
-    
+    //  [image draw];
     [[self window] flushWindow];
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
