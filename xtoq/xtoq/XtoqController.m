@@ -160,7 +160,7 @@
         } else if (xqevent.event_type == XTOQ_DESTROY) {
             [self updateImage];
         } else { 
-            NSLog(@"HEy I'm Not damage!"); 
+            NSLog(@"Hey I'm Not damage!"); 
         }
 
     }

@@ -35,12 +35,6 @@ initWithFrame:(NSRect)frame {
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
-      //  screen = ":1";
-       // NSLog(@"screen = %s", screen);
-        //xcbContext = xtoq_init(screen);
-        //imageT = xtoq_get_image(xcbContext);
-        //image = [[XtoqImageRep alloc] initWithData:imageT];
-        
         // Leaving these in for testing
         // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
         // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
@@ -59,15 +53,9 @@ initWithImage:(XtoqImageRep *)newImage {
     self = [super initWithFrame:frame];
     
     if (self) {
-        
-//        screen = ":1";
-//        NSLog(@"screen = %s", screen);
-//        xcbContext = xtoq_init(screen);
-//        imageT = xtoq_get_image(xcbContext);
         image = newImage;//[[XtoqImageRep alloc] initWithData:imageT];
         [image draw];
         [[self window] flushWindow];
-
         
     }
     return self;
@@ -160,8 +148,9 @@ keyDown:(NSEvent *)theEvent {
     //[newImage retain];
     //[image release];
     image = newImage;
+    NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
     [[self window] flushWindow];
-    [self setNeedsDisplay:YES];
+    [self setNeedsDisplayInRect:imageRec];
 }
 
 -(float)opacity{
