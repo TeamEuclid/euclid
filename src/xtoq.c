@@ -43,7 +43,7 @@ xtoq_init(char *screen) {
  
     conn = xcb_connect(screen, &conn_screen);
 
-    void _xtoq_init_damage(conn);
+    _xtoq_init_damage(conn);
     
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
@@ -95,7 +95,7 @@ void _xtoq_init_damage(xcb_connection_t *conn) {
     xcb_query_extension_reply_t *reply =_xtoq_init_extension(conn, "DAMAGE");
     
     xcb_damage_query_version_cookie_t version_cookie = 
-    xcb_damage_query_version([connection connection], 
+    xcb_damage_query_version(conn, 
                              XCB_DAMAGE_MAJOR_VERSION,
                              XCB_DAMAGE_MINOR_VERSION);
 	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(conn, version_cookie, NULL);
