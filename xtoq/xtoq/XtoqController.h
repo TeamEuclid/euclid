@@ -98,7 +98,4 @@
  */
 - (void) setScreen: (char *) scrn;
 
-
-- (void) sendRects;
-
 @end

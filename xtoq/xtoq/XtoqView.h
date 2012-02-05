@@ -50,6 +50,7 @@ SOFTWARE.
 }
 @property (readwrite) float opacity;
 - (void)setImage:(XtoqImageRep *)newImage;
+- (void)setPartialImage:(XtoqImageRep *)newImage;
 - (id)initWithImage:(XtoqImageRep *)initImage;
 - (id)initWithFrame:(NSRect)frame;
 

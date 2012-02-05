@@ -156,6 +156,14 @@ keyDown:(NSEvent *)theEvent {
     [self setNeedsDisplay:YES];
 }
 
+- (void)setPartialImage:(XtoqImageRep *)newImage {
+    //[newImage retain];
+    //[image release];
+    image = newImage;
+    [[self window] flushWindow];
+    [self setNeedsDisplay:YES];
+}
+
 -(float)opacity{
     return opacity;
 }

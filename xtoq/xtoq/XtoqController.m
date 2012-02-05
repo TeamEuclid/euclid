@@ -149,8 +149,9 @@
     while (1) {
         // Change this call to dummy_xtoq_wait_for_event if
         // you just want the 4 second delay
-        xqevent = xtoq_wait_for_event(xcbContext);
-    
+        xqevent = dummy_xtoq_wait_for_event(xcbContext);
+        //xqevent = xtoq_wait_for_event(xcbContext);    
+        
         if (xqevent.event_type == XTOQ_DAMAGE) {
             NSLog(@"Got damage event");
             [self updateImage];
@@ -161,29 +162,23 @@
         } else { 
             NSLog(@"HEy I'm Not damage!"); 
            // [self updateImage];
-           [self sendRects];
+
         }
 
     }
 }
 
-- (void) sendRects {
-   // [[NSGraphicsContext currentContext]
-   //  setImageInterpolation:NSImageInterpolationHigh];
-    
-        NSRect rect = NSMakeRect(10, 10, 100, 100);
-        [[NSColor redColor] setFill];
-        NSRectFill(rect);
-        [ourView setNeedsDisplayInRect:rect];
-
-}
-
-
+// create a new image to redraw part of the screen 
 - (void) updateImage {
         NSLog(@"update Image");
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
-    [ourView setImage:image];
+    [ourView setPartialImage:image];
+    
+    NSRect rect = NSMakeRect(10, 10, 100, 100);
+    [[NSColor redColor] setFill];
+    NSRectFill(rect);
+    [ourView setNeedsDisplayInRect:rect];
 }
 
 - (void) setWindowInList:(XtoqWindow *)windowId forKey:(id)akey {
