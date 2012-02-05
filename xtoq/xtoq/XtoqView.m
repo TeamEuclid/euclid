@@ -156,6 +156,14 @@ keyDown:(NSEvent *)theEvent {
     [self setNeedsDisplay:YES];
 }
 
+-(float)opacity{
+    return opacity;
+}
+
+- (void)setOpacity:(float)x{
+    opacity = x;
+    [self setNeedsDisplay:YES];
+}
 
 
 @end
