@@ -173,15 +173,14 @@
     
     for (int i = 0; i < numberOfRects; i++) {
     
-    NSLog(@"update Image");
-    imageT = xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];
-    [ourView setPartialImage:image];
+        NSLog(@"update Image");
+        imageT = xtoq_get_image(xcbContext);
+        image = [[XtoqImageRep alloc] initWithData:imageT];
+        [ourView setPartialImage:image];
     
-    NSRect rect = NSMakeRect(200, 200, 300, 300);
-    // NSRect rect = NSMakeRect(0, 0, 300, 300);
-    [ourView setNeedsDisplayInRect:rect];
-        
+        NSRect rect = NSMakeRect(200, 200, 300, 300);
+        // NSRect rect = NSMakeRect(0, 0, 300, 300);
+        [ourView setNeedsDisplayInRect:rect];
     }
 }
 
