@@ -1,4 +1,4 @@
-/* Copyright (c) 2012 David Snyder
+/* Copyright (c) 2012 David Snyder, Benjamin Carr
  *
  * rootimg_api.h
  *
@@ -301,12 +301,11 @@ xtoq_wait_for_event (xtoq_context_t context)
     
     return_evt.context = context;
     
-    while ((evt = xcb_wait_for_event(context.conn))) {
-        if ((evt->response_type & ~0x80) == damage_event) {
-            printf("XCB_DAMAGE_NOTIFY\n");
-            return_evt.event_type = XTOQ_DAMAGE;
-            //return return_evt;
-        } else {
+    evt = xcb_wait_for_event(context.conn);
+    if ((evt->response_type & ~0x80) == damage_event) {
+        printf("XCB_DAMAGE_NOTIFY\n");
+        return_evt.event_type = XTOQ_DAMAGE;
+    } else {
         switch (evt->response_type & ~0x80) {
             case XCB_EXPOSE: {
                 xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
@@ -317,7 +316,6 @@ xtoq_wait_for_event (xtoq_context_t context)
                 
                 return_evt.event_type = XTOQ_EXPOSE;
                 free(exevnt);
-                //return return_evt;
                 break;
             }
             case XCB_CREATE_NOTIFY: {
@@ -332,22 +330,11 @@ xtoq_wait_for_event (xtoq_context_t context)
                 return_evt.event_type = XTOQ_DESTROY;
                 break;
             }
-            /*case damage_event: {
-                printf("XCB_DAMAGE_NOTIFY\n");
-                return_evt.event_type = XTOQ_DAMAGE;
-                return return_evt;
-            }*/
             default: {
                 printf("UNKNOWN EVENT\n");
-                //return_evt.event_type = XTOQ_DAMAGE;
-                //return return_evt;
-                continue;
+                break;
             }
-            //return return_evt;
-            }
-            break;
         }
-        return return_evt;
     }
     return return_evt;
 }
