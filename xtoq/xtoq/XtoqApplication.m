@@ -24,21 +24,14 @@
 @implementation XtoqApplication
 
 int XtoqApplicationMain(int argc, char** argv){
-    char *screen;
-    int loc = 0;
-    loc = findScreen(argc, argv);
 
-    if( loc != 0) {
-        screen = argv[loc];
-     }
-    else {
-        screen = ":1";
-    }
+    char *scrn;
+    scrn = findScreen(argc, argv);
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
     XtoqController *controller = [[XtoqController alloc] init];
-    [controller setScreen:screen];
+    [controller setScreen:scrn];
     [NSApp setDelegate: controller];
     [NSApp run];
     
@@ -46,21 +39,30 @@ int XtoqApplicationMain(int argc, char** argv){
 }
 
 
-int findScreen(int argc, char **argv) {
+char* findScreen(int argc, char **argv) {
     int i;
     int j;
+    int loc;
     char place;
+    bool toBreak = false;
     
-    for (i = 1; i < argc; ++i) {
+    for (i = 1; !toBreak && i < argc; ++i) {
         for (j = 0; argv[i][j] != '\0'; ++j) {
             place = argv[i][j];
             if (place == ':') {
-                return i;
+                toBreak = true;
+                loc = i;
+                break;
             }
+            else loc = 0;
         }
     }
     
-    return 0;
+    if ( loc != 0) {
+        return argv[loc];
+    }
+    else return ":1";
+    
 }
 
 @end
