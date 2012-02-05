@@ -55,6 +55,12 @@ typedef struct xtoq_event_t {
 xtoq_context_t
 xtoq_init(char *screen);
 
+xcb_query_extension_reply_t * 
+_xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
+
+void 
+_xtoq_init_damage(xcb_connection_t *conn);
+
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);
 

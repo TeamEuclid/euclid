@@ -41,6 +41,8 @@ xtoq_init(char *screen) {
     xcb_get_geometry_reply_t *geom_reply;
  
     conn = xcb_connect(screen, &conn_screen);
+
+    void _xtoq_init_damage(conn);
     
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
@@ -51,6 +53,9 @@ xtoq_init(char *screen) {
     //WriteWindowInfo(conn, root_window);
 	//WriteAllChildrenWindowInfo(conn, root_window);
     
+    
+
+    
 	xcb_flush(conn);
     
     xtoq_context_t init_reply;
@@ -59,6 +64,53 @@ xtoq_init(char *screen) {
     
     return init_reply;
 }
+
+xcb_query_extension_reply_t * _xtoq_init_extension(xcb_connection_t *conn, char *extension_name) {
+    xcb_query_extension_cookie_t cookie = xcb_query_extension(conn, strlen(extension_name), extension_name);
+	xcb_query_extension_reply_t *reply = xcb_query_extension_reply(conn, cookie, NULL);
+	if (!reply->present)
+	{
+		free(reply);
+        printf("%s extension not present", extension_name);
+        exit(1);
+	}
+    
+	return reply;
+}
+
+void _xtoq_init_damage(xcb_connection_t *conn) {
+    
+    xcb_query_extension_reply_t *reply =_xtoq_init_extension(conn, "DAMAGE");
+    
+    xcb_damage_query_version_cookie_t version_cookie = 
+    xcb_damage_query_version([connection connection], 
+                             XCB_DAMAGE_MAJOR_VERSION,
+                             XCB_DAMAGE_MINOR_VERSION);
+	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(conn, version_cookie, NULL);
+/*	if (!XCBCheckExtensionVersion(
+                                  XCB_DAMAGE_MAJOR_VERSION,
+                                  XCB_DAMAGE_MINOR_VERSION,
+                                  version_reply->major_version,
+                                  version_reply->minor_version))
+	{
+		free(reply);
+		free(version_reply);
+		[[NSException 
+          exceptionWithName: XCBExtensionNotPresentException
+          reason: @"Unable to find the damage extension with the version required."
+          userInfo: [NSDictionary dictionary]]
+         raise];
+	} */
+    
+	[XCBConn setSelector: @selector(damageNotify:)
+               forXEvent: reply->first_event + XCB_DAMAGE_NOTIFY];
+	NSDebugLLog(@"XCBDamage", @"Registering damageNotify: handler for delegate.");
+	
+	NSLog(@"Initialized damage extension for connection %@", connection);
+	free(version_reply);
+	free(reply);	
+}
+
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context) {
@@ -222,6 +274,11 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     
     sleep(4);
     xtoq_event_t event;
+    xtoq_context_t new_context;
+    new_context.window = context.window;
+    new_context.conn = context.conn;
+    event.context = new_context;
+    event.event_type = XTOQ_DAMAGE;
     
     return event;
 }
