@@ -292,13 +292,21 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
 
 xtoq_event_t
 xtoq_wait_for_event (xtoq_context_t context)
-{
+{   
+    xcb_query_extension_reply_t *damage_extension = _xtoq_init_extension(context.conn, "DAMAGE");
+    int damage_event = damage_extension->first_event + XCB_DAMAGE_NOTIFY;
+    free(damage_extension);
     xcb_generic_event_t *evt;
     xtoq_event_t return_evt;
     
     return_evt.context = context;
     
     while ((evt = xcb_wait_for_event(context.conn))) {
+        if ((evt->response_type & ~0x80) == damage_event) {
+            printf("XCB_DAMAGE_NOTIFY\n");
+            return_evt.event_type = XTOQ_DAMAGE;
+            return return_evt;
+        }
         switch (evt->response_type & ~0x80) {
             case XCB_EXPOSE: {
                 xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
@@ -323,10 +331,16 @@ xtoq_wait_for_event (xtoq_context_t context)
                 return_evt.event_type = XTOQ_DESTROY;
                 break;
             }
-            default:
-                printf("DEFAULT EVENT, POSSIBLY DAMAGE");
+            /*case damage_event: {
+                printf("XCB_DAMAGE_NOTIFY\n");
                 return_evt.event_type = XTOQ_DAMAGE;
                 return return_evt;
+            }*/
+            default:
+                printf("UNKNOWN EVENT\n");
+                //return_evt.event_type = XTOQ_DAMAGE;
+                //return return_evt;
+                continue;
         }
         return return_evt;
     }
