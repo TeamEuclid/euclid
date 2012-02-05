@@ -84,7 +84,7 @@
     // [NSApp activateIgnoringOtherApps:YES];
 
     
-    // This was pulled from XqtoqView
+    // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
     
@@ -101,22 +101,28 @@
     }
     
     imageT = xtoq_get_image(xcbContext);
+    
+    //create an XtoqImageRep with the information from X
     image = [[XtoqImageRep alloc] initWithData:imageT];
 
+    // no longer passing an image to the view, using a rect now
     //ourView = [[XtoqView alloc] initWithImage:image];
     
+    //draw the image into a rect
     NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
     [image drawInRect:imageRec];
     
-// not sure whats going on  
-    //[[NSColor greenColor] setFill];
-    //NSRectFill(imageRec);
+    // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
     
-    [[xtoqWindow contentView]  addSubview: ourView];    
+    // add view to its window
+    [[xtoqWindow contentView]  addSubview: ourView];   
+    
     // Leaving these in for testing
-    file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-    image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+    //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
+    //image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+    // [[NSColor greenColor] setFill];
+    //  NSRectFill(imageRec);
     
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -154,13 +160,18 @@
     xtoq_event_t xqevent;
     
     while (1) {
-        xqevent = dummy_xtoq_wait_for_event(xqcontxt);
+        // Change this call to dummy_xtoq_wait_for_event if
+        // you just want the 4 second delay
+        xqevent = xtoq_wait_for_event(xcbContext);
     
         if (xqevent.event_type == XTOQ_DAMAGE) {
             NSLog(@"Got damage event");
             [self updateImage];
-        }
-        else { 
+        } else if (xqevent.event_type == XTOQ_CREATE) {
+            [self updateImage];
+        } else if (xqevent.event_type == XTOQ_DESTROY) {
+            [self updateImage];
+        } else { 
             NSLog(@"HEy I'm Not damage!"); 
            // [self updateImage];
            [self sendRects];
