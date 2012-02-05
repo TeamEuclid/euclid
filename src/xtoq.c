@@ -143,6 +143,7 @@ xtoq_get_image(xtoq_context_t context) {
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
+    free(geom_reply);
     return image;
 }
 
