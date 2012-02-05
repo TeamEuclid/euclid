@@ -87,6 +87,19 @@
     // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
+    
+    //Setting environment variable $DISPLAY to screen.
+    char *env = getenv("DISPLAY");
+    NSLog(@"$DISPLAY = %s", env);
+    if (setenv("DISPLAY", screen, 1) == 0) {
+        NSLog(@"successful");
+        env = getenv("DISPLAY");
+        NSLog(@"current $DISPLAY is = %s", env);
+    }
+    else {
+        NSLog(@"not successful in attemp to set $DISPLAY");
+    }
+    
     imageT = xtoq_get_image(xcbContext);
     
     //create an XtoqImageRep with the information from X

@@ -22,15 +22,13 @@
 #import <AppKit/AppKit.h>
 #import "XtoqController.h"
 
-@interface XtoqApplication : NSApplication {
-    char *screen;
-}
+@interface XtoqApplication : NSApplication
 
 int XtoqApplicationMain(int argc, char** argv);
 
 /**
  * Find's which element screen is in argv, otherwise returns 0 if not found.
  */
-int findScreen(int argc, char **argv);
+char* findScreen(int argc, char **argv);
 
 @end
