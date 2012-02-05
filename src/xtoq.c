@@ -114,11 +114,11 @@ void _xtoq_init_damage(xcb_connection_t *conn) {
          raise];
 	} */
     
-	[XCBConn setSelector: @selector(damageNotify:)
+	/*[XCBConn setSelector: @selector(damageNotify:)
                forXEvent: reply->first_event + XCB_DAMAGE_NOTIFY];
 	NSDebugLLog(@"XCBDamage", @"Registering damageNotify: handler for delegate.");
 	
-	NSLog(@"Initialized damage extension for connection %@", connection);
+	NSLog(@"Initialized damage extension for connection %@", connection); */
 	free(version_reply);
 	free(reply);	
 }
