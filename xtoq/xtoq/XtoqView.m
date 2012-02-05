@@ -148,7 +148,7 @@ keyDown:(NSEvent *)theEvent {
     //[newImage retain];
     //[image release];
     image = newImage;
-    NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
+    NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
     [[self window] flushWindow];
     [self setNeedsDisplayInRect:imageRec];
 }

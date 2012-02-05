@@ -178,7 +178,7 @@
     
     NSRect rect = NSMakeRect(200, 200, 300, 300);
     //[[NSColor redColor] setFill];
-    NSRectFill(rect);
+    //NSRectFill(rect);
     [ourView setNeedsDisplayInRect:rect];
 }
 
