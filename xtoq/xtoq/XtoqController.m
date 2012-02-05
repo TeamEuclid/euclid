@@ -117,6 +117,7 @@
     
     // add view to its window
     [[xtoqWindow contentView]  addSubview: ourView];   
+    [ourView setImage:image];
     
     // Leaving these in for testing
     //file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
