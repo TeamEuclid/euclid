@@ -31,7 +31,7 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        
+        opacity = 1.0;
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
