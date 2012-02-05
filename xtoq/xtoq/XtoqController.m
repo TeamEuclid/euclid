@@ -147,13 +147,18 @@
     xtoq_event_t xqevent;
     
     while (1) {
-        xqevent = dummy_xtoq_wait_for_event(xqcontxt);
+        // Change this call to dummy_xtoq_wait_for_event if
+        // you just want the 4 second delay
+        xqevent = xtoq_wait_for_event(xcbContext);
     
         if (xqevent.event_type == XTOQ_DAMAGE) {
             NSLog(@"Got damage event");
             [self updateImage];
-        }
-        else { 
+        } else if (xqevent.event_type == XTOQ_CREATE) {
+            [self updateImage];
+        } else if (xqevent.event_type == XTOQ_DESTROY) {
+            [self updateImage];
+        } else { 
             NSLog(@"HEy I'm Not damage!"); 
            // [self updateImage];
            [self sendRects];

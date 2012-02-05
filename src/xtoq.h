@@ -37,6 +37,9 @@
 #include "util.h"
 
 #define XTOQ_DAMAGE 0
+#define XTOQ_EXPOSE 1
+#define XTOQ_CREATE 2
+#define XTOQ_DESTROY 3
 
 typedef struct xtoq_context_t {
     xcb_connection_t *conn;
@@ -70,7 +73,16 @@ dummy_xtoq_get_image(xtoq_context_t context);
 xtoq_event_t
 dummy_xtoq_wait_for_event(xtoq_context_t context);
 
-
+/**
+ * Event loop that returns X events. Designed to be called by
+ * a seprate thread in of the client application so it does
+ * not block.
+ * @param xtoq_context_t The context whose connection will be
+ * used to listen for X events.
+ * @returns The event caught.
+ */
+xtoq_event_t
+xtoq_wait_for_event (xtoq_context_t context);
 
 
 #endif // _XTOQ_H_
