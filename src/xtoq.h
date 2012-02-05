@@ -34,7 +34,7 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
-#include <xproto.h>
+//#include <xproto.h>
 //#include "context_list.h"
 #include "util.h"
 

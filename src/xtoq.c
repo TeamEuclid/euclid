@@ -27,6 +27,7 @@
 #define _XTOQ_C_
 
 #include "xtoq.h"
+#include <string.h>
 
 
 // This init function needs set the window to be registered for events!
