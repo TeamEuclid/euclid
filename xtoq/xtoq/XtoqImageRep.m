@@ -93,7 +93,7 @@
 - (BOOL)drawInRect:(NSRect)rect{   
     CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
     if (contextMac == NULL)
-        NSLog(@"NULL context in draw");
+        NSLog(@"NULL context in drawInRect");
 	if ( !cgImage) {
         NSLog(@"No image");
 		return NO;
