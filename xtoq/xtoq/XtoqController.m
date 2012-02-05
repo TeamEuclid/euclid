@@ -168,18 +168,21 @@
 
 // create a new image to redraw part of the screen 
 - (void) updateImage {
-    // [[NSGraphicsContext currentContext]
-    // setImageInterpolation:NSImageInterpolationHigh];
+
+    int numberOfRects = 1;
     
-        NSLog(@"update Image");
+    for (int i = 0; i < numberOfRects; i++) {
+    
+    NSLog(@"update Image");
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
     [ourView setPartialImage:image];
     
     NSRect rect = NSMakeRect(200, 200, 300, 300);
-    //[[NSColor redColor] setFill];
-    //NSRectFill(rect);
+    // NSRect rect = NSMakeRect(0, 0, 300, 300);
     [ourView setNeedsDisplayInRect:rect];
+        
+    }
 }
 
 - (void) setWindowInList:(XtoqWindow *)windowId forKey:(id)akey {
