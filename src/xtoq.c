@@ -305,8 +305,8 @@ xtoq_wait_for_event (xtoq_context_t context)
         if ((evt->response_type & ~0x80) == damage_event) {
             printf("XCB_DAMAGE_NOTIFY\n");
             return_evt.event_type = XTOQ_DAMAGE;
-            return return_evt;
-        }
+            //return return_evt;
+        } else {
         switch (evt->response_type & ~0x80) {
             case XCB_EXPOSE: {
                 xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
@@ -316,7 +316,8 @@ xtoq_wait_for_event (xtoq_context_t context)
                 printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
                 
                 return_evt.event_type = XTOQ_EXPOSE;
-                return return_evt;
+                free(exevnt);
+                //return return_evt;
                 break;
             }
             case XCB_CREATE_NOTIFY: {
@@ -336,16 +337,19 @@ xtoq_wait_for_event (xtoq_context_t context)
                 return_evt.event_type = XTOQ_DAMAGE;
                 return return_evt;
             }*/
-            default:
+            default: {
                 printf("UNKNOWN EVENT\n");
                 //return_evt.event_type = XTOQ_DAMAGE;
                 //return return_evt;
                 continue;
+            }
+            //return return_evt;
+            }
+            break;
         }
         return return_evt;
     }
-        
-        return return_evt;
+    return return_evt;
 }
 
 #endif //_XTOQ_C_
