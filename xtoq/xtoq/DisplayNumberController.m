@@ -41,6 +41,7 @@ NSString * const DisplayNotification = @"DisplayNotify";
 
 - (id)init
 {
+        NSLog(@"DisplayNumberControllerInit");
     if (!( windowId = [super initWithWindowNibName:@"DisplayNumberDialog"]))
         return nil;
 
@@ -58,7 +59,7 @@ NSString * const DisplayNotification = @"DisplayNotify";
     NSLog(@"Display changed %d", displayNumber );
     
     //FIXME windowId close doesn't close the Dialog
-    [windowId close];
+    //[windowId close];
 }
 
 - (int)getDisplayNumber{

@@ -74,7 +74,6 @@ main (int argc, char **argv)
     
     WriteWindowInfo(conn, root_window);
 	WriteAllChildrenWindowInfo(conn, root_window);
-    img_data = GetWindowImageData(conn, root_window);
 
     /* Get the image of the root window */
     image = xcb_image_get(conn,
@@ -112,11 +111,9 @@ main (int argc, char **argv)
         exit(1);
     }
 
-    WriteWindowInfo(conn_two, window);
     /* Map the window and flush the connection so it draws to the screen */
     xcb_map_window(conn_two, window);
     xcb_flush(conn_two);
-    WriteWindowInfo(conn_two, window);
 
     /* Create the pixmap and associate it with our new window. */
     pixmap = xcb_generate_id(conn_two);
@@ -137,14 +134,10 @@ main (int argc, char **argv)
     cookie = xcb_image_put(conn_two,
                            pixmap,
                            gc,
-                           geom_reply->width,
-                           geom_reply->height,
+                           image,
                            0,
                            0,
-                           0,
-                           geom_reply->depth,
-                           img_data.length,
-                           img_data.data);
+						   0);
     if (RequestCheck(conn_two, cookie, "Failed to put image")) {
         exit(1);
     }

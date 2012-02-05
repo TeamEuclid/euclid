@@ -23,19 +23,48 @@
  * SOFTWARE.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <xcb/xcb.h>
-#include <xcb/xcb_image.h>
-#include <xcb/xcb_aux.h>
-#include "util.h"
-#include "rootimg_api.h"
 #include "context_list.h"
 
+void _xtoq_init_list(){
+    _xtoq_window_list.head = NULL;
+    _xtoq_window_list.count = 0;
+}
+/*
+void 
+testList(){
+    xcb_connection_t *conn;
+    int conn_screen;
+    xcb_screen_t *root_screen;
+    xcb_drawable_t root_window;
+    
+    xcb_get_geometry_reply_t *geom_reply;
+    
+    conn = xcb_connect(":1", &conn_screen);
+    
+    root_screen = xcb_aux_get_screen(conn, conn_screen);
+    root_window = root_screen->root;
+    
+    // Get the geometry of the root window 
+    geom_reply = _xtoq_get_window_geometry(conn, root_window);
+    
+    //WriteWindowInfo(conn, root_window);
+	//WriteAllChildrenWindowInfo(conn, root_window);
+    
+	xcb_flush(conn);
+    
+    xtoq_context_t init_reply;
+    init_reply.conn = conn;
+    init_reply.window = root_window;
+    
+    // not sure about this error ...
+    _xtoq_add_context_t(init_reply);
+
+}
+*/
 
 void
-add_context_node(struct context_list * list, struct context_node * node) {
-    if (list->head == NULL) {
+_xtoq_add_context_t(xtoq_context_t context) {
+  /*  if (list->head == NULL) {
         list->head = node;
         node->next = NULL;
     }
@@ -45,16 +74,16 @@ add_context_node(struct context_list * list, struct context_node * node) {
             temp = temp->next;
         temp->next = node;
         node->next = NULL;
-    }
+    } */
 }
 
 void
-remove_context_node(struct context_list * list, xcb_window_t window_id) {
-    if (list->head == NULL) {
+_xtoq_remove_context_node(xcb_window_t window_id) {
+ /*   if (list->head == NULL) {
         //error empty list
         printf("Error, empty list\n");
     }
-    struct context_node * curr, * prev = list->head;
+    struct context_node * curr= list->head, * prev = NULL;
     if (curr->context->window == window_id) {
         list->head = curr->next;
         return;
@@ -70,11 +99,12 @@ remove_context_node(struct context_list * list, xcb_window_t window_id) {
     }
     // error, no node with window_id
     //printf("Error, no node with window_id: %d", (int)window_id);
+  */
 }
 
-struct context_node *
-get_context_node_by_window_id (struct context_list * list, xcb_window_t window_id) {
-    if (list->head == NULL) {
+_xtoq_context_node *
+_xtoq_get_context_node_by_window_id (xcb_window_t window_id) {
+/*    if (list->head == NULL) {
         //error, empty list
         printf("Error, empty list\n");
     }
@@ -87,6 +117,7 @@ get_context_node_by_window_id (struct context_list * list, xcb_window_t window_i
     // error, no window with that id
     // printf("Error, no node with window_id: %d", (int)window_id);
     return NULL;
+ */
 }
 
 /* this will surely break: */

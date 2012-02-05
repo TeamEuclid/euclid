@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 
+/*Copyright (C) 2012 Ben Huddle
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -22,5 +22,30 @@
 #import "XtoqWindow.h"
 
 @implementation XtoqWindow
+
+-(id) initWithContentRect:(NSRect)contentRect 
+                styleMask:(NSUInteger)aStyle 
+                  backing:(NSBackingStoreType)bufferingType 
+                    defer:(BOOL)flag {
+    
+    XtoqWindow *result = [super initWithContentRect:contentRect
+                                        styleMask:aStyle
+                                          backing:bufferingType
+                                            defer:flag];
+    return result;
+}
+
+-(void) makeKeyAndOrderFront:(id)sender {
+    [super makeKeyAndOrderFront:sender];
+}
+
+-(void) setContext:(xtoq_context_t *)aContext withId:(id)theId {
+    winContext = aContext;
+    winId = theId;
+}
+
+-(xtoq_context_t *) getContext:(XtoqWindow *)win {
+    return win->winContext;
+}
 
 @end

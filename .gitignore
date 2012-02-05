@@ -18,9 +18,12 @@
 
 # Executables to ignore
 lpxcb-ex
-#rootimg
 
 # Xcode files to ignore 
 #project.pbxproj
 xcuserdata/
 xcuserdatad/
+
+# Autotools files to ignore
+config.status
+compile

@@ -29,11 +29,11 @@
 //  Auto generated XCode project file
 
 #import <Cocoa/Cocoa.h>
-#import "AppController.h"
+#import "XtoqController.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 {
-    AppController * ac; 
+    XtoqController * ac; 
 }
 
 @property (assign) IBOutlet NSWindow *window;

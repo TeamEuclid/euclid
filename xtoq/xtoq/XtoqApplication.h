@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 
+/*Copyright (C) 2012 Braden Wooley, Ben Huddle
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -20,11 +20,17 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "AppController.h"
+#import "XtoqController.h"
 
-@interface XtoqApplication : NSApplication
+@interface XtoqApplication : NSApplication {
+    char *screen;
+}
 
-int XtoqApplicationMain(int argc, const char** argv);
+int XtoqApplicationMain(int argc, char** argv);
 
+/**
+ * Find's which element screen is in argv, otherwise returns 0 if not found.
+ */
+int findScreen(int argc, char **argv);
 
 @end

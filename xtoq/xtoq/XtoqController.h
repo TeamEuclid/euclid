@@ -1,5 +1,5 @@
 
-/*Copyright (C) 2012 Aaron Skomra 
+/*Copyright (C) 2012 Aaron Skomra, Braden Wooley, Ben Huddle
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -24,24 +24,45 @@
  *  AppController.h
  *  xtoq
  *
- *  This is the controller for the Popup to retreive the display number
+  *  TODO: rename this class to XtoqController
+ *  This was controller for the Popup to retreive the display number
  *  from the user.
+ *
+ *  This is the window controller // clean up some of the names
  */
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 #import <AppKit/AppKit.h>
+#import "DisplayNumberController.h"
+#import "XtoqWindow.h"
+#import "XtoqImageRep.h"
+#import "XtoqView.h"
+#import "xtoq.h"
 
 @class DisplayNumberController;
 
-@interface AppController : NSObject {
+@interface XtoqController : NSObject {
     DisplayNumberController *displayNumberController;
-    NSWindow *xtoqWindow;
-    NSMenu *menu;
+    XtoqWindow *xtoqWindow;
+    XtoqView * ourView;
+    
+    //The X :1 paramater, updated in the XtoqApplication
+    char *screen;
+    
+    xtoq_context_t xcbContext;
+    xcb_image_t *imageT;
+    XtoqImageRep *image;
+    XtoqView *view;
+    NSString *file;
+    NSImage *image2;
+    NSMutableDictionary *winList; // The window list data structure.
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
+
+- (void) keyDownInView: (NSNotification *) aNotification;
 
 /**
  * Create the Display Number Controller
@@ -49,6 +70,35 @@
 
 - (IBAction)showDisplayChooser;
 
-- (void)wait_for_xtoq_event;
+/**
+ * Wait for the event.
+ */
+- (void) wait_for_xtoq_event;
+
+/**
+ * Put a new image in the window / view
+ */
+- (void) updateImage;
+
+/**
+ * a function for setting a window in the window list
+ * might need to be modified to actually set context if possible.
+ */
+- (void) setWindowInList: (XtoqWindow *) windowId forKey: (id) akey;
+
+/**
+ * a method for getting a window in the list by searching all keys
+ * returns nil if no key is found.
+ */
+- (XtoqWindow *) getWindowInList: (id) aKey 
+                      withContxt: (xtoq_context_t) xtoqContxt;
+
+/**
+ * Sets the screen to command line argument.
+ */
+- (void) setScreen: (char *) scrn;
+
+
+- (void) sendRects;
 
 @end

@@ -37,6 +37,7 @@ xtoq_init(char *screen) {
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
+    uint32_t mask_values[1];
     
     xcb_get_geometry_reply_t *geom_reply;
  
@@ -46,6 +47,14 @@ xtoq_init(char *screen) {
     
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
+    
+    // Set the mask for the root window so we know when new windows
+    // are created on the root. This is where we add masks for the events
+    // we care about catching on the root window.
+    mask_values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    xcb_change_window_attributes (conn, root_window,
+                                  XCB_CW_EVENT_MASK, mask_values);
+
     
     /* Get the geometry of the root window */
     geom_reply = _xtoq_get_window_geometry(conn, root_window);
@@ -61,6 +70,9 @@ xtoq_init(char *screen) {
     xtoq_context_t init_reply;
     init_reply.conn = conn;
     init_reply.window = root_window;
+    
+    // not sure about this error ...
+    //_xtoq_add_context_t(init_reply);
     
     return init_reply;
 }
@@ -281,6 +293,48 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     event.event_type = XTOQ_DAMAGE;
     
     return event;
+}
+
+xtoq_event_t
+xtoq_wait_for_event (xtoq_context_t context)
+{
+    xcb_generic_event_t *evt;
+    xtoq_event_t return_evt;
+    
+    return_evt.context = context;
+    
+    while ((evt = xcb_wait_for_event(context.conn))) {
+        switch (evt->response_type & ~0x80) {
+            case XCB_EXPOSE: {
+                xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
+                
+                printf("Window %u exposed. Region to be redrawn at location (%d, %d), ",
+                       exevnt->window, exevnt->x, exevnt->y);
+                printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
+                
+                return_evt.event_type = XTOQ_EXPOSE;
+                return return_evt;
+                break;
+            }
+            case XCB_CREATE_NOTIFY: {
+                // New window created in root window
+                printf("XCB_CREATE_NOTIFY\n");
+                return_evt.event_type = XTOQ_CREATE;
+                break;
+            }
+            case XCB_DESTROY_NOTIFY: {
+                // Window destroyed in root window
+                printf("XCB_DESTROY_NOTIFY\n");
+                return_evt.event_type = XTOQ_DESTROY;
+            }
+            default:
+                return_evt.event_type = XTOQ_DAMAGE;
+                return return_evt;
+        }
+        return return_evt;
+    }
+        
+        return return_evt;
 }
 
 #endif //_XTOQ_C_
