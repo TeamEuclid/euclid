@@ -62,6 +62,15 @@ initWithImage:(XtoqImageRep *)newImage {
 }
 
 /**
+ * Eventually 
+ */
+- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
+    const NSRect ** rectList;
+    NSInteger * rectInt = 0;
+}
+
+
+/**
  *  This function draws the initial image to the window.
  */
 - (void)
