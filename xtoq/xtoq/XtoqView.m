@@ -31,32 +31,12 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        opacity = 1.0;
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
         // Leaving these in for testing
         // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
-        
-    }
-    return self;
-}
-
-/**
- *  This is the initializer.
- */
-- (id)
-initWithImage:(XtoqImageRep *)newImage {
-    
-    frame = NSMakeRect(0, 0, newImage.size.width, newImage.size.height);
-    self = [super initWithFrame:frame];
-    
-    if (self) {
-        image = newImage;//[[XtoqImageRep alloc] initWithData:imageT];
-        [image draw];
-        [[self window] flushWindow];
-        
+        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];        
     }
     return self;
 }
@@ -67,29 +47,38 @@ initWithImage:(XtoqImageRep *)newImage {
 - (void)
 drawRect:(NSRect)dirtyRect {
 
+    /*
     const NSRect ** rectList;
     NSInteger * rectInt = 0;
-    
-    [self getRectsBeingDrawn:rectList count:rectInt];
-    
-    NSLog(@"rectInt = %ld", (long)rectInt);
-    
-   NSRect rect = NSMakeRect(10, 10, 100, 100);
-    [[NSColor purpleColor] setFill];
-    NSRectFill(rect);
+    [rectList count:rectInt];
+    NSLog(@"rectInt = %ld", (long)rectInt);*/
     
     [image drawInRect:dirtyRect];
+
+    //[[self window] flushWindow];
     
-    //if (rectInt > 0){
-        
-    
-    //}
-    
-    //  [image draw];
-    [[self window] flushWindow];
     // Leaving in for testing
-    //[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    //[image2 drawInRect:destRect fromRect:NSZeroRect
+    //   operation:NSCompositeSourceOver fraction:1.0];
 }
+
+
+/**
+ * Eventually implement- draw damaged rects
+ */
+/*- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
+ 
+ //NSRect rect = NSMakeRect(10, 10, 100, 100);
+ //[[NSColor purpleColor] setFill];
+ //NSRectFill(rect); 
+ 
+ //if (rectInt > 0){
+    [image drawInRect:dirtyRect];
+ //}
+ [[self window] flushWindow];
+ 
+ }*/
+
 
 /**
  *  This is necessary for accepting input.
@@ -114,21 +103,8 @@ keyDown:(NSEvent *)theEvent {
      userInfo: [[NSDictionary alloc]
                 initWithObjectsAndKeys:[[NSArray alloc]
                                         initWithObjects: theEvent, nil], @"1", nil]];
-    
-//    // NEED TO CHANGE to remove hard coded size
-//    NSSize imageSize = {1024, 768};
-//    
-//    NSRect destRect;
-//    destRect.size = imageSize;
-//    
+
 //    if (key == NSDownArrowFunctionKey) {        
-//        // Get update image
-//  //      imageT = xtoq_get_image(xcbContext);
-//        
-//        image = [[XtoqImageRep alloc] initWithData:imageT];
-//        [image drawInRect:destRect];
-//        [image draw];        
-//        [[self window] flushWindow];
 //        
 //    } else {
         [super keyDown:theEvent];
@@ -140,7 +116,7 @@ keyDown:(NSEvent *)theEvent {
     //[newImage retain];
     //[image release];
     image = newImage;
-    [[self window] flushWindow];
+    //[[self window] flushWindow];
     [self setNeedsDisplay:YES];
 }
 
@@ -148,20 +124,14 @@ keyDown:(NSEvent *)theEvent {
     //[newImage retain];
     //[image release];
     image = newImage;
-    NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-    [[self window] flushWindow];
-    [self setNeedsDisplayInRect:imageRec];
+    //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
+   // NSRect imageRec = NSMakeRect(0, 0, [image getWidth]/2, [image getHeight]/2);
+    // [[self window] flushWindow];
+    //[self setNeedsDisplayInRect:imageRec];
 }
 
--(float)opacity{
-    return opacity;
+- (BOOL)isOpaque{
+    return YES;
 }
-
-- (void)setOpacity:(float)x{
-    opacity = x;
-    [self setNeedsDisplay:YES];
-}
-
 
 @end
-
