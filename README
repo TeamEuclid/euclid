@@ -1,2 +1,26 @@
-X.org Rootless Compositing Window Manager
+Xtoq - X.org Rootless Compositing Window Manager
 
+
+Building
+========
+
+The xtoq project can be built using GNU autotools. 
+From the top level directory, execute the commands:
+
+$ ./autogen.sh
+$ ./configure
+$ make
+$ make install
+
+Note that 'make install' packages the application as a Cocoa app, so
+it will create a directory named 'xtoq.app'. The actual executable is
+copied into this directory.
+
+For testing, the 'prefix' variable should be defined to be a directory
+that the user has write access to. A call to configure would look
+like:
+
+$ ./configure -prefix=/some/local/dir
+
+The 'make install' command will install the 'xtoq.app' directory into
+the /bin directory inside of the prefix given above.

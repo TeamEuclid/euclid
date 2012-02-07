@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 Braden Wooley
+/*Copyright (C) 2012 Braden Wooley, Ben Huddle
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -23,17 +23,46 @@
 
 @implementation XtoqApplication
 
-int XtoqApplicationMain(int argc, const char** argv){
+int XtoqApplicationMain(int argc, char** argv){
+
+    char *scrn;
+    scrn = findScreen(argc, argv);
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
     XtoqController *controller = [[XtoqController alloc] init];
-    
-    [NSApp setDelegate: controller];    
+    [controller setScreen:scrn];
+    [NSApp setDelegate: controller];
     [NSApp run];
     
     return 1;
 }
 
+
+char* findScreen(int argc, char **argv) {
+    int i;
+    int j;
+    int loc;
+    char place;
+    bool toBreak = false;
+    
+    for (i = 1; !toBreak && i < argc; ++i) {
+        for (j = 0; argv[i][j] != '\0'; ++j) {
+            place = argv[i][j];
+            if (place == ':') {
+                toBreak = true;
+                loc = i;
+                break;
+            }
+            else loc = 0;
+        }
+    }
+    
+    if ( loc != 0) {
+        return argv[loc];
+    }
+    else return ":1";
+    
+}
 
 @end

@@ -1,4 +1,4 @@
-/* Copyright (c) 2012 David Snyder
+/* Copyright (c) 2012 David Snyder, Benjamin Carr
  *
  * rootimg_api.h
  *
@@ -27,6 +27,7 @@
 #define _XTOQ_C_
 
 #include "xtoq.h"
+#include <string.h>
 
 
 // This init function needs set the window to be registered for events!
@@ -37,6 +38,7 @@ xtoq_init(char *screen) {
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
+    uint32_t mask_values[1];
     
     xcb_get_geometry_reply_t *geom_reply;
  
@@ -45,23 +47,77 @@ xtoq_init(char *screen) {
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
     
+    //xtoq_context_t contxt;
+    //contxt.window = root_window;
+    //contxt.conn = conn;
+    //_xtoq_init_damage(contxt);
+    
+    // Set the mask for the root window so we know when new windows
+    // are created on the root. This is where we add masks for the events
+    // we care about catching on the root window.
+    mask_values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    xcb_change_window_attributes (conn, root_window,
+                                  XCB_CW_EVENT_MASK, mask_values);
+
+    
     /* Get the geometry of the root window */
     geom_reply = _xtoq_get_window_geometry(conn, root_window);
     
     //WriteWindowInfo(conn, root_window);
 	//WriteAllChildrenWindowInfo(conn, root_window);
     
+    
+
+    
 	xcb_flush(conn);
     
     xtoq_context_t init_reply;
     init_reply.conn = conn;
     init_reply.window = root_window;
+    _xtoq_init_damage(init_reply);
     
     // not sure about this error ...
     //_xtoq_add_context_t(init_reply);
     
     return init_reply;
 }
+
+xcb_query_extension_reply_t * _xtoq_init_extension(xcb_connection_t *conn, char *extension_name) {
+    xcb_query_extension_cookie_t cookie = xcb_query_extension(conn, strlen(extension_name), extension_name);
+	xcb_query_extension_reply_t *reply = xcb_query_extension_reply(conn, cookie, NULL);
+	if (!reply->present) {
+		free(reply);
+        printf("%s extension not present", extension_name);
+        exit(1);
+	} else {
+        printf("%s extension present", extension_name);
+    }
+    
+	return reply;
+}
+
+void _xtoq_init_damage(xtoq_context_t contxt) {
+    
+    xcb_query_extension_reply_t *reply =_xtoq_init_extension(contxt.conn, "DAMAGE");
+    
+    xcb_damage_query_version_cookie_t version_cookie = 
+    xcb_damage_query_version(contxt.conn, 
+                             XCB_DAMAGE_MAJOR_VERSION,
+                             XCB_DAMAGE_MINOR_VERSION);
+	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(contxt.conn, version_cookie, NULL);
+
+	free(version_reply);
+	free(reply);
+    xcb_damage_damage_t damage = xcb_generate_id(contxt.conn);
+    
+    // Refer to the Damage Protocol. level = 0 corresponds to the level
+    // DamageReportRawRectangles.  Another level may be more appropriate.
+    uint8_t level = 0;
+    xcb_void_cookie_t v = xcb_damage_create(contxt.conn,
+                                        damage, contxt.window, level);
+	
+}
+
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context) {
@@ -87,6 +143,7 @@ xtoq_get_image(xtoq_context_t context) {
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
+    free(geom_reply);
     return image;
 }
 
@@ -225,8 +282,62 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     
     sleep(4);
     xtoq_event_t event;
+    xtoq_context_t new_context;
+    new_context.window = context.window;
+    new_context.conn = context.conn;
+    event.context = new_context;
+    event.event_type = XTOQ_DAMAGE;
     
     return event;
+}
+
+xtoq_event_t
+xtoq_wait_for_event (xtoq_context_t context)
+{   
+    xcb_query_extension_reply_t *damage_extension = _xtoq_init_extension(context.conn, "DAMAGE");
+    int damage_event = damage_extension->first_event + XCB_DAMAGE_NOTIFY;
+    free(damage_extension);
+    xcb_generic_event_t *evt;
+    xtoq_event_t return_evt;
+    
+    return_evt.context = context;
+    
+    evt = xcb_wait_for_event(context.conn);
+    if ((evt->response_type & ~0x80) == damage_event) {
+        printf("XCB_DAMAGE_NOTIFY\n");
+        return_evt.event_type = XTOQ_DAMAGE;
+    } else {
+        switch (evt->response_type & ~0x80) {
+            case XCB_EXPOSE: {
+                xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
+                
+                printf("Window %u exposed. Region to be redrawn at location (%d, %d), ",
+                       exevnt->window, exevnt->x, exevnt->y);
+                printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
+                
+                return_evt.event_type = XTOQ_EXPOSE;
+                free(exevnt);
+                break;
+            }
+            case XCB_CREATE_NOTIFY: {
+                // New window created in root window
+                printf("XCB_CREATE_NOTIFY\n");
+                return_evt.event_type = XTOQ_CREATE;
+                break;
+            }
+            case XCB_DESTROY_NOTIFY: {
+                // Window destroyed in root window
+                printf("XCB_DESTROY_NOTIFY\n");
+                return_evt.event_type = XTOQ_DESTROY;
+                break;
+            }
+            default: {
+                printf("UNKNOWN EVENT\n");
+                break;
+            }
+        }
+    }
+    return return_evt;
 }
 
 #endif //_XTOQ_C_

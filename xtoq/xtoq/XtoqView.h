@@ -44,10 +44,13 @@ SOFTWARE.
     
     xtoq_context_t xcbContext;
     xcb_image_t *imageT;
+    
+    float opacity;
 
 }
-
+@property (readwrite) float opacity;
 - (void)setImage:(XtoqImageRep *)newImage;
+- (void)setPartialImage:(XtoqImageRep *)newImage;
 - (id)initWithImage:(XtoqImageRep *)initImage;
 - (id)initWithFrame:(NSRect)frame;
 

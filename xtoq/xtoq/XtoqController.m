@@ -83,28 +83,33 @@
     // [window makeKeyAndOrderFront:nil];
     // [NSApp activateIgnoringOtherApps:YES];
 
-    
-    // This was pulled from XqtoqView
-    screen = ":1";
+    // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
+    
+    //Setting environment variable $DISPLAY to screen.
+    char *env = getenv("DISPLAY");
+    NSLog(@"$DISPLAY = %s", env);
+    if (setenv("DISPLAY", screen, 1) == 0) {
+        NSLog(@"successful");
+        env = getenv("DISPLAY");
+        NSLog(@"current $DISPLAY is = %s", env);
+    }
+    else {
+        NSLog(@"not successful in attemp to set $DISPLAY");
+    }
+    
+    //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];
-
-    //ourView = [[XtoqView alloc] initWithImage:image];
-    
+    //draw the image into a rect
     NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
-    [image drawInRect:imageRec];
-    
-// not sure whats going on  
-    //[[NSColor greenColor] setFill];
-    //NSRectFill(imageRec);
+    // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
-    
-    [[xtoqWindow contentView]  addSubview: ourView];    
-    // Leaving these in for testing
-    file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-    image2 = [[NSImage alloc] initWithContentsOfFile:(file)];
+    // add view to its window
+    [[xtoqWindow contentView]  addSubview: ourView];  
+    // set the initial image in the window
+    [ourView setImage:image];
     
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -142,38 +147,41 @@
     xtoq_event_t xqevent;
     
     while (1) {
-        xqevent = dummy_xtoq_wait_for_event(xqcontxt);
-    
+        // Change this call to dummy_xtoq_wait_for_event if
+        // you just want the 4 second delay
+        //xqevent = dummy_xtoq_wait_for_event(xcbContext);
+        xqevent = xtoq_wait_for_event(xcbContext);    
+        
         if (xqevent.event_type == XTOQ_DAMAGE) {
             NSLog(@"Got damage event");
             [self updateImage];
-        }
-        else { 
-            NSLog(@"HEy I'm Not damage!"); 
-           // [self updateImage];
-           [self sendRects];
+        } else if (xqevent.event_type == XTOQ_CREATE) {
+            [self updateImage];
+        } else if (xqevent.event_type == XTOQ_DESTROY) {
+            [self updateImage];
+        } else { 
+            NSLog(@"Hey I'm Not damage!"); 
         }
 
     }
 }
 
-- (void) sendRects {
-   // [[NSGraphicsContext currentContext]
-   //  setImageInterpolation:NSImageInterpolationHigh];
-    
-        NSRect rect = NSMakeRect(10, 10, 100, 100);
-        [[NSColor redColor] setFill];
-        NSRectFill(rect);
-        [ourView setNeedsDisplayInRect:rect];
-
-}
-
-
+// create a new image to redraw part of the screen 
 - (void) updateImage {
+
+    int numberOfRects = 1;
+    
+    for (int i = 0; i < numberOfRects; i++) {
+    
         NSLog(@"update Image");
-    imageT = xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];
-    [ourView setImage:image];
+        imageT = xtoq_get_image(xcbContext);
+        image = [[XtoqImageRep alloc] initWithData:imageT];
+        [ourView setPartialImage:image];
+    
+        NSRect rect = NSMakeRect(200, 200, 300, 300);
+        // NSRect rect = NSMakeRect(0, 0, 300, 300);
+        [ourView setNeedsDisplayInRect:rect];
+    }
 }
 
 - (void) setWindowInList:(XtoqWindow *)windowId forKey:(id)akey {
@@ -199,6 +207,10 @@
     }
     
     return nil;
+}
+
+- (void) setScreen:(char *)scrn {
+    screen = scrn;
 }
 
 @end
