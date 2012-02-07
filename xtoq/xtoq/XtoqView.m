@@ -31,7 +31,7 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        opacity = 1.0;
+        //opacity = 1.0;
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
@@ -49,14 +49,13 @@ initWithFrame:(NSRect)frame {
 - (id)
 initWithImage:(XtoqImageRep *)newImage {
     
-    frame = NSMakeRect(0, 0, newImage.size.width, newImage.size.height);
-    self = [super initWithFrame:frame];
+    NSRect frame2 = NSMakeRect(0, 0, newImage.size.width, newImage.size.height);
+    self = [super initWithFrame:frame2];
     
     if (self) {
         image = newImage;//[[XtoqImageRep alloc] initWithData:imageT];
         [image draw];
         [[self window] flushWindow];
-        
     }
     return self;
 }
@@ -67,6 +66,14 @@ initWithImage:(XtoqImageRep *)newImage {
 /*- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
     const NSRect ** rectList;
     NSInteger * rectInt = 0;
+     NSLog(@"rectInt = %ld", (long)rectInt);
+ //if (rectInt > 0){
+ 
+ //}
+ 
+ //NSRect rect = NSMakeRect(10, 10, 100, 100);
+ //[[NSColor purpleColor] setFill];
+ //NSRectFill(rect); 
 }*/
 
 
@@ -75,27 +82,20 @@ initWithImage:(XtoqImageRep *)newImage {
  */
 - (void)
 drawRect:(NSRect)dirtyRect {
-
+    
     const NSRect ** rectList;
     NSInteger * rectInt = 0;
     
-    [self getRectsBeingDrawn:rectList count:rectInt];
-    
     NSLog(@"rectInt = %ld", (long)rectInt);
     
-   NSRect rect = NSMakeRect(10, 10, 100, 100);
+    NSRect rect = NSMakeRect(10, 10, 100, 100);
     [[NSColor purpleColor] setFill];
     NSRectFill(rect);
-    
+
+    [self getRectsBeingDrawn:rectList count:rectInt];
     [image drawInRect:dirtyRect];
-    
-    //if (rectInt > 0){
-        
-    
-    //}
-    
-    //  [image draw];
     [[self window] flushWindow];
+    
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 }
@@ -162,7 +162,7 @@ keyDown:(NSEvent *)theEvent {
     [self setNeedsDisplayInRect:imageRec];
 }
 
--(float)opacity{
+/*-(float)opacity{
     return opacity;
 }
 
@@ -171,7 +171,7 @@ keyDown:(NSEvent *)theEvent {
     [self setNeedsDisplay:YES];
 }
 
-/*- (BOOL)isOpaque{
+- (BOOL)isOpaque{
     return YES;
 }*/
 

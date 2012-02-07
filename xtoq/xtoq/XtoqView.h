@@ -37,7 +37,7 @@ SOFTWARE.
     
     NSImage *image2;
     NSString *file;
-    NSRect frame;
+   // NSRect frame;
     
     //The X :1 paramater
     char *screen;
@@ -45,16 +45,15 @@ SOFTWARE.
     xtoq_context_t xcbContext;
     xcb_image_t *imageT;
     
-    float opacity;
+ //   float opacity;
 
 }
-@property (readwrite) float opacity;
+//@property (readwrite) float opacity;
 - (void)setImage:(XtoqImageRep *)newImage;
 - (void)setPartialImage:(XtoqImageRep *)newImage;
 - (id)initWithImage:(XtoqImageRep *)initImage;
 - (id)initWithFrame:(NSRect)frame;
-- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
-
+//- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
 
 @end
 
