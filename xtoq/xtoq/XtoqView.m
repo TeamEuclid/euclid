@@ -64,10 +64,10 @@ initWithImage:(XtoqImageRep *)newImage {
 /**
  * Eventually 
  */
-- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
+/*- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
     const NSRect ** rectList;
     NSInteger * rectInt = 0;
-}
+}*/
 
 
 /**
@@ -171,6 +171,9 @@ keyDown:(NSEvent *)theEvent {
     [self setNeedsDisplay:YES];
 }
 
+/*- (BOOL)isOpaque{
+    return YES;
+}*/
 
 @end
 
