@@ -47,8 +47,15 @@ initWithFrame:(NSRect)frame {
 - (void)
 drawRect:(NSRect)dirtyRect {
 
+    /*
+    const NSRect ** rectList;
+    NSInteger * rectInt = 0;
+    [rectList count:rectInt];
+    NSLog(@"rectInt = %ld", (long)rectInt);*/
+    
     [image drawInRect:dirtyRect];
-    [[self window] flushWindow];
+
+    //[[self window] flushWindow];
     
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect
@@ -60,17 +67,16 @@ drawRect:(NSRect)dirtyRect {
  * Eventually implement- draw damaged rects
  */
 /*- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
- const NSRect ** rectList;
- NSInteger * rectInt = 0;
- NSLog(@"rectInt = %ld", (long)rectInt);
  
  //NSRect rect = NSMakeRect(10, 10, 100, 100);
  //[[NSColor purpleColor] setFill];
  //NSRectFill(rect); 
  
  //if (rectInt > 0){
- [image drawInRect:dirtyRect];
+    [image drawInRect:dirtyRect];
  //}
+ [[self window] flushWindow];
+ 
  }*/
 
 
@@ -110,7 +116,7 @@ keyDown:(NSEvent *)theEvent {
     //[newImage retain];
     //[image release];
     image = newImage;
-    [[self window] flushWindow];
+    //[[self window] flushWindow];
     [self setNeedsDisplay:YES];
 }
 
@@ -118,9 +124,10 @@ keyDown:(NSEvent *)theEvent {
     //[newImage retain];
     //[image release];
     image = newImage;
-    NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-    [[self window] flushWindow];
-    [self setNeedsDisplayInRect:imageRec];
+    //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
+   // NSRect imageRec = NSMakeRect(0, 0, [image getWidth]/2, [image getHeight]/2);
+    // [[self window] flushWindow];
+    //[self setNeedsDisplayInRect:imageRec];
 }
 
 - (BOOL)isOpaque{
