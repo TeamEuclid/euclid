@@ -263,8 +263,8 @@ dummy_xtoq_get_image(xtoq_context_t context) {
     
     //Remove later
     /* Enter infinte loop so the window stays open */
-    while (1) {
-    }
+  //  while (1) {
+  //  }
     
     
     /* Never get here, but if we could, would still want to clean up memory */
