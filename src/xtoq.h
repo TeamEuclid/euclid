@@ -50,6 +50,7 @@ typedef struct xtoq_context_t {
     int y;
     int width;
     int height;
+    void *local_data;   // Area for data client cares about
 } xtoq_context_t;
 
 typedef struct xtoq_event_t {
