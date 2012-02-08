@@ -110,6 +110,8 @@
     [[xtoqWindow contentView]  addSubview: ourView];  
     // set the initial image in the window
     [ourView setImage:image];
+    originalWidth = [image getWidth];
+    originalHeight = [image getHeight];
     
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -177,11 +179,11 @@
         imageT = xtoq_get_image(xcbContext);
         image = [[XtoqImageRep alloc] initWithData:imageT];
         //free(imageT);
+        [image topCrop];
         [ourView setPartialImage:image];
         
-        //NSRect rect = NSMakeRect(200, 200, 300, 300);
-        NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-        // NSRect rect = NSMakeRect(0, 0, 300, 300);
+        //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
+         NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
         [ourView setNeedsDisplayInRect:rect];
     }
 }
