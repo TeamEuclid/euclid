@@ -57,6 +57,9 @@
     NSString *file;
     NSImage *image2;
     NSMutableDictionary *winList; // The window list data structure.
+
+    int originalHeight;
+    int originalWidth;
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;

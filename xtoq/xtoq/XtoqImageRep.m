@@ -76,6 +76,18 @@
     return self;
 }
 
+// testing function
+- (id)topCrop{
+    CGSize sizeH = [self size];
+    CGRect rect = CGRectMake(0, 30,                      
+                sizeH.width - 30, sizeH.height-30 );
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect(cgImage, rect);
+    cgImage = imageRef;
+    return self;
+}
+
+
 - (BOOL)draw{   
     CGContextRef contextMac = [[NSGraphicsContext currentContext] graphicsPort];
     if (contextMac == NULL)
