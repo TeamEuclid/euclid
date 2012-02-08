@@ -58,6 +58,8 @@
     NSImage *image2;
     NSMutableDictionary *winList; // The window list data structure.
     NSInteger winCount;           // Used for setting keys of windows
+    int originalHeight;
+    int originalWidth;
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;

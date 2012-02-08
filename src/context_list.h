@@ -38,6 +38,7 @@
 typedef struct _xtoq_context_node {
     xtoq_context_t *context;
     struct _xtoq_context_node * next;
+    struct _xtoq_context_node * prev;
 } _xtoq_context_node;
 
 typedef struct _xtoq_context_list {
@@ -45,7 +46,8 @@ typedef struct _xtoq_context_list {
     int count;
 } _xtoq_context_list;
 
-_xtoq_context_list _xtoq_window_list;
+/* this is the head pointer */
+_xtoq_context_node *_xtoq_window_list_head;
 
 void _xtoq_init_list();
 
