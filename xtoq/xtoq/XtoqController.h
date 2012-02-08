@@ -57,6 +57,7 @@
     NSString *file;
     NSImage *image2;
     NSMutableDictionary *winList; // The window list data structure.
+    NSInteger winCount;           // Used for setting keys of windows
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
@@ -80,18 +81,12 @@
  */
 - (void) updateImage;
 
-/**
- * a function for setting a window in the window list
- * might need to be modified to actually set context if possible.
- */
-- (void) setWindowInList: (XtoqWindow *) windowId forKey: (id) akey;
 
 /**
  * a method for getting a window in the list by searching all keys
  * returns nil if no key is found.
  */
-- (XtoqWindow *) getWindowInList: (id) aKey 
-                      withContxt: (xtoq_context_t) xtoqContxt;
+- (XtoqWindow *) getWindowInList: (xtoq_context_t) xtoqContxt;
 
 /**
  * Sets the screen to command line argument.
