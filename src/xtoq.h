@@ -34,7 +34,6 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
-//#include <xproto.h>
 //#include "context_list.h"
 #include "util.h"
 
@@ -46,10 +45,15 @@
 typedef struct xtoq_context_t {
     xcb_connection_t *conn;
     xcb_drawable_t window;
+    xcb_window_t parent;
+    int x;
+    int y;
+    int width;
+    int height;
 } xtoq_context_t;
 
 typedef struct xtoq_event_t {
-    xtoq_context_t context;
+    xtoq_context_t *context;
     int event_type;
 } xtoq_event_t;
 

@@ -29,6 +29,8 @@
 #include "xtoq.h"
 #include <string.h>
 
+// TODO: Decide where this variable needs to live.
+int _damage_event;
 
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
@@ -115,7 +117,10 @@ void _xtoq_init_damage(xtoq_context_t contxt) {
     uint8_t level = 0;
     xcb_void_cookie_t v = xcb_damage_create(contxt.conn,
                                         damage, contxt.window, level);
-	
+
+    xcb_query_extension_reply_t *damage_extension = _xtoq_init_extension(contxt.conn, "DAMAGE");
+    _damage_event = damage_extension->first_event + XCB_DAMAGE_NOTIFY;
+    free(damage_extension);	
 }
 
 
@@ -285,7 +290,7 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     xtoq_context_t new_context;
     new_context.window = context.window;
     new_context.conn = context.conn;
-    event.context = new_context;
+    event.context = &new_context;
     event.event_type = XTOQ_DAMAGE;
     
     return event;
@@ -294,18 +299,15 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
 xtoq_event_t
 xtoq_wait_for_event (xtoq_context_t context)
 {   
-    xcb_query_extension_reply_t *damage_extension = _xtoq_init_extension(context.conn, "DAMAGE");
-    int damage_event = damage_extension->first_event + XCB_DAMAGE_NOTIFY;
-    free(damage_extension);
     xcb_generic_event_t *evt;
     xtoq_event_t return_evt;
     
-    return_evt.context = context;
-    
     evt = xcb_wait_for_event(context.conn);
-    if ((evt->response_type & ~0x80) == damage_event) {
+    if ((evt->response_type & ~0x80) == _damage_event) {
         printf("XCB_DAMAGE_NOTIFY\n");
         return_evt.event_type = XTOQ_DAMAGE;
+        return_evt.context = NULL;
+        
     } else {
         switch (evt->response_type & ~0x80) {
             case XCB_EXPOSE: {
@@ -320,15 +322,43 @@ xtoq_wait_for_event (xtoq_context_t context)
                 break;
             }
             case XCB_CREATE_NOTIFY: {
-                // New window created in root window
-                printf("XCB_CREATE_NOTIFY\n");
+                // Window created as child of root window
+                xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
+                
                 return_evt.event_type = XTOQ_CREATE;
+                // Create the memory for a new context - this will need to be freed when
+                // the window is destroyed
+                return_evt.context = malloc(sizeof(xtoq_context_t));
+                return_evt.context->conn = context.conn;
+                return_evt.context->window = notify->window;
+                return_evt.context->parent = notify->parent;
+                return_evt.context->x = notify->x;
+                return_evt.context->y = notify->y;
+                return_evt.context->window = notify->width;
+                return_evt.context->window = notify->height;
+
+                free(notify);
+                
+                // TODO: Add the context created here to the data structure
+                
                 break;
             }
             case XCB_DESTROY_NOTIFY: {
                 // Window destroyed in root window
-                printf("XCB_DESTROY_NOTIFY\n");
+                xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
                 return_evt.event_type = XTOQ_DESTROY;
+                
+                // Memory for context will need to be freed by caller
+                // Only setting the window - other values will be garbage.
+                return_evt.context = malloc(sizeof(xtoq_context_t));
+                return_evt.context->conn = context.conn;
+                return_evt.context->window = notify->window;
+                
+                free(notify);
+                
+                // TODO: Remove the window from the data structure.
+                // Need to figure out where memory is freed.
+                
                 break;
             }
             default: {
