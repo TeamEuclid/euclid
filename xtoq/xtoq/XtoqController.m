@@ -182,6 +182,7 @@
         
         // [image dealloc];
         image = [[XtoqImageRep alloc] initWithData:imageT];
+
         [image topCrop];
         [ourView setPartialImage:image];
         
