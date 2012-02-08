@@ -176,9 +176,12 @@
     for (int i = 0; i < numberOfRects; i++) {
     
         NSLog(@"update Image");
+        
+        xcb_image_destroy(imageT);
         imageT = xtoq_get_image(xcbContext);
+        
+        // [image dealloc];
         image = [[XtoqImageRep alloc] initWithData:imageT];
-        //free(imageT);
         [image topCrop];
         [ourView setPartialImage:image];
         
