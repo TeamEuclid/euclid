@@ -124,7 +124,11 @@
                                              selector: @selector(keyDownInView:)
                                                  name: @"viewKeyDownEvent"
                                                object: nil];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(mouseButtonDownInView:)
+                                                 name: @"mouseButtonDownEvent"
+                                               object: nil];
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
@@ -149,6 +153,14 @@
     NSLog(@"Got a viewKeyDownEvent");
     NSLog(@"Key was: %@", [keyInfo objectForKey: @"1"]);
 }
+
+- (void) mouseButtonDownInView: (NSNotification *) aNotification
+{
+    NSDictionary *keyInfo = [aNotification userInfo];
+    NSLog(@"Got a mouseButtonDownEvent");
+    NSLog(@"Mouse Info: %@", [keyInfo objectForKey: @"1"]);
+}
+
 
 - (void) wait_for_xtoq_event {
     xtoq_context_t xqcontxt;
@@ -185,8 +197,6 @@
         
         xcb_image_destroy(imageT);
         imageT = xtoq_get_image(xcbContext);
-        
-        // [image dealloc];
         image = [[XtoqImageRep alloc] initWithData:imageT];
 
         [image topCrop];

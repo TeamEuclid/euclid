@@ -67,6 +67,7 @@
 
 - (void) keyDownInView: (NSNotification *) aNotification;
 
+- (void) mouseButtonDownInView: (NSNotification *) aNotification;
 /**
  * Create the Display Number Controller
  */
