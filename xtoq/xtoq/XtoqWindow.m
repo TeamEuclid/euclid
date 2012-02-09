@@ -48,4 +48,8 @@
     return win->winContext;
 }
 
+-(void) setRootDataPointer:(xtoq_context_t)xqContext {
+    xtoqLocalData = xqContext.local_data;
+}
+
 @end

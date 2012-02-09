@@ -117,6 +117,7 @@
     // add root window to list, increment count of windows
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
     [xtoqWindow setContext:xcbContext withId:key];
+    [xtoqWindow setRootDataPointer:xcbContext];
     [winList setObject:xtoqWindow forKey:key];
     ++winCount;
     
