@@ -25,10 +25,10 @@
 
 #include "context_list.h"
 
-void _xtoq_init_list(){
+/*void _xtoq_init_list(){
     _xtoq_window_list.head = NULL;
     _xtoq_window_list.count = 0;
-}
+}*/
 /*
 void 
 testList(){
@@ -63,73 +63,84 @@ testList(){
 */
 
 void
-_xtoq_add_context_t(xtoq_context_t context) {
-  /*  if (list->head == NULL) {
-        list->head = node;
-        node->next = NULL;
+_xtoq_add_context_t(xtoq_context_t context)
+{
+    _xtoq_context_node *new;
+    _xtoq_context_node *curr;
+    _xtoq_context_node *prev;
+    
+    
+    /* Does the window already exist */
+    if (_xtoq_get_context_node_by_window_id(context.window))
+        return;
+    
+    /* Create node to hold the new window */
+    new = malloc(sizeof(xtoq_context_t));
+    if (!new) {
+        exit(1);                /* Should we handle this differently? */
     }
-    else {
-        struct context_node * temp = list->head;
-        while (temp->next != NULL)
-            temp = temp->next;
-        temp->next = node;
-        node->next = NULL;
-    } */
+    new->context = &context;
+    
+    /* Handle the case where this is the first node added */
+    if (!_xtoq_window_list_head) {
+        new->prev = NULL;
+        new->next = NULL;
+        _xtoq_window_list_head = new;
+    } else {
+        curr = _xtoq_window_list_head;
+        while (curr->next) {
+            prev = curr;
+            curr = curr->next;
+        }
+        curr->next = new;
+        new->prev = curr;
+        new->next = NULL;
+    }
+    
+    
+    return;
+}       
+
+_xtoq_context_node *
+_xtoq_get_context_node_by_window_id (xcb_window_t window_id)
+{
+    _xtoq_context_node *curr;
+    
+    if (_xtoq_window_list_head) {
+        return NULL;
+    }
+    
+    curr = _xtoq_window_list_head;
+    while (curr) {
+        if (curr->context->window == window_id) {
+            return curr;
+        }
+        curr = curr->next;
+    }
+    return NULL;
 }
+
 
 void
 _xtoq_remove_context_node(xcb_window_t window_id) {
- /*   if (list->head == NULL) {
-        //error empty list
-        printf("Error, empty list\n");
-    }
-    struct context_node * curr= list->head, * prev = NULL;
-    if (curr->context->window == window_id) {
-        list->head = curr->next;
-        return;
-    }
-    while (curr->next != NULL) {
-        curr = curr->next;
+
+    _xtoq_context_node *curr;
+    
+    curr = _xtoq_window_list_head;
+    while (curr) {
         if (curr->context->window == window_id) {
-            prev->next = curr->next;
+            curr->next->prev = curr->prev;
+            if (curr->prev) {
+                curr->prev->next = curr->next;
+            }
+            free(curr);
             return;
         }
-        prev = curr;
-        curr = curr->next;
     }
-    // error, no node with window_id
-    //printf("Error, no node with window_id: %d", (int)window_id);
-  */
+    return;
 }
 
-_xtoq_context_node *
-_xtoq_get_context_node_by_window_id (xcb_window_t window_id) {
-/*    if (list->head == NULL) {
-        //error, empty list
-        printf("Error, empty list\n");
-    }
-    struct context_node * temp = list->head;
-    while (temp->next != NULL) {
-        if (temp->context->window == window_id)
-            return temp;
-        temp = temp->next;
-    }
-    // error, no window with that id
-    // printf("Error, no node with window_id: %d", (int)window_id);
-    return NULL;
- */
-}
 
-/* this will surely break: */
-/*
-context_list * get_context_node(context_list * list, int index) {
-  context_node * temp = list
-  int i = 0;
-  while (i < index) {
-    temp = temp->next;
-  }
-  return temp;
-}
-*/
+
 
 

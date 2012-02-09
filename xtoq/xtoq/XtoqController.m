@@ -38,6 +38,7 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     winList = [[NSMutableDictionary alloc] init];
+    winCount = 0;
     
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
@@ -91,7 +92,7 @@
     char *env = getenv("DISPLAY");
     NSLog(@"$DISPLAY = %s", env);
     if (setenv("DISPLAY", screen, 1) == 0) {
-        NSLog(@"successful");
+        NSLog(@"setenv successful");
         env = getenv("DISPLAY");
         NSLog(@"current $DISPLAY is = %s", env);
     }
@@ -110,6 +111,13 @@
     [[xtoqWindow contentView]  addSubview: ourView];  
     // set the initial image in the window
     [ourView setImage:image];
+    originalWidth = [image getWidth];
+    originalHeight = [image getHeight];
+    
+    // add root window to list, increment count of windows
+    NSString *key = [NSString stringWithFormat:@"%d", winCount];
+    [winList setObject:xtoqWindow forKey:key];
+    ++winCount;
     
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -174,24 +182,24 @@
     for (int i = 0; i < numberOfRects; i++) {
     
         NSLog(@"update Image");
+        
+        xcb_image_destroy(imageT);
         imageT = xtoq_get_image(xcbContext);
+        
+        // [image dealloc];
         image = [[XtoqImageRep alloc] initWithData:imageT];
-        //free(imageT);
+
+        [image topCrop];
         [ourView setPartialImage:image];
         
-        //NSRect rect = NSMakeRect(200, 200, 300, 300);
-        NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-        // NSRect rect = NSMakeRect(0, 0, 300, 300);
+        //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
+         NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
         [ourView setNeedsDisplayInRect:rect];
     }
 }
 
-- (void) setWindowInList:(XtoqWindow *)windowId forKey:(id)akey {
-    [winList setObject:windowId forKey:akey];
-}
 
-- (XtoqWindow *) getWindowInList:(id)aKey 
-                      withContxt:(xtoq_context_t)xtoqContxt {
+- (XtoqWindow *) getWindowInList: (xtoq_context_t)xtoqContxt {
     
     id key;
     int index;
