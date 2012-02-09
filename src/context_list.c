@@ -57,13 +57,13 @@ testList(){
     init_reply.window = root_window;
     
     // not sure about this error ...
-    _xtoq_add_context_t(init_reply);
+    _xtoq_add_context(init_reply);
 
 }
 
 
 void
-_xtoq_add_context_t(xtoq_context_t context)
+_xtoq_add_context (xtoq_context_t context)
 {
     _xtoq_context_node *new;
     _xtoq_context_node *curr;
