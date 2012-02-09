@@ -1,0 +1,4 @@
+# In the project_docs folder to ignore
+*.html
+css
+*.ods

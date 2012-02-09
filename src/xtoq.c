@@ -23,8 +23,8 @@
  * SOFTWARE.
  */
 
-#ifndef _XTOQ_C_
-#define _XTOQ_C_
+/* #ifndef _XTOQ_C_ */
+/* #define _XTOQ_C_ */
 
 #include "xtoq.h"
 #include <string.h>
@@ -370,4 +370,4 @@ xtoq_wait_for_event (xtoq_context_t context)
     return return_evt;
 }
 
-#endif //_XTOQ_C_
+/* #endif //_XTOQ_C_ */

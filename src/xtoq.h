@@ -34,7 +34,7 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
-//#include "context_list.h"
+#include "context_list.h"
 #include "util.h"
 
 #define XTOQ_DAMAGE 0
@@ -74,11 +74,6 @@ _xtoq_init_damage(xtoq_context_t contxt);
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);
-
-/*
-xtoq_event_t
-xtoq_wait_for_event(xtoq_context_t context);
-*/
 
 int
 dummy_xtoq_get_image(xtoq_context_t context);

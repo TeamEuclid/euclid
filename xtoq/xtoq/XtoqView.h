@@ -41,6 +41,9 @@ SOFTWARE.
     xtoq_context_t xcbContext;
     xcb_image_t *imageT;
 
+    //mouse event 
+    NSPoint downPoint;
+    NSPoint currentPoint;
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;

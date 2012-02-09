@@ -111,6 +111,21 @@ keyDown:(NSEvent *)theEvent {
 //    }
 }
 
+-(void)
+mouseDown:(NSEvent *)mouseEvent {
+    
+    NSPoint p = [mouseEvent locationInWindow];
+    downPoint = [self convertPoint:p fromView:nil];
+    currentPoint = downPoint;
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"mouseButtonDownEvent" object:self 
+     userInfo: [[NSDictionary alloc]
+                initWithObjectsAndKeys:[[NSArray alloc]
+                                        initWithObjects: mouseEvent, nil], @"1", nil]];
+   // [self setNeedsDisplay:YES];
+}
+
 // This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
     //[newImage retain];
@@ -125,7 +140,7 @@ keyDown:(NSEvent *)theEvent {
     //[image release];
     image = newImage;
     //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-   // NSRect imageRec = NSMakeRect(0, 0, [image getWidth]/2, [image getHeight]/2);
+    // NSRect imageRec = NSMakeRect(0, 0, [image getWidth]/2, [image getHeight]/2);
     // [[self window] flushWindow];
     //[self setNeedsDisplayInRect:imageRec];
 }
