@@ -25,11 +25,11 @@
 
 #include "context_list.h"
 
-/*void _xtoq_init_list(){
+void _xtoq_init_list(){
     _xtoq_window_list.head = NULL;
     _xtoq_window_list.count = 0;
-}*/
-/*
+}
+
 void 
 testList(){
     xcb_connection_t *conn;
@@ -60,7 +60,7 @@ testList(){
     _xtoq_add_context_t(init_reply);
 
 }
-*/
+
 
 void
 _xtoq_add_context_t(xtoq_context_t context)
@@ -75,10 +75,17 @@ _xtoq_add_context_t(xtoq_context_t context)
         return;
     
     /* Create node to hold the new window */
+
+    /* NOTE: There are two things that you need to allocate memory for
+     * - the xtoq_context AND the _xtoq_context_node that you are
+     * going to put the xtoq_context into. */
     new = malloc(sizeof(xtoq_context_t));
     if (!new) {
         exit(1);                /* Should we handle this differently? */
     }
+    /* NOTE: I don't think this will work since context may go out of
+     * scope when the function ends - might have to make a deep
+     * copy */
     new->context = &context;
     
     /* Handle the case where this is the first node added */
@@ -140,7 +147,9 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     return;
 }
 
-
-
-
-
+int
+main (int argc, char **argv)
+{
+    testList();
+    return 0;
+}

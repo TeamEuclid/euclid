@@ -49,6 +49,11 @@ typedef struct _xtoq_context_list {
 /* this is the head pointer */
 _xtoq_context_node *_xtoq_window_list_head;
 
+/* NOTE: Added this because _xtoq_init_list seems to need
+ * it. _xtoq_window_list might be a bad name since it prettly close to
+ * the names of the structures your using here */
+_xtoq_context_list _xtoq_window_list ;
+
 void _xtoq_init_list();
 
 
