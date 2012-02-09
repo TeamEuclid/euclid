@@ -39,12 +39,12 @@
     [super makeKeyAndOrderFront:sender];
 }
 
--(void) setContext:(xtoq_context_t *)aContext withId:(id)theId {
+-(void) setContext:(xtoq_context_t)aContext withId:(id)theId {
     winContext = aContext;
     winId = theId;
 }
 
--(xtoq_context_t *) getContext:(XtoqWindow *)win {
+-(xtoq_context_t) getContext:(XtoqWindow *)win {
     return win->winContext;
 }
 

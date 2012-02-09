@@ -116,6 +116,7 @@
     
     // add root window to list, increment count of windows
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
+    [xtoqWindow setContext:xcbContext withId:key];
     [winList setObject:xtoqWindow forKey:key];
     ++winCount;
     
@@ -203,7 +204,7 @@
     
     id key;
     int index;
-    xtoq_context_t *xqWinContxt;
+    xtoq_context_t xqWinContxt;
     NSArray *keyArray = [winList allKeys];
     XtoqWindow *xqWin;
     
@@ -211,13 +212,28 @@
         key = [keyArray objectAtIndex:index];
         xqWin = [winList objectForKey:key];
         xqWinContxt = [xqWin getContext:xqWin];
-        if (xqWinContxt->window == xtoqContxt.window) {
+        if (xqWinContxt.window == xtoqContxt.window) {
             return xqWin;
         }
     }
     
     return nil;
 }
+
+
+- (void) addWindowInList:(XtoqWindow *)xqWin 
+             withContext: (xtoq_context_t) aContext{
+    NSString *key = [NSString stringWithFormat:@"%d", winCount];
+    [xqWin setContext:aContext withId:key];
+    [winList setObject:xqWin forKey:key];
+    ++winCount;
+}
+
+- (void) removeWindowInLIst:(id)akey {
+    [winList removeObjectForKey:akey];
+    --winCount;
+}
+
 
 - (void) setScreen:(char *)scrn {
     screen = scrn;

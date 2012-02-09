@@ -26,7 +26,7 @@
 #import "XtoqView.h"
 
 @interface XtoqWindow : NSWindow {
-    xtoq_context_t *winContext;
+    xtoq_context_t winContext;
     id winId;
 }
 
@@ -44,11 +44,11 @@
 /**
  * Used for setting member variables context and id.
  */
--(void) setContext: (xtoq_context_t *) aContext withId: (id) theId;
+-(void) setContext: (xtoq_context_t) aContext withId: (id) theId;
 
 /**
  * Function for getting context of window from list.
  */
--(xtoq_context_t *) getContext:(XtoqWindow *) win;
+-(xtoq_context_t) getContext:(XtoqWindow *) win;
 
 @end
