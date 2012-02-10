@@ -92,5 +92,21 @@ dummy_xtoq_wait_for_event(xtoq_context_t context);
 xtoq_event_t
 xtoq_wait_for_event (xtoq_context_t context);
 
+/**
+ * Testing function
+ * @param window The window that the key press was made in.
+ * @param key The key pressed.
+ */
+void
+xtoq_key_press (int window, int key);
+
+/**
+ * Testing function
+ * @param x - width
+ * @param y - height
+ * @param window The window that the key press was made in.
+ */
+void
+xtoq_button_down (int x, int y, int window);
 
 #endif // _XTOQ_H_
