@@ -78,9 +78,12 @@ xtoq_init(char *screen) {
     init_reply.conn = conn;
     init_reply.window = root_window;
     
-    // Get width and height from root_screen into the xtoq_context_t
+    // Set width, height, x, & y from root_screen into the xtoq_context_t
     init_reply.width = root_screen->width_in_pixels;
     init_reply.height = root_screen->height_in_pixels;
+    init_reply.x = 140;
+    init_reply.y = 42;
+    
     
     _xtoq_init_damage(init_reply);
     
