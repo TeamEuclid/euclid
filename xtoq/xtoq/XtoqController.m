@@ -1,5 +1,5 @@
 
-/*Copyright (C) 2012 Aaron Skomra, Ben Huddle
+/*Copyright (C) 2012 Aaron Skomra, Ben Huddle, Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -37,24 +37,7 @@
 
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-    winList = [[NSMutableDictionary alloc] init];
-    winCount = 0;
     
-    [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
-    
-    xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(0, 0, 1028, 768)
-                                               styleMask: (NSTitledWindowMask |
-                                                           NSMiniaturizableWindowMask |
-                                                           NSResizableWindowMask)
-                                                 backing: NSBackingStoreBuffered
-                                                   defer: YES];
-    
-    [self makeMenu];        
-
-    // setup X connection and get the initial image from the server
-    NSLog(@"screen = %s", screen);
-    xcbContext = xtoq_init(screen);
     
     //Setting environment variable $DISPLAY to screen.
     char *env = getenv("DISPLAY");
@@ -68,9 +51,32 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }
     
+    
+    // setup X connection and get the initial image from the server
+    NSLog(@"screen = %s", screen);
+    xcbContext = xtoq_init(screen);
+    
+NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.height, xcbContext.x, xcbContext.y);
+    
+    winList = [[NSMutableDictionary alloc] init];
+    winCount = 0;
+    
+    [[NSGraphicsContext currentContext]
+     setImageInterpolation:NSImageInterpolationHigh];
+    
+    xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(xcbContext.x, xcbContext.y, xcbContext.width, xcbContext.height)
+                                               styleMask: (NSTitledWindowMask |
+                                                           NSMiniaturizableWindowMask |
+                                                           NSResizableWindowMask)
+                                                 backing: NSBackingStoreBuffered
+                                                   defer: YES];
+
+    // Make the menu
+    [self makeMenu];        
+    
     //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];
+    image = [[XtoqImageRep alloc] initWithData:imageT];  
     //draw the image into a rect
     NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
