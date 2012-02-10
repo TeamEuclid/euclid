@@ -31,6 +31,7 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
+        notificatoinCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
@@ -95,20 +96,14 @@ acceptsFirstResponder {
  */
 - (void)
 keyDown:(NSEvent *)theEvent {      
-    NSString *characters = [theEvent characters];
-    int key = [characters characterAtIndex:0];
+    //NSString *characters = [theEvent characters];
+    //int key = [characters characterAtIndex:0];
     
-    [[NSNotificationCenter defaultCenter]
+    [notificatoinCenter
      postNotificationName:@"viewKeyDownEvent" object:self 
      userInfo: [[NSDictionary alloc]
                 initWithObjectsAndKeys:[[NSArray alloc]
                                         initWithObjects: theEvent, nil], @"1", nil]];
-
-//    if (key == NSDownArrowFunctionKey) {        
-//        
-//    } else {
-        [super keyDown:theEvent];
-//    }
 }
 
 -(void)
@@ -118,30 +113,24 @@ mouseDown:(NSEvent *)mouseEvent {
     downPoint = [self convertPoint:p fromView:nil];
     currentPoint = downPoint;
     
-    [[NSNotificationCenter defaultCenter]
+    [notificatoinCenter
      postNotificationName:@"mouseButtonDownEvent" object:self 
      userInfo: [[NSDictionary alloc]
                 initWithObjectsAndKeys:[[NSArray alloc]
                                         initWithObjects: mouseEvent, nil], @"1", nil]];
-   // [self setNeedsDisplay:YES];
 }
 
 // This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
-    //[newImage retain];
-    //[image release];
     image = newImage;
     //[[self window] flushWindow];
     [self setNeedsDisplay:YES];
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage {
-    //[newImage retain];
-    //[image release];
     image = newImage;
     //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-    // NSRect imageRec = NSMakeRect(0, 0, [image getWidth]/2, [image getHeight]/2);
-    // [[self window] flushWindow];
+    //[self window] flushWindow];
     //[self setNeedsDisplayInRect:imageRec];
 }
 

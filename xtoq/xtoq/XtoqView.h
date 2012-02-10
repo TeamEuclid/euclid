@@ -44,6 +44,9 @@ SOFTWARE.
     //mouse event 
     NSPoint downPoint;
     NSPoint currentPoint;
+    
+    NSNotificationCenter * notificatoinCenter;
+    
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;
