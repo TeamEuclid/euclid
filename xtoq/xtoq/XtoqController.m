@@ -129,6 +129,9 @@
                                              selector: @selector(mouseButtonDownInView:)
                                                  name: @"mouseButtonDownEvent"
                                                object: nil];
+    
+    xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
+    
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
@@ -152,6 +155,7 @@
     NSDictionary *keyInfo = [aNotification userInfo];
     NSLog(@"Got a viewKeyDownEvent");
     NSLog(@"Key was: %@", [keyInfo objectForKey: @"1"]);
+    dispatch_async(xtoqDispatchQueue, ^{ NSLog(@"send keyDown to dispatch");});
 }
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
@@ -159,6 +163,7 @@
     NSDictionary *keyInfo = [aNotification userInfo];
     NSLog(@"Got a mouseButtonDownEvent");
     NSLog(@"Mouse Info: %@", [keyInfo objectForKey: @"1"]);
+    dispatch_async(xtoqDispatchQueue, ^{ NSLog(@"send mouseButton to dispatch");});
 }
 
 

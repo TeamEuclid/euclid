@@ -39,6 +39,7 @@
 #import "XtoqImageRep.h"
 #import "XtoqView.h"
 #import "xtoq.h"
+#import <dispatch/dispatch.h>
 
 @class DisplayNumberController;
 
@@ -46,6 +47,8 @@
     DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
     XtoqView * ourView;
+    
+    dispatch_queue_t xtoqDispatchQueue;
     
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
