@@ -1,4 +1,4 @@
-/* Copyright (c) 2012 David Snyder, Benjamin Carr
+/* Copyright (c) 2012 David Snyder, Benjamin Carr, Braden Wooley
  *
  * rootimg_api.h
  *
@@ -49,6 +49,7 @@ xtoq_init(char *screen) {
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
     
+    
     //xtoq_context_t contxt;
     //contxt.window = root_window;
     //contxt.conn = conn;
@@ -76,6 +77,11 @@ xtoq_init(char *screen) {
     xtoq_context_t init_reply;
     init_reply.conn = conn;
     init_reply.window = root_window;
+    
+    // Get width and height from root_screen into the xtoq_context_t
+    init_reply.width = root_screen->width_in_pixels;
+    init_reply.height = root_screen->height_in_pixels;
+    
     _xtoq_init_damage(init_reply);
     
     // not sure about this error ...
