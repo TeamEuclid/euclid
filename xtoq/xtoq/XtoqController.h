@@ -65,12 +65,14 @@
     int originalWidth;
 }
 
-- (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (void) applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+- (void) makeMenu;
+
 /**
  * Create the Display Number Controller
  */
@@ -93,6 +95,17 @@
  * returns nil if no key is found.
  */
 - (XtoqWindow *) getWindowInList: (xtoq_context_t) xtoqContxt;
+
+/**
+ * A function that adds a window to the dictionary list.
+ */
+- (void) addWindowInList: (XtoqWindow *) xqWin 
+             withContext: (xtoq_context_t) aContext;
+
+/**
+ * A function that removes a window from the list by key.
+ */
+- (void) removeWindowInLIst: (id) akey;
 
 /**
  * Sets the screen to command line argument.

@@ -26,8 +26,9 @@
 #import "XtoqView.h"
 
 @interface XtoqWindow : NSWindow {
-    xtoq_context_t *winContext;
-    id winId;
+    xtoq_context_t winContext;  // The context of the window.
+    id winId;                   // String id of window in list (i.e. 0,1,2,3)
+    void *xtoqLocalData;        // Pointer to xtoq_context's data structure.
 }
 
 /**
@@ -44,11 +45,16 @@
 /**
  * Used for setting member variables context and id.
  */
--(void) setContext: (xtoq_context_t *) aContext withId: (id) theId;
+-(void) setContext: (xtoq_context_t) aContext withId: (id) theId;
 
 /**
  * Function for getting context of window from list.
  */
--(xtoq_context_t *) getContext:(XtoqWindow *) win;
+-(xtoq_context_t) getContext:(XtoqWindow *) win;
+
+/**
+ * Sets the root window's pointer xtoqLocalData to the context's pointer.
+ */
+-(void) setRootDataPointer: (xtoq_context_t) xqContext;
 
 @end
