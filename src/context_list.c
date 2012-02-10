@@ -146,10 +146,3 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     }
     return;
 }
-
-int
-main (int argc, char **argv)
-{
-    testList();
-    return 0;
-}

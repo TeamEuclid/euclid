@@ -313,7 +313,6 @@ xtoq_wait_for_event (xtoq_context_t context)
     
     evt = xcb_wait_for_event(context.conn);
     if ((evt->response_type & ~0x80) == _damage_event) {
-        printf("XCB_DAMAGE_NOTIFY\n");
         return_evt.event_type = XTOQ_DAMAGE;
         return_evt.context = NULL;
         
