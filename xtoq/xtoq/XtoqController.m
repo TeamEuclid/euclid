@@ -50,39 +50,7 @@
                                                  backing: NSBackingStoreBuffered
                                                    defer: YES];
     
-    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-    
-    id menubar = [NSMenu new];
-    id appMenuItem = [NSMenuItem new];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
-    
-    id appMenu = [NSMenu new];
-    id appName = [[NSProcessInfo processInfo] processName];
-    
-    // About
-    id aboutTitle = [@"About " stringByAppendingString:appName];        
-    id aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
-    [appMenu addItem:aboutMenuItem];
-    [appMenuItem setSubmenu:appMenu];
-    
-    // Quit    
-    id quitTitle = [@"Quit " stringByAppendingString:appName];
-    id quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
-    [appMenu addItem:quitMenuItem];
-    [appMenuItem setSubmenu:appMenu];
-    
-    id window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
-    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
-    [window setTitle:appName];
-    
-    appMenu = [NSMenu new];
-    appMenuItem = [NSMenuItem new];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
-    // [window makeKeyAndOrderFront:nil];
-    // [NSApp activateIgnoringOtherApps:YES];
+    [self makeMenu];        
 
     // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);
@@ -175,7 +143,7 @@
         xqevent = xtoq_wait_for_event(xcbContext);    
         
         if (xqevent.event_type == XTOQ_DAMAGE) {
-            NSLog(@"Got damage event");
+            //NSLog(@"Got damage event");
             [self updateImage];
         } else if (xqevent.event_type == XTOQ_CREATE) {
             [self updateImage];
@@ -195,7 +163,7 @@
     
     for (int i = 0; i < numberOfRects; i++) {
     
-        NSLog(@"update Image");
+        //NSLog(@"update Image");
         
         xcb_image_destroy(imageT);
         imageT = xtoq_get_image(xcbContext);
@@ -248,6 +216,40 @@
 
 - (void) setScreen:(char *)scrn {
     screen = scrn;
+}
+
+- (void) makeMenu {
+    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+    
+    id menubar = [NSMenu new];
+    id appMenuItem = [NSMenuItem new];
+    [menubar addItem:appMenuItem];
+    [NSApp setMainMenu:menubar];    
+    
+    id appMenu = [NSMenu new];
+    id appName = [[NSProcessInfo processInfo] processName];
+    
+    // About
+    id aboutTitle = [@"About " stringByAppendingString:appName];        
+    id aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    [appMenu addItem:aboutMenuItem];
+    [appMenuItem setSubmenu:appMenu];
+    
+    // Quit    
+    id quitTitle = [@"Quit " stringByAppendingString:appName];
+    id quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    [appMenu addItem:quitMenuItem];
+    [appMenuItem setSubmenu:appMenu];
+    
+    id window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
+    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
+    [window setTitle:appName];
+    
+    appMenu = [NSMenu new];
+    appMenuItem = [NSMenuItem new];
+    [menubar addItem:appMenuItem];
+    [NSApp setMainMenu:menubar]; 
 }
 
 @end

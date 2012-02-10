@@ -62,12 +62,14 @@
     int originalWidth;
 }
 
-- (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (void) applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+- (void) makeMenu;
+
 /**
  * Create the Display Number Controller
  */
