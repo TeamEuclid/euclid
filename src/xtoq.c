@@ -310,6 +310,13 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     return event;
 }
 
+int 
+xtoq_start_event_loop (xtoq_context_t root_context, void *callback)
+{
+	/* Simply call our internal function to do the actual setup */
+	return _xtoq_start_event_loop(root_context, callback);
+}
+
 xtoq_event_t
 xtoq_wait_for_event (xtoq_context_t context)
 {   

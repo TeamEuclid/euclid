@@ -60,6 +60,13 @@ typedef struct xtoq_event_t {
     int event_type;
 } xtoq_event_t;
 
+/**
+ * Strucuture used to pass nesessary data to xtoq_start_event_loop.
+ */
+typedef struct xtoq_event_connetion {
+	xcb_connection *conn;		/* Connection to listen to events on */
+	void * event_callback;		/* Fuction to call when event caught */
+} xtoq_event_connection;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
@@ -82,6 +89,21 @@ dummy_xtoq_get_image(xtoq_context_t context);
 
 xtoq_event_t
 dummy_xtoq_wait_for_event(xtoq_context_t context);
+
+/**
+ * Starts the event loop and listens on the connection specified in
+ * the given xtoq_context_t. Uses callback as the function to call
+ * when an event of interest is received. Callback must be able to
+ * take an xtoq_event_t as its one and only parameter.
+ * @param root_context The context containing the connection to listen
+ * for events on.
+ * @param callback The function to call when an event of interest is
+ * received.
+ * @return Uses the return value of the call to pthread_create as 
+ * the return value.
+ */
+int
+xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
 
 /**
  * Event loop that returns X events. Designed to be called by
