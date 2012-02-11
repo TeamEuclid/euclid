@@ -98,7 +98,7 @@ xtoq_wait_for_event (xtoq_context_t context);
  * @param key The key pressed.
  */
 void
-xtoq_key_press (int window, int key);
+xtoq_key_press (int window, unsigned short keyCode);
 
 /**
  * Testing function

@@ -98,12 +98,16 @@ acceptsFirstResponder {
 keyDown:(NSEvent *)theEvent {      
     //NSString *characters = [theEvent characters];
     //int key = [characters characterAtIndex:0];
-    
-    [notificatoinCenter
-     postNotificationName:@"viewKeyDownEvent" object:self 
-     userInfo: [[NSDictionary alloc]
-                initWithObjectsAndKeys:[[NSArray alloc]
-                                        initWithObjects: theEvent, nil], @"1", nil]];
+    //NSEvent * event = theEvent;
+
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent 
+                                                            forKey:@"1"];
+    /*NSDictionary * dictionary = [[NSDictionary alloc]
+                                 initWithObjectsAndKeys:[[NSArray alloc]
+                                                         initWithObjects: theEvent, nil], @"1", nil];*/
+    [notificatoinCenter postNotificationName:@"XTOQviewKeyDownEvent" 
+                                      object:self 
+                                    userInfo: dictionary];
 }
 
 -(void)
@@ -114,10 +118,10 @@ mouseDown:(NSEvent *)mouseEvent {
     currentPoint = downPoint;
     
     [notificatoinCenter
-     postNotificationName:@"mouseButtonDownEvent" object:self 
+     postNotificationName:@"XTOQmouseButtonDownEvent" object:self 
      userInfo: [[NSDictionary alloc]
                 initWithObjectsAndKeys:[[NSArray alloc]
-                                        initWithObjects: mouseEvent, nil], @"1", nil]];
+                                        initWithObjects: mouseEvent, nil], @"2", nil]];
 }
 
 // This is getting called from the controller
