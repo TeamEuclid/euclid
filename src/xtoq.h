@@ -95,16 +95,18 @@ xtoq_wait_for_event (xtoq_context_t context);
 
 /**
  * Testing function
+ * @param context xtoq_context_t 
  * @param window The window that the key press was made in.
- * @param key The key pressed.
+ * @param keyCode The key pressed.
  */
 void
 xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode);
 
 /**
  * Testing function
- * @param x - width
- * @param y - height
+ * @param context xtoq_context_t 
+ * @param x - x coordinate
+ * @param y - y coordinate
  * @param window The window that the key press was made in.
  */
 void
