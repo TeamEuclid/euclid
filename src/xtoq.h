@@ -34,6 +34,7 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
+#include <xcb/xtest.h>
 #include "context_list.h"
 #include "util.h"
 
@@ -98,7 +99,7 @@ xtoq_wait_for_event (xtoq_context_t context);
  * @param key The key pressed.
  */
 void
-xtoq_key_press (int window, unsigned short keyCode);
+xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode);
 
 /**
  * Testing function
@@ -107,6 +108,6 @@ xtoq_key_press (int window, unsigned short keyCode);
  * @param window The window that the key press was made in.
  */
 void
-xtoq_button_down (long x, long y, int window);
+xtoq_button_down (xtoq_context_t context, long x, long y, int window);
 
 #endif // _XTOQ_H_

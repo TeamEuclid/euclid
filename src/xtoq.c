@@ -379,14 +379,38 @@ xtoq_wait_for_event (xtoq_context_t context)
 }
 
 void
-xtoq_key_press (int window, unsigned short keyCode)
+xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode)
 {
+    xcb_test_fake_input (context.conn,
+                         keyCode,
+                         keyCode,
+                         NULL,
+                         NULL,
+                         NULL,
+                         NULL,
+                         NULL );
+    //xcb_test_fake_input (xcb_connection_t *c  /**< */,
+    //                     uint8_t           type  /**< */,
+    //                     uint8_t           detail  /**< */,
+    //                     uint32_t          time  /**< */,
+    //                     xcb_window_t      root  /**< */,
+    //                     uint16_t          rootX  /**< */,
+    //                     uint16_t          rootY  /**< */,
+    //                     uint8_t           deviceid  /**< */);*/
     printf("key press received by xtoq.c - keyCode %i in window %i\n", keyCode, window);
 }
 
 void
-xtoq_button_down (long x, long y, int window)
+xtoq_button_down (xtoq_context_t context, long x, long y, int window)
 {
+    xcb_test_fake_input (context.conn,
+                         NULL,
+                         NULL,
+                         NULL,
+                         NULL,
+                         x,
+                         y,
+                         NULL );
     printf("button down received by xtoq.c - (%ld,%ld) in window %i\n", x, y, window);
 }
 

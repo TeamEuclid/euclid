@@ -56,7 +56,7 @@
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
     
-NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.height, xcbContext.x, xcbContext.y);
+    NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.height, xcbContext.x, xcbContext.y);
     
     winList = [[NSMutableDictionary alloc] init];
     winCount = 0;
@@ -133,7 +133,8 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.h
     NSEvent * event = [keyInfo objectForKey: @"1"];
     //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ xtoq_key_press((int)[event windowNumber],
+                   ^{ xtoq_key_press(xcbContext, 
+                                     (int)[event windowNumber],
                                      [event keyCode]) ;});
 }
 
@@ -144,7 +145,8 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.h
     NSEvent * event = [mouseDownInfo objectForKey: @"2"];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ xtoq_button_down ([event locationInWindow].x, 
+                   ^{ xtoq_button_down (xcbContext,
+                                        [event locationInWindow].x, 
                                         [event locationInWindow].y, 
                                         (int)[event windowNumber]);;});
 }
