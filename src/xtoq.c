@@ -381,14 +381,12 @@ xtoq_wait_for_event (xtoq_context_t context)
 void
 xtoq_key_press (int window, unsigned short keyCode)
 {
-    //xcb_key_press_event_t may be the struct needed
     printf("key press received by xtoq.c - keyCode %i in window %i\n", keyCode, window);
 }
 
 void
 xtoq_button_down (long x, long y, int window)
 {
-    //xcb_button_press_event_t may be the struct needed
     printf("button down received by xtoq.c - (%ld,%ld) in window %i\n", x, y, window);
 }
 
