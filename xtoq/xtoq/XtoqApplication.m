@@ -34,7 +34,7 @@ int XtoqApplicationMain(int argc, char** argv){
     [controller setScreen:scrn];
     [NSApp setDelegate: controller];
     [NSApp run];
-    
+
     return 1;
 }
 

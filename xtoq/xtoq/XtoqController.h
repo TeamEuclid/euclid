@@ -68,7 +68,7 @@ id referenceToSelf;
 }
 
 - (id) init;
-- (void) applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (void) applicationWillFinishLaunching:(NSNotification *) aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
 - (void) keyDownInView: (NSNotification *) aNotification;
@@ -81,11 +81,6 @@ id referenceToSelf;
  */
 
 - (IBAction)showDisplayChooser;
-
-/**
- * Wait for the event.
- */
-- (void) wait_for_xtoq_event;
 
 /**
  * Put a new image in the window / view

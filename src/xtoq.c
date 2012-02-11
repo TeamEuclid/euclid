@@ -67,16 +67,6 @@ xtoq_init(char *screen) {
     xcb_change_window_attributes (conn, root_window,
                                   XCB_CW_EVENT_MASK, mask_values);
 
-    
-    /* Get the geometry of the root window */
-    geom_reply = _xtoq_get_window_geometry(conn, root_window);
-    
-    //WriteWindowInfo(conn, root_window);
-	//WriteAllChildrenWindowInfo(conn, root_window);
-    
-    
-
-    
 	xcb_flush(conn);
     
     xtoq_context_t init_reply;
@@ -87,8 +77,7 @@ xtoq_init(char *screen) {
     init_reply.width = root_screen->width_in_pixels;
     init_reply.height = root_screen->height_in_pixels;
     init_reply.x = 140;
-    init_reply.y = 42;
-    
+    init_reply.y = 42;    
     
     _xtoq_init_damage(init_reply);
     
@@ -317,80 +306,6 @@ xtoq_start_event_loop (xtoq_context_t root_context, void *callback)
 	return _xtoq_start_event_loop(root_context.conn, callback);
 }
 
-xtoq_event_t
-xtoq_wait_for_event (xtoq_context_t context)
-{   
-    xcb_generic_event_t *evt;
-    xtoq_event_t return_evt;
-    
-    evt = xcb_wait_for_event(context.conn);
-    if ((evt->response_type & ~0x80) == _damage_event) {
-        return_evt.event_type = XTOQ_DAMAGE;
-        return_evt.context = NULL;
-        
-    } else {
-        switch (evt->response_type & ~0x80) {
-            case XCB_EXPOSE: {
-                xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
-                
-                printf("Window %u exposed. Region to be redrawn at location (%d, %d), ",
-                       exevnt->window, exevnt->x, exevnt->y);
-                printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
-                
-                return_evt.event_type = XTOQ_EXPOSE;
-                free(exevnt);
-                break;
-            }
-            case XCB_CREATE_NOTIFY: {
-                // Window created as child of root window
-                xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
-                
-                return_evt.event_type = XTOQ_CREATE;
-                // Create the memory for a new context - this will need to be freed when
-                // the window is destroyed
-                return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = context.conn;
-                return_evt.context->window = notify->window;
-                return_evt.context->parent = notify->parent;
-                return_evt.context->x = notify->x;
-                return_evt.context->y = notify->y;
-                return_evt.context->window = notify->width;
-                return_evt.context->window = notify->height;
-
-                free(notify);
-                
-                // TODO: Add the context created here to the data structure
-                
-                break;
-            }
-            case XCB_DESTROY_NOTIFY: {
-                // Window destroyed in root window
-                xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
-                return_evt.event_type = XTOQ_DESTROY;
-                
-                // Memory for context will need to be freed by caller
-                // Only setting the window - other values will be garbage.
-                return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = context.conn;
-                return_evt.context->window = notify->window;
-                
-                free(notify);
-                
-                // TODO: Remove the window from the data structure.
-                // Need to figure out where memory is freed.
-                
-                break;
-            }
-            default: {
-                printf("UNKNOWN EVENT\n");
-                break;
-            }
-        }
-    }
-    return return_evt;
-}
-
-
 // key code corresponds roughly to a physical key
 // while a keysym corresponds to the symbol on the key top
 // http://cgit.freedesktop.org/xcb/demo/tree/app/xte/xte.c
@@ -410,7 +325,6 @@ dummy_thing_to_keycode( xcb_connection_t *c, char *thing ) {
     
     return( kc );
 }
-
 
 void
 dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char * charAsCharStar)
