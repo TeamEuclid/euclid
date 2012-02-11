@@ -120,7 +120,7 @@
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
     [xtoqWindow makeKeyAndOrderFront: self];
-	// TODO: Remove if new loop works    [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
+    // Start the event loop and set the handler function
 	xtoq_start_event_loop(xcbContext, (void *) eventHandler);
 }
 
@@ -165,31 +165,6 @@
                                         [event locationInWindow].x, 
                                         [event locationInWindow].y, 
                                         (int)[event windowNumber]);;});
-}
-
-- (void) wait_for_xtoq_event {
-    xtoq_context_t xqcontxt;
-    xtoq_event_t xqevent;
-    
-    while (1) {
-        // Change this call to dummy_xtoq_wait_for_event if
-        // you just want the 4 second delay
-        //xqevent = dummy_xtoq_wait_for_event(xcbContext);
-        xqevent = xtoq_wait_for_event(xcbContext);    
-        
-        if (xqevent.event_type == XTOQ_DAMAGE) {
-            //NSLog(@"Got damage event");
-            [self updateImage];
-        } else if (xqevent.event_type == XTOQ_CREATE) {
-            NSLog(@"Window was created");
-            [self updateImage];
-        } else if (xqevent.event_type == XTOQ_DESTROY) {
-            [self updateImage];
-        } else { 
-            NSLog(@"Hey I'm Not damage!"); 
-        }
-
-    }
 }
 
 // create a new image to redraw part of the screen 
@@ -292,8 +267,6 @@
 
 void eventHandler (xtoq_event_t event)
 {
-    NSLog(@"Event handler called");
-    
     if (event.event_type == XTOQ_DAMAGE) {
         //NSLog(@"Got damage event");
         [referenceToSelf updateImage];
