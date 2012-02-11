@@ -35,38 +35,12 @@
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
 #include <xcb/xtest.h>
+#include "data.h"
 #include <xcb/xcb_keysyms.h> //aaron
 #include "context_list.h"
 #include "util.h"
 
-#define XTOQ_DAMAGE 0
-#define XTOQ_EXPOSE 1
-#define XTOQ_CREATE 2
-#define XTOQ_DESTROY 3
 
-typedef struct xtoq_context_t {
-    xcb_connection_t *conn;
-    xcb_drawable_t window;
-    xcb_window_t parent;
-    int x;
-    int y;
-    int width;
-    int height;
-    void *local_data;   // Area for data client cares about
-} xtoq_context_t;
-
-typedef struct xtoq_event_t {
-    xtoq_context_t *context;
-    int event_type;
-} xtoq_event_t;
-
-/**
- * Strucuture used to pass nesessary data to xtoq_start_event_loop.
- */
-typedef struct xtoq_event_connetion {
-	xcb_connection *conn;		/* Connection to listen to events on */
-	void * event_callback;		/* Fuction to call when event caught */
-} xtoq_event_connection;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen

@@ -27,12 +27,14 @@
 
 #include <pthread.h>
 #include "xtoq.h"
-
+#include "util.h"
+ 
 typedef struct _connection_data {
-	xcb_connection *conn;
+	xcb_connection_t *conn;
 	void * callback;
 } _connection_data;
 
+/* The thread that is running the event loop */
 pthread_t _event_thread;
 
 /* Functions only called within event_loop.c */
@@ -41,32 +43,36 @@ void *run_event_loop(void *thread_arg_struct);
 /* Functions included in xtoq_internal.h */
 
 int
-_xtoq_start_event_loop (xtoq_event_connection event_conn,
+_xtoq_start_event_loop (xcb_connection_t *conn,
 						void *event_callback)
 {
-	_connection_data conn_data;
-	int ret_code;
-
-	conn_data.conn = event_conn.conn;
-	conn_data.callback = event_callback;
+	_connection_data *conn_data;
+    
+    conn_data = malloc(sizeof(_connection_data));
+    assert(conn_data);
+    
+	conn_data->conn = conn;
+	conn_data->callback = event_callback;
 
 	return pthread_create(&_event_thread,
 						  NULL,
-						  _run_event_loop,
+						  run_event_loop,
 						  (void *) conn_data);
 }
 
 void *run_event_loop (void *thread_arg_struct)
 {
 	_connection_data *conn_data;
-	xcb_connection *event_conn;
-	void *event_callback;
+	xcb_connection_t *event_conn;
 	xcb_generic_event_t *evt;
 	xtoq_event_t return_evt;
+    void (*callback_ptr) (xtoq_event_t event);
 
-	conn_data = (_connection_data *) thread_arg_struct;
+	conn_data = thread_arg_struct;
 	event_conn = conn_data->conn;
-	event_callback = conn_data->callback;
+	callback_ptr = conn_data->callback;
+    
+    free(thread_arg_struct);
 
 	/* Start the event loop */
 	
@@ -74,7 +80,7 @@ void *run_event_loop (void *thread_arg_struct)
 		if ((evt->response_type & ~0x80) == _damage_event) {
 			return_evt.event_type = XTOQ_DAMAGE;
 			return_evt.context = NULL;
-        
+            callback_ptr(return_evt);        
 		} else {
 			switch (evt->response_type & ~0x80) {
             case XCB_EXPOSE: {
@@ -86,7 +92,7 @@ void *run_event_loop (void *thread_arg_struct)
                 
                 return_evt.event_type = XTOQ_EXPOSE;
                 free(exevnt);
-                break;
+                callback_ptr(return_evt);
             }
             case XCB_CREATE_NOTIFY: {
                 // Window created as child of root window
@@ -96,7 +102,7 @@ void *run_event_loop (void *thread_arg_struct)
                 // Create the memory for a new context - this will need to be freed when
                 // the window is destroyed
                 return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = context.conn;
+                return_evt.context->conn = event_conn;
                 return_evt.context->window = notify->window;
                 return_evt.context->parent = notify->parent;
                 return_evt.context->x = notify->x;
@@ -108,7 +114,7 @@ void *run_event_loop (void *thread_arg_struct)
                 
                 // TODO: Add the context created here to the data structure
                 
-				event_callback(return_evt);
+				callback_ptr(return_evt);
 
                 break;
             }
@@ -120,7 +126,7 @@ void *run_event_loop (void *thread_arg_struct)
                 // Memory for context will need to be freed by caller
                 // Only setting the window - other values will be garbage.
                 return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = context.conn;
+                return_evt.context->conn = event_conn;
                 return_evt.context->window = notify->window;
                 
                 free(notify);
@@ -128,6 +134,8 @@ void *run_event_loop (void *thread_arg_struct)
 				
                 // TODO: Remove the window from the data structure.
                 // Need to figure out where memory is freed.
+                
+                callback_ptr(return_evt);
                 
                 break;
             }

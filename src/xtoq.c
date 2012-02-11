@@ -27,10 +27,10 @@
 /* #define _XTOQ_C_ */
 
 #include "xtoq.h"
+#include "util.h"
 #include <string.h>
 
-// TODO: Decide where this variable needs to live.
-int _damage_event;
+
 
 // aaron key stuff
 #define XK_Shift_L                       0xffe1
@@ -314,7 +314,7 @@ int
 xtoq_start_event_loop (xtoq_context_t root_context, void *callback)
 {
 	/* Simply call our internal function to do the actual setup */
-	return _xtoq_start_event_loop(root_context, callback);
+	return _xtoq_start_event_loop(root_context.conn, callback);
 }
 
 xtoq_event_t

@@ -21,8 +21,19 @@ LDFLAGS = -L/opt/X11/lib -lxcb-util -lxcb-damage -lxcb-composite -lxcb-xfixes -l
 FRAMEWORKS = Cocoa AppKit
 IBTOOL = ibtool
 
-SOURCES = main.m XtoqApplication.m XtoqController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
-CSOURCES = $(PATHTOXTOQSRC)/xtoq.c $(PATHTOXTOQSRC)/util.c $(PATHTOXTOQSRC)/context_list.c
+SOURCES = main.m \
+          XtoqApplication.m \
+          XtoqController.m \
+          XtoqWindow.m \
+          DisplayNumberController.m \
+          XtoqImageRep.m \
+          XtoqView.m
+
+CSOURCES = $(PATHTOXTOQSRC)/xtoq.c \
+           $(PATHTOXTOQSRC)/util.c \
+           $(PATHTOXTOQSRC)/context_list.c \
+           $(PATHTOXTOQSRC)/event_loop.c
+
 COBJS = $(CSOURCES:.c=.o)
 Xibdir = en.lproj
 

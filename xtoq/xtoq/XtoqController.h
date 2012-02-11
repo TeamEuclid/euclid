@@ -43,6 +43,8 @@
 
 @class DisplayNumberController;
 
+id referenceToSelf;
+
 @interface XtoqController : NSObject {
     DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
@@ -65,6 +67,7 @@
     int originalWidth;
 }
 
+- (id) init;
 - (void) applicationWillFinishLaunching:(NSNotification *)aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
@@ -113,3 +116,9 @@
 - (void) setScreen: (char *) scrn;
 
 @end
+
+/**
+ * Callback function that will receive events from the xtoq event loop
+ * once it is started.
+ */
+void eventHandler (xtoq_event_t event);

@@ -35,6 +35,13 @@
 
 @implementation XtoqController
 
+- (id) init {
+    self = [super init];
+    if (self) {
+        referenceToSelf = self;
+    }
+    return self;
+}
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     
@@ -113,7 +120,8 @@
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
     [xtoqWindow makeKeyAndOrderFront: self];
-    [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
+	// TODO: Remove if new loop works    [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
+	xtoq_start_event_loop(xcbContext, (void *) eventHandler);
 }
 
 - (IBAction)showDisplayChooser
@@ -173,6 +181,7 @@
             //NSLog(@"Got damage event");
             [self updateImage];
         } else if (xqevent.event_type == XTOQ_CREATE) {
+            NSLog(@"Window was created");
             [self updateImage];
         } else if (xqevent.event_type == XTOQ_DESTROY) {
             [self updateImage];
@@ -280,3 +289,21 @@
 }
 
 @end
+
+void eventHandler (xtoq_event_t event)
+{
+    NSLog(@"Event handler called");
+    
+    if (event.event_type == XTOQ_DAMAGE) {
+        //NSLog(@"Got damage event");
+        [referenceToSelf updateImage];
+    } else if (event.event_type == XTOQ_CREATE) {
+        NSLog(@"Window was created");
+        [referenceToSelf updateImage];
+    } else if (event.event_type == XTOQ_DESTROY) {
+        [referenceToSelf updateImage];
+    } else { 
+        NSLog(@"Hey I'm Not damage!"); 
+    }
+    
+}
