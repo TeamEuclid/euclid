@@ -129,21 +129,25 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.h
 - (void) keyDownInView: (NSNotification *) aNotification
 {
     NSDictionary *keyInfo = [aNotification userInfo];
+    // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
-    NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
-    dispatch_async(xtoqDispatchQueue, ^{ xtoq_key_press((int)[event windowNumber], [event keyCode]) ;});
+    //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_key_press((int)[event windowNumber],
+                                     [event keyCode]) ;});
 }
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
 {
-    NSDictionary *keyInfo = [aNotification userInfo];
-    NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
-    // this keyInfo is the key in <key, value>
-    NSLog(@"Mouse Info: %@", [keyInfo objectForKey: @"2"]);
-    dispatch_async(xtoqDispatchQueue, ^{ NSLog(@"send mouseButton to dispatch");});
-    //    dispatch_async(xtoqDispatchQueue, ^{ NSLog(@"send mouseButton to dispatch");});
+    NSDictionary *mouseDownInfo = [aNotification userInfo];
+    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
+    NSEvent * event = [mouseDownInfo objectForKey: @"2"];
+    //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_button_down ([event locationInWindow].x, 
+                                        [event locationInWindow].y, 
+                                        (int)[event windowNumber]);;});
 }
-
 
 - (void) wait_for_xtoq_event {
     xtoq_context_t xqcontxt;

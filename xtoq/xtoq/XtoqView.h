@@ -45,7 +45,7 @@ SOFTWARE.
     NSPoint downPoint;
     NSPoint currentPoint;
     
-    NSNotificationCenter * notificatoinCenter;
+    NSNotificationCenter * notificationCenter;
     
 }
 

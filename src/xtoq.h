@@ -107,6 +107,6 @@ xtoq_key_press (int window, unsigned short keyCode);
  * @param window The window that the key press was made in.
  */
 void
-xtoq_button_down (int x, int y, int window);
+xtoq_button_down (long x, long y, int window);
 
 #endif // _XTOQ_H_

@@ -31,7 +31,7 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        notificatoinCenter = [NSNotificationCenter defaultCenter];
+        notificationCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
@@ -90,38 +90,30 @@ acceptsFirstResponder {
 }
 
 /**
- *  This is the function that captures the event which is 
- *  the down arrow key, not the numpad down arrow key.
- *  It updates the image on the screen when the down arrow is pressed.
+ *  Capture keyboard events
  */
 - (void)
 keyDown:(NSEvent *)theEvent {      
-    //NSString *characters = [theEvent characters];
-    //int key = [characters characterAtIndex:0];
-    //NSEvent * event = theEvent;
-
     NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent 
                                                             forKey:@"1"];
-    /*NSDictionary * dictionary = [[NSDictionary alloc]
-                                 initWithObjectsAndKeys:[[NSArray alloc]
-                                                         initWithObjects: theEvent, nil], @"1", nil];*/
-    [notificatoinCenter postNotificationName:@"XTOQviewKeyDownEvent" 
+
+    [notificationCenter postNotificationName:@"XTOQviewKeyDownEvent" 
                                       object:self 
-                                    userInfo: dictionary];
+                                    userInfo:dictionary];
 }
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
     
-    NSPoint p = [mouseEvent locationInWindow];
-    downPoint = [self convertPoint:p fromView:nil];
-    currentPoint = downPoint;
+    //NSPoint p = [mouseEvent locationInWindow];
+    //downPoint = [self convertPoint:p fromView:nil];
     
-    [notificatoinCenter
-     postNotificationName:@"XTOQmouseButtonDownEvent" object:self 
-     userInfo: [[NSDictionary alloc]
-                initWithObjectsAndKeys:[[NSArray alloc]
-                                        initWithObjects: mouseEvent, nil], @"2", nil]];
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:mouseEvent 
+                                                            forKey:@"2"];
+    
+    [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
+                                      object:self 
+                                    userInfo:dictionary];
 }
 
 // This is getting called from the controller

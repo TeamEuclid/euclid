@@ -386,10 +386,10 @@ xtoq_key_press (int window, unsigned short keyCode)
 }
 
 void
-xtoq_button_down (int x, int y, int window)
+xtoq_button_down (long x, long y, int window)
 {
     //xcb_button_press_event_t may be the struct needed
-    printf("button down received by xtoq.c - %i,%i in %i\n", x, y, window);
+    printf("button down received by xtoq.c - (%ld,%ld) in window %i\n", x, y, window);
 }
 
 /* #endif //_XTOQ_C_ */
