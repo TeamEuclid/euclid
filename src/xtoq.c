@@ -382,13 +382,13 @@ void
 xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode)
 {
     xcb_test_fake_input (context.conn,
+                         XCB_KEY_PRESS,
                          keyCode,
-                         keyCode,
-                         NULL,
-                         NULL,
-                         NULL,
-                         NULL,
-                         NULL );
+                         0,
+                         context.parent,
+                         0,
+                         0,
+                         0 );
     //xcb_test_fake_input (xcb_connection_t *c  /**< */,
     //                     uint8_t           type  /**< */,
     //                     uint8_t           detail  /**< */,
@@ -397,21 +397,21 @@ xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode)
     //                     uint16_t          rootX  /**< */,
     //                     uint16_t          rootY  /**< */,
     //                     uint8_t           deviceid  /**< */);*/
-    printf("key press received by xtoq.c - keyCode %i in window %i\n", keyCode, window);
+    printf("key press received by xtoq.c - keyCode %i in Mac window #%i\n", keyCode, window);
 }
 
 void
 xtoq_button_down (xtoq_context_t context, long x, long y, int window)
 {
     xcb_test_fake_input (context.conn,
-                         NULL,
-                         NULL,
-                         NULL,
-                         NULL,
-                         x,
+                         XCB_BUTTON_PRESS,
+                         0,
+                         0,
+                         context.parent, // remove context.parent to see "UNKNOWN EVENT" message
+                         x, // has to be translated (?in the view)
                          y,
-                         NULL );
-    printf("button down received by xtoq.c - (%ld,%ld) in window %i\n", x, y, window);
+                         0 );
+    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
 /* #endif //_XTOQ_C_ */
