@@ -32,6 +32,11 @@
 // TODO: Decide where this variable needs to live.
 int _damage_event;
 
+// aaron key stuff
+#define XK_Shift_L                       0xffe1
+xcb_key_symbols_t *syms = NULL;
+// end aaron key stuff
+
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
 xtoq_context_t
@@ -378,25 +383,50 @@ xtoq_wait_for_event (xtoq_context_t context)
     return return_evt;
 }
 
+
+// http://cgit.freedesktop.org/xcb/demo/tree/app/xte/xte.c
+uint8_t
+thing_to_keycode( xcb_connection_t *c, char *thing ) {
+    xcb_keycode_t kc;
+    xcb_keysym_t ks;
+    
+    /* For now, assume thing[0] == Latin-1 keysym */
+    ks = (uint8_t)thing[0];
+    
+    kc = xcb_key_symbols_get_keycode( syms, ks );
+    
+    printf( "String '%s' maps to keysym '%d'\n", thing, ks );
+    printf( "String '%s' maps to keycode '%d'\n", thing, kc );
+    
+    return( kc );
+}
+
 void
 xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode)
 {
-    xcb_test_fake_input (context.conn,
-                         XCB_KEY_PRESS,
-                         keyCode,
-                         0,
-                         context.parent,
-                         0,
-                         0,
-                         0 );
-    //xcb_test_fake_input (xcb_connection_t *c  /**< */,
-    //                     uint8_t           type  /**< */,
-    //                     uint8_t           detail  /**< */,
-    //                     uint32_t          time  /**< */,
-    //                     xcb_window_t      root  /**< */,
-    //                     uint16_t          rootX  /**< */,
-    //                     uint16_t          rootY  /**< */,
-    //                     uint8_t           deviceid  /**< */);*/
+    xcb_window_t none = { XCB_NONE };
+    static xcb_keysym_t shift = { XK_Shift_L };
+    
+    uint8_t code;
+    char codeFirst[] = {keyCode};
+    char * codeq = codeFirst;
+    uint8_t * wrap_code = 0;
+    const char *cap = "~!@#$%^&*()_+{}|:\"<>?";
+ 
+    if (keyCode >= 'A' && keyCode <= 'Z')
+        wrap_code = xcb_key_symbols_get_keycode( syms, shift );
+    else if (strchr(cap, keyCode) != NULL)
+        wrap_code = xcb_key_symbols_get_keycode( syms, shift );
+ 
+    code = thing_to_keycode( context.conn, codeq );
+  
+    if( wrap_code )
+            xcb_test_fake_input( context.conn, XCB_KEY_PRESS, wrap_code, 0, none, 0, 0, 0 );  
+    
+    
+    xcb_test_fake_input( context.conn, XCB_KEY_PRESS, code, 0, none, 0, 0, 0 );  
+    xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, code, 0, none, 0, 0, 0 );
+
     printf("key press received by xtoq.c - keyCode %i in Mac window #%i\n", keyCode, window);
 }
 
