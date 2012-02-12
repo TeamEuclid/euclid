@@ -132,10 +132,18 @@
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
     //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
+    unsigned short aChar = [[event characters] characterAtIndex:0];
+    NSString* charNSString = [event characters]; 
+    const char* charcharstar = [charNSString UTF8String];
+    printf( "\n--------------------------------------------\n" );
+    NSLog(@"%s pressed", charcharstar);
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_key_press(xcbContext, 
                                      (int)[event windowNumber],
-                                     [event keyCode]) ;});
+                                     [event keyCode],
+                                     aChar,
+                                     charcharstar) ;});
 }
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification

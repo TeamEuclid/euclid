@@ -101,8 +101,8 @@ xtoq_wait_for_event (xtoq_context_t context);
  * @param keyCode The key pressed.
  */
 void
-xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode);
-uint8_t thing_to_keycode( xcb_connection_t *c, char *thing );
+xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char *);
+uint8_t *thing_to_keycode( xcb_connection_t *c, char *thing );
 /**
  * Testing function
  * @param context xtoq_context_t 

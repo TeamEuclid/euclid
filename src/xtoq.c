@@ -384,10 +384,13 @@ xtoq_wait_for_event (xtoq_context_t context)
 }
 
 
+// key code corresponds roughly to a physical key
+// while a keysym corresponds to the symbol on the key top
 // http://cgit.freedesktop.org/xcb/demo/tree/app/xte/xte.c
-uint8_t
+uint8_t *
 thing_to_keycode( xcb_connection_t *c, char *thing ) {
-    xcb_keycode_t kc;
+    
+    xcb_keycode_t *kc;
     xcb_keysym_t ks;
     
     /* For now, assume thing[0] == Latin-1 keysym */
@@ -396,48 +399,51 @@ thing_to_keycode( xcb_connection_t *c, char *thing ) {
     kc = xcb_key_symbols_get_keycode( syms, ks );
     
     printf( "String '%s' maps to keysym '%d'\n", thing, ks );
-    printf( "String '%s' maps to keycode '%d'\n", thing, kc );
+    printf( "String '%s' maps to keycode '%s'\n", thing, kc ); // keycode not correct
     
     return( kc );
 }
 
+
 void
-xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode)
+xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char * charAsCharStar)
 {
+    // move to setup
+        syms = xcb_key_symbols_alloc(context.conn );
+    //
     xcb_window_t none = { XCB_NONE };
     static xcb_keysym_t shift = { XK_Shift_L };
     
-    uint8_t code;
-    char codeFirst[] = {keyCode};
-    char * codeq = codeFirst;
-    uint8_t * wrap_code = 0;
-    const char *cap = "~!@#$%^&*()_+{}|:\"<>?";
- 
+    uint8_t * code;
+    uint8_t wrap_code;
+    /* 
+     const char *cap = "~!@#$%^&*()_+{}|:\"<>?";
     if (keyCode >= 'A' && keyCode <= 'Z')
         wrap_code = xcb_key_symbols_get_keycode( syms, shift );
     else if (strchr(cap, keyCode) != NULL)
         wrap_code = xcb_key_symbols_get_keycode( syms, shift );
- 
-    code = thing_to_keycode( context.conn, codeq );
+     */
+    code = thing_to_keycode( context.conn, charAsCharStar );
   
-    if( wrap_code )
-            xcb_test_fake_input( context.conn, XCB_KEY_PRESS, wrap_code, 0, none, 0, 0, 0 );  
-    
-    
-    xcb_test_fake_input( context.conn, XCB_KEY_PRESS, code, 0, none, 0, 0, 0 );  
-    xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, code, 0, none, 0, 0, 0 );
+    /*if( wrap_code ){
+        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, wrap_code, 0, none, 0, 0, 0 );  
+        printf("wrapcode\n");
+    }*/
+    xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, none, 0, 0, 0 );  
+    xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, none, 0, 0, 0 );
 
-    printf("key press received by xtoq.c - keyCode %i in Mac window #%i\n", keyCode, window);
+    printf("key press received by xtoq.c - Mac keyCode %i in Mac window #%i - (ASCII %hu)\n", keyCode, window, aChar);
 }
 
 void
 xtoq_button_down (xtoq_context_t context, long x, long y, int window)
 {
+    xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context.conn,
                          XCB_BUTTON_PRESS,
+                         43,
                          0,
-                         0,
-                         context.parent, // remove context.parent to see "UNKNOWN EVENT" message
+                         none,//context.parent, // remove context to see "UNKNOWN EVENT" message
                          x, // has to be translated (?in the view)
                          y,
                          0 );
