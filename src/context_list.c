@@ -24,14 +24,15 @@
  */
 
 #include "context_list.h"
-
+/*
 void _xtoq_init_list(){
     _xtoq_window_list.head = NULL;
     _xtoq_window_list.count = 0;
-}
+}*/
+
 
 void 
-testList(){
+testList(){ /*
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
@@ -57,13 +58,23 @@ testList(){
     init_reply.window = root_window;
     
     // not sure about this error ...
-    _xtoq_add_context(init_reply);
-
+    //_xtoq_add_context(init_reply);
+*/
+    xtoq_context_t ctxt1;
+    xtoq_context_t ctxt2;
+    xtoq_context_t ctxt3;
+    ctxt1.window = 1;
+    ctxt2.window = 2;
+    ctxt3.window = 3;
+    _xtoq_add_context_t(ctxt1);
+    _xtoq_add_context_t(ctxt2);
+    _xtoq_add_context_t(ctxt3);
+    
 }
 
 
 void
-_xtoq_add_context (xtoq_context_t context)
+_xtoq_add_context_t(struct xtoq_context_t context)
 {
     _xtoq_context_node *new;
     _xtoq_context_node *curr;

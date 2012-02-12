@@ -94,8 +94,7 @@ xtoq_init(char *screen) {
     
     _xtoq_init_xfixes(root_context);
     
-    // not sure about this error ...
-    //_xtoq_add_context_t(init_reply);
+    _xtoq_add_context_t(init_reply);
     
     return init_reply;
 }
