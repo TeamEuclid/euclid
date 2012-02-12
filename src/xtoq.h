@@ -101,8 +101,9 @@ xtoq_wait_for_event (xtoq_context_t context);
  * @param keyCode The key pressed.
  */
 void
-xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char *);
-uint8_t *thing_to_keycode( xcb_connection_t *c, char *thing );
+dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char *);
+uint8_t *
+dummy_thing_to_keycode( xcb_connection_t *c, char *thing );
 /**
  * Testing function
  * @param context xtoq_context_t 
@@ -111,6 +112,6 @@ uint8_t *thing_to_keycode( xcb_connection_t *c, char *thing );
  * @param window The window that the key press was made in.
  */
 void
-xtoq_button_down (xtoq_context_t context, long x, long y, int window);
+dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window);
 
 #endif // _XTOQ_H_

@@ -139,7 +139,7 @@
     NSLog(@"%s pressed", charcharstar);
     
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ xtoq_key_press(xcbContext, 
+                   ^{ dummy_xtoq_key_press(xcbContext, 
                                      (int)[event windowNumber],
                                      [event keyCode],
                                      aChar,
@@ -153,7 +153,7 @@
     NSEvent * event = [mouseDownInfo objectForKey: @"2"];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ xtoq_button_down (xcbContext,
+                   ^{ dummy_xtoq_button_down (xcbContext,
                                         [event locationInWindow].x, 
                                         [event locationInWindow].y, 
                                         (int)[event windowNumber]);;});

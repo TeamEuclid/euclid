@@ -388,7 +388,7 @@ xtoq_wait_for_event (xtoq_context_t context)
 // while a keysym corresponds to the symbol on the key top
 // http://cgit.freedesktop.org/xcb/demo/tree/app/xte/xte.c
 uint8_t *
-thing_to_keycode( xcb_connection_t *c, char *thing ) {
+dummy_thing_to_keycode( xcb_connection_t *c, char *thing ) {
     
     xcb_keycode_t *kc;
     xcb_keysym_t ks;
@@ -406,10 +406,13 @@ thing_to_keycode( xcb_connection_t *c, char *thing ) {
 
 
 void
-xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char * charAsCharStar)
+dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char * charAsCharStar)
 {
     // move to setup
         syms = xcb_key_symbols_alloc(context.conn );
+   // xcb_generic_error_t **e;
+   // xcb_key_symbols_get_reply(syms, e);
+    
     //
     xcb_window_t none = { XCB_NONE };
     static xcb_keysym_t shift = { XK_Shift_L };
@@ -423,7 +426,7 @@ xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsi
     else if (strchr(cap, charAsCharStar[0]) != NULL)
         wrap_code = xcb_key_symbols_get_keycode( syms, shift );
     
-    code = thing_to_keycode( context.conn, charAsCharStar );
+    code = dummy_thing_to_keycode( context.conn, charAsCharStar );
   
     if( wrap_code ){
         xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *wrap_code, 0, none, 0, 0, 0 );  
@@ -436,12 +439,18 @@ xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsi
         //xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *charAsCharStar, 0, context.parent, 0, 0, 0 );  // have to look at xcb_keysyms
         //xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *charAsCharStar, 0, context.parent, 0, 0, 0 );
     }
-    printf("key press received by xtoq.c - xcb keycode '%s' from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
+    printf("key press received by xtoq.c - xcb keycode '%s',  from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
            , code, keyCode, window, aChar);
+    //printf("key press received by xtoq.c - xcb keycode '%s', wrapcode '%s' from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
+     //      , code, wrap_code, keyCode, window, aChar);
+    /*if (wrap_code)
+        free(wrap_code);
+    if (code)
+        free(code);*/
 }
 
 void
-xtoq_button_down (xtoq_context_t context, long x, long y, int window)
+dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window)
 {
     xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context.conn,
