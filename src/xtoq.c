@@ -27,7 +27,7 @@
 /* #define _XTOQ_C_ */
 
 #include "xtoq.h"
-#include "util.h"
+#include "xtoq_internal.h"
 #include <string.h>
 
 

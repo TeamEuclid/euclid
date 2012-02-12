@@ -120,6 +120,7 @@
 		4817709614CCD243004556BA /* DisplayNumberDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayNumberDialog.xib; sourceTree = "<group>"; };
 		E119D52A14D73852008FC58C /* XtoqWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqWindow.h; sourceTree = "<group>"; };
 		E119D52B14D73852008FC58C /* XtoqWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqWindow.m; sourceTree = "<group>"; };
+		E1533BA714E785EE00EABE4A /* xtoq_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xtoq_internal.h; path = ../src/xtoq_internal.h; sourceTree = "<group>"; };
 		E1B3E2C614E6FF2C008030A8 /* event_loop.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = event_loop.c; path = ../src/event_loop.c; sourceTree = "<group>"; };
 		E1B3E2C914E6FFFE008030A8 /* data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = data.h; path = ../src/data.h; sourceTree = "<group>"; };
 		E1BFDEA114CB71A200E2B08B /* bigreq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigreq.h; sourceTree = "<group>"; };
@@ -257,7 +258,6 @@
 		E1EBB2EA14CB55FF007496CF /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
 		E1EBB2EB14CB55FF007496CF /* Mac-Logo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo2.jpg"; sourceTree = "<group>"; };
 		E1EBB2FA14CB66AD007496CF /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = util.c; path = ../src/util.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
-		E1EBB2FB14CB66AD007496CF /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../src/util.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -565,11 +565,11 @@
 		E1EBB2F914CB6681007496CF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E1533BA714E785EE00EABE4A /* xtoq_internal.h */,
 				E1B3E2C614E6FF2C008030A8 /* event_loop.c */,
 				4294EA2B14CB8A6D0026C164 /* xtoq.c */,
 				4294EA2C14CB8A6D0026C164 /* xtoq.h */,
 				E1EBB2FA14CB66AD007496CF /* util.c */,
-				E1EBB2FB14CB66AD007496CF /* util.h */,
 				E1B3E2C914E6FFFE008030A8 /* data.h */,
 			);
 			name = src;

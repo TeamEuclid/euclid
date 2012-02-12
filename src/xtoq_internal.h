@@ -1,6 +1,7 @@
-/* Copyright (c) 2012 Jess VanDerwalker
+/* Copyright (c) 2012 Jess VanDerwalker <washu@sonic.net>
+ * All rights reserved.
  *
- * util.h
+ * xtoq_internal.h
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,8 +24,8 @@
  * SOFTWARE.
  */
 
-#ifndef _UTIL_H_
-#define _UTIL_H_
+#ifndef _XTOQ_INTERNAL_H_
+#define _XTOQ_INTERNAL_H_
 
 #include <stdlib.h>
 #include <stdio.h>
