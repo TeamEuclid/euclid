@@ -28,7 +28,10 @@ int XtoqApplicationMain(int argc, char** argv){
     char *scrn;
     scrn = findScreen(argc, argv);
     
-    /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    /*setenv("DISPLAY", scrn, 1);
+    mkfifo(scrn, 0);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CFBundleRef bundle = CFBundleGetMainBundle();
         char *bundle_path = CFBundleGetDataPointerForName(bundle, CFSTR("xtoq.app"));
         
@@ -49,7 +52,8 @@ int XtoqApplicationMain(int argc, char** argv){
         argv[4] = '\0';
         
         pid_t child;
-        int error = posix_spawnp(&child, argv[0], NULL, NULL, argv, _NSGetEnviron());
+        extern char **environ;
+        int error = posix_spawnp(&child, argv[0], NULL, NULL, argv, environ);
         if (error) {
             //... do something
             NSLog(@"error with posix_spawnp");
@@ -61,7 +65,7 @@ int XtoqApplicationMain(int argc, char** argv){
             //... do something
             NSLog(@"error with waitpid");
         }        
-    }); */
+    });*/
     
     
     // initializes simple subclass
