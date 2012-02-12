@@ -104,7 +104,22 @@ int
 _xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
               char *msg);
 
-/* event_loop.c */
+/****************
+ * init.c
+ ****************/
+
+xcb_query_extension_reply_t * 
+_xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
+
+void 
+_xtoq_init_damage(xtoq_context_t *contxt);
+
+void
+_xtoq_init_xfixes (xtoq_context_t *contxt);
+
+/****************
+ * event_loop.c
+ ****************/
 
 /**
  * Starts the event loop thread which listens on the given connection and
@@ -115,5 +130,6 @@ _xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
 int
 _xtoq_start_event_loop (xcb_connection_t *conn,
 						void *event_callback);
+
 
 #endif  /* _UTIL_H_ */

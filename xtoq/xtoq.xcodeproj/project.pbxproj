@@ -14,6 +14,7 @@
 		4817709814CCD243004556BA /* DisplayNumberController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817709514CCD243004556BA /* DisplayNumberController.m */; };
 		4817709914CCD243004556BA /* DisplayNumberDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4817709614CCD243004556BA /* DisplayNumberDialog.xib */; };
 		E119D52C14D73852008FC58C /* XtoqWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E119D52B14D73852008FC58C /* XtoqWindow.m */; };
+		E1533BA914E788E500EABE4A /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = E1533BA814E788E500EABE4A /* init.c */; };
 		E1B3E2C714E6FF2C008030A8 /* event_loop.c in Sources */ = {isa = PBXBuildFile; fileRef = E1B3E2C614E6FF2C008030A8 /* event_loop.c */; };
 		E1BFDF1914CB79E400E2B08B /* libxcb-util.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDEC814CB79E400E2B08B /* libxcb-util.0.dylib */; };
 		E1BFDF1A14CB79E400E2B08B /* libxcb-util.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1BFDEC914CB79E400E2B08B /* libxcb-util.0.dylib */; };
@@ -121,6 +122,7 @@
 		E119D52A14D73852008FC58C /* XtoqWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqWindow.h; sourceTree = "<group>"; };
 		E119D52B14D73852008FC58C /* XtoqWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqWindow.m; sourceTree = "<group>"; };
 		E1533BA714E785EE00EABE4A /* xtoq_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xtoq_internal.h; path = ../src/xtoq_internal.h; sourceTree = "<group>"; };
+		E1533BA814E788E500EABE4A /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = init.c; path = ../src/init.c; sourceTree = "<group>"; };
 		E1B3E2C614E6FF2C008030A8 /* event_loop.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = event_loop.c; path = ../src/event_loop.c; sourceTree = "<group>"; };
 		E1B3E2C914E6FFFE008030A8 /* data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = data.h; path = ../src/data.h; sourceTree = "<group>"; };
 		E1BFDEA114CB71A200E2B08B /* bigreq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigreq.h; sourceTree = "<group>"; };
@@ -571,6 +573,7 @@
 				4294EA2C14CB8A6D0026C164 /* xtoq.h */,
 				E1EBB2FA14CB66AD007496CF /* util.c */,
 				E1B3E2C914E6FFFE008030A8 /* data.h */,
+				E1533BA814E788E500EABE4A /* init.c */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 				42DE13D414D44D1B008C148A /* XtoqApplication.m in Sources */,
 				E119D52C14D73852008FC58C /* XtoqWindow.m in Sources */,
 				E1B3E2C714E6FF2C008030A8 /* event_loop.c in Sources */,
+				E1533BA914E788E500EABE4A /* init.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

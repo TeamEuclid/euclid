@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 David Snyder
  *
- * rootimg_api.h
+ * xtoq.h
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -53,14 +53,7 @@ xtoq_context_t *root_context;
 xtoq_context_t
 xtoq_init(char *screen);
 
-xcb_query_extension_reply_t * 
-_xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 
-void 
-_xtoq_init_damage(xtoq_context_t *contxt);
-
-void
-_xtoq_init_xfixes (xtoq_context_t *contxt);
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);
@@ -82,17 +75,6 @@ dummy_xtoq_wait_for_event(xtoq_context_t context);
  */
 int
 xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
-
-/**
- * Event loop that returns X events. Designed to be called by
- * a seprate thread in of the client application so it does
- * not block.
- * @param xtoq_context_t The context whose connection will be
- * used to listen for X events.
- * @returns The event caught.
- */
-xtoq_event_t
-xtoq_wait_for_event (xtoq_context_t context);
 
 /**
  * Testing function

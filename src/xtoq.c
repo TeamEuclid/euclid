@@ -55,7 +55,9 @@ xtoq_init(char *screen) {
     // Set the mask for the root window so we know when new windows
     // are created on the root. This is where we add masks for the events
     // we care about catching on the root window.
-    mask_values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
+                     XCB_EVENT_MASK_BUTTON_PRESS |
+                     XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
     xcb_change_window_attributes (conn, root_window,
                                   XCB_CW_EVENT_MASK, mask_values);
 
@@ -74,7 +76,8 @@ xtoq_init(char *screen) {
     root_context->width = root_screen->width_in_pixels;
     root_context->height = root_screen->height_in_pixels;
     root_context->x = 140;
-    root_context->y = 42;    
+    root_context->y = 42;
+    // TODO END
     
     xtoq_context_t init_reply;
     init_reply.conn = conn;
@@ -97,64 +100,6 @@ xtoq_init(char *screen) {
     return init_reply;
 }
 
-xcb_query_extension_reply_t 
-*_xtoq_init_extension (xcb_connection_t *conn, char *extension_name)
-{
-    xcb_query_extension_cookie_t cookie = xcb_query_extension(conn, strlen(extension_name), extension_name);
-	xcb_query_extension_reply_t *reply = xcb_query_extension_reply(conn, cookie, NULL);
-	if (!reply->present) {
-		free(reply);
-        printf("%s extension not present\n", extension_name);
-        exit(1);
-	} else {
-        printf("%s extension present\n", extension_name);
-    }
-    
-	return reply;
-}
-
-void
-_xtoq_init_damage(xtoq_context_t *contxt)
-{
-    
-    xcb_query_extension_reply_t *reply =_xtoq_init_extension(contxt->conn, "DAMAGE");
-    
-    xcb_damage_query_version_cookie_t version_cookie = 
-        xcb_damage_query_version(contxt->conn, 
-                                 XCB_DAMAGE_MAJOR_VERSION,
-                                 XCB_DAMAGE_MINOR_VERSION);
-	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(contxt->conn, version_cookie, NULL);
-
-    _damage_event = reply->first_event + XCB_DAMAGE_NOTIFY;
-
-	free(version_reply);
-	free(reply);
-    
-    xcb_damage_damage_t damage = xcb_generate_id(contxt->conn);
-    
-    // Refer to the Damage Protocol. level = 0 corresponds to the level
-    // DamageReportRawRectangles.  Another level may be more appropriate.
-    uint8_t level = XCB_DAMAGE_REPORT_LEVEL_BOUNDING_BOX;
-    xcb_void_cookie_t cookie = xcb_damage_create(contxt->conn,
-                                                 damage, contxt->window, level);
-    
-    /* Assign this damage object to the roots window's context */
-    contxt->damage = damage;
-
-}
-
-void
-_xtoq_init_xfixes (xtoq_context_t *contxt)
-{
-    xcb_xfixes_query_version_cookie_t cookie = 
-        xcb_xfixes_query_version(contxt->conn, 4, 0);
-    
-    xcb_xfixes_query_version_reply_t *reply = 
-        xcb_xfixes_query_version_reply(contxt->conn, cookie, NULL);
-    
-    free(reply);
-}
-
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context) {
     
@@ -165,11 +110,7 @@ xtoq_get_image(xtoq_context_t context) {
     
     geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
-    //WriteWindowInfo(context.conn, context.window);
-	//WriteAllChildrenWindowInfo(context.conn, context.window);
-    //img_data = GetWindowImageData(context.conn, context.window);
-    
-	xcb_flush(context.conn);
+	//xcb_flush(context.conn);
     /* Get the image of the root window */
     image = xcb_image_get(context.conn,
                           context.window,

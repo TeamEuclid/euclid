@@ -164,6 +164,14 @@ void *run_event_loop (void *thread_arg_struct)
                 
                 break;
             }
+            case XCB_KEY_PRESS: {
+                printf("Key press from xserver\n");
+                break;
+            }
+            case XCB_BUTTON_PRESS: {
+                printf("Button press from xserver\n");
+                break;
+            }
             default: {
                 printf("UNKNOWN EVENT\n");
                 break;
