@@ -399,7 +399,7 @@ thing_to_keycode( xcb_connection_t *c, char *thing ) {
     kc = xcb_key_symbols_get_keycode( syms, ks );
     
     printf( "String '%s' maps to keysym '%d'\n", thing, ks );
-    printf( "String '%s' maps to keycode '%s'\n", thing, kc ); // keycode not correct
+    printf( "String '%s' maps to keycode '%s' - something wrong here\n", thing, kc ); // keycode not correct
     
     return( kc );
 }
@@ -415,24 +415,29 @@ xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsi
     static xcb_keysym_t shift = { XK_Shift_L };
     
     uint8_t * code;
-    uint8_t wrap_code;
-    /* 
-     const char *cap = "~!@#$%^&*()_+{}|:\"<>?";
-    if (keyCode >= 'A' && keyCode <= 'Z')
+    uint8_t * wrap_code = NULL;
+    
+    const char *cap = "~!@#$%^&*()_+{}|:\"<>?";
+    if (charAsCharStar[0] >= 'A' && charAsCharStar[0] <= 'Z')
         wrap_code = xcb_key_symbols_get_keycode( syms, shift );
-    else if (strchr(cap, keyCode) != NULL)
+    else if (strchr(cap, charAsCharStar[0]) != NULL)
         wrap_code = xcb_key_symbols_get_keycode( syms, shift );
-     */
+    
     code = thing_to_keycode( context.conn, charAsCharStar );
   
-    /*if( wrap_code ){
-        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, wrap_code, 0, none, 0, 0, 0 );  
+    if( wrap_code ){
+        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *wrap_code, 0, none, 0, 0, 0 );  
         printf("wrapcode\n");
-    }*/
-    xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, none, 0, 0, 0 );  
-    xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, none, 0, 0, 0 );
+    }
 
-    printf("key press received by xtoq.c - Mac keyCode %i in Mac window #%i - (ASCII %hu)\n", keyCode, window, aChar);
+    else{
+        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, context.parent, 0, 0, 0 );  
+        xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, context.parent, 0, 0, 0 );
+        //xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *charAsCharStar, 0, context.parent, 0, 0, 0 );  // have to look at xcb_keysyms
+        //xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *charAsCharStar, 0, context.parent, 0, 0, 0 );
+    }
+    printf("key press received by xtoq.c - xcb keycode '%s' from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
+           , code, keyCode, window, aChar);
 }
 
 void
