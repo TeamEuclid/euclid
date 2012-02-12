@@ -268,7 +268,7 @@
 void eventHandler (xtoq_event_t event)
 {
     if (event.event_type == XTOQ_DAMAGE) {
-        //NSLog(@"Got damage event");
+        NSLog(@"Got damage event");
         [referenceToSelf updateImage];
     } else if (event.event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");

@@ -28,6 +28,9 @@
 #ifndef _DATA_H_
 #define _DATA_H_
 
+#include <xcb/xcb.h>
+#include <xcb/damage.h>
+
 #define XTOQ_DAMAGE 0
 #define XTOQ_EXPOSE 1
 #define XTOQ_CREATE 2
@@ -37,6 +40,7 @@ typedef struct xtoq_context_t {
     xcb_connection_t *conn;
     xcb_drawable_t window;
     xcb_window_t parent;
+    xcb_damage_damage_t damage;
     int x;
     int y;
     int width;

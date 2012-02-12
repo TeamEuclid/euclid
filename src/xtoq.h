@@ -35,12 +35,16 @@
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
 #include <xcb/xtest.h>
+#include <xcb/xfixes.h>
 #include "data.h"
 #include <xcb/xcb_keysyms.h> //aaron
 #include "context_list.h"
 #include "util.h"
 
-
+// TODO: Remove this once we get the context_list in place. Right
+// now this is here for testing purposes to give an easy way to get the
+// root window's context in any function
+xtoq_context_t *root_context;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
@@ -53,7 +57,10 @@ xcb_query_extension_reply_t *
 _xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 
 void 
-_xtoq_init_damage(xtoq_context_t contxt);
+_xtoq_init_damage(xtoq_context_t *contxt);
+
+void
+_xtoq_init_xfixes (xtoq_context_t *contxt);
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);

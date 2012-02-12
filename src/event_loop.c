@@ -74,12 +74,38 @@ void *run_event_loop (void *thread_arg_struct)
     
     free(thread_arg_struct);
 
-	/* Start the event loop */
+	/* Start the event loop, and flush if first */
+    xcb_flush(event_conn);
 	
     while ((evt = xcb_wait_for_event(event_conn))) {
 		if ((evt->response_type & ~0x80) == _damage_event) {
+            xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
 			return_evt.event_type = XTOQ_DAMAGE;
 			return_evt.context = NULL;
+            
+            // TODO: Do this better - in a different function, but a least we're doing some
+            // damage processing. This just assumes that its the root window, and that
+            // the whole window is damaged.
+            xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
+            xcb_rectangle_t rect;
+            rect.x = 0;
+            rect.y = 0;
+            rect.width = root_context->width;
+            rect.height= root_context->height;
+            
+            xcb_void_cookie_t cookie =
+                xcb_xfixes_create_region_checked(root_context->conn,
+                                                 region,
+                                                 1, 
+                                                 &rect);
+            _xtoq_request_check(root_context->conn, cookie, "Failed to create region");
+            cookie = xcb_damage_subtract_checked (root_context->conn,
+                                                  root_context->damage,
+                                                  region,
+                                                  NULL);
+            _xtoq_request_check(root_context->conn, cookie, "Failed to subtract damage");
+            // END TODO
+
             callback_ptr(return_evt);        
 		} else {
 			switch (evt->response_type & ~0x80) {
@@ -113,7 +139,7 @@ void *run_event_loop (void *thread_arg_struct)
                 free(notify);
                 
                 // TODO: Add the context created here to the data structure
-                
+                printf("Got create notify\n");
 				callback_ptr(return_evt);
 
                 break;
@@ -130,8 +156,7 @@ void *run_event_loop (void *thread_arg_struct)
                 return_evt.context->window = notify->window;
                 
                 free(notify);
-                
-				
+                				
                 // TODO: Remove the window from the data structure.
                 // Need to figure out where memory is freed.
                 
