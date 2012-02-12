@@ -79,7 +79,7 @@ _xtoq_add_context_t(struct xtoq_context_t context)
     _xtoq_context_node *new;
     _xtoq_context_node *curr;
     _xtoq_context_node *prev;
-    
+    xtoq_context_t hmm;
     
     /* Does the window already exist */
     if (_xtoq_get_context_node_by_window_id(context.window))
@@ -98,6 +98,7 @@ _xtoq_add_context_t(struct xtoq_context_t context)
      * scope when the function ends - might have to make a deep
      * copy */
     new->context = &context;
+    hmm = context;
     
     /* Handle the case where this is the first node added */
     if (!_xtoq_window_list_head) {

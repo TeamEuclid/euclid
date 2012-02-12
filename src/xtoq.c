@@ -96,6 +96,13 @@ xtoq_init(char *screen) {
     
     _xtoq_add_context_t(init_reply);
     
+    /* JESS: Check this out, put a breakpoint above this line and check
+     * the values for _xtoq_window_list_head (or temp)
+     * before/after the call to _xtoq_add_context_t
+     */
+    _xtoq_context_node * temp = _xtoq_window_list_head;
+    temp = NULL;
+    
     return init_reply;
 }
 
