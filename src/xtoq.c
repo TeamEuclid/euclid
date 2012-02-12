@@ -134,7 +134,7 @@ _xtoq_init_damage(xtoq_context_t *contxt)
     
     // Refer to the Damage Protocol. level = 0 corresponds to the level
     // DamageReportRawRectangles.  Another level may be more appropriate.
-    uint8_t level = XCB_DAMAGE_REPORT_LEVEL_DELTA_RECTANGLES;
+    uint8_t level = XCB_DAMAGE_REPORT_LEVEL_BOUNDING_BOX;
     xcb_void_cookie_t cookie = xcb_damage_create(contxt->conn,
                                                  damage, contxt->window, level);
     
