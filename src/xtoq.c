@@ -431,8 +431,8 @@ xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsi
     }
 
     else{
-        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, context.parent, 0, 0, 0 );  
-        xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, context.parent, 0, 0, 0 );
+        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, none, 0, 0, 0 );  
+        xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, none, 0, 0, 0 );
         //xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *charAsCharStar, 0, context.parent, 0, 0, 0 );  // have to look at xcb_keysyms
         //xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *charAsCharStar, 0, context.parent, 0, 0, 0 );
     }
