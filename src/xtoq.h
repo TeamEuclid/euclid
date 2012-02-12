@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 David Snyder
  *
- * rootimg_api.h
+ * xtoq.h
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -34,30 +34,17 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
+#include <xcb/xtest.h>
+#include <xcb/xfixes.h>
+#include "data.h"
+#include <xcb/xcb_keysyms.h> //aaron
 #include "context_list.h"
-#include "util.h"
+#include "xtoq_internal.h"
 
-#define XTOQ_DAMAGE 0
-#define XTOQ_EXPOSE 1
-#define XTOQ_CREATE 2
-#define XTOQ_DESTROY 3
-
-typedef struct xtoq_context_t {
-    xcb_connection_t *conn;
-    xcb_drawable_t window;
-    xcb_window_t parent;
-    int x;
-    int y;
-    int width;
-    int height;
-    void *local_data;   // Area for data client cares about
-} xtoq_context_t;
-
-typedef struct xtoq_event_t {
-    xtoq_context_t *context;
-    int event_type;
-} xtoq_event_t;
-
+// TODO: Remove this once we get the context_list in place. Right
+// now this is here for testing purposes to give an easy way to get the
+// root window's context in any function
+xtoq_context_t *root_context;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
@@ -66,31 +53,47 @@ typedef struct xtoq_event_t {
 xtoq_context_t
 xtoq_init(char *screen);
 
-xcb_query_extension_reply_t * 
-_xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 
-void 
-_xtoq_init_damage(xtoq_context_t contxt);
 
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);
-
-int
-dummy_xtoq_get_image(xtoq_context_t context);
 
 xtoq_event_t
 dummy_xtoq_wait_for_event(xtoq_context_t context);
 
 /**
- * Event loop that returns X events. Designed to be called by
- * a seprate thread in of the client application so it does
- * not block.
- * @param xtoq_context_t The context whose connection will be
- * used to listen for X events.
- * @returns The event caught.
+ * Starts the event loop and listens on the connection specified in
+ * the given xtoq_context_t. Uses callback as the function to call
+ * when an event of interest is received. Callback must be able to
+ * take an xtoq_event_t as its one and only parameter.
+ * @param root_context The context containing the connection to listen
+ * for events on.
+ * @param callback The function to call when an event of interest is
+ * received.
+ * @return Uses the return value of the call to pthread_create as 
+ * the return value.
  */
-xtoq_event_t
-xtoq_wait_for_event (xtoq_context_t context);
+int
+xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
 
+/**
+ * Testing function
+ * @param context xtoq_context_t 
+ * @param window The window that the key press was made in.
+ * @param keyCode The key pressed.
+ */
+void
+dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char *);
+uint8_t *
+dummy_thing_to_keycode( xcb_connection_t *c, char *thing );
+/**
+ * Testing function
+ * @param context xtoq_context_t 
+ * @param x - x coordinate
+ * @param y - y coordinate
+ * @param window The window that the key press was made in.
+ */
+void
+dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window);
 
 #endif // _XTOQ_H_

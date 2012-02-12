@@ -28,7 +28,7 @@ SOFTWARE.
  */
 
 #import <Cocoa/Cocoa.h>
-#import "util.h"
+#import "xtoq_internal.h"
 #import "XtoqImageRep.h"
 #import "xtoq.h"
 
@@ -44,6 +44,9 @@ SOFTWARE.
     //mouse event 
     NSPoint downPoint;
     NSPoint currentPoint;
+    
+    NSNotificationCenter * notificationCenter;
+    
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;

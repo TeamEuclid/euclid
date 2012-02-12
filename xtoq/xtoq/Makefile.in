@@ -17,12 +17,24 @@ PATHTOXTOQSRC = ../../src
 CC = clang
 CFLAGS = -Wall -g -O0
 INCLUDES = -I../../src -I/opt/X11/include
-LDFLAGS = -L/opt/X11/lib -lxcb-util -lxcb-damage -lxcb-composite -lxcb-xfixes -lxcb-render -lxcb-shape -lxcb-image -lxcb-shm -lxcb
+LDFLAGS = -L/opt/X11/lib -lxcb-util -lxcb-damage -lxcb-composite -lxcb-image -lxcb-shm -lxcb-xtest -lxcb-xfixes -lxcb-render -lxcb-shape -lxcb-keysyms -lxcb
 FRAMEWORKS = Cocoa AppKit
 IBTOOL = ibtool
 
-SOURCES = main.m XtoqApplication.m XtoqController.m XtoqWindow.m DisplayNumberController.m XtoqImageRep.m XtoqView.m
-CSOURCES = $(PATHTOXTOQSRC)/xtoq.c $(PATHTOXTOQSRC)/util.c $(PATHTOXTOQSRC)/context_list.c
+SOURCES = main.m \
+          XtoqApplication.m \
+          XtoqController.m \
+          XtoqWindow.m \
+          DisplayNumberController.m \
+          XtoqImageRep.m \
+          XtoqView.m
+
+CSOURCES = $(PATHTOXTOQSRC)/xtoq.c \
+           $(PATHTOXTOQSRC)/util.c \
+           $(PATHTOXTOQSRC)/init.c \
+           $(PATHTOXTOQSRC)/context_list.c \
+           $(PATHTOXTOQSRC)/event_loop.c
+
 COBJS = $(CSOURCES:.c=.o)
 Xibdir = en.lproj
 

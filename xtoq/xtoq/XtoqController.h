@@ -39,13 +39,18 @@
 #import "XtoqImageRep.h"
 #import "XtoqView.h"
 #import "xtoq.h"
+#import <dispatch/dispatch.h>
 
 @class DisplayNumberController;
+
+id referenceToSelf;
 
 @interface XtoqController : NSObject {
     DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
     XtoqView * ourView;
+    
+    dispatch_queue_t xtoqDispatchQueue;
     
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
@@ -62,22 +67,20 @@
     int originalWidth;
 }
 
-- (void)applicationWillFinishLaunching:(NSNotification *)aNotification;
+- (id) init;
+- (void) applicationWillFinishLaunching:(NSNotification *) aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+- (void) makeMenu;
+
 /**
  * Create the Display Number Controller
  */
 
 - (IBAction)showDisplayChooser;
-
-/**
- * Wait for the event.
- */
-- (void) wait_for_xtoq_event;
 
 /**
  * Put a new image in the window / view
@@ -108,3 +111,9 @@
 - (void) setScreen: (char *) scrn;
 
 @end
+
+/**
+ * Callback function that will receive events from the xtoq event loop
+ * once it is started.
+ */
+void eventHandler (xtoq_event_t event);

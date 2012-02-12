@@ -54,16 +54,15 @@ _xtoq_context_node *_xtoq_window_list_head;
  * the names of the structures your using here */
 _xtoq_context_list _xtoq_window_list;
 
-void _xtoq_init_list();
-
+void 
+_xtoq_init_list();
 
 void 
 testList();
 
 
-/* _xtoq_add_context should be taking a context_t */
-void
-_xtoq_add_context (struct xtoq_context_t context);
+void 
+_xtoq_add_context_t(struct xtoq_context_t context);
  
 void
 _xtoq_remove_context_node(xcb_window_t window_id);

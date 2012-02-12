@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-#include "util.h"
+#include "xtoq_internal.h"
 #include <xcb/xcb.h>
 
 

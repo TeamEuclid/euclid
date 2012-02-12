@@ -31,6 +31,7 @@ initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
+        notificationCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         
@@ -89,59 +90,43 @@ acceptsFirstResponder {
 }
 
 /**
- *  This is the function that captures the event which is 
- *  the down arrow key, not the numpad down arrow key.
- *  It updates the image on the screen when the down arrow is pressed.
+ *  Capture keyboard events
  */
 - (void)
 keyDown:(NSEvent *)theEvent {      
-    NSString *characters = [theEvent characters];
-    int key = [characters characterAtIndex:0];
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"viewKeyDownEvent" object:self 
-     userInfo: [[NSDictionary alloc]
-                initWithObjectsAndKeys:[[NSArray alloc]
-                                        initWithObjects: theEvent, nil], @"1", nil]];
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent 
+                                                            forKey:@"1"];
 
-//    if (key == NSDownArrowFunctionKey) {        
-//        
-//    } else {
-        [super keyDown:theEvent];
-//    }
+    [notificationCenter postNotificationName:@"XTOQviewKeyDownEvent" 
+                                      object:self 
+                                    userInfo:dictionary];
 }
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
     
-    NSPoint p = [mouseEvent locationInWindow];
-    downPoint = [self convertPoint:p fromView:nil];
-    currentPoint = downPoint;
+    //NSPoint p = [mouseEvent locationInWindow];
+    //downPoint = [self convertPoint:p fromView:nil];
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"mouseButtonDownEvent" object:self 
-     userInfo: [[NSDictionary alloc]
-                initWithObjectsAndKeys:[[NSArray alloc]
-                                        initWithObjects: mouseEvent, nil], @"1", nil]];
-   // [self setNeedsDisplay:YES];
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:mouseEvent 
+                                                            forKey:@"2"];
+    
+    [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
+                                      object:self 
+                                    userInfo:dictionary];
 }
 
 // This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
-    //[newImage retain];
-    //[image release];
     image = newImage;
     //[[self window] flushWindow];
     [self setNeedsDisplay:YES];
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage {
-    //[newImage retain];
-    //[image release];
     image = newImage;
     //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-    // NSRect imageRec = NSMakeRect(0, 0, [image getWidth]/2, [image getHeight]/2);
-    // [[self window] flushWindow];
+    //[self window] flushWindow];
     //[self setNeedsDisplayInRect:imageRec];
 }
 

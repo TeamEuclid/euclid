@@ -1,6 +1,7 @@
-/* Copyright (c) 2012 Jess VanDerwalker
+/* Copyright (c) 2012 Jess VanDerwalker <washu@sonic.net>
+ * All rights reserved.
  *
- * util.h
+ * xtoq_internal.h
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,18 +24,27 @@
  * SOFTWARE.
  */
 
-#ifndef _UTIL_H_
-#define _UTIL_H_
+#ifndef _XTOQ_INTERNAL_H_
+#define _XTOQ_INTERNAL_H_
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
+#include "data.h"
+#include "xtoq.h"
 
-typedef struct image_data_t {
-    uint8_t *data;
-    int length;
-}  image_data_t;
+
+/**
+ * Strucuture used to pass nesessary data to xtoq_start_event_loop.
+ */
+typedef struct xtoq_event_connetion {
+	xcb_connection_t *conn;		/* Connection to listen to events on */
+	void * event_callback;		/* Fuction to call when event caught */
+} xtoq_event_connection;
+
+/* util.c */
 
 /**
  * Return the given windows attributes reply. Caller must free memory
@@ -93,5 +103,33 @@ _xtoq_write_window_info (xcb_connection_t *conn, xcb_window_t window);
 int
 _xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
               char *msg);
+
+/****************
+ * init.c
+ ****************/
+
+xcb_query_extension_reply_t * 
+_xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
+
+void 
+_xtoq_init_damage(xtoq_context_t *contxt);
+
+void
+_xtoq_init_xfixes (xtoq_context_t *contxt);
+
+/****************
+ * event_loop.c
+ ****************/
+
+/**
+ * Starts the event loop thread which listens on the given connection and
+ * calls event_callback if an event is caught.
+ * @param *conn The connection to listen for X events on
+ * @param event_callback The callback function to call when a event is caught.
+ */
+int
+_xtoq_start_event_loop (xcb_connection_t *conn,
+						void *event_callback);
+
 
 #endif  /* _UTIL_H_ */

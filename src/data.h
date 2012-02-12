@@ -1,5 +1,7 @@
-
-/* Copyright (c) 2012 Jess VanDerwalker and Aaron Skomra
+/* Copyright (c) 2012 Jess VanDerwalker <washu@sonic.net>
+ * All rights reserved.
+ *
+ * data.h
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,32 +24,41 @@
  * SOFTWARE.
  */
 
-//
-//  AppDelegate.m
-//  xtoq
-//
-//  Auto generated XCode project file
-//  Added AppController creation. 
-//
 
-#import "AppDelegate.h"
+#ifndef _DATA_H_
+#define _DATA_H_
 
-@implementation AppDelegate
+#include <xcb/xcb.h>
+#include <xcb/damage.h>
 
-@synthesize window = _window;
+#define XTOQ_DAMAGE 0
+#define XTOQ_EXPOSE 1
+#define XTOQ_CREATE 2
+#define XTOQ_DESTROY 3
 
-/**
- *  Create the AppController for the DisplayNumberController (Window
- *  popup)
- * 
- */
+typedef struct xtoq_context_t {
+    xcb_connection_t *conn;
+    xcb_drawable_t window;
+    xcb_window_t parent;
+    xcb_damage_damage_t damage;
+    int x;
+    int y;
+    int width;
+    int height;
+    void *local_data;   // Area for data client cares about
+} xtoq_context_t;
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    // Insert code here to initialize your application
-    ac = [[XtoqController alloc] init];
-    [ac showDisplayChooser];    
-    [ac wait_for_xtoq_event];
-}
+typedef struct xtoq_event_t {
+    xtoq_context_t *context;
+    int event_type;
+} xtoq_event_t;
 
-@end
+typedef struct image_data_t {
+    uint8_t *data;
+    int length;
+}  image_data_t;
+
+// TODO: Decide where this variable needs to live.
+int _damage_event;
+
+#endif

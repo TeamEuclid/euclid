@@ -1,5 +1,5 @@
 
-/*Copyright (C) 2012 Aaron Skomra, Ben Huddle
+/*Copyright (C) 2012 Aaron Skomra, Ben Huddle, Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -35,58 +35,16 @@
 
 @implementation XtoqController
 
+- (id) init {
+    self = [super init];
+    if (self) {
+        referenceToSelf = self;
+    }
+    return self;
+}
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-    winList = [[NSMutableDictionary alloc] init];
-    winCount = 0;
     
-    [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
-    
-    xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(0, 0, 1028, 768)
-                                               styleMask: (NSTitledWindowMask |
-                                                           NSMiniaturizableWindowMask |
-                                                           NSResizableWindowMask)
-                                                 backing: NSBackingStoreBuffered
-                                                   defer: YES];
-    
-    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-    
-    id menubar = [NSMenu new];
-    id appMenuItem = [NSMenuItem new];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
-    
-    id appMenu = [NSMenu new];
-    id appName = [[NSProcessInfo processInfo] processName];
-    
-    // About
-    id aboutTitle = [@"About " stringByAppendingString:appName];        
-    id aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
-    [appMenu addItem:aboutMenuItem];
-    [appMenuItem setSubmenu:appMenu];
-    
-    // Quit    
-    id quitTitle = [@"Quit " stringByAppendingString:appName];
-    id quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
-    [appMenu addItem:quitMenuItem];
-    [appMenuItem setSubmenu:appMenu];
-    
-    id window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
-    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
-    [window setTitle:appName];
-    
-    appMenu = [NSMenu new];
-    appMenuItem = [NSMenuItem new];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
-    // [window makeKeyAndOrderFront:nil];
-    // [NSApp activateIgnoringOtherApps:YES];
-
-    // setup X connection and get the initial image from the server
-    NSLog(@"screen = %s", screen);
-    xcbContext = xtoq_init(screen);
     
     //Setting environment variable $DISPLAY to screen.
     char *env = getenv("DISPLAY");
@@ -100,9 +58,32 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }
     
+    
+    // setup X connection and get the initial image from the server
+    NSLog(@"screen = %s", screen);
+    xcbContext = xtoq_init(screen);
+    
+    NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.height, xcbContext.x, xcbContext.y);
+    
+    winList = [[NSMutableDictionary alloc] init];
+    winCount = 0;
+    
+    [[NSGraphicsContext currentContext]
+     setImageInterpolation:NSImageInterpolationHigh];
+    
+    xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(xcbContext.x, xcbContext.y, xcbContext.width, xcbContext.height)
+                                               styleMask: (NSTitledWindowMask |
+                                                           NSMiniaturizableWindowMask |
+                                                           NSResizableWindowMask)
+                                                 backing: NSBackingStoreBuffered
+                                                   defer: YES];
+
+    // Make the menu
+    [self makeMenu];        
+    
     //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];
+    image = [[XtoqImageRep alloc] initWithData:imageT];  
     //draw the image into a rect
     NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
@@ -124,19 +105,23 @@
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyDownInView:)
-                                                 name: @"viewKeyDownEvent"
+                                                 name: @"XTOQviewKeyDownEvent"
                                                object: nil];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(mouseButtonDownInView:)
-                                                 name: @"mouseButtonDownEvent"
+                                                 name: @"XTOQmouseButtonDownEvent"
                                                object: nil];
+    
+    xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
+    
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
     [xtoqWindow makeKeyAndOrderFront: self];
-    [NSThread detachNewThreadSelector:@selector(wait_for_xtoq_event) toTarget:self withObject:nil];
+    // Start the event loop and set the handler function
+	xtoq_start_event_loop(xcbContext, (void *) eventHandler);
 }
 
 - (IBAction)showDisplayChooser
@@ -152,40 +137,34 @@
 - (void) keyDownInView: (NSNotification *) aNotification
 {
     NSDictionary *keyInfo = [aNotification userInfo];
-    NSLog(@"Got a viewKeyDownEvent");
-    NSLog(@"Key was: %@", [keyInfo objectForKey: @"1"]);
+    // note this keyInfo is the key in <key, value> not the key pressed
+    NSEvent * event = [keyInfo objectForKey: @"1"];
+    //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
+    unsigned short aChar = [[event characters] characterAtIndex:0];
+    NSString* charNSString = [event characters]; 
+    const char* charcharstar = [charNSString UTF8String];
+    printf( "\n--------------------------------------------\n" );
+    NSLog(@"%s pressed", charcharstar);
+    
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ dummy_xtoq_key_press(xcbContext, 
+                                     (int)[event windowNumber],
+                                     [event keyCode],
+                                     aChar,
+                                     charcharstar) ;});
 }
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
 {
-    NSDictionary *keyInfo = [aNotification userInfo];
-    NSLog(@"Got a mouseButtonDownEvent");
-    NSLog(@"Mouse Info: %@", [keyInfo objectForKey: @"1"]);
-}
-
-
-- (void) wait_for_xtoq_event {
-    xtoq_context_t xqcontxt;
-    xtoq_event_t xqevent;
-    
-    while (1) {
-        // Change this call to dummy_xtoq_wait_for_event if
-        // you just want the 4 second delay
-        //xqevent = dummy_xtoq_wait_for_event(xcbContext);
-        xqevent = xtoq_wait_for_event(xcbContext);    
-        
-        if (xqevent.event_type == XTOQ_DAMAGE) {
-            NSLog(@"Got damage event");
-            [self updateImage];
-        } else if (xqevent.event_type == XTOQ_CREATE) {
-            [self updateImage];
-        } else if (xqevent.event_type == XTOQ_DESTROY) {
-            [self updateImage];
-        } else { 
-            NSLog(@"Hey I'm Not damage!"); 
-        }
-
-    }
+    NSDictionary *mouseDownInfo = [aNotification userInfo];
+    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
+    NSEvent * event = [mouseDownInfo objectForKey: @"2"];
+    //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ dummy_xtoq_button_down (xcbContext,
+                                        [event locationInWindow].x, 
+                                        [event locationInWindow].y, 
+                                        (int)[event windowNumber]);;});
 }
 
 // create a new image to redraw part of the screen 
@@ -195,7 +174,7 @@
     
     for (int i = 0; i < numberOfRects; i++) {
     
-        NSLog(@"update Image");
+        //NSLog(@"update Image");
         
         xcb_image_destroy(imageT);
         imageT = xtoq_get_image(xcbContext);
@@ -250,4 +229,54 @@
     screen = scrn;
 }
 
+- (void) makeMenu {
+    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+    
+    id menubar = [NSMenu new];
+    id appMenuItem = [NSMenuItem new];
+    [menubar addItem:appMenuItem];
+    [NSApp setMainMenu:menubar];    
+    
+    id appMenu = [NSMenu new];
+    id appName = [[NSProcessInfo processInfo] processName];
+    
+    // About
+    id aboutTitle = [@"About " stringByAppendingString:appName];        
+    id aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    [appMenu addItem:aboutMenuItem];
+    [appMenuItem setSubmenu:appMenu];
+    
+    // Quit    
+    id quitTitle = [@"Quit " stringByAppendingString:appName];
+    id quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    [appMenu addItem:quitMenuItem];
+    [appMenuItem setSubmenu:appMenu];
+    
+    id window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
+    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
+    [window setTitle:appName];
+    
+    appMenu = [NSMenu new];
+    appMenuItem = [NSMenuItem new];
+    [menubar addItem:appMenuItem];
+    [NSApp setMainMenu:menubar]; 
+}
+
 @end
+
+void eventHandler (xtoq_event_t event)
+{
+    if (event.event_type == XTOQ_DAMAGE) {
+        NSLog(@"Got damage event");
+        [referenceToSelf updateImage];
+    } else if (event.event_type == XTOQ_CREATE) {
+        NSLog(@"Window was created");
+        [referenceToSelf updateImage];
+    } else if (event.event_type == XTOQ_DESTROY) {
+        [referenceToSelf updateImage];
+    } else { 
+        NSLog(@"Hey I'm Not damage!"); 
+    }
+    
+}
