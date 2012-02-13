@@ -21,6 +21,10 @@
 
 #import <AppKit/AppKit.h>
 #import "XtoqController.h"
+#import <spawn.h>
+#import "crt_externs.h"
+#import "sys/times.h"
+#import "sys/stat.h"
 
 @interface XtoqApplication : NSApplication
 

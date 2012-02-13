@@ -28,6 +28,46 @@ int XtoqApplicationMain(int argc, char** argv){
     char *scrn;
     scrn = findScreen(argc, argv);
     
+    /*setenv("DISPLAY", scrn, 1);
+    mkfifo(scrn, 0);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        CFBundleRef bundle = CFBundleGetMainBundle();
+        char *bundle_path = CFBundleGetDataPointerForName(bundle, CFSTR("xtoq.app"));
+        
+        const char *startx_path = "//opt/X11/bin/startx";
+        char const *Xorg_path = "/opt/X11/bin/Xorg";
+        char *xinitrc_path;
+        asprintf(&xinitrc_path, "%s/Contents/Resources/X11/lib/X11/xinit/xinitrc", bundle_path);
+        if (xinitrc_path == NULL) {
+            //... do something
+            NSLog(@"xinitrc path is null");
+        }
+        
+        const char *argv[5];
+        argv[0] = startx_path;
+        argv[1] = xinitrc_path;
+        argv[2] = "--";
+        argv[3] = Xorg_path;
+        argv[4] = '\0';
+        
+        pid_t child;
+        extern char **environ;
+        int error = posix_spawnp(&child, argv[0], NULL, NULL, argv, environ);
+        if (error) {
+            //... do something
+            NSLog(@"error with posix_spawnp");
+        }
+        
+        int retval;
+        waitpid(child, &retval, 0);
+        if (retval != 0) {
+            //... do something
+            NSLog(@"error with waitpid");
+        }        
+    });*/
+    
+    
     // initializes simple subclass
     [XtoqApplication sharedApplication];
     XtoqController *controller = [[XtoqController alloc] init];

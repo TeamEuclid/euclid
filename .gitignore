@@ -1,6 +1,13 @@
 # Files for git to ignore
 #
 
+# Ignore local git metadata
+HEAD
+description
+config
+info
+hooks
+
 # Ignore the .DS_Store files that Apple seems to want in every directory
 .DS_Store
 
@@ -12,6 +19,7 @@
 # Ignore object files
 *.o
 
+# Ignore latex intermediate files
 *.aux
 *.out
 *.log
@@ -27,3 +35,5 @@ xcuserdatad/
 # Autotools files to ignore
 config.status
 compile
+config.h
+Makefile
