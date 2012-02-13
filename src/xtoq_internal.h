@@ -131,5 +131,33 @@ int
 _xtoq_start_event_loop (xcb_connection_t *conn,
 						void *event_callback);
 
+/****************
+ * context_list.c
+ ****************/
+
+typedef struct _xtoq_context_node {
+    struct xtoq_context_t *context;
+    struct _xtoq_context_node * next;
+    struct _xtoq_context_node * prev;
+} _xtoq_context_node;
+
+typedef struct _xtoq_context_list {
+    struct _xtoq_context_node * head;
+    int count;
+} _xtoq_context_list;
+
+/* this is the head pointer */
+extern _xtoq_context_node *_xtoq_window_list_head;
+
+
+void 
+_xtoq_add_context_t(struct xtoq_context_t *context);
+
+void
+_xtoq_remove_context_node(xcb_window_t window_id);
+
+_xtoq_context_node *
+_xtoq_get_context_node_by_window_id (xcb_window_t window_id);
+
 
 #endif  /* _UTIL_H_ */

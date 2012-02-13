@@ -23,7 +23,9 @@
  * SOFTWARE.
  */
 
-#include "context_list.h"
+#include "xtoq_internal.h"
+
+_xtoq_context_node *_xtoq_window_list_head = NULL;
 
 
 void

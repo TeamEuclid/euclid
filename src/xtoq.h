@@ -38,7 +38,6 @@
 #include <xcb/xfixes.h>
 #include "data.h"
 #include <xcb/xcb_keysyms.h> //aaron
-#include "context_list.h"
 #include "xtoq_internal.h"
 
 // TODO: Remove this once we get the context_list in place. Right
