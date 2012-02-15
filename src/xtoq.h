@@ -43,7 +43,7 @@
 // TODO: Remove this once we get the context_list in place. Right
 // now this is here for testing purposes to give an easy way to get the
 // root window's context in any function
-xtoq_context_t *root_context;
+extern xtoq_context_t *root_context;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen

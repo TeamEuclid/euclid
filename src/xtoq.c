@@ -34,6 +34,7 @@
 #define XK_Shift_L                       0xffe1
 xcb_key_symbols_t *syms = NULL;
 // end aaron key stuff
+xtoq_context_t *root_context = NULL;
 
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage

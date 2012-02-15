@@ -59,6 +59,6 @@ typedef struct image_data_t {
 }  image_data_t;
 
 // TODO: Decide where this variable needs to live.
-int _damage_event;
+extern int _damage_event;
 
 #endif
