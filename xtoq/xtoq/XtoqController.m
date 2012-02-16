@@ -164,7 +164,8 @@
                    ^{ dummy_xtoq_button_down (xcbContext,
                                         [event locationInWindow].x, 
                                         [event locationInWindow].y, 
-                                        (int)[event windowNumber]);;});
+                                        (int)[event windowNumber],
+                                        0);;});
 }
 
 // create a new image to redraw part of the screen 
