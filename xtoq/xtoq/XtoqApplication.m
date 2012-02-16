@@ -26,15 +26,16 @@
 int XtoqApplicationMain(int argc, char** argv){
 
     char *scrn;
+    /*FILE *fp;
     scrn = findScreen(argc, argv);
-    /*const char *fifo_path = "/tmp/xtoq_fifo";
+    const char *fifo_path = "/tmp/xtoq_fifo";
     int ret = 0;
     
     ret = mkfifo(fifo_path, S_IRUSR | S_IWUSR);
     if (ret == -1) {
         NSLog(@"mkfifo unsuccessful");
     }
-    ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
+    /*ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
     if (ret != 0) {
         NSLog(@"problem with setenv");
     }
@@ -82,22 +83,22 @@ int XtoqApplicationMain(int argc, char** argv){
     });
     
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
-    FILE *fp;
-    char *xtoq_fifo;
+
+    char *xtoq_fifo = NULL;
     size_t read;
     size_t len = 0;
+    
     fp = fopen(fifo_path, "r");
     if (fp == NULL) {
         NSLog(@"Problem with fp");
         //exit(1);
     }
-    while ((read = getline(&xtoq_fifo, &len, fp)) != -1) {
-        NSLog(@"%s", xtoq_fifo);
-    }
+    read = getline(&xtoq_fifo, &len, fp);
+    xtoq_fifo[len - 1] = '\0';
+    NSLog(@"from fifo: %s", xtoq_fifo);
     fclose(fp);
     // setenv("DISPLAY", scrn, 1);    
-    
-    sleep(5);*/
+    */
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
