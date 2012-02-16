@@ -93,6 +93,6 @@ dummy_thing_to_keycode( xcb_connection_t *c, char *thing );
  * @param window The window that the key press was made in.
  */
 void
-dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window);
+dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window, int button);
 
 #endif // _XTOQ_H_
