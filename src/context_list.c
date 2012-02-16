@@ -23,97 +23,59 @@
  * SOFTWARE.
  */
 
-#include "context_list.h"
-/*
-void _xtoq_init_list(){
-    _xtoq_window_list.head = NULL;
-    _xtoq_window_list.count = 0;
-}*/
+#include "xtoq_internal.h"
 
-
-void 
-testList(){ /*
-    xcb_connection_t *conn;
-    int conn_screen;
-    xcb_screen_t *root_screen;
-    xcb_drawable_t root_window;
-    
-    xcb_get_geometry_reply_t *geom_reply;
-    
-    conn = xcb_connect(":1", &conn_screen);
-    
-    root_screen = xcb_aux_get_screen(conn, conn_screen);
-    root_window = root_screen->root;
-    
-    // Get the geometry of the root window 
-    geom_reply = _xtoq_get_window_geometry(conn, root_window);
-    
-    //WriteWindowInfo(conn, root_window);
-	//WriteAllChildrenWindowInfo(conn, root_window);
-    
-	xcb_flush(conn);
-    
-    xtoq_context_t init_reply;
-    init_reply.conn = conn;
-    init_reply.window = root_window;
-    
-    // not sure about this error ...
-    //_xtoq_add_context(init_reply);
-*/
-    xtoq_context_t ctxt1;
-    xtoq_context_t ctxt2;
-    xtoq_context_t ctxt3;
-    ctxt1.window = 1;
-    ctxt2.window = 2;
-    ctxt3.window = 3;
-    _xtoq_add_context_t(ctxt1);
-    _xtoq_add_context_t(ctxt2);
-    _xtoq_add_context_t(ctxt3);
-    
-}
+_xtoq_context_node *_xtoq_window_list_head = NULL;
 
 
 void
-_xtoq_add_context_t(struct xtoq_context_t context)
+_xtoq_add_context_t(struct xtoq_context_t *context)
 {
-    _xtoq_context_node *new;
+    /* Does the window already exist */
+    if (_xtoq_get_context_node_by_window_id(context->window))
+        return;
+    
+    xtoq_context_t * new_context;
+    new_context = malloc(sizeof(xtoq_context_t));
+    
+    new_context->conn = context->conn;
+    new_context->window = context->window;
+    new_context->parent = context->parent;
+    new_context->damage = context->damage;
+    new_context->x = context->x;
+    new_context->y = context->y;
+    new_context->width = context->width;
+    new_context->height = context->height;
+    new_context->local_data = context->local_data;
+
+    _xtoq_context_node *new_node;
     _xtoq_context_node *curr;
     _xtoq_context_node *prev;
-    xtoq_context_t hmm;
     
-    /* Does the window already exist */
-    if (_xtoq_get_context_node_by_window_id(context.window))
-        return;
     
     /* Create node to hold the new window */
 
-    /* NOTE: There are two things that you need to allocate memory for
-     * - the xtoq_context AND the _xtoq_context_node that you are
-     * going to put the xtoq_context into. */
-    new = malloc(sizeof(xtoq_context_t));
-    if (!new) {
-        exit(1);                /* Should we handle this differently? */
+    new_node = malloc(sizeof(_xtoq_context_node));
+    if (!new_node) {
+        exit(1);
     }
-    /* NOTE: I don't think this will work since context may go out of
-     * scope when the function ends - might have to make a deep
-     * copy */
-    new->context = &context;
-    hmm = context;
+    
+    new_node->context = new_context;
     
     /* Handle the case where this is the first node added */
     if (!_xtoq_window_list_head) {
-        new->prev = NULL;
-        new->next = NULL;
-        _xtoq_window_list_head = new;
+        new_node->prev = NULL;
+        new_node->next = NULL;
+        _xtoq_window_list_head = new_node;
     } else {
         curr = _xtoq_window_list_head;
         while (curr->next) {
             prev = curr;
             curr = curr->next;
         }
-        curr->next = new;
-        new->prev = curr;
-        new->next = NULL;
+        curr->next = new_node;
+        new_node->prev = curr;
+        new_node->next = NULL;
     }
     
     
@@ -124,11 +86,7 @@ _xtoq_context_node *
 _xtoq_get_context_node_by_window_id (xcb_window_t window_id)
 {
     _xtoq_context_node *curr;
-    
-    if (_xtoq_window_list_head) {
-        return NULL;
-    }
-    
+        
     curr = _xtoq_window_list_head;
     while (curr) {
         if (curr->context->window == window_id) {
@@ -148,10 +106,17 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     curr = _xtoq_window_list_head;
     while (curr) {
         if (curr->context->window == window_id) {
-            curr->next->prev = curr->prev;
+            free(curr->context);
+            if(curr->next){
+                curr->next->prev = curr->prev;
+            }
             if (curr->prev) {
                 curr->prev->next = curr->next;
             }
+            else{
+                _xtoq_window_list_head = curr->next;
+            }
+                
             free(curr);
             return;
         }

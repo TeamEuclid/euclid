@@ -30,12 +30,11 @@
 #include "xtoq_internal.h"
 #include <string.h>
 
-
-
 // aaron key stuff
 #define XK_Shift_L                       0xffe1
 xcb_key_symbols_t *syms = NULL;
 // end aaron key stuff
+xtoq_context_t *root_context = NULL;
 
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
@@ -94,14 +93,10 @@ xtoq_init(char *screen) {
     
     _xtoq_init_xfixes(root_context);
     
-    _xtoq_add_context_t(init_reply);
-    
-    /* JESS: Check this out, put a breakpoint above this line and check
-     * the values for _xtoq_window_list_head (or temp)
-     * before/after the call to _xtoq_add_context_t
-     */
-    _xtoq_context_node * temp = _xtoq_window_list_head;
-    temp = NULL;
+    _xtoq_add_context_t(&init_reply);
+        
+    syms = xcb_key_symbols_alloc(conn);
+    _xtoq_init_extension(conn, "XTEST");	
     
     return init_reply;
 }
@@ -175,12 +170,9 @@ dummy_thing_to_keycode( xcb_connection_t *c, char *thing ) {
 void
 dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char * charAsCharStar)
 {
-    // move to setup
-        syms = xcb_key_symbols_alloc(context.conn );
    // xcb_generic_error_t **e;
    // xcb_key_symbols_get_reply(syms, e);
-    
-    //
+	
     xcb_window_t none = { XCB_NONE };
     static xcb_keysym_t shift = { XK_Shift_L };
     
@@ -200,16 +192,13 @@ dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode
         printf("wrapcode\n");
     }
 
-    else{
+    else{ // *code || *charAsCharStar, context.parent || none
         xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, none, 0, 0, 0 );  
         xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, none, 0, 0, 0 );
-        //xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *charAsCharStar, 0, context.parent, 0, 0, 0 );  // have to look at xcb_keysyms
-        //xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *charAsCharStar, 0, context.parent, 0, 0, 0 );
+        // have to look at xcb_keysyms
     }
-    printf("key press received by xtoq.c - xcb keycode '%s',  from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
-           , code, keyCode, window, aChar);
-    //printf("key press received by xtoq.c - xcb keycode '%s', wrapcode '%s' from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
-     //      , code, wrap_code, keyCode, window, aChar);
+    printf("key press received by xtoq.c - xcb keycode '%s',  from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n", code, keyCode, window, aChar);
+
     /*if (wrap_code)
         free(wrap_code);
     if (code)
