@@ -1,37 +1,32 @@
-#                                               -*- Autoconf -*-
 # Copyright (c) 2012 Jess VanDerwalker <washu@sonic.net>
-#
-# Basic outline created with autoscan
-# Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
 AC_INIT([xtoq], [0.1])
-AC_CONFIG_SRCDIR([src/xtoq.c])
-AC_CONFIG_HEADER([config.h])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AM_MAINTAINER_MODE
+AM_CONFIG_HEADER(config.h)
 
-# Checks for programs.
+# Initialize libtool
+AC_PROG_LIBTOOL
+
+# Require xorg-macros: XORG_DEFAULT_OPTIONS BASE_CFLAGS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.16 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.16)
+XORG_DEFAULT_OPTIONS
+
 AC_PROG_CC
+AC_PROG_OBJC
 AC_PROG_INSTALL
 
 # Checks for libraries.
-AC_SEARCH_LIBS([xcb_connect], [xcb])
-
-# Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_CONST
-AC_TYPE_SIZE_T
-AC_TYPE_UINT16_T
-AC_TYPE_UINT32_T
-AC_TYPE_UINT8_T
-
-# Checks for library functions.
-AC_FUNC_MALLOC
+PKG_CHECK_MODULES(XCB, xcb-damage xcb-event xcb-xtest xcb-image)
 
 AC_CONFIG_FILES([Makefile
+                 include/Makefile
+                 man/Makefile
+                 src/libcompositewm/Makefile
                  src/Makefile
-                 xtoq/xtoq/Makefile])
+                 src/xtoq/bundle/Makefile
+                 src/xtoq/Makefile])
 AC_OUTPUT

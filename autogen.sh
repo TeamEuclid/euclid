@@ -1,8 +1,12 @@
-#!/bin/sh
+#! /bin/sh
 
-# Autogen script for the xtoq project. To be run in order to run
-# autoreconf and automake. Automake is run simply to create files
-# expected by ./configure.
+srcdir=`dirname $0`
+test -z "$srcdir" && srcdir=.
 
-autoreconf --install
-automake --add-missing --copy >/dev/null 2>&1
+ORIGDIR=`pwd`
+cd $srcdir
+
+autoreconf -v --install || exit 1
+cd $ORIGDIR || exit $?
+
+$srcdir/configure --enable-maintainer-mode "$@"
