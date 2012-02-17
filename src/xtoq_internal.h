@@ -150,7 +150,7 @@ typedef struct _xtoq_context_list {
 extern _xtoq_context_node *_xtoq_window_list_head;
 
 
-void 
+xtoq_context_t * 
 _xtoq_add_context_t(struct xtoq_context_t *context);
 
 void
@@ -158,6 +158,11 @@ _xtoq_remove_context_node(xcb_window_t window_id);
 
 _xtoq_context_node *
 _xtoq_get_context_node_by_window_id (xcb_window_t window_id);
+
+/****************
+ * window.c
+ ****************/
+xtoq_context_t *_xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *evt);
 
 
 #endif  /* _UTIL_H_ */
