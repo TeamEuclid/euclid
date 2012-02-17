@@ -26,9 +26,9 @@
 int XtoqApplicationMain(int argc, char** argv){
 
     char *scrn;
-    /*FILE *fp;
+    FILE *fp;
     scrn = findScreen(argc, argv);
-    const char *fifo_path = "/tmp/xtoq_fifo";
+    /*const char *fifo_path = "/tmp/xtoq_fifo";
     int ret = 0;
     
     ret = mkfifo(fifo_path, S_IRUSR | S_IWUSR);
