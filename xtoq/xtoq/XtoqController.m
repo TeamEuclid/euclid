@@ -144,14 +144,13 @@
     NSString* charNSString = [event characters]; 
     const char* charcharstar = [charNSString UTF8String];
     printf( "\n--------------------------------------------\n" );
+    // translate key here code = translate(charcharstar);
     NSLog(@"%s pressed", charcharstar);
-    
+    uint8_t code = (unsigned char)0x10;
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_key_press(xcbContext, 
                                      (int)[event windowNumber],
-                                     [event keyCode],
-                                     aChar,
-                                     charcharstar) ;});
+                                     code) ;});
 }
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification

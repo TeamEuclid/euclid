@@ -96,7 +96,8 @@ xtoq_init(char *screen) {
     _xtoq_add_context_t(&init_reply);
         
     syms = xcb_key_symbols_alloc(conn);
-    _xtoq_init_extension(conn, "XTEST");	
+    _xtoq_init_extension(conn, "XTEST");
+	_xtoq_init_extension(conn, "XKEYBOARD");
     
     return init_reply;
 }
@@ -147,75 +148,30 @@ xtoq_start_event_loop (xtoq_context_t root_context, void *callback)
 	return _xtoq_start_event_loop(root_context.conn, callback);
 }
 
-// key code corresponds roughly to a physical key
-// while a keysym corresponds to the symbol on the key top
-// http://cgit.freedesktop.org/xcb/demo/tree/app/xte/xte.c
-uint8_t *
-dummy_thing_to_keycode( xcb_connection_t *c, char *thing ) {
-    
-    xcb_keycode_t *kc;
-    xcb_keysym_t ks;
-    
-    /* For now, assume thing[0] == Latin-1 keysym */
-    ks = (uint8_t)thing[0];
 
-    kc = xcb_key_symbols_get_keycode( syms, ks );
-    
-    printf( "String '%s' maps to keysym '%d'\n", thing, ks );
-    printf( "String '%s' maps to keycode '%s' - something wrong here\n", 
-           thing, kc); // keycode not correct
-    
-    return( kc );
-}
 
 void
-dummy_xtoq_key_press (xtoq_context_t context, int window, 
-                      unsigned short keyCode, unsigned short aChar, 
-                      char * charAsCharStar)
+dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code)
 {
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
-    //int rep = xcb_key_symbols_get_reply(syms, err);
+
     
     xcb_window_t none = { XCB_NONE };
-    static xcb_keysym_t shift = { XK_Shift_L };
-    
-    uint8_t * code;
-    uint8_t * wrap_code = NULL;
-    
-    const char *cap = "~!@#$%^&*()_+{}|:\"<>?";
-    if (charAsCharStar[0] >= 'A' && charAsCharStar[0] <= 'Z')
-        wrap_code = xcb_key_symbols_get_keycode( syms, shift );
-    else if (strchr(cap, charAsCharStar[0]) != NULL)
-        wrap_code = xcb_key_symbols_get_keycode( syms, shift );
-    
-    code = dummy_thing_to_keycode( context.conn, charAsCharStar );
 
-    
-    if( wrap_code ){
-        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *wrap_code, 0, none, 0, 0, 0 );  
-        printf("wrapcode\n");
-    }
-
-    else{ // *code || *charAsCharStar, context.parent || none
-        cookie = xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 
-                                     XCB_CURRENT_TIME, none, 0, 0, 0 );  
-        xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 
-                                     XCB_CURRENT_TIME	, none, 0, 0, 0 );
+    cookie = xcb_test_fake_input( context.conn, XCB_KEY_PRESS, code, 
+                                XCB_CURRENT_TIME, none, 0, 0, 0 );  
+    xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, code, 
+                                XCB_CURRENT_TIME, none, 0, 0, 0 );
         
-        err = xcb_request_check(context.conn, cookie);
-        if (err)
-        {
-            printf("err ");
-            free(err);
-        }	
-    }
-    printf("key press received by xtoq.c - xcb keycode '%s',  from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n", code, keyCode, window, aChar);
-
-    /*if (wrap_code)
-        free(wrap_code);
-    if (code)
-        free(code);*/
+    err = xcb_request_check(context.conn, cookie);
+    if (err)
+    {
+        printf("err ");
+        free(err);
+    }	
+    
+    printf("key press received by xtoq.c - uint8_t '%i',  in Mac window #%i - \n", code,  window);
 }
 
 void
