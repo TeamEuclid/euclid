@@ -26,7 +26,7 @@
 int XtoqApplicationMain(int argc, char** argv){
 
     char *scrn;
-    FILE *fp;
+    //FILE *fp;
     scrn = findScreen(argc, argv);
     /*const char *fifo_path = "/tmp/xtoq_fifo";
     int ret = 0;
@@ -35,7 +35,7 @@ int XtoqApplicationMain(int argc, char** argv){
     if (ret == -1) {
         NSLog(@"mkfifo unsuccessful");
     }
-    /*ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
+    ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
     if (ret != 0) {
         NSLog(@"problem with setenv");
     }
@@ -134,7 +134,7 @@ char* findScreen(int argc, char **argv) {
         return argv[loc];
     }
     else */
-        return ":0";
+        return ":1";
     
 }
 
