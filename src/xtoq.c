@@ -96,7 +96,7 @@ xtoq_init(char *screen) {
     _xtoq_add_context_t(&init_reply);
         
     syms = xcb_key_symbols_alloc(conn);
-    _xtoq_init_extension(conn, "XTEST");
+    //_xtoq_init_extension(conn, "XTEST");
 	_xtoq_init_extension(conn, "XKEYBOARD");
     
     return init_reply;
