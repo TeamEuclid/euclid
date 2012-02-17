@@ -26,6 +26,10 @@
 #import "sys/times.h"
 #import "sys/stat.h"
 
+#ifdef __APPLE__
+#define environ (*_NSGetEnviron())
+#endif
+
 @interface XtoqApplication : NSApplication
 
 int XtoqApplicationMain(int argc, char** argv);

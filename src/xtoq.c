@@ -30,12 +30,11 @@
 #include "xtoq_internal.h"
 #include <string.h>
 
-
-
 // aaron key stuff
 #define XK_Shift_L                       0xffe1
 xcb_key_symbols_t *syms = NULL;
 // end aaron key stuff
+xtoq_context_t *root_context = NULL;
 
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
@@ -96,6 +95,9 @@ xtoq_init(char *screen) {
     
     _xtoq_add_context_t(&init_reply);
         
+    syms = xcb_key_symbols_alloc(conn);
+    _xtoq_init_extension(conn, "XTEST");	
+    
     return init_reply;
 }
 
@@ -156,24 +158,25 @@ dummy_thing_to_keycode( xcb_connection_t *c, char *thing ) {
     
     /* For now, assume thing[0] == Latin-1 keysym */
     ks = (uint8_t)thing[0];
-    
+
     kc = xcb_key_symbols_get_keycode( syms, ks );
     
     printf( "String '%s' maps to keysym '%d'\n", thing, ks );
-    printf( "String '%s' maps to keycode '%s' - something wrong here\n", thing, kc ); // keycode not correct
+    printf( "String '%s' maps to keycode '%s' - something wrong here\n", 
+           thing, kc); // keycode not correct
     
     return( kc );
 }
 
 void
-dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char * charAsCharStar)
+dummy_xtoq_key_press (xtoq_context_t context, int window, 
+                      unsigned short keyCode, unsigned short aChar, 
+                      char * charAsCharStar)
 {
-    // move to setup
-        syms = xcb_key_symbols_alloc(context.conn );
-   // xcb_generic_error_t **e;
-   // xcb_key_symbols_get_reply(syms, e);
+    xcb_generic_error_t *err;
+    xcb_void_cookie_t cookie;
+    //int rep = xcb_key_symbols_get_reply(syms, err);
     
-    //
     xcb_window_t none = { XCB_NONE };
     static xcb_keysym_t shift = { XK_Shift_L };
     
@@ -187,22 +190,28 @@ dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode
         wrap_code = xcb_key_symbols_get_keycode( syms, shift );
     
     code = dummy_thing_to_keycode( context.conn, charAsCharStar );
-  
+
+    
     if( wrap_code ){
         xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *wrap_code, 0, none, 0, 0, 0 );  
         printf("wrapcode\n");
     }
 
-    else{
-        xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 0, none, 0, 0, 0 );  
-        xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 0, none, 0, 0, 0 );
-        //xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *charAsCharStar, 0, context.parent, 0, 0, 0 );  // have to look at xcb_keysyms
-        //xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *charAsCharStar, 0, context.parent, 0, 0, 0 );
+    else{ // *code || *charAsCharStar, context.parent || none
+        cookie = xcb_test_fake_input( context.conn, XCB_KEY_PRESS, *code, 
+                                     XCB_CURRENT_TIME, none, 0, 0, 0 );  
+        xcb_test_fake_input( context.conn, XCB_KEY_RELEASE, *code, 
+                                     XCB_CURRENT_TIME	, none, 0, 0, 0 );
+        
+        err = xcb_request_check(context.conn, cookie);
+        if (err)
+        {
+            printf("err ");
+            free(err);
+        }	
     }
-    printf("key press received by xtoq.c - xcb keycode '%s',  from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
-           , code, keyCode, window, aChar);
-    //printf("key press received by xtoq.c - xcb keycode '%s', wrapcode '%s' from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n"
-     //      , code, wrap_code, keyCode, window, aChar);
+    printf("key press received by xtoq.c - xcb keycode '%s',  from Mac keyCode '%i' in Mac window #%i - (ASCII %hu)\n", code, keyCode, window, aChar);
+
     /*if (wrap_code)
         free(wrap_code);
     if (code)
@@ -210,17 +219,15 @@ dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode
 }
 
 void
-dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window)
+dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window, int button)
 {
-    xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context.conn,
-                         XCB_BUTTON_PRESS,
-                         43,
-                         0,
-                         none,//context.parent, // remove context to see "UNKNOWN EVENT" message
-                         x, // has to be translated (?in the view)
-                         y,
-                         0 );
+    //xcb_window_t none = { XCB_NONE };
+    xcb_test_fake_input (context.conn,XCB_BUTTON_PRESS,1,XCB_CURRENT_TIME,
+                         context.parent,x,y,0);
+                         // x has to be translated (?in the view)
+    xcb_test_fake_input (context.conn, XCB_BUTTON_RELEASE,1,XCB_CURRENT_TIME,
+                         context.parent,	x,y,0);
+    
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 

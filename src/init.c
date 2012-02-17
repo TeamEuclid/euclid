@@ -26,6 +26,8 @@
 #include <string.h>
 #include "xtoq_internal.h"
 
+int _damage_event = 0;
+
 xcb_query_extension_reply_t *
 _xtoq_init_extension (xcb_connection_t *conn, char *extension_name)
 {

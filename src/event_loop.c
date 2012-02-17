@@ -102,7 +102,7 @@ void *run_event_loop (void *thread_arg_struct)
             cookie = xcb_damage_subtract_checked (root_context->conn,
                                                   root_context->damage,
                                                   region,
-                                                  NULL);
+                                                  0);
             _xtoq_request_check(root_context->conn, cookie, "Failed to subtract damage");
             // END TODO
 
@@ -170,4 +170,5 @@ void *run_event_loop (void *thread_arg_struct)
 			}
 		}
 	}
+    return NULL;
 }

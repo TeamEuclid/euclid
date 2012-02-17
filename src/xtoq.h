@@ -43,7 +43,7 @@
 // TODO: Remove this once we get the context_list in place. Right
 // now this is here for testing purposes to give an easy way to get the
 // root window's context in any function
-xtoq_context_t *root_context;
+extern xtoq_context_t *root_context;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
@@ -93,6 +93,6 @@ dummy_thing_to_keycode( xcb_connection_t *c, char *thing );
  * @param window The window that the key press was made in.
  */
 void
-dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window);
+dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window, int button);
 
 #endif // _XTOQ_H_

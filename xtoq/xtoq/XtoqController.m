@@ -164,7 +164,8 @@
                    ^{ dummy_xtoq_button_down (xcbContext,
                                         [event locationInWindow].x, 
                                         [event locationInWindow].y, 
-                                        (int)[event windowNumber]);;});
+                                        (int)[event windowNumber],
+                                        0);;});
 }
 
 // create a new image to redraw part of the screen 
@@ -268,7 +269,8 @@
 void eventHandler (xtoq_event_t event)
 {
     if (event.event_type == XTOQ_DAMAGE) {
-        NSLog(@"Got damage event");
+        // This message generates a lot of console spam - only uncomment when testing
+        //NSLog(@"Got damage event");
         [referenceToSelf updateImage];
     } else if (event.event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
