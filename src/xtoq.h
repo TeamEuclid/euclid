@@ -82,9 +82,8 @@ xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
  * @param keyCode The key pressed.
  */
 void
-dummy_xtoq_key_press (xtoq_context_t context, int window, unsigned short keyCode, unsigned short aChar, char *);
-uint8_t *
-dummy_thing_to_keycode( xcb_connection_t *c, char *thing );
+dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code);
+
 /**
  * Testing function
  * @param context xtoq_context_t 
