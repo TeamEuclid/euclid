@@ -18,6 +18,8 @@ hooks
 
 # Ignore object files
 *.o
+*.lo
+*la
 
 # Ignore latex intermediate files
 *.aux
@@ -37,3 +39,17 @@ config.status
 compile
 config.h
 Makefile
+Makefile.in
+libtool
+install-sh
+ltmain.sh
+config.guess
+config.h.in
+configure
+stamp-h1
+.deps
+aclocal.m4
+autom4te.cache
+config.sub
+depcomp
+missing

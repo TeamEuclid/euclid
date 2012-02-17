@@ -14,7 +14,6 @@ xtoqappdir = $(APPLE_APPLICATIONS_DIR)/$(APPLE_APPLICATION_NAME).app/Contents/Ma
 xtoqapp_PROGRAMS = xtoq
 
 xtoq_SOURCES = \
-	DisplayNumberController.m \
 	XtoqApplication.m \
 	XtoqController.m \
 	XtoqImageRep.m \
