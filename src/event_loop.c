@@ -123,22 +123,11 @@ void *run_event_loop (void *thread_arg_struct)
             case XCB_CREATE_NOTIFY: {
                 // Window created as child of root window
                 xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
-                
+                return_evt.context = _xtoq_window_created(event_conn, notify);
+                if (!return_evt.context)
+                    break;
                 return_evt.event_type = XTOQ_CREATE;
-                // Create the memory for a new context - this will need to be freed when
-                // the window is destroyed
-                return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = event_conn;
-                return_evt.context->window = notify->window;
-                return_evt.context->parent = notify->parent;
-                return_evt.context->x = notify->x;
-                return_evt.context->y = notify->y;
-                return_evt.context->window = notify->width;
-                return_evt.context->window = notify->height;
-
-                free(notify);
                 
-                // TODO: Add the context created here to the data structure
                 printf("Got create notify\n");
 				callback_ptr(return_evt);
 
@@ -151,6 +140,8 @@ void *run_event_loop (void *thread_arg_struct)
                 
                 // Memory for context will need to be freed by caller
                 // Only setting the window - other values will be garbage.
+                
+                _xtoq_remove_context_node(notify->window);
                 return_evt.context = malloc(sizeof(xtoq_context_t));
                 return_evt.context->conn = event_conn;
                 return_evt.context->window = notify->window;

@@ -27,13 +27,13 @@
 
 _xtoq_context_node *_xtoq_window_list_head = NULL;
 
-
-void
+xtoq_context_t *
 _xtoq_add_context_t(struct xtoq_context_t *context)
 {
     /* Does the window already exist */
+    /*
     if (_xtoq_get_context_node_by_window_id(context->window))
-        return;
+        return NULL;
     
     xtoq_context_t * new_context;
     new_context = malloc(sizeof(xtoq_context_t));
@@ -47,20 +47,20 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
     new_context->width = context->width;
     new_context->height = context->height;
     new_context->local_data = context->local_data;
-
+     */
     _xtoq_context_node *new_node;
     _xtoq_context_node *curr;
     _xtoq_context_node *prev;
     
     
     /* Create node to hold the new window */
-
+    
     new_node = malloc(sizeof(_xtoq_context_node));
     if (!new_node) {
         exit(1);
     }
-    
-    new_node->context = new_context;
+    new_node->context = context;
+    //new_node->context = new_context;
     
     /* Handle the case where this is the first node added */
     if (!_xtoq_window_list_head) {
@@ -79,7 +79,7 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
     }
     
     
-    return;
+    return new_node->context;
 }       
 
 _xtoq_context_node *
@@ -120,6 +120,8 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
             free(curr);
             return;
         }
+        else
+            curr = curr->next;
     }
     return;
 }
