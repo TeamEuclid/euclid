@@ -305,7 +305,7 @@
     
     //create an XtoqImageRep with the information from X
 //wrong context 
-    xcbImage = xtoq_get_image(xcbContext);
+    xcbImage = xtoq_get_image(windowContext);
     imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
     
     //draw the image into a rect
