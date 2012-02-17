@@ -88,6 +88,9 @@ id referenceToSelf;
 - (void) updateImage;
 
 
+- (void) createNewWindow: (xtoq_context_t *) windowContext;
+
+
 /**
  * a method for getting a window in the list by searching all keys
  * returns nil if no key is found.
