@@ -124,16 +124,6 @@
 	xtoq_start_event_loop(xcbContext, (void *) eventHandler);
 }
 
-- (IBAction)showDisplayChooser
-{
-   if (!displayNumberController){
-        displayNumberController = [[DisplayNumberController alloc] init];
-    }
-    NSLog(@"showing %@", displayNumberController);
-    [displayNumberController showWindow:self];
-    NSLog(@"opened %@", displayNumberController);	
-}
-
 - (void) keyDownInView: (NSNotification *) aNotification
 {
     NSDictionary *keyInfo = [aNotification userInfo];
