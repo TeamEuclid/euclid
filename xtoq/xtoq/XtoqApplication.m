@@ -26,47 +26,79 @@
 int XtoqApplicationMain(int argc, char** argv){
 
     char *scrn;
+    FILE *fp;
     scrn = findScreen(argc, argv);
+    /*const char *fifo_path = "/tmp/xtoq_fifo";
+    int ret = 0;
     
-    /*setenv("DISPLAY", scrn, 1);
-    mkfifo(scrn, 0);
+    ret = mkfifo(fifo_path, S_IRUSR | S_IWUSR);
+    if (ret == -1) {
+        NSLog(@"mkfifo unsuccessful");
+    }
+    /*ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
+    if (ret != 0) {
+        NSLog(@"problem with setenv");
+    }
+    
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CFBundleRef bundle = CFBundleGetMainBundle();
-        char *bundle_path = CFBundleGetDataPointerForName(bundle, CFSTR("xtoq.app"));
+        CFURLRef resourcesURL = CFBundleCopyBundleURL(bundle);
+        CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
+        char bundle_path[PATH_MAX];
+        CFStringGetCString( str, bundle_path, FILENAME_MAX, kCFStringEncodingASCII );
         
-        const char *startx_path = "//opt/X11/bin/startx";
-        char const *Xorg_path = "/opt/X11/bin/Xorg";
+        const char *startx_path = "/opt/X11/bin/startx";
+        const char *Xorg_path = "/opt/X11/bin/Xorg";
         char *xinitrc_path;
         asprintf(&xinitrc_path, "%s/Contents/Resources/X11/lib/X11/xinit/xinitrc", bundle_path);
+        NSLog(@"bundle_path=%s", bundle_path);
+        NSLog(@"xinitrc_path=%s", xinitrc_path);
         if (xinitrc_path == NULL) {
-            //... do something
+            //... perhaps create dir or exit program
             NSLog(@"xinitrc path is null");
         }
         
-        const char *argv[5];
-        argv[0] = startx_path;
-        argv[1] = xinitrc_path;
-        argv[2] = "--";
-        argv[3] = Xorg_path;
-        argv[4] = '\0';
+        const char *spawn[5];
+        spawn[0] = startx_path;
+        spawn[1] = xinitrc_path;
+        spawn[2] = "--";
+        spawn[3] = Xorg_path;
+        spawn[4] = '\0';
         
         pid_t child;
-        extern char **environ;
-        int error = posix_spawnp(&child, argv[0], NULL, NULL, argv, environ);
+        
+        int error = posix_spawnp(&child, spawn[0], NULL, NULL, spawn, environ);
         if (error) {
-            //... do something
+            //... exit program if connection was not made.
             NSLog(@"error with posix_spawnp");
         }
         
         int retval;
         waitpid(child, &retval, 0);
         if (retval != 0) {
-            //... do something
+            //... probably just exit here as well & set errno.
             NSLog(@"error with waitpid");
-        }        
-    });*/
+        }
+    });
     
+    // Read $DISPLAY from XTOQ_DISPLAY_FIFO
+
+    char *xtoq_fifo = NULL;
+    size_t read;
+    size_t len = 0;
+    
+    fp = fopen(fifo_path, "r");
+    if (fp == NULL) {
+        NSLog(@"Problem with fp");
+        //exit(1);
+    }
+    read = getline(&xtoq_fifo, &len, fp);
+    xtoq_fifo[len - 1] = '\0';
+    NSLog(@"from fifo: %s", xtoq_fifo);
+    fclose(fp);
+    // setenv("DISPLAY", scrn, 1);    
+    */
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
@@ -80,7 +112,7 @@ int XtoqApplicationMain(int argc, char** argv){
 
 
 char* findScreen(int argc, char **argv) {
-    int i;
+    /*int i;
     int j;
     int loc;
     char place;
@@ -101,7 +133,8 @@ char* findScreen(int argc, char **argv) {
     if ( loc != 0) {
         return argv[loc];
     }
-    else return ":1";
+    else */
+        return ":0";
     
 }
 

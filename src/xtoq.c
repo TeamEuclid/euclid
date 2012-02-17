@@ -74,8 +74,8 @@ xtoq_init(char *screen) {
     // Set width, height, x, & y from root_screen into the xtoq_context_t
     root_context->width = root_screen->width_in_pixels;
     root_context->height = root_screen->height_in_pixels;
-    root_context->x = 140;
-    root_context->y = 42;
+    root_context->x = 0;
+    root_context->y = 0;
     // TODO END
     
     xtoq_context_t init_reply;
@@ -85,8 +85,8 @@ xtoq_init(char *screen) {
     // Set width, height, x, & y from root_screen into the xtoq_context_t
     init_reply.width = root_screen->width_in_pixels;
     init_reply.height = root_screen->height_in_pixels;
-    init_reply.x = 140;
-    init_reply.y = 42;    
+    init_reply.x = 0;
+    init_reply.y = 0;    
     
     // TODO: May want to send &init_reply instead of root window
     _xtoq_init_damage(root_context);
