@@ -1,0 +1,406 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		E1D4D05614EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		E1D4D05814EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = ../Makefile.am; sourceTree = "<group>"; };
+		E1D4D05B14EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		E1D4D07314EE5011000AB51B /* context_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = context_list.c; sourceTree = "<group>"; };
+		E1D4D07614EE5011000AB51B /* data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data.h; sourceTree = "<group>"; };
+		E1D4D07714EE5011000AB51B /* event_loop.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = event_loop.c; sourceTree = "<group>"; };
+		E1D4D07A14EE5011000AB51B /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
+		E1D4D07F14EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		E1D4D08114EE5011000AB51B /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
+		E1D4D08414EE5011000AB51B /* window.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = window.c; sourceTree = "<group>"; };
+		E1D4D08714EE5011000AB51B /* xtoq.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xtoq.c; sourceTree = "<group>"; };
+		E1D4D08814EE5011000AB51B /* xtoq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xtoq.h; sourceTree = "<group>"; };
+		E1D4D08B14EE5011000AB51B /* xtoq_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xtoq_internal.h; sourceTree = "<group>"; };
+		E1D4D08D14EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		E1D4D09C14EE5011000AB51B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1D4D09D14EE5011000AB51B /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		E1D4D09E14EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		E1D4D09F14EE5011000AB51B /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		E1D4D0A014EE5011000AB51B /* mk_bundke.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mk_bundke.sh; sourceTree = "<group>"; };
+		E1D4D0A114EE5011000AB51B /* PkgInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PkgInfo; sourceTree = "<group>"; };
+		E1D4D0A414EE5011000AB51B /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
+		E1D4D0A614EE5011000AB51B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DisplayNumberDialog.xib; sourceTree = "<group>"; };
+		E1D4D0A814EE5011000AB51B /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E1D4D0A914EE5011000AB51B /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
+		E1D4D0AA14EE5011000AB51B /* Mac-Logo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo2.jpg"; sourceTree = "<group>"; };
+		E1D4D0AB14EE5011000AB51B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E1D4D0AE14EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		E1D4D0B114EE5011000AB51B /* XtoqApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqApplication.h; sourceTree = "<group>"; };
+		E1D4D0B214EE5011000AB51B /* XtoqApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqApplication.m; sourceTree = "<group>"; };
+		E1D4D0B414EE5011000AB51B /* XtoqController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqController.h; sourceTree = "<group>"; };
+		E1D4D0B514EE5011000AB51B /* XtoqController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqController.m; sourceTree = "<group>"; };
+		E1D4D0B714EE5011000AB51B /* XtoqImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqImageRep.h; sourceTree = "<group>"; };
+		E1D4D0B814EE5011000AB51B /* XtoqImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqImageRep.m; sourceTree = "<group>"; };
+		E1D4D0BA14EE5011000AB51B /* XtoqView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqView.h; sourceTree = "<group>"; };
+		E1D4D0BB14EE5011000AB51B /* XtoqView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqView.m; sourceTree = "<group>"; };
+		E1D4D0BD14EE5011000AB51B /* XtoqWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqWindow.h; sourceTree = "<group>"; };
+		E1D4D0BE14EE5011000AB51B /* XtoqWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqWindow.m; sourceTree = "<group>"; };
+		E1D4D0C814EE5011000AB51B /* xinitrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = xinitrc; sourceTree = "<group>"; };
+		E1D4D0CA14EE5011000AB51B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		E1D4D0CC14EE5011000AB51B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E1D4D0CD14EE5011000AB51B /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
+		E1D4D0CE14EE5011000AB51B /* Mac-Logo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo2.jpg"; sourceTree = "<group>"; };
+		E1D4D0CF14EE5011000AB51B /* xtoq-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "xtoq-Info.plist"; sourceTree = "<group>"; };
+		E1D4D0D014EE5011000AB51B /* xtoq-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xtoq-Prefix.pch"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		E1D4D04714EE4FBC000AB51B = {
+			isa = PBXGroup;
+			children = (
+				E1D4D05414EE5011000AB51B /* include */,
+				E1D4D05814EE5011000AB51B /* Makefile.am */,
+				E1D4D05914EE5011000AB51B /* man */,
+				E1D4D05D14EE5011000AB51B /* src */,
+				E1D4D0C014EE5011000AB51B /* xtoq */,
+			);
+			sourceTree = "<group>";
+		};
+		E1D4D05414EE5011000AB51B /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D05614EE5011000AB51B /* Makefile.am */,
+			);
+			name = include;
+			path = ../include;
+			sourceTree = "<group>";
+		};
+		E1D4D05914EE5011000AB51B /* man */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D05B14EE5011000AB51B /* Makefile.am */,
+			);
+			name = man;
+			path = ../man;
+			sourceTree = "<group>";
+		};
+		E1D4D05D14EE5011000AB51B /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D05E14EE5011000AB51B /* libcompositewm */,
+				E1D4D08D14EE5011000AB51B /* Makefile.am */,
+				E1D4D08F14EE5011000AB51B /* xtoq */,
+			);
+			name = src;
+			path = ../src;
+			sourceTree = "<group>";
+		};
+		E1D4D05E14EE5011000AB51B /* libcompositewm */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D07314EE5011000AB51B /* context_list.c */,
+				E1D4D07614EE5011000AB51B /* data.h */,
+				E1D4D07714EE5011000AB51B /* event_loop.c */,
+				E1D4D07A14EE5011000AB51B /* init.c */,
+				E1D4D07F14EE5011000AB51B /* Makefile.am */,
+				E1D4D08114EE5011000AB51B /* util.c */,
+				E1D4D08414EE5011000AB51B /* window.c */,
+				E1D4D08714EE5011000AB51B /* xtoq.c */,
+				E1D4D08814EE5011000AB51B /* xtoq.h */,
+				E1D4D08B14EE5011000AB51B /* xtoq_internal.h */,
+			);
+			path = libcompositewm;
+			sourceTree = "<group>";
+		};
+		E1D4D08F14EE5011000AB51B /* xtoq */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D09B14EE5011000AB51B /* bundle */,
+				E1D4D0AB14EE5011000AB51B /* main.m */,
+				E1D4D0AE14EE5011000AB51B /* Makefile.am */,
+				E1D4D0B114EE5011000AB51B /* XtoqApplication.h */,
+				E1D4D0B214EE5011000AB51B /* XtoqApplication.m */,
+				E1D4D0B414EE5011000AB51B /* XtoqController.h */,
+				E1D4D0B514EE5011000AB51B /* XtoqController.m */,
+				E1D4D0B714EE5011000AB51B /* XtoqImageRep.h */,
+				E1D4D0B814EE5011000AB51B /* XtoqImageRep.m */,
+				E1D4D0BA14EE5011000AB51B /* XtoqView.h */,
+				E1D4D0BB14EE5011000AB51B /* XtoqView.m */,
+				E1D4D0BD14EE5011000AB51B /* XtoqWindow.h */,
+				E1D4D0BE14EE5011000AB51B /* XtoqWindow.m */,
+			);
+			path = xtoq;
+			sourceTree = "<group>";
+		};
+		E1D4D09B14EE5011000AB51B /* bundle */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D09C14EE5011000AB51B /* Info.plist */,
+				E1D4D09D14EE5011000AB51B /* Makefile */,
+				E1D4D09E14EE5011000AB51B /* Makefile.am */,
+				E1D4D09F14EE5011000AB51B /* Makefile.in */,
+				E1D4D0A014EE5011000AB51B /* mk_bundke.sh */,
+				E1D4D0A114EE5011000AB51B /* PkgInfo */,
+				E1D4D0A214EE5011000AB51B /* Resources */,
+			);
+			path = bundle;
+			sourceTree = "<group>";
+		};
+		E1D4D0A214EE5011000AB51B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0A314EE5011000AB51B /* Credits.rtf */,
+				E1D4D0A514EE5011000AB51B /* DisplayNumberDialog.xib */,
+				E1D4D0A714EE5011000AB51B /* InfoPlist.strings */,
+				E1D4D0A914EE5011000AB51B /* Mac-Logo.jpg */,
+				E1D4D0AA14EE5011000AB51B /* Mac-Logo2.jpg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E1D4D0C014EE5011000AB51B /* xtoq */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C114EE5011000AB51B /* xtoq */,
+			);
+			name = xtoq;
+			path = ../xtoq;
+			sourceTree = "<group>";
+		};
+		E1D4D0C114EE5011000AB51B /* xtoq */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C214EE5011000AB51B /* Contents */,
+				E1D4D0C914EE5011000AB51B /* Credits.rtf */,
+				E1D4D0CB14EE5011000AB51B /* InfoPlist.strings */,
+				E1D4D0CD14EE5011000AB51B /* Mac-Logo.jpg */,
+				E1D4D0CE14EE5011000AB51B /* Mac-Logo2.jpg */,
+				E1D4D0CF14EE5011000AB51B /* xtoq-Info.plist */,
+				E1D4D0D014EE5011000AB51B /* xtoq-Prefix.pch */,
+			);
+			path = xtoq;
+			sourceTree = "<group>";
+		};
+		E1D4D0C214EE5011000AB51B /* Contents */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C314EE5011000AB51B /* Resources */,
+			);
+			path = Contents;
+			sourceTree = "<group>";
+		};
+		E1D4D0C314EE5011000AB51B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C414EE5011000AB51B /* X11 */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E1D4D0C414EE5011000AB51B /* X11 */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C514EE5011000AB51B /* lib */,
+			);
+			path = X11;
+			sourceTree = "<group>";
+		};
+		E1D4D0C514EE5011000AB51B /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C614EE5011000AB51B /* X11 */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E1D4D0C614EE5011000AB51B /* X11 */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C714EE5011000AB51B /* xinit */,
+			);
+			path = X11;
+			sourceTree = "<group>";
+		};
+		E1D4D0C714EE5011000AB51B /* xinit */ = {
+			isa = PBXGroup;
+			children = (
+				E1D4D0C814EE5011000AB51B /* xinitrc */,
+			);
+			path = xinit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		E1D4D04E14EE4FBD000AB51B /* xtoq-xcode */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E1D4D05114EE4FBD000AB51B /* Build configuration list for PBXLegacyTarget "xtoq-xcode" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = ../;
+			dependencies = (
+			);
+			name = "xtoq-xcode";
+			passBuildSettingsInEnvironment = 1;
+			productName = "xtoq-xcode";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		E1D4D04914EE4FBC000AB51B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = E1D4D04C14EE4FBC000AB51B /* Build configuration list for PBXProject "xtoq-xcode" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				English,
+			);
+			mainGroup = E1D4D04714EE4FBC000AB51B;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E1D4D04E14EE4FBD000AB51B /* xtoq-xcode */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXVariantGroup section */
+		E1D4D0A314EE5011000AB51B /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1D4D0A414EE5011000AB51B /* English */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		E1D4D0A514EE5011000AB51B /* DisplayNumberDialog.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1D4D0A614EE5011000AB51B /* English */,
+			);
+			name = DisplayNumberDialog.xib;
+			sourceTree = "<group>";
+		};
+		E1D4D0A714EE5011000AB51B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1D4D0A814EE5011000AB51B /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E1D4D0C914EE5011000AB51B /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1D4D0CA14EE5011000AB51B /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		E1D4D0CB14EE5011000AB51B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1D4D0CC14EE5011000AB51B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E1D4D04F14EE4FBD000AB51B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E1D4D05014EE4FBD000AB51B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E1D4D05214EE4FBD000AB51B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E1D4D05314EE4FBD000AB51B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E1D4D04C14EE4FBC000AB51B /* Build configuration list for PBXProject "xtoq-xcode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1D4D04F14EE4FBD000AB51B /* Debug */,
+				E1D4D05014EE4FBD000AB51B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1D4D05114EE4FBD000AB51B /* Build configuration list for PBXLegacyTarget "xtoq-xcode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1D4D05214EE4FBD000AB51B /* Debug */,
+				E1D4D05314EE4FBD000AB51B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E1D4D04914EE4FBC000AB51B /* Project object */;
+}
