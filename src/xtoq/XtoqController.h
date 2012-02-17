@@ -34,7 +34,6 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 #import <AppKit/AppKit.h>
-#import "DisplayNumberController.h"
 #import "XtoqWindow.h"
 #import "XtoqImageRep.h"
 #import "XtoqView.h"

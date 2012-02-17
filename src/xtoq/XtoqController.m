@@ -171,8 +171,9 @@
 - (void) updateImage {
 
     int numberOfRects = 1;
+	int i;
     
-    for (int i = 0; i < numberOfRects; i++) {
+    for (i = 0; i < numberOfRects; i++) {
     
         //NSLog(@"update Image");
         
