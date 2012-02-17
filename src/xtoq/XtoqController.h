@@ -54,7 +54,7 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-    xtoq_context_t xcbContext;
+    xtoq_context_t *xcbContext;
     xcb_image_t *imageT;
     XtoqImageRep *image;
     XtoqView *view;

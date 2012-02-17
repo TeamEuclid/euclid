@@ -38,7 +38,6 @@ SOFTWARE.
     NSImage *image2;
     NSString *file;
     
-    xtoq_context_t xcbContext;
     xcb_image_t *imageT;
 
     //mouse event 

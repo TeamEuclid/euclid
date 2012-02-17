@@ -49,16 +49,14 @@ extern xtoq_context_t *root_context;
  * Sets up the connection and grabs the root window from the specified screen
  * @param screen The screen that we wish to connect to
  */
-xtoq_context_t
+xtoq_context_t *
 xtoq_init(char *screen);
 
-
-
+/**
+ *
+ */
 xcb_image_t *
-xtoq_get_image(xtoq_context_t context);
-
-xtoq_event_t
-dummy_xtoq_wait_for_event(xtoq_context_t context);
+xtoq_get_image(xtoq_context_t *context);
 
 /**
  * Starts the event loop and listens on the connection specified in
@@ -73,7 +71,7 @@ dummy_xtoq_wait_for_event(xtoq_context_t context);
  * the return value.
  */
 int
-xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
+xtoq_start_event_loop (xtoq_context_t *root_context, void *callback);
 
 /**
  * Testing function
@@ -82,7 +80,7 @@ xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
  * @param keyCode The key pressed.
  */
 void
-dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code);
+dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
 
 /**
  * Testing function
@@ -92,6 +90,6 @@ dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code);
  * @param window The window that the key press was made in.
  */
 void
-dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window, int button);
+dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
 
 #endif // _XTOQ_H_

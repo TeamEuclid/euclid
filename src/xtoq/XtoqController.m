@@ -63,7 +63,8 @@
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
     
-    NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.height, xcbContext.x, xcbContext.y);
+    NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width, 
+          xcbContext->height, xcbContext->x, xcbContext->y);
     
     winList = [[NSMutableDictionary alloc] init];
     winCount = 0;
@@ -71,12 +72,14 @@
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
     
-    xtoqWindow = [[XtoqWindow alloc] initWithContentRect: NSMakeRect(xcbContext.x, xcbContext.y, xcbContext.width, xcbContext.height)
-                                               styleMask: (NSTitledWindowMask |
-                                                           NSMiniaturizableWindowMask |
-                                                           NSResizableWindowMask)
-                                                 backing: NSBackingStoreBuffered
-                                                   defer: YES];
+    xtoqWindow = [[XtoqWindow alloc] 
+                  initWithContentRect: NSMakeRect(xcbContext->x, xcbContext->y, 
+                                                  xcbContext->width, xcbContext->height)
+                            styleMask: (NSTitledWindowMask |
+                                        NSMiniaturizableWindowMask |
+                                        NSResizableWindowMask)
+                              backing: NSBackingStoreBuffered
+                                defer: YES];
 
     // Make the menu
     [self makeMenu];        
@@ -181,11 +184,11 @@
 }
 
 
-- (XtoqWindow *) getWindowInList: (xtoq_context_t)xtoqContxt {
+- (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
     
     id key;
     int index;
-    xtoq_context_t xqWinContxt;
+    xtoq_context_t *xqWinContxt;
     NSArray *keyArray = [winList allKeys];
     XtoqWindow *xqWin;
     
@@ -193,7 +196,7 @@
         key = [keyArray objectAtIndex:index];
         xqWin = [winList objectForKey:key];
         xqWinContxt = [xqWin getContext:xqWin];
-        if (xqWinContxt.window == xtoqContxt.window) {
+        if (xqWinContxt->window == xtoqContxt->window) {
             return xqWin;
         }
     }
@@ -203,7 +206,7 @@
 
 
 - (void) addWindowInList:(XtoqWindow *)xqWin 
-             withContext: (xtoq_context_t) aContext{
+             withContext: (xtoq_context_t *) aContext{
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
     [xqWin setContext:aContext withId:key];
     [winList setObject:xqWin forKey:key];
@@ -224,27 +227,38 @@
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     
-    id menubar = [NSMenu new];
-    id appMenuItem = [NSMenuItem new];
+    id menubar;
+    id appMenuItem;
+    
+    menubar = [NSMenu new];
+    appMenuItem = [NSMenuItem new];
     [menubar addItem:appMenuItem];
     [NSApp setMainMenu:menubar];    
     
-    id appMenu = [NSMenu new];
-    id appName = [[NSProcessInfo processInfo] processName];
+    id appMenu;
+    id appName;
+    appMenu = [NSMenu new];
+    appMenu = [[NSProcessInfo processInfo] processName];
     
     // About
-    id aboutTitle = [@"About " stringByAppendingString:appName];        
-    id aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    id aboutTitle;
+    id aboutMenuItem;
+    aboutTitle = [@"About " stringByAppendingString:appName];        
+
+    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
     // Quit    
-    id quitTitle = [@"Quit " stringByAppendingString:appName];
-    id quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    id quitTitle;
+    id quitMenuItem;
+    quitTitle = [@"Quit " stringByAppendingString:appName];
+    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    id window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
+    id window;
+    window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
     [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
     [window setTitle:appName];
     
