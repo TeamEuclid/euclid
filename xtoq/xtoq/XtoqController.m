@@ -272,14 +272,26 @@
     xcb_image_t *xcbImage;
     XtoqImageRep *imageRep;
     
+    NSLog(@"In createNewWindow");
+    NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);
     
-    newWindow =  [[XtoqWindow alloc] initWithContentRect: 
+   /* newWindow =  [[XtoqWindow alloc] initWithContentRect: 
                         NSMakeRect(windowContext->x, windowContext->y, windowContext->width, windowContext->height)
                                  styleMask: (NSTitledWindowMask |
                                  NSMiniaturizableWindowMask |
                                  NSResizableWindowMask)
                                  backing: NSBackingStoreBuffered
                                  defer: YES];
+    */
+    
+    newWindow =  [[XtoqWindow alloc] initWithContentRect: 
+                  NSMakeRect(100, 150, 1024,768)
+                                               styleMask: (NSTitledWindowMask |
+                                                           NSMiniaturizableWindowMask |
+                                                           NSResizableWindowMask)
+                                                 backing: NSBackingStoreBuffered
+                                                   defer: YES];
+
     
     windowContext->local_data = newWindow;
     
@@ -293,32 +305,31 @@
     imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
     
     //draw the image into a rect
-    NSRect imgRec = NSMakeRect(0, 0, [imageRep getWidth], [imageRep getHeight]);
+    NSRect imgRec = NSMakeRect(0,0, [imageRep getWidth], [imageRep getHeight]);
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
     
-//This is where I need to creat the window
+    //shows the window
     [newWindow makeKeyAndOrderFront:nil];
-    
-    // add view to its window
-    [[xtoqWindow contentView]  addSubview: newView]; 
+        
     
     // set the initial image in the window
     [newView setImage:imageRep];
-    originalWidth = [imageRep getWidth];
-    originalHeight = [imageRep getHeight];
     
-    NSLog(@"Pop up new window"); 
+    // add view to its window
+    [[newWindow contentView]  addSubview: newView]; 
     
-    // add root window to list, increment count of windows
+
+//Need to add to the widow list 
+ /*   // add root window to list, increment count of windows
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
     [xtoqWindow setContext:xcbContext withId:key];
     [xtoqWindow setRootDataPointer:xcbContext];
     [winList setObject:xtoqWindow forKey:key];
     ++winCount;
 
-
+*/
 
 
 }
