@@ -60,14 +60,14 @@
     
     
     // setup X connection and get the initial image from the server
-    NSLog(@"screen = %s", screen);
+NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
     
-    NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width, 
-          xcbContext->height, xcbContext->x, xcbContext->y);
+NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width, 
+      xcbContext->height, xcbContext->x, xcbContext->y);
     
     winList = [[NSMutableDictionary alloc] init];
-    winCount = 0;
+    winCount = 0;    
     
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
@@ -82,8 +82,9 @@
                                 defer: YES];
 
     // Make the menu
-    [self makeMenu];        
-    
+    // was getting a seg fault 11 with the menu so its out for now
+    // [self makeMenu];        
+
     //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];  
@@ -97,14 +98,14 @@
     [ourView setImage:image];
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
-    
+   
     // add root window to list, increment count of windows
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
     [xtoqWindow setContext:xcbContext withId:key];
     [xtoqWindow setRootDataPointer:xcbContext];
     [winList setObject:xtoqWindow forKey:key];
     ++winCount;
-    
+  
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyDownInView:)
@@ -279,32 +280,29 @@
     NSLog(@"In createNewWindow");
     NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);
     
-   /* newWindow =  [[XtoqWindow alloc] initWithContentRect: 
+    newWindow =  [[XtoqWindow alloc] initWithContentRect: 
                         NSMakeRect(windowContext->x, windowContext->y, windowContext->width, windowContext->height)
                                  styleMask: (NSTitledWindowMask |
                                  NSMiniaturizableWindowMask |
                                  NSResizableWindowMask)
                                  backing: NSBackingStoreBuffered
                                  defer: YES];
-    */
-    
-    newWindow =  [[XtoqWindow alloc] initWithContentRect: 
-                  NSMakeRect(100, 150, 1024,768)
-                                               styleMask: (NSTitledWindowMask |
-                                                           NSMiniaturizableWindowMask |
-                                                           NSResizableWindowMask)
-                                                 backing: NSBackingStoreBuffered
-                                                   defer: YES];
 
-    
+    // save the newWindow into the context
     windowContext->local_data = newWindow;
     
-    // need to add window to list
-    // addWindowInList:(XtoqWindow *)xqWin
+NSLog(@"wincount before adding the window = %i", winCount);
     
+    // add new window to list, increment count of windows
+    NSString *key = [NSString stringWithFormat:@"%d", winCount];
+    [xtoqWindow setContext:windowContext withId:key];
+    [xtoqWindow setRootDataPointer:windowContext];
+    [winList setObject:xtoqWindow forKey:key];
+    ++winCount;
     
-    //create an XtoqImageRep with the information from X
-//wrong context 
+NSLog(@"wincount = %i", winCount);
+    
+    // get image to darw
     xcbImage = xtoq_get_image(windowContext);
     imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
     
@@ -315,26 +313,13 @@
     newView = [[XtoqView alloc] initWithFrame:imgRec];
     
     //shows the window
-    [newWindow makeKeyAndOrderFront:nil];
-        
+    [newWindow makeKeyAndOrderFront:nil];        
     
     // set the initial image in the window
     [newView setImage:imageRep];
     
     // add view to its window
     [[newWindow contentView]  addSubview: newView]; 
-    
-
-//Need to add to the widow list 
- /*   // add root window to list, increment count of windows
-    NSString *key = [NSString stringWithFormat:@"%d", winCount];
-    [xtoqWindow setContext:xcbContext withId:key];
-    [xtoqWindow setRootDataPointer:xcbContext];
-    [winList setObject:xtoqWindow forKey:key];
-    ++winCount;
-
-*/
-
 
 }
 
