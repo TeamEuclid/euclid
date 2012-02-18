@@ -276,9 +276,7 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
     XtoqView *newView;
     xcb_image_t *xcbImage;
     XtoqImageRep *imageRep;
-    
-    NSLog(@"In createNewWindow");
-    NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);
+    //NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);
     
     newWindow =  [[XtoqWindow alloc] initWithContentRect: 
                         NSMakeRect(windowContext->x, windowContext->y, windowContext->width, windowContext->height)
@@ -291,16 +289,12 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
     // save the newWindow into the context
     windowContext->local_data = newWindow;
     
-NSLog(@"wincount before adding the window = %i", winCount);
-    
     // add new window to list, increment count of windows
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
     [xtoqWindow setContext:windowContext withId:key];
     [xtoqWindow setRootDataPointer:windowContext];
     [winList setObject:xtoqWindow forKey:key];
     ++winCount;
-    
-NSLog(@"wincount = %i", winCount);
     
     // get image to darw
     xcbImage = xtoq_get_image(windowContext);
@@ -326,10 +320,9 @@ NSLog(@"wincount = %i", winCount);
 - (void) destroyWindow: (xtoq_context_t *) windowContext {
     
     //remove from list
-        //removeWindowInLIst
     
     //close window
-    [windowContext->local_data close];
+    //[windowContext->local_data: close];
     
 }
 
@@ -345,6 +338,7 @@ void eventHandler (xtoq_event_t event)
         NSLog(@"Window was created");
         [referenceToSelf createNewWindow: event.context];
     } else if (event.event_type == XTOQ_DESTROY) {
+        NSLog(@"Window was destroyed");
         [referenceToSelf destroyWindow: event.context];
     } else { 
         NSLog(@"Hey I'm Not damage!"); 
