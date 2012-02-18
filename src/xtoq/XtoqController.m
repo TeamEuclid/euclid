@@ -323,7 +323,13 @@ NSLog(@"wincount = %i", winCount);
 
 }
 
-- (void) destroyWindow: (xtoq_context_t *) windowContext{
+- (void) destroyWindow: (xtoq_context_t *) windowContext {
+    
+    //remove from list
+        //removeWindowInLIst
+    
+    //close window
+    [windowContext->local_data close];
     
 }
 
@@ -339,7 +345,7 @@ void eventHandler (xtoq_event_t event)
         NSLog(@"Window was created");
         [referenceToSelf createNewWindow: event.context];
     } else if (event.event_type == XTOQ_DESTROY) {
-        [referenceToSelf updateImage];
+        [referenceToSelf destroyWindow: event.context];
     } else { 
         NSLog(@"Hey I'm Not damage!"); 
     }
