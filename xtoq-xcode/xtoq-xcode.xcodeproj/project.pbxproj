@@ -238,7 +238,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = ../;
+			buildWorkingDirectory = "/Users/AwesomeO/Documents/cs487/fa2011cs487-euclid/src/xtoq/bundle";
 			dependencies = (
 			);
 			name = "xtoq-xcode";
