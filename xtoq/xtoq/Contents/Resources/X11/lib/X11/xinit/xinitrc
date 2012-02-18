@@ -1,14 +1,8 @@
 #!/bin/sh
 
-userresources=$HOME/.Xresources
-usermodmap=$HOME/.Xmodmap
-sysresources=/usr/X11/lib/xinit/.Xresources
-sysmodmap=/usr/X11/lib/X11/xinit/.Xmodmap
-
-
 DIR="/tmp/xtoq_fifo"
 while [ true ]; do
     echo $DISPLAY > $DIR
     cat $DIR
-    sleep 5;
+    sleep 1000;
 #done

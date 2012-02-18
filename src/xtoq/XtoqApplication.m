@@ -38,7 +38,7 @@ int XtoqApplicationMain(int argc, char** argv){
         CFURLRef resourcesURL = CFBundleCopyBundleURL(bundle);
         CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
         char bundle_path[PATH_MAX];
-        CFStringGetCString( str, bundle_path, FILENAME_MAX, kCFStringEncodingASCII );
+        CFStringGetCString( str, bundle_path, PATH_MAX, kCFStringEncodingASCII );
         
         int len = strlen(bundle_path);
         bundle_path[len - 6] = 0;
