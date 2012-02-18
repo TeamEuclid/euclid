@@ -323,6 +323,10 @@ NSLog(@"wincount = %i", winCount);
 
 }
 
+- (void) destroyWindow: (xtoq_context_t *) windowContext{
+    
+}
+
 @end
 
 void eventHandler (xtoq_event_t event)

@@ -88,6 +88,8 @@ id referenceToSelf;
 
 
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
+- (void) destroyWindow:   (xtoq_context_t *) windowContext;
+
 
 
 /**
