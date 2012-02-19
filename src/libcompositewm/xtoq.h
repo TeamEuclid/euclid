@@ -94,4 +94,6 @@ dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code);
 void
 dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window, int button);
 
+xtoq_image_t
+test_xtoq_get_image(xtoq_context_t context);
 #endif // _XTOQ_H_

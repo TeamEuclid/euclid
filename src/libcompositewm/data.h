@@ -45,6 +45,10 @@ typedef struct xtoq_context_t {
     int y;
     int width;
     int height;
+    int damaged_x;
+    int damaged_y;
+    int damaged_width;
+    int damaged_height;
     void *local_data;   // Area for data client cares about
 } xtoq_context_t;
 
@@ -57,6 +61,14 @@ typedef struct image_data_t {
     uint8_t *data;
     int length;
 }  image_data_t;
+
+typedef struct xtoq_image_t {
+    xcb_image_t *image;
+    int x;
+    int y;
+    int width;
+    int height;
+} xtoq_image_t;
 
 // TODO: Decide where this variable needs to live.
 extern int _damage_event;

@@ -44,7 +44,7 @@
     // We might need implement GetSize
     windowSize =  NSMakeSize(imageData->width, imageData->size);
 
-    self = [super init];
+     self = [super init];
 	if (!self) {
 		return nil;
     }

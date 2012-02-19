@@ -24,7 +24,7 @@
  *  AppController.h
  *  xtoq
  *
-  *  TODO: rename this class to XtoqController
+ *  TODO: rename this class to XtoqController
  *  This was controller for the Popup to retreive the display number
  *  from the user.
  *
@@ -56,7 +56,9 @@ id referenceToSelf;
     
     xtoq_context_t xcbContext;
     xcb_image_t *imageT;
+    xtoq_image_t libImageT;
     XtoqImageRep *image;
+    XtoqImageRep *imageNew;
     XtoqView *view;
     NSString *file;
     NSImage *image2;
@@ -85,6 +87,7 @@ id referenceToSelf;
  * Put a new image in the window / view
  */
 - (void) updateImage;
+- (void) updateImageNew: (xtoq_context_t *) windowContext;
 
 
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
