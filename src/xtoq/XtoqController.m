@@ -330,6 +330,24 @@
 
 }
 
+
+/*typedef struct xtoq_context_t {
+ xcb_connection_t *conn;
+ xcb_drawable_t window;
+ xcb_window_t parent;
+ xcb_damage_damage_t damage;
+ int x;
+ int y;
+ int width;
+ int height;
+ int damaged_x;
+ int damaged_y;
+ int damaged_width;
+ int damaged_height;
+ void *local_data;   // Area for data client cares about
+ } xtoq_context_t;
+ */
+
 - (void) updateImageNew : (xtoq_context_t *) windowContext{
     
     int numberOfRects = 1;
@@ -337,21 +355,22 @@
     
     for (i = 0; i < numberOfRects; i++) {
         
-        //xcb_image_destroy(libImageT->image);
+        if (libImageT.image)
+            xcb_image_destroy(libImageT.image);
         libImageT = test_xtoq_get_image(*windowContext);
         NSLog(@"%i, %i, %i, %i", libImageT.x, libImageT.y, libImageT.width, libImageT.height);
         //int z = libImageT->image->width;
         // int y = libImageT->image->size;
         //        NSLog(@"%i", z);
-        NSLog(@"Past test_xtoq_get_image");
+        NSLog(@"Passed test_xtoq_get_image");
         imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image];
         
-        NSLog(@"Past initWithData");
+        NSLog(@"Passed initWithData");
         
         [ourView setPartialImage:imageNew x:0 y:0];
         
         //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-        NSRect rect = NSMakeRect(libImageT.x, libImageT.y, libImageT.width, libImageT.height);
+        NSRect rect = NSMakeRect(windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
         [ourView setNeedsDisplayInRect:rect];
     }
 }
