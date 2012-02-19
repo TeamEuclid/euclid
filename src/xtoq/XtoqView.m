@@ -131,7 +131,7 @@ mouseDown:(NSEvent *)mouseEvent {
     [self setNeedsDisplay:YES];
 }
 
-- (void)setPartialImage:(XtoqImageRep *)newImage{
+- (void)setPartialImage:(XtoqImageRep *)newImage x:(int)x y:(int)y{
     image = newImage;
     //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
     //[self window] flushWindow];
