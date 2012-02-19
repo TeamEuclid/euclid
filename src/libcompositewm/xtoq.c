@@ -28,6 +28,7 @@
 
 #include "xtoq.h"
 #include "xtoq_internal.h"
+#include "X11/keysym.h" //aaron
 #include <string.h>
 
 // aaron key stuff
@@ -91,7 +92,7 @@ xtoq_init(char *display) {
     _xtoq_add_context_t(root_context);
         
     syms = xcb_key_symbols_alloc(conn);
-    //_xtoq_init_extension(conn, "XTEST");
+    _xtoq_init_extension(conn, "XTEST");
 	_xtoq_init_extension(conn, "XKEYBOARD");
 
 	_xtoq_get_wm_atoms(root_context);
@@ -159,7 +160,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     
-    printf("key press received by xtoq.c - uint8_t '%i',  in Mac window #%i - \n", code,  window);
+    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context.window);
 }
 
 void

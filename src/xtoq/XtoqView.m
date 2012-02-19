@@ -104,16 +104,24 @@ keyDown:(NSEvent *)theEvent {
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
-    
+    NSRect bnd = [self bounds];
     //NSPoint p = [mouseEvent locationInWindow];
     //downPoint = [self convertPoint:p fromView:nil];
-    
-    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:mouseEvent 
-                                                            forKey:@"2"];
-    
+    CGFloat f = CGRectGetHeight(bnd);
+    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
+    [twoInfoDict setObject:mouseEvent forKey:@"1"];
+    [twoInfoDict setObject:n forKey:@"2"];
+
+    NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
+    //[mouseEvent locationInWindow].y = 0;
+
+    //NSDictionary * dictionary = [NSDictionary dictionaryWithObject:mouseEvent 
+    //                                                        forKey:@"2"];
+    	
     [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
                                       object:self 
-                                    userInfo:dictionary];
+                                    userInfo:twoInfoDict];
 }
 
 // This is getting called from the controller
@@ -123,7 +131,7 @@ mouseDown:(NSEvent *)mouseEvent {
     [self setNeedsDisplay:YES];
 }
 
-- (void)setPartialImage:(XtoqImageRep *)newImage {
+- (void)setPartialImage:(XtoqImageRep *)newImage{
     image = newImage;
     //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
     //[self window] flushWindow];

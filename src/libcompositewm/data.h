@@ -45,6 +45,10 @@ typedef struct xtoq_context_t {
     int y;
     int width;
     int height;
+    int damaged_x;
+    int damaged_y;
+    int damaged_width;
+    int damaged_height;
 	char *name;					/* The name of the window */
 	int wm_delete_set;			/* Flag for WM_DELETE_WINDOW, 1 if set */
     void *local_data;   // Area for data client cares about
@@ -59,6 +63,14 @@ typedef struct image_data_t {
     uint8_t *data;
     int length;
 }  image_data_t;
+
+typedef struct xtoq_image_t {
+    xcb_image_t *image;
+    int x;
+    int y;
+    int width;
+    int height;
+} xtoq_image_t;
 
 typedef void (*xtoq_event_cb_t) (xtoq_event_t const *event);
 

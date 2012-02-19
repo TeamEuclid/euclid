@@ -29,9 +29,7 @@
  *  from the user.
 
  */
-
 #import "XtoqController.h"
-
 
 @implementation XtoqController
 
@@ -45,7 +43,6 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     
-    
     //Setting environment variable $DISPLAY to screen.
     char *env = getenv("DISPLAY");
     NSLog(@"$DISPLAY = %s", env);
@@ -58,7 +55,7 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }
     
-    
+    //screen = ":1";// comment out
     // setup X connection and get the initial image from the server
 //NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
@@ -164,23 +161,32 @@
     printf( "\n--------------------------------------------\n" );
     // translate key here code = translate(charcharstar);
     NSLog(@"%s pressed", charcharstar);
-    uint8_t code = (unsigned char)0x10;
-    dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_key_press(rootContext, 
+    //uint8_t code = (unsigned char)0x10;
+    //uint8_t code = 
+    int i;
+    for( i = 0; i < 256; i++){
+        aChar++;
+        dispatch_async(xtoqDispatchQueue, 
+                   ^{ dummy_xtoq_key_press(xcbContext, 
                                      (int)[event windowNumber],
-                                     code) ;});
+                                     aChar) ;});
+    }
 }
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
 {
     NSDictionary *mouseDownInfo = [aNotification userInfo];
     // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
-    NSEvent * event = [mouseDownInfo objectForKey: @"2"];
+    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
+    //NSRect bnd = NSMakeRect(0,0,512,386);
+    NSNumber * heightAsNumber =  [NSNumber alloc];
+    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
+    CGFloat heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_button_down (rootContext,
                                         [event locationInWindow].x, 
-                                        [event locationInWindow].y, 
+                                        heightFloat - [event locationInWindow].y, 
                                         (int)[event windowNumber],
                                         0);;});
 }
@@ -200,7 +206,7 @@
         image = [[XtoqImageRep alloc] initWithData:imageT];
 
         [image topCrop];
-        [ourView setPartialImage:image];
+        [ourView setPartialImage:image x:0 y:0];
         
         //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
          NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
@@ -377,6 +383,31 @@
 }
 
 @end
+- (void) updateImageNew : (xtoq_context_t *) windowContext{
+    
+    int numberOfRects = 1;
+	int i;
+    
+    for (i = 0; i < numberOfRects; i++) {
+        
+        //xcb_image_destroy(libImageT->image);
+        libImageT = test_xtoq_get_image(*windowContext);
+        NSLog(@"%i, %i, %i, %i", libImageT.x, libImageT.y, libImageT.width, libImageT.height);
+        //int z = libImageT->image->width;
+        // int y = libImageT->image->size;
+        //        NSLog(@"%i", z);
+        NSLog(@"Past test_xtoq_get_image");
+        imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image];
+        
+        NSLog(@"Past initWithData");
+        
+        [ourView setPartialImage:imageNew];
+        
+        //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
+        NSRect rect = NSMakeRect(libImageT.x, libImageT.y, libImageT.width, libImageT.height);
+        [ourView setNeedsDisplayInRect:rect];
+    }
+}
 
 void eventHandler (xtoq_event_t *event)
 {

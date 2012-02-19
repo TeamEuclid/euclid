@@ -131,4 +131,6 @@ xtoq_request_close(xtoq_context_t *context);
 */
 
 
+xtoq_image_t
+test_xtoq_get_image(xtoq_context_t context);
 #endif // _XTOQ_H_
