@@ -76,6 +76,7 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
                   initWithContentRect: NSMakeRect(xcbContext->x, xcbContext->y, 
                                                   xcbContext->width, xcbContext->height)
                             styleMask: (NSTitledWindowMask |
+                                        NSClosableWindowMask |
                                         NSMiniaturizableWindowMask |
                                         NSResizableWindowMask)
                               backing: NSBackingStoreBuffered
@@ -272,19 +273,29 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
     
+    NSLog(@"windowContext");
+    NSLog(@"x = %i",windowContext->x);
+    NSLog(@"y = %i",windowContext->y);
+    NSLog(@"width = %i",windowContext->width);
+    NSLog(@"height = %i",windowContext->height);
+    
     XtoqWindow *newWindow;
     XtoqView *newView;
     xcb_image_t *xcbImage;
     XtoqImageRep *imageRep;
-    //NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);
+    //NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);    
     
-    newWindow =  [[XtoqWindow alloc] initWithContentRect: 
-                        NSMakeRect(windowContext->x, windowContext->y, windowContext->width, windowContext->height)
-                                 styleMask: (NSTitledWindowMask |
-                                 NSMiniaturizableWindowMask |
-                                 NSResizableWindowMask)
-                                 backing: NSBackingStoreBuffered
-                                 defer: YES];
+    newWindow =  [[XtoqWindow alloc] 
+                  initWithContentRect: NSMakeRect(windowContext->x, windowContext->y, 
+                                                  windowContext->width, windowContext->height)
+                  styleMask: (NSTitledWindowMask |
+                              NSClosableWindowMask |
+                              NSMiniaturizableWindowMask |
+                              NSResizableWindowMask)
+                  backing: NSBackingStoreBuffered
+                  defer: YES];
+    
+    [NSWindow standardWindowButton:NSWindowCloseButton forStyleMask:NSTitledWindowMask];
 
     // save the newWindow into the context
     windowContext->local_data = newWindow;
@@ -322,7 +333,18 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
     //remove from list
     
     //close window
-    //[windowContext->local_data: close];
+    NSLog(@"windowContext");
+    NSLog(@"x = %i",windowContext->x);
+    NSLog(@"y = %i",windowContext->y);
+    NSLog(@"width = %i",windowContext->width);
+    NSLog(@"height = %i",windowContext->height);
+
+
+    //[windowContext->local_data performClose:nil];
+  
+    //use [NSApplication keyWindow] to get the key window if needed
+
+    
     
 }
 
