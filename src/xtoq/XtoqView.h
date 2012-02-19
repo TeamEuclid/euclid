@@ -49,7 +49,7 @@ SOFTWARE.
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;
-- (void)setPartialImage:(XtoqImageRep *)newImage;
+- (void)setPartialImage:(XtoqImageRep *)newImage x:(int)x y:(int)y;
 - (id)initWithFrame:(NSRect)frame;
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
 

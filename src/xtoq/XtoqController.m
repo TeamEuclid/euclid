@@ -401,7 +401,7 @@
         
         NSLog(@"Past initWithData");
         
-        [ourView setPartialImage:imageNew];
+        [ourView setPartialImage:imageNew x:0 y:0];
         
         //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
         NSRect rect = NSMakeRect(libImageT.x, libImageT.y, libImageT.width, libImageT.height);
