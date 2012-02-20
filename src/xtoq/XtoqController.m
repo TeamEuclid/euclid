@@ -90,9 +90,11 @@
     // add view to its window
     [[xtoqWindow contentView]  addSubview: ourView];  
     // set the initial image in the window
-    [ourView setImage:image];
+    //[ourView setImage:image];
+
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
+    [ourView setPartialImage:imageNew x:0 y:0 dx:originalWidth dy:originalHeight];
 
     //set context
     [xtoqWindow setContext:rootContext];
@@ -400,14 +402,13 @@
        // imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image x:windowContext->damaged_x y:windowContext->damaged_y];
         imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image x:0 y:0];
 
-        int x_transformed =  0;//windowContext->damaged_x ;
-        int y_transformed = 0;//windowContext->height - windowContext->damaged_height - windowContext->damaged_y;
+        int x_transformed =  windowContext->damaged_x ;
+        int y_transformed =  windowContext->y + windowContext->damaged_y;
         int dWidth = windowContext->damaged_width;
         int dLength = windowContext->damaged_height;
         
-        [ourView setPartialImage:imageNew x:x_transformed y:y_transformed
-                              dx:dWidth dy:dLength ];
-        NSLog(@"%i, %i, %i, %i", x_transformed, y_transformed, dWidth, dLength);
+        [ourView setPartialImage:imageNew x:x_transformed y:y_transformed dx:dWidth dy:dLength ];
+        NSLog(@"%i, %i, %i, %i window-%i parent-%i", x_transformed, y_transformed, dWidth, dLength, windowContext->window, windowContext->parent);
         //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
       //  NSRect rect = NSMakeRect(windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
        // [ourView setNeedsDisplayInRect:rect];
