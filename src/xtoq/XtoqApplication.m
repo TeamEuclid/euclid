@@ -30,7 +30,7 @@ int XtoqApplicationMain(int argc, char** argv){
     // seems to error if file already exists
     mkfifo(fifo_path, S_IRUSR | S_IWUSR);    
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CFBundleRef bundle = CFBundleGetMainBundle();
         assert(bundle);
 
@@ -68,14 +68,15 @@ int XtoqApplicationMain(int argc, char** argv){
             NSLog(@"error with posix_spawnp");
             exit(1);
         }
-        
-        int retval;
-        waitpid(child, &retval, 0);
-        if (retval != 0) {
-            NSLog(@"The X11 server shutdown.");
-            exit(EXIT_SUCCESS);
-        }
-    });
+
+// TODO: Collect the zombie child in SIGCHLD  
+//        int retval;
+//        waitpid(child, &retval, 0);
+//        if (retval != 0) {
+//            NSLog(@"The X11 server shutdown.");
+//            exit(EXIT_SUCCESS);
+//        }
+//    });
     
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
     // Just giving up on this, too much time spent spinning wheels.
@@ -86,7 +87,7 @@ int XtoqApplicationMain(int argc, char** argv){
     
     fp = fopen(fifo_path, "r");
     assert(fp);
-#if 0
+#if 1
     bytes_read = getline(&scrn, &len, fp);
 #else
     scrn=":0";

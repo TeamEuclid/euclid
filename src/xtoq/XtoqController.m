@@ -219,8 +219,16 @@
 }
 
 
-- (void) setScreen:(char *)scrn {
-    screen = scrn;
+- (void) setScreen:(const char *)scrn {
+    free(screen);
+    screen = strdup(scrn);
+    NSLog(@"screen = %s", screen);
+    if(screen == NULL) {
+        perror(strerror(errno));
+    }
+    else {
+        setenv("DISPLAY", screen, 1);
+    }
 }
 
 - (void) makeMenu {

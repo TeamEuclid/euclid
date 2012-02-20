@@ -110,7 +110,7 @@ id referenceToSelf;
 /**
  * Sets the screen to command line argument.
  */
-- (void) setScreen: (char *) scrn;
+- (void) setScreen: (const char *) scrn;
 
 @end
 
