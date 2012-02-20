@@ -83,8 +83,7 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
                                 defer: YES];
 
     // Make the menu
-    // was getting a seg fault 11 with the menu so its out for now
-    // [self makeMenu];        
+    [self makeMenu];        
 
     //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
@@ -226,9 +225,7 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
 }
 
 - (void) makeMenu {
-    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-    
+    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
     NSMenu *menubar;
     NSMenuItem *appMenuItem;
     NSMenu *appMenu;
@@ -237,34 +234,33 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
     NSMenuItem *aboutMenuItem;
     NSString *quitTitle;
     NSMenuItem *quitMenuItem;
-    NSWindow *window;
-    
-    menubar = [[NSMenu alloc] init];
-    appMenuItem = [[NSMenuItem alloc] init];
+
+    menubar = [[NSMenu new] autorelease];
+    appMenuItem = [[NSMenuItem new] autorelease];
     [menubar addItem:appMenuItem];
     [NSApp setMainMenu:menubar];    
     
-    appMenu = [NSMenu new];
+    appMenu = [[NSMenu new] autorelease];
     appName = [[NSProcessInfo processInfo] processName];
     
     // About
     aboutTitle = [@"About " stringByAppendingString:appName];        
-    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle
+										action:NULL
+										keyEquivalent:@"a"]; // About is greyed out since action is null
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
     // Quit    
     quitTitle = [@"Quit " stringByAppendingString:appName];
-    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle
+									   action:@selector(terminate:)
+									   keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
-    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
-    [window setTitle:appName];
-    
-    appMenu = [NSMenu new];
-    appMenuItem = [NSMenuItem new];
+    appMenu = [[NSMenu new] autorelease];
+    appMenuItem = [[NSMenuItem new] autorelease];
     [menubar addItem:appMenuItem];
     [NSApp setMainMenu:menubar]; 
 }
