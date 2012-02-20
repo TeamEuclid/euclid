@@ -43,7 +43,7 @@ initWithFrame:(NSRect)frame {
 }
 
 /**
- *  This function draws the initial image to the window.
+ *  Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
  */
 - (void)
 drawRect:(NSRect)dirtyRect {
@@ -54,7 +54,7 @@ drawRect:(NSRect)dirtyRect {
     [rectList count:rectInt];
     NSLog(@"rectInt = %ld", (long)rectInt);*/
     
-    [image drawInRect:dirtyRect];
+    [image draw];//InRect:dirtyRect];
 
     //[[self window] flushWindow];
     
@@ -128,14 +128,18 @@ mouseDown:(NSEvent *)mouseEvent {
 - (void)setImage:(XtoqImageRep *)newImage {
     image = newImage;
     //[[self window] flushWindow];
-    [self setNeedsDisplay:YES];
+    //[self setNeedsDisplay:YES];
 }
 
-- (void)setPartialImage:(XtoqImageRep *)newImage x:(int)x y:(int)y{
+- (void)setPartialImage:(XtoqImageRep *)newImage x:(int)x y:(int)y dx:(int)dx dy:(int)dy{
+    //sleep(1);
     image = newImage;
-    //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-    //[self window] flushWindow];
-    //[self setNeedsDisplayInRect:imageRec];
+    NSLog(@" imageRec %i %i   %i %i", x,y,dx,dy );
+    NSRect imageRec = NSMakeRect(x, y, dx, dy);
+    
+    //[image drawInRect:imageRec];
+    //[[self window] flushWindow];
+    [self setNeedsDisplayInRect:imageRec];
 }
 
 - (BOOL)isOpaque{
