@@ -80,7 +80,7 @@
     
     //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];  
+    image = [[XtoqImageRep alloc] initWithData:imageT x:0 y:0];  
     //draw the image into a rect
     NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
@@ -349,7 +349,7 @@
  */
 
 - (void) updateImageNew : (xtoq_context_t *) windowContext{
-    
+   // sleep(1);
     int numberOfRects = 1;
 	int i;
     
@@ -358,20 +358,24 @@
         if (libImageT.image)
             xcb_image_destroy(libImageT.image);
         libImageT = test_xtoq_get_image(*windowContext);
-        NSLog(@"%i, %i, %i, %i", libImageT.x, libImageT.y, libImageT.width, libImageT.height);
+        NSLog(@"%i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
         //int z = libImageT->image->width;
         // int y = libImageT->image->size;
         //        NSLog(@"%i", z);
-        NSLog(@"Passed test_xtoq_get_image");
-        imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image];
+       // imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image x:windowContext->damaged_x y:windowContext->damaged_y];
+        imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image x:0 y:0];
+
+        int x_transformed =  0;//windowContext->damaged_x ;
+        int y_transformed = 0;//windowContext->height - windowContext->damaged_height - windowContext->damaged_y;
+        int dWidth = windowContext->damaged_width;
+        int dLength = windowContext->damaged_height;
         
-        NSLog(@"Passed initWithData");
-        
-        [ourView setPartialImage:imageNew x:0 y:0];
-        
+        [ourView setPartialImage:imageNew x:x_transformed y:y_transformed
+                              dx:dWidth dy:dLength ];
+        NSLog(@"%i, %i, %i, %i", x_transformed, y_transformed, dWidth, dLength);
         //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-        NSRect rect = NSMakeRect(windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
-        [ourView setNeedsDisplayInRect:rect];
+      //  NSRect rect = NSMakeRect(windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+       // [ourView setNeedsDisplayInRect:rect];
     }
 }
 

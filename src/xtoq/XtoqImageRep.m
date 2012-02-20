@@ -40,11 +40,11 @@
 }
 
 
-- (id)initWithData:(xcb_image_t *)imageData{
+- (id)initWithData:(xcb_image_t *)imageData x:(int)x y:(int)y{
     // We might need implement GetSize
     windowSize =  NSMakeSize(imageData->width, imageData->size);
 
-     self = [super init];
+    self = [super init];
 	if (!self) {
 		return nil;
     }
@@ -72,7 +72,8 @@
     width = CGImageGetWidth(cgImage);
     height = CGImageGetHeight(cgImage);
     size = NSMakeSize (width, height);
-    
+    imageX =x;
+    imageY =y;
     return self;
 }
 
@@ -97,7 +98,7 @@
 		return NO;
 	}
     
-    CGContextDrawImage(contextMac, CGRectMake(0, 0, width, height), cgImage);
+    CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
     
 	return YES;
 }
