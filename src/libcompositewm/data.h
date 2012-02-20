@@ -58,6 +58,8 @@ typedef struct image_data_t {
     int length;
 }  image_data_t;
 
+typedef void (*xtoq_event_cb_t) (xtoq_event_t const *event);
+
 // TODO: Decide where this variable needs to live.
 extern int _damage_event;
 

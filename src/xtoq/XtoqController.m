@@ -229,37 +229,36 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     
-    id menubar;
-    id appMenuItem;
+    NSMenu *menubar;
+    NSMenuItem *appMenuItem;
+    NSMenu *appMenu;
+    NSString *appName;
+    NSString *aboutTitle;
+    NSMenuItem *aboutMenuItem;
+    NSString *quitTitle;
+    NSMenuItem *quitMenuItem;
+    NSWindow *window;
     
-    menubar = [NSMenu new];
-    appMenuItem = [NSMenuItem new];
+    menubar = [[NSMenu alloc] init];
+    appMenuItem = [[NSMenuItem alloc] init];
     [menubar addItem:appMenuItem];
     [NSApp setMainMenu:menubar];    
     
-    id appMenu;
-    id appName;
     appMenu = [NSMenu new];
-    appMenu = [[NSProcessInfo processInfo] processName];
+    appName = [[NSProcessInfo processInfo] processName];
     
     // About
-    id aboutTitle;
-    id aboutMenuItem;
     aboutTitle = [@"About " stringByAppendingString:appName];        
-
     aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
     // Quit    
-    id quitTitle;
-    id quitMenuItem;
     quitTitle = [@"Quit " stringByAppendingString:appName];
     quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    id window;
     window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
     [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
     [window setTitle:appName];
@@ -350,20 +349,20 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
 
 @end
 
-void eventHandler (xtoq_event_t event)
+void eventHandler (xtoq_event_t *event)
 {
-    if (event.event_type == XTOQ_DAMAGE) {
+    if (event->event_type == XTOQ_DAMAGE) {
         // This message generates a lot of console spam - only uncomment when testing
         //NSLog(@"Got damage event");
         [referenceToSelf updateImage];
-    } else if (event.event_type == XTOQ_CREATE) {
+    } else if (event->event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
-        [referenceToSelf createNewWindow: event.context];
-    } else if (event.event_type == XTOQ_DESTROY) {
+        [referenceToSelf createNewWindow: event->context];
+    } else if (event->event_type == XTOQ_DESTROY) {
         NSLog(@"Window was destroyed");
-        [referenceToSelf destroyWindow: event.context];
+        [referenceToSelf destroyWindow: event->context];
     } else { 
         NSLog(@"Hey I'm Not damage!"); 
     }
-    
+    free(event);
 }

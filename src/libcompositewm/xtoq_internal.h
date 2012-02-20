@@ -40,8 +40,8 @@
  * Strucuture used to pass nesessary data to xtoq_start_event_loop.
  */
 typedef struct xtoq_event_connetion {
-	xcb_connection_t *conn;		/* Connection to listen to events on */
-	void * event_callback;		/* Fuction to call when event caught */
+	xcb_connection_t *conn;	          /* Connection to listen to events on */
+	xtoq_event_cb_t event_callback;   /* Fuction to call when event caught */
 } xtoq_event_connection;
 
 /* util.c */
@@ -129,7 +129,7 @@ _xtoq_init_xfixes (xtoq_context_t *contxt);
  */
 int
 _xtoq_start_event_loop (xcb_connection_t *conn,
-						void *event_callback);
+						xtoq_event_cb_t event_callback);
 
 /****************
  * context_list.c

@@ -34,6 +34,7 @@
 #define XK_Shift_L                       0xffe1
 xcb_key_symbols_t *syms = NULL;
 // end aaron key stuff
+
 xtoq_context_t *root_context = NULL;
 
 // This init function needs set the window to be registered for events!
@@ -61,11 +62,7 @@ xtoq_init(char *screen) {
                                   XCB_CW_EVENT_MASK, mask_values);
 
 	xcb_flush(conn);
-    
-    // TODO: Creating this reference to the root window so there is a way
-    // to get at it from other functions - since we don't have a data
-    // structure for the windows yet. This should be deleted later
-    // because this is getting VERY HACKY
+
     root_context = malloc(sizeof(xtoq_context_t));
     root_context->conn = conn;
     root_context->parent = 0;
@@ -76,24 +73,12 @@ xtoq_init(char *screen) {
     root_context->height = root_screen->height_in_pixels;
     root_context->x = 0;
     root_context->y = 0;
-    // TODO END
-    
-    xtoq_context_t init_reply;
-    init_reply.conn = conn;
-    init_reply.window = root_window;
-    
-    // Set width, height, x, & y from root_screen into the xtoq_context_t
-    init_reply.width = root_screen->width_in_pixels;
-    init_reply.height = root_screen->height_in_pixels;
-    init_reply.x = 0;
-    init_reply.y = 0;    
-    
-    // TODO: May want to send &init_reply instead of root window
+
     _xtoq_init_damage(root_context);
     
     _xtoq_init_xfixes(root_context);
     
-    _xtoq_add_context_t(&init_reply);
+    _xtoq_add_context_t(root_context);
         
     syms = xcb_key_symbols_alloc(conn);
     //_xtoq_init_extension(conn, "XTEST");
@@ -127,10 +112,11 @@ xtoq_get_image(xtoq_context_t *context) {
 }
 
 int 
-xtoq_start_event_loop (xtoq_context_t *root_context, void *callback)
+xtoq_start_event_loop (xtoq_context_t *context,
+                       xtoq_event_cb_t callback)
 {
 	/* Simply call our internal function to do the actual setup */
-	return _xtoq_start_event_loop(root_context->conn, callback);
+	return _xtoq_start_event_loop(context->conn, callback);
 }
 
 

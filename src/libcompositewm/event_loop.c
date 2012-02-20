@@ -31,7 +31,7 @@
  
 typedef struct _connection_data {
 	xcb_connection_t *conn;
-	void * callback;
+	xtoq_event_cb_t callback;
 } _connection_data;
 
 /* The thread that is running the event loop */
@@ -44,7 +44,7 @@ void *run_event_loop(void *thread_arg_struct);
 
 int
 _xtoq_start_event_loop (xcb_connection_t *conn,
-						void *event_callback)
+						xtoq_event_cb_t event_callback)
 {
 	_connection_data *conn_data;
     
@@ -65,8 +65,8 @@ void *run_event_loop (void *thread_arg_struct)
 	_connection_data *conn_data;
 	xcb_connection_t *event_conn;
 	xcb_generic_event_t *evt;
-	xtoq_event_t return_evt;
-    void (*callback_ptr) (xtoq_event_t event);
+	xtoq_event_t *return_evt;
+    xtoq_event_cb_t callback_ptr;
 
 	conn_data = thread_arg_struct;
 	event_conn = conn_data->conn;
@@ -80,8 +80,9 @@ void *run_event_loop (void *thread_arg_struct)
     while ((evt = xcb_wait_for_event(event_conn))) {
 		if ((evt->response_type & ~0x80) == _damage_event) {
             xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
-			return_evt.event_type = XTOQ_DAMAGE;
-			return_evt.context = NULL;
+            return_evt = malloc(sizeof(xtoq_event_t));
+			return_evt->event_type = XTOQ_DAMAGE;
+			return_evt->context = NULL;
             
             // TODO: Do this better - in a different function, but a least we're doing some
             // damage processing. This just assumes that its the root window, and that
@@ -116,17 +117,21 @@ void *run_event_loop (void *thread_arg_struct)
                        exevnt->window, exevnt->x, exevnt->y);
                 printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
                 
-                return_evt.event_type = XTOQ_EXPOSE;
+				return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_EXPOSE;
                 free(exevnt);
                 callback_ptr(return_evt);
             }
             case XCB_CREATE_NOTIFY: {
                 // Window created as child of root window
                 xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
-                return_evt.context = _xtoq_window_created(event_conn, notify);
-                if (!return_evt.context)
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->context = _xtoq_window_created(event_conn, notify);
+                if (!return_evt->context) {
+                    free(return_evt);
                     break;
-                return_evt.event_type = XTOQ_CREATE;
+                }
+                return_evt->event_type = XTOQ_CREATE;
                 
                 printf("Got create notify\n");
 				callback_ptr(return_evt);
@@ -136,15 +141,16 @@ void *run_event_loop (void *thread_arg_struct)
             case XCB_DESTROY_NOTIFY: {
                 // Window destroyed in root window
                 xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
-                return_evt.event_type = XTOQ_DESTROY;
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_DESTROY;
                 
                 // Memory for context will need to be freed by caller
                 // Only setting the window - other values will be garbage.
                 
                 _xtoq_remove_context_node(notify->window);
-                return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = event_conn;
-                return_evt.context->window = notify->window;
+                return_evt->context = malloc(sizeof(xtoq_context_t));
+                return_evt->context->conn = event_conn;
+                return_evt->context->window = notify->window;
                 
                 free(notify);
                 				

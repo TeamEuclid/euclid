@@ -117,5 +117,6 @@ id referenceToSelf;
 /**
  * Callback function that will receive events from the xtoq event loop
  * once it is started.
+ * @param event The event received.
  */
-void eventHandler (xtoq_event_t event);
+void eventHandler (xtoq_event_t *event);
