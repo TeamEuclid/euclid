@@ -264,14 +264,6 @@
 
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
-   /*
-    NSLog(@"windowContext");
-    NSLog(@"x = %i",windowContext->x);
-    NSLog(@"y = %i",windowContext->y);
-    NSLog(@"width = %i",windowContext->width);
-    NSLog(@"height = %i",windowContext->height);
-    NSLog(@"Window title \"%s\" ",windowContext->name);
-  */  
     
     XtoqWindow *newWindow;
     XtoqView *newView;

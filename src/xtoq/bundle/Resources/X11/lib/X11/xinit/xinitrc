@@ -1,0 +1,3 @@
+#!/bin/sh
+echo $DISPLAY > "/tmp/xtoq_fifo"
+while true; do sleep 100000; done
