@@ -23,6 +23,8 @@
 
 @implementation XtoqWindow
 
+
+
 -(id) initWithContentRect:(NSRect)contentRect 
                 styleMask:(NSUInteger)aStyle 
                   backing:(NSBackingStoreType)bufferingType 
@@ -51,5 +53,20 @@
 -(void) setRootDataPointer:(xtoq_context_t)xqContext {
     xtoqLocalData = xqContext.local_data;
 }
+
+
+- (BOOL)windowShouldClose:(id)sender {
+    //use dispatch_async() to handle the actual close
+    
+    //  xtoq_close_window(xtoq_context_t *). The window being closed should have a reference to its context, so this is what it passes in.
+    
+  //  dispatch_async(xtoqDispatchQueue, 
+  //                 ^{ xtoq_close_window ([self getContext]);});
+    
+    // always return no
+    return NO;
+}
+
+
 
 @end

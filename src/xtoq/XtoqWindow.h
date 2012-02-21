@@ -57,4 +57,7 @@
  */
 -(void) setRootDataPointer: (xtoq_context_t *) xqContext;
 
+- (BOOL)windowShouldClose:(id)sender;
+
+
 @end
