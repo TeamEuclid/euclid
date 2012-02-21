@@ -55,6 +55,22 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
     return context;
 }
 
+xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
+    
+  //  if (_xtoq_get_context_node_by_window_id(event->window) == NULL)
+    //    return NULL;
+    
+    xtoq_context_t *context = _xtoq_get_context_node_by_window_id(event->window);
+    
+    // Destroy the damage object associated with the window.
+    //free(context->damage);
+    
+    // Call the remove function in context_list.c
+    _xtoq_remove_context_node(context->window);
+    
+    //Returns the pointer for the context that was removed from the list.
+    return context;
+}
 
 
 
