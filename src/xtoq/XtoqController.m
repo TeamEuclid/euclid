@@ -344,7 +344,7 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
 }
 
 - (void) destroy: (NSNotification *) aNotification {    
-    
+/*    
     NSDictionary *windowThing = [aNotification userInfo];
 
     XtoqWindow *aWindow = [windowThing objectForKey: @"1"];
@@ -356,13 +356,12 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
     NSLog(@"y = %i",theContext->y);
     NSLog(@"width = %i",theContext->width);
     NSLog(@"height = %i",theContext->height);
-    
+*/    
     //use dispatch_async() to handle the actual close 
     //  xtoq_close_window(xtoq_context_t *). 
     //  The window being closed should have a reference to its context, so this is what it passes in.
       dispatch_async(xtoqDispatchQueue, ^{
-          NSLog(@"Hulk SMASH");          
-          //xtoq_close_window(theContext);
+          NSLog(@"Hulk SMASH! Need to call xtoq_close_window(theContext)");
       });
 }
 
