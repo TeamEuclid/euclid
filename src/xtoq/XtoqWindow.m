@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 Ben Huddle
+/*Copyright (C) 2012 Ben Huddle, Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -56,12 +56,12 @@
 
 
 - (BOOL)windowShouldClose:(id)sender {
-    //use dispatch_async() to handle the actual close
+    NSLog(@"I didn't close");
+    //use dispatch_async() to handle the actual close    
     
-    //  xtoq_close_window(xtoq_context_t *). The window being closed should have a reference to its context, so this is what it passes in.
-    
-  //  dispatch_async(xtoqDispatchQueue, 
-  //                 ^{ xtoq_close_window ([self getContext]);});
+    //  xtoq_close_window(xtoq_context_t *). 
+    //  The window being closed should have a reference to its context, so this is what it passes in.
+
     
     // always return no
     return NO;

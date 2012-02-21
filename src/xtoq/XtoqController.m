@@ -325,22 +325,17 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext->width,
 
 - (void) destroyWindow: (xtoq_context_t *) windowContext {
     
-    //remove from list
+    // TODO: remove from list
     
-    //close window
+    // to help see if the right context is returned
     NSLog(@"windowContext");
     NSLog(@"x = %i",windowContext->x);
     NSLog(@"y = %i",windowContext->y);
     NSLog(@"width = %i",windowContext->width);
     NSLog(@"height = %i",windowContext->height);
-
-
-    //[windowContext->local_data performClose:nil];
-  
-    //use [NSApplication keyWindow] to get the key window if needed
-
     
-    
+    //close window
+    [windowContext->local_data close];
 }
 
 @end
