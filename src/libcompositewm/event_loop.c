@@ -141,16 +141,18 @@ void *run_event_loop (void *thread_arg_struct)
             case XCB_DESTROY_NOTIFY: {
                 // Window destroyed in root window
                 xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
+                xtoq_context_t *context = _xtoq_destroy_window(notify);
+                
                 return_evt = malloc(sizeof(xtoq_event_t));
                 return_evt->event_type = XTOQ_DESTROY;
                 
                 // Memory for context will need to be freed by caller
                 // Only setting the window - other values will be garbage.
                 
-                _xtoq_remove_context_node(notify->window);
-                return_evt->context = malloc(sizeof(xtoq_context_t));
-                return_evt->context->conn = event_conn;
-                return_evt->context->window = notify->window;
+                //_xtoq_remove_context_node(notify->window);
+                return_evt->context = context;
+                //return_evt->context->conn = event_conn;
+                //return_evt->context->window = notify->window;
                 
                 free(notify);
                 				
@@ -158,7 +160,7 @@ void *run_event_loop (void *thread_arg_struct)
                 // Need to figure out where memory is freed.
                 
                 callback_ptr(return_evt);
-                
+                free(context);
                 break;
             }
             case XCB_KEY_PRESS: {
