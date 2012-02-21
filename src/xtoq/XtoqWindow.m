@@ -30,6 +30,8 @@
                   backing:(NSBackingStoreType)bufferingType 
                     defer:(BOOL)flag {
     
+    notificationCenter = [NSNotificationCenter defaultCenter];
+    
     XtoqWindow *result = [super initWithContentRect:contentRect
                                         styleMask:aStyle
                                           backing:bufferingType
@@ -56,12 +58,15 @@
 
 
 - (BOOL)windowShouldClose:(id)sender {
-    NSLog(@"I didn't close");
-    //use dispatch_async() to handle the actual close    
     
-    //  xtoq_close_window(xtoq_context_t *). 
-    //  The window being closed should have a reference to its context, so this is what it passes in.
-
+    NSLog(@"I didn't close");
+    
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:sender 
+                                                            forKey:@"1"];
+    
+    [notificationCenter postNotificationName:@"XTOQdestroyTheWindow" 
+                                      object:self
+                                    userInfo:dictionary];
     
     // always return no
     return NO;
