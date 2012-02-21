@@ -395,7 +395,7 @@
         imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image x:0 y:0];
 
         int x_transformed =  windowContext->damaged_x ;
-        int y_transformed =  windowContext->y + windowContext->damaged_y;
+        int y_transformed =   windowContext->damaged_y;
         int dWidth = windowContext->damaged_width;
         int dLength = windowContext->damaged_height;
         
