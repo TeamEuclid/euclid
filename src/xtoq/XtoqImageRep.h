@@ -32,14 +32,19 @@
 @interface XtoqImageRep : NSImageRep {
     struct CGImage *cgImage;
     xcb_image_t *imageT;
-    CGFloat imageX ;
-    CGFloat imageY;
     NSSize size;
     CGFloat width;
     CGFloat height;
     NSArray *imageTypes;
-    NSSize windowSize;    
+    NSSize windowSize; 
+    float imageX;
+    float imageY;
 }
+
+- (float)imageX;
+- (float)imageY;
+
+
 /**
  * Return an NSArray of supported file types, currently nil
  * @return An array of supported image file types.

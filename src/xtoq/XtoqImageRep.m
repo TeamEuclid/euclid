@@ -111,8 +111,8 @@
         NSLog(@"No image");
 		return NO;
 	}
-    
-    CGContextDrawImage(contextMac, rect, cgImage);
+    //changed origin to imageX imageY to get damage to work
+    CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
     
 	return YES;
 }
@@ -129,5 +129,10 @@
     return height;
 }
 
-
+- (float)imageX{
+    return imageX;
+}
+- (float)imageY{
+    return imageY;
+}
 @end

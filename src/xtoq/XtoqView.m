@@ -20,7 +20,7 @@
  */
 
 #import "XtoqView.h"
-
+#define RECTLOG(rect)    (NSLog(@""  #rect @" x:%f y:%f w:%f h:%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height ));
 @implementation XtoqView
 
 /**
@@ -105,8 +105,6 @@ keyDown:(NSEvent *)theEvent {
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
     NSRect bnd = [self bounds];
-    //NSPoint p = [mouseEvent locationInWindow];
-    //downPoint = [self convertPoint:p fromView:nil];
     CGFloat f = CGRectGetHeight(bnd);
     NSNumber *n = [[NSNumber alloc] initWithFloat:f];
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
@@ -114,10 +112,6 @@ mouseDown:(NSEvent *)mouseEvent {
     [twoInfoDict setObject:n forKey:@"2"];
 
     NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
-    //[mouseEvent locationInWindow].y = 0;
-
-    //NSDictionary * dictionary = [NSDictionary dictionaryWithObject:mouseEvent 
-    //                                                        forKey:@"2"];
     	
     [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
                                       object:self 
@@ -127,16 +121,15 @@ mouseDown:(NSEvent *)mouseEvent {
 // This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
     image = newImage;
-    //[[self window] flushWindow];
-    //[self setNeedsDisplay:YES];
 }
 
-- (void)setPartialImage:(XtoqImageRep *)newImage x:(int)x y:(int)y dx:(int)dx dy:(int)dy{
-    //sleep(1);
+- (void)setPartialImage:(XtoqImageRep *)newImage{
+
     image = newImage;
-    NSLog(@" imageRec %i %i   %i %i", x,y,dx,dy );
-    NSRect imageRec = NSMakeRect(x, y, dx, dy);
-    
+    NSRect imageRec = NSMakeRect([image imageX], [image imageY], [image getWidth] , [image getHeight]);
+    RECTLOG(imageRec);
+
+    NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
     //[image drawInRect:imageRec];
     //[[self window] flushWindow];
     [self setNeedsDisplayInRect:imageRec];
@@ -145,5 +138,7 @@ mouseDown:(NSEvent *)mouseEvent {
 - (BOOL)isOpaque{
     return YES;
 }
+
+
 
 @end

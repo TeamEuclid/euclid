@@ -66,6 +66,8 @@ id referenceToSelf;
    // NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
+    NSRect imageRec;
+    NSString *keyFirst;
 }
 
 - (id) init;
@@ -80,7 +82,6 @@ id referenceToSelf;
 /**
  * Put a new image in the window / view
  */
-- (void) updateImage;
 - (void) updateImageNew: (xtoq_context_t *) windowContext;
 
 
