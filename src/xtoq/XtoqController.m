@@ -272,13 +272,13 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
 
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
-    
+/*    
     NSLog(@"windowContext");
     NSLog(@"x = %i",windowContext->x);
     NSLog(@"y = %i",windowContext->y);
     NSLog(@"width = %i",windowContext->width);
     NSLog(@"height = %i",windowContext->height);
-    
+*/    
     XtoqWindow *newWindow;
     XtoqView *newView;
     xcb_image_t *xcbImage;
@@ -295,7 +295,10 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
                   backing: NSBackingStoreBuffered
                   defer: YES];
     
-    [NSWindow standardWindowButton:NSWindowCloseButton forStyleMask:NSTitledWindowMask];
+    // set context in window
+    [newWindow setContext:windowContext withId:newWindow];
+    
+    //[NSWindow standardWindowButton:NSWindowCloseButton forStyleMask:NSTitledWindowMask];
 
     // save the newWindow into the context
     windowContext->local_data = newWindow;
@@ -331,37 +334,30 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
 - (void) destroyWindow: (xtoq_context_t *) windowContext {
     
     // TODO: remove from list
-    
-    // to help see if the right context is returned
-    NSLog(@"windowContext");
-    NSLog(@"x = %i",windowContext->x);
-    NSLog(@"y = %i",windowContext->y);
-    NSLog(@"width = %i",windowContext->width);
-    NSLog(@"height = %i",windowContext->height);
-    
+       
     //close window
     [windowContext->local_data close];
 }
 
 - (void) destroy: (NSNotification *) aNotification {    
-/*    
-    NSDictionary *windowThing = [aNotification userInfo];
-
-    XtoqWindow *aWindow = [windowThing objectForKey: @"1"];
     
+    NSDictionary *contextInfo = [aNotification userInfo];    
+    XtoqWindow *aWindow = [contextInfo objectForKey: @"1"];
     xtoq_context_t *theContext = [aWindow getContext];
-    
+/*   
     NSLog(@"windowContext");
     NSLog(@"x = %i",theContext->x);
     NSLog(@"y = %i",theContext->y);
     NSLog(@"width = %i",theContext->width);
     NSLog(@"height = %i",theContext->height);
-*/    
+*/   
+    
+    // TODO: remove from list
+    
     //use dispatch_async() to handle the actual close 
-    //  xtoq_close_window(xtoq_context_t *). 
-    //  The window being closed should have a reference to its context, so this is what it passes in.
       dispatch_async(xtoqDispatchQueue, ^{
-          NSLog(@"Hulk SMASH! Need to call xtoq_close_window(theContext)");
+          NSLog(@"Call xtoq_close_window(theContext)");
+          //xtoq_close_window(theContext);
       });
 }
 
