@@ -48,8 +48,8 @@
     winId = theId;
 }
 
--(xtoq_context_t *) getContext:(XtoqWindow *)win {
-    return win->winContext;
+-(xtoq_context_t *) getContext {
+    return winContext;
 }
 
 -(void) setRootDataPointer:(xtoq_context_t)xqContext {
@@ -57,21 +57,17 @@
 }
 
 
-- (BOOL)windowShouldClose:(id)sender {
-    
-    NSLog(@"I didn't close");
-    
-    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:sender 
-                                                            forKey:@"1"];
-    
+- (BOOL) windowShouldClose:(id)sender {    
+    // send notification to controller to close the window
+    XtoqWindow * aWindow = self;
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:aWindow 
+                                                            forKey:@"1"];    
     [notificationCenter postNotificationName:@"XTOQdestroyTheWindow" 
                                       object:self
-                                    userInfo:dictionary];
+                                    userInfo:dictionary];  
     
-    // always return no
+    // keep window from closing till server tells it to
     return NO;
 }
-
-
 
 @end

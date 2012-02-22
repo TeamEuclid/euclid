@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 Ben Huddle
+/*Copyright (C) 2012 Ben Huddle, Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -51,14 +51,16 @@
 /**
  * Function for getting context of window from list.
  */
--(xtoq_context_t *) getContext:(XtoqWindow *) win;
+-(xtoq_context_t *) getContext;
 
 /**
  * Sets the root window's pointer xtoqLocalData to the context's pointer.
  */
 -(void) setRootDataPointer: (xtoq_context_t *) xqContext;
 
+/**
+ * Catches the close event from clicking the red button or from preformClose.
+ */
 - (BOOL)windowShouldClose:(id)sender;
-
 
 @end
