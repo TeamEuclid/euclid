@@ -38,7 +38,9 @@
 #import "XtoqImageRep.h"
 #import "XtoqView.h"
 #import "xtoq.h"
+#import "unistd.h"
 #import <dispatch/dispatch.h>
+
 
 @class DisplayNumberController;
 
@@ -73,7 +75,17 @@ id referenceToSelf;
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+
+/**
+ * Makemenu and related selector functions for launching X applications.
+ */
 - (void) makeMenu;
+- (void) runXeyes: (id) sender;
+- (void) runXclock: (id) sender;
+- (void) runXlogo: (id) sender;
+- (void) runXterm: (id) sedner;
+- (void) runXman: (id) sender;
+
 
 /**
  * Create the Display Number Controller

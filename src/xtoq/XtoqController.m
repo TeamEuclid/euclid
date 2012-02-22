@@ -82,7 +82,7 @@
                                 defer: YES];
 
     // Make the menu
-    [self makeMenu];        
+    [self makeMenu];
     
     //create an XtoqImageRep with the information from X
     imageT = xtoq_get_image(xcbContext);
@@ -235,45 +235,99 @@
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     
-    id menubar;
-    id appMenuItem;
-    
-    menubar = [NSMenu new];
-    appMenuItem = [NSMenuItem new];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
-    
-    id appMenu;
-    id appName;
-    appMenu = [NSMenu new];
-    appMenu = [[NSProcessInfo processInfo] processName];
-    
-    // About
-    id aboutTitle;
-    id aboutMenuItem;
-    aboutTitle = [@"About " stringByAppendingString:appName];        
+    // The whole Menu bar in general
+    NSMenu *menubar = [NSMenu new];
+    NSMenuItem *appMenuItem = [NSMenuItem new];
 
-    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    // Menu under XtoQ
+    NSMenu *appMenu = [NSMenu new];
+    NSString *appName = [[NSProcessInfo processInfo] processName];
+    
+    // Xtoq -> About
+    NSString *aboutTitle = [@"About " stringByAppendingString:appName];
+    NSMenuItem *aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    // Quit    
-    id quitTitle;
-    id quitMenuItem;
-    quitTitle = [@"Quit " stringByAppendingString:appName];
-    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    // Xtoq -> Quit    
+    NSString *quitTitle = [@"Quit " stringByAppendingString:appName];
+    NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    id window;
-    window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200) styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO];
-    [window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
-    [window setTitle:appName];
     
-    appMenu = [NSMenu new];
-    appMenuItem = [NSMenuItem new];
+    
+    
+    //TEST
+    // Menu under Applications
+    NSMenu *startXMenu = [NSMenu new];
+    NSMenuItem *startXApps = [NSMenuItem new];
+    [startXMenu setTitle:@"Applications"];
+    
+    // Run Xeyes
+    NSString *xTitle;
+    NSMenuItem *xeyesMenuItem;
+    xTitle = [@"Run Xeyes on " stringByAppendingString:appName];
+    xeyesMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:@selector(runXeyes:) keyEquivalent:@"e"];
+    [startXMenu addItem:xeyesMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xclock
+    NSMenuItem *xclockMenuItem;
+    xTitle = [@"Run Xclock on" stringByAppendingString:appName];
+    xclockMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"c"];
+    [startXMenu addItem:xclockMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    // Run Xlogo
+    NSMenuItem *xlogoMenuItem;
+    xTitle = [@"Run Xlogo on" stringByAppendingString:appName];
+    xlogoMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"l"];
+    [startXMenu addItem:xlogoMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    // Run Xterm
+    NSMenuItem *xtermMenuItem;
+    xTitle = [@"Run Xterm on" stringByAppendingString:appName];
+    xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"t"];
+    [startXMenu addItem:xtermMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    // Run Xman
+    NSMenuItem *xmanMenuItem;
+    xTitle = [@"Run Xman on" stringByAppendingString:appName];
+    xmanMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"m"];
+    [startXMenu addItem:xmanMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    //idea: might just have one "run" function and send the string of the
+    // executable to sprintf'd onto the end of the path.
+    
+    //TEST
+    
+    
+    
     [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar]; 
+    [menubar addItem:startXApps];
+    [NSApp setMainMenu:menubar];
+}
+
+- (void) runXeyes:(id) sender {
+    
+    NSLog(@"Attempting to run Xeyes.");
+    const char *xArg[4];
+    xArg[0] = "/usr/X11/bin/xeyes";
+    xArg[1] = "-display";
+    xArg[2] = getenv("DISPLAY");
+    xArg[3] = NULL;
+    
+    // might try double fork like Xquartz
+    
+}
+- (void) runXclock:(id) sender {
+}
+- (void) runXlogo:(id) sender {
+}
+- (void) runXterm:(id) sender {
+}
+- (void) runXman:(id) sender {
 }
 
 // create a new window 
