@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		52BF61D114F5607E00CA8AA0 /* xinitrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = xinitrc; sourceTree = "<group>"; };
 		E1D4D05614EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		E1D4D05814EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = ../Makefile.am; sourceTree = "<group>"; };
 		E1D4D05B14EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
@@ -44,7 +45,6 @@
 		E1D4D0BB14EE5011000AB51B /* XtoqView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqView.m; sourceTree = "<group>"; };
 		E1D4D0BD14EE5011000AB51B /* XtoqWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtoqWindow.h; sourceTree = "<group>"; };
 		E1D4D0BE14EE5011000AB51B /* XtoqWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XtoqWindow.m; sourceTree = "<group>"; };
-		E1D4D0C814EE5011000AB51B /* xinitrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = xinitrc; sourceTree = "<group>"; };
 		E1D4D0CA14EE5011000AB51B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		E1D4D0CC14EE5011000AB51B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E1D4D0CD14EE5011000AB51B /* Mac-Logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mac-Logo.jpg"; sourceTree = "<group>"; };
@@ -54,6 +54,38 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		52BF61CC14F55F0A00CA8AA0 /* X11 */ = {
+			isa = PBXGroup;
+			children = (
+				52BF61CD14F55F3100CA8AA0 /* lib */,
+			);
+			name = X11;
+			sourceTree = "<group>";
+		};
+		52BF61CD14F55F3100CA8AA0 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				52BF61CE14F55F3E00CA8AA0 /* X11 */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		52BF61CE14F55F3E00CA8AA0 /* X11 */ = {
+			isa = PBXGroup;
+			children = (
+				52BF61CF14F55F4300CA8AA0 /* xinit */,
+			);
+			name = X11;
+			sourceTree = "<group>";
+		};
+		52BF61CF14F55F4300CA8AA0 /* xinit */ = {
+			isa = PBXGroup;
+			children = (
+				52BF61D114F5607E00CA8AA0 /* xinitrc */,
+			);
+			name = xinit;
+			sourceTree = "<group>";
+		};
 		E1D4D04714EE4FBC000AB51B = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +180,7 @@
 		E1D4D0A214EE5011000AB51B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				52BF61CC14F55F0A00CA8AA0 /* X11 */,
 				E1D4D0A314EE5011000AB51B /* Credits.rtf */,
 				E1D4D0A514EE5011000AB51B /* DisplayNumberDialog.xib */,
 				E1D4D0A714EE5011000AB51B /* InfoPlist.strings */,
@@ -183,49 +216,8 @@
 		E1D4D0C214EE5011000AB51B /* Contents */ = {
 			isa = PBXGroup;
 			children = (
-				E1D4D0C314EE5011000AB51B /* Resources */,
 			);
 			path = Contents;
-			sourceTree = "<group>";
-		};
-		E1D4D0C314EE5011000AB51B /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				E1D4D0C414EE5011000AB51B /* X11 */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		E1D4D0C414EE5011000AB51B /* X11 */ = {
-			isa = PBXGroup;
-			children = (
-				E1D4D0C514EE5011000AB51B /* lib */,
-			);
-			path = X11;
-			sourceTree = "<group>";
-		};
-		E1D4D0C514EE5011000AB51B /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				E1D4D0C614EE5011000AB51B /* X11 */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		E1D4D0C614EE5011000AB51B /* X11 */ = {
-			isa = PBXGroup;
-			children = (
-				E1D4D0C714EE5011000AB51B /* xinit */,
-			);
-			path = X11;
-			sourceTree = "<group>";
-		};
-		E1D4D0C714EE5011000AB51B /* xinit */ = {
-			isa = PBXGroup;
-			children = (
-				E1D4D0C814EE5011000AB51B /* xinitrc */,
-			);
-			path = xinit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
