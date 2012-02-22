@@ -66,6 +66,8 @@ id referenceToSelf;
     NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
+    NSRect imageRec;
+    NSString *keyFirst;
 }
 
 - (id) init;
@@ -81,12 +83,11 @@ id referenceToSelf;
  * Create the Display Number Controller
  */
 
-- (IBAction)showDisplayChooser;
+//- (IBAction)showDisplayChooser;
 
 /**
  * Put a new image in the window / view
  */
-- (void) updateImage;
 - (void) updateImageNew: (xtoq_context_t *) windowContext;
 
 
