@@ -37,14 +37,21 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
     // allocate memory for new xtoq_context_t
     xtoq_context_t *context = malloc(sizeof(xtoq_context_t));
     
+    xcb_get_geometry_reply_t *geom;
+    geom = xcb_get_geometry_reply (conn, xcb_get_geometry (conn, event->window), NULL);
+    
     // set any available values from xcb_create_notify_event_t object pointer
+    // and geom pointer
     context->conn = conn;
     context->window = event->window;
     context->parent = event->parent;
-    context->x = event->x;
-    context->y = event->y;
-    context->width = event->width;
-    context->height = event->height;
+    context->x = geom->x;
+    context->y = geom->y;
+    context->width = geom->width;
+    context->height = geom->height;
+    
+    // done with geom
+    free (geom);
     
     //register for damage
     _xtoq_init_damage(context);
@@ -63,7 +70,8 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     xtoq_context_t *context = _xtoq_get_context_node_by_window_id(event->window);
     
     // Destroy the damage object associated with the window.
-    xcb_damage_destroy(context->conn,context->damage);	
+    // TODO: I'm not sure if this frees the damage object...
+    xcb_damage_destroy(context->conn,context->damage);
     
     // Call the remove function in context_list.c
     _xtoq_remove_context_node(context->window);
