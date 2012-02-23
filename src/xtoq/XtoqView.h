@@ -33,7 +33,8 @@ SOFTWARE.
 #import "xtoq.h"
 
 @interface XtoqView : NSView {
-    XtoqImageRep *image;  
+    XtoqImageRep *image[10000];  
+    
     
     NSImage *image2;
     NSString *file;
@@ -47,6 +48,9 @@ SOFTWARE.
     
     NSNotificationCenter * notificationCenter;
     
+    //junk
+    int index;
+    int indexTwo;
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;
