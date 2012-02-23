@@ -47,7 +47,13 @@ xtoq_init(char *screen) {
     uint32_t mask_values[1];
  
     conn = xcb_connect(screen, &conn_screen);
-    
+
+	// Check to make sure connection is valid
+	if (xcb_connection_has_error(conn)) {
+		fprintf(stderr, "ERROR: xtoq_init failed to get connection\n");
+		exit(1);
+	}
+
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
     
