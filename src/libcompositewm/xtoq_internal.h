@@ -30,9 +30,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <limits.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_icccm.h>
+#include <xcb/xcb_atom.h>
 #include "data.h"
 #include "xtoq.h"
 
