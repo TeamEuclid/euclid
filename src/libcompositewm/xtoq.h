@@ -48,10 +48,10 @@ extern xtoq_context_t *root_context;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
- * @param screen The screen that we wish to connect to
+ * @param display The display to connect to
  */
 xtoq_context_t *
-xtoq_init(char *screen);
+xtoq_init(char *display);
 
 /**
  *

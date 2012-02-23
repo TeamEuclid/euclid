@@ -45,6 +45,8 @@ typedef struct xtoq_context_t {
     int y;
     int width;
     int height;
+	char *name;					/* The name of the window */
+	int wm_delete_set;			/* Flag for WM_DELETE_WINDOW, 1 if set */
     void *local_data;   // Area for data client cares about
 } xtoq_context_t;
 

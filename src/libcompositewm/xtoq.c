@@ -40,14 +40,14 @@ xtoq_context_t *root_context = NULL;
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
 xtoq_context_t *
-xtoq_init(char *screen) {
+xtoq_init(char *display) {
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
     uint32_t mask_values[1];
  
-    conn = xcb_connect(screen, &conn_screen);
+    conn = xcb_connect(display, &conn_screen);
     
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;

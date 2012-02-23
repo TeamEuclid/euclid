@@ -23,9 +23,22 @@
  * SOFTWARE.
  */
 
-
 #include "xtoq.h"
 #include "xtoq_internal.h"
+
+/* Functions only used within this file */
+
+/* Sets the WM_* properties we care about in context */
+void
+set_icccm_properties (xtoq_context_t *context);
+
+/* Set the WM_NAME property in context */
+void
+set_wm_name_in_context (xtoq_context_t *context);
+
+/* Find out of the WM_DELETE_WINDOW property is set */
+void
+set_wm_delete_win_in_context (xtoq_context_t *context);
 
 xtoq_context_t *
 _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) {
@@ -37,14 +50,24 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
     // allocate memory for new xtoq_context_t
     xtoq_context_t *context = malloc(sizeof(xtoq_context_t));
     
+    xcb_get_geometry_reply_t *geom;
+    geom = xcb_get_geometry_reply (conn, xcb_get_geometry (conn, event->window), NULL);
+    
     // set any available values from xcb_create_notify_event_t object pointer
+    // and geom pointer
     context->conn = conn;
     context->window = event->window;
     context->parent = event->parent;
-    context->x = event->x;
-    context->y = event->y;
-    context->width = event->width;
-    context->height = event->height;
+    context->x = geom->x;
+    context->y = geom->y;
+    context->width = geom->width;
+    context->height = geom->height;
+
+    // done with geom
+    free (geom);
+
+	/* Set the ICCCM properties we care about */
+	set_icccm_properties(context);
     
     //register for damage
     _xtoq_init_damage(context);
@@ -63,7 +86,8 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     xtoq_context_t *context = _xtoq_get_context_node_by_window_id(event->window);
     
     // Destroy the damage object associated with the window.
-    xcb_damage_destroy(context->conn,context->damage);	
+    // TODO: I'm not sure if this frees the damage object...
+    xcb_damage_destroy(context->conn,context->damage);
     
     // Call the remove function in context_list.c
     _xtoq_remove_context_node(context->window);
@@ -72,8 +96,48 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     return context;
 }
 
+void
+set_icccm_properties (xtoq_context_t *context)
+{
+	set_wm_name_in_context(context);
 
+	
+	set_wm_delete_win_in_context(context);
+}
 
+void
+set_wm_name_in_context (xtoq_context_t *context)
+{
+	xcb_get_property_cookie_t cookie;
+	xcb_icccm_get_text_property_reply_t *prop;
+	xcb_get_property_reply_t *reply;
+	xcb_generic_error_t *error;
+	uint8_t ret_val;
+	void *value;
+	int length;
 
+	cookie = xcb_get_property(context->conn,
+							  0,
+							  context->window,
+							  XCB_ATOM_WM_NAME,
+							  XCB_GET_PROPERTY_TYPE_ANY,
+							  0,
+							  128);
+	reply = xcb_get_property_reply(context->conn,
+								   cookie,
+								   &error);
+	if (!reply) {
+		context->name = NULL;
+		return;
+	}
+	length = xcb_get_property_value_length(reply);
+	value = xcb_get_property_value(reply);
 
+	context->name = strdup((char *)value);
+}
 
+void
+set_wm_delete_win_in_context (xtoq_context_t *context)
+{
+
+}
