@@ -24,8 +24,23 @@
  */
 
 
+#include <xcb/xcb_icccm.h>
 #include "xtoq.h"
 #include "xtoq_internal.h"
+
+/* Functions only used within this file */
+
+/* Sets the WM_* properties we care about in context */
+void
+set_icccm_properties (xtoq_context_t *context);
+
+/* Set the WM_NAME property in context */
+void
+set_wm_name_in_context (xtoq_context_t *context);
+
+/* Find out of the WM_DELETE_WINDOW property is set */
+void
+set_wm_delete_win_in_context (xtoq_context_t *context);
 
 xtoq_context_t *
 _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) {
@@ -80,8 +95,43 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     return context;
 }
 
+void
+set_icccm_properties (xtoq_context_t *context)
+{
+	set_wm_name_in_context(context);
 
+	
+	set_wm_delete_win_in_context(context);
+}
 
+void
+set_wm_name_in_context (xtoq_context_t *context)
+{
+	xcb_get_property_cookie_t cookie;
+	xcb_icccm_get_text_property_reply_t *prop;
+	xcb_generic_error_t *error;
+	uint8_t ret_val;
 
+	if (context->name) {
+		free(context->name);
+	}
 
+	cookie = xcb_icccm_get_wm_name(context->conn, context->window);
+	ret_val = xcb_icccm_get_text_property_reply(context->conn,
+												cookie,
+												prop,
+												&error);
+	if (!ret_val) {
+		context->name = NULL;
+		return;
+	}
 
+	
+
+}
+
+void
+set_wm_delete_win_in_context (xtoq_context_t *context)
+{
+
+}
