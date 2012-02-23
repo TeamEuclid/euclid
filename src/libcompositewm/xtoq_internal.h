@@ -32,6 +32,7 @@
 #include <assert.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
+#include <xcb/xcb_icccm.h>
 #include "data.h"
 #include "xtoq.h"
 
