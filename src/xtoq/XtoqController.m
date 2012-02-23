@@ -60,11 +60,11 @@
     
     
     // setup X connection and get the initial image from the server
-NSLog(@"screen = %s", screen);
+//NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
     
-NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
-      rootContext->height, rootContext->x, rootContext->y);
+//NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
+//      rootContext->height, rootContext->x, rootContext->y);
     
     winList = [[NSMutableDictionary alloc] init];
     winCount = 0;    
@@ -129,6 +129,9 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
     [xtoqWindow makeKeyAndOrderFront: self];
+    
+    //hide window
+    [xtoqWindow orderOut:self];
     // Start the event loop and set the handler function
 	xtoq_start_event_loop(rootContext, (void *) eventHandler);
 }
