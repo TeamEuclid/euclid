@@ -97,7 +97,7 @@
         NSLog(@"No image");
 		return NO;
 	}
-    
+    //    CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
     CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
     
 	return YES;

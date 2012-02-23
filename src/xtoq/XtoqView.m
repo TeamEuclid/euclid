@@ -34,7 +34,8 @@ initWithFrame:(NSRect)frame {
         notificationCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
-        
+        index = 0;
+        indexTwo = 0;
         // Leaving these in for testing
         // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
         // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];        
@@ -45,16 +46,19 @@ initWithFrame:(NSRect)frame {
 /**
  *  Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
  */
-- (void)
+-(void)
 drawRect:(NSRect)dirtyRect {
 
-    /*
-    const NSRect ** rectList;
-    NSInteger * rectInt = 0;
-    [rectList count:rectInt];
-    NSLog(@"rectInt = %ld", (long)rectInt);*/
     
-    [image draw];//InRect:dirtyRect];
+    //const NSRect ** rectList;
+    //NSInteger * rectInt = 0;
+    //[rectList count:rectInt];
+    //NSLog(@"rectInt = %ld", (long)rectInt);
+    
+    while (indexTwo < index) {
+        [image[indexTwo++] draw];//InRect:dirtyRect];
+    }
+    
 
     //[[self window] flushWindow];
     
@@ -120,25 +124,25 @@ mouseDown:(NSEvent *)mouseEvent {
 
 // This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
-    image = newImage;
+    image[index++] = newImage;
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage{
 
-    image = newImage;
-    NSRect imageRec = NSMakeRect([image imageX], [image imageY], [image getWidth] , [image getHeight]);
+    image[index++] = newImage;
+    //XtoqImageRep imageCopy = [[XtoqImageRep alloc] ]
+    NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
     RECTLOG(imageRec);
-
+    NSLog(@"index %i index 2 %i", index, indexTwo);
     NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
     //[image drawInRect:imageRec];
-    //[[self window] flushWindow];
+
     [self setNeedsDisplayInRect:imageRec];
+    //[[self window] flushWindow];
 }
 
 - (BOOL)isOpaque{
     return YES;
 }
-
-
 
 @end

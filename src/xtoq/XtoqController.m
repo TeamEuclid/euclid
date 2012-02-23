@@ -451,20 +451,30 @@
     int numberOfRects = 1;
 	int i;
         
-        if (libImageT.image)
-            xcb_image_destroy(libImageT.image);
-        libImageT = test_xtoq_get_image(*windowContext);
-        NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+    //if (libImageT.image)
+    //    xcb_image_destroy(libImageT.image);
+    libImageT = test_xtoq_get_image(*windowContext);
+    NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
 
-        y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-        imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image
-                                                    x:(windowContext->damaged_x)/1.0
+    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
+    imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image
+                                                    x:((windowContext->damaged_x))
                                                     y:y_transformed];
-        [ourView setPartialImage:imageNew];
+    NSLog(@"NSS %lu", GetTimeSinceBoot());
+    [ourView setPartialImage:imageNew];
 
 }
 
-void eventHandler (xtoq_event_t *event)
+
+
+unsigned long long GetTimeSinceBoot()
+{
+    UnsignedWide uw = AbsoluteToNanoseconds(UpTime());
+    return ((((unsigned long long)uw.hi)<<32)|(uw.lo));
+}
+
+
+void eventHandler (xtoq_event_t event)
 {
     if (event->event_type == XTOQ_DAMAGE) {
         // This message generates a lot of console spam - only uncomment when testing

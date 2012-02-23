@@ -33,6 +33,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
+#include <CoreServices/CoreServices.h> // timestamp
 #import <AppKit/AppKit.h>
 #import "XtoqWindow.h"
 #import "XtoqImageRep.h"
@@ -116,4 +117,7 @@ id referenceToSelf;
  * once it is started.
  * @param event The event received.
  */
-void eventHandler (xtoq_event_t *event);
+void eventHandler (xtoq_event_t event);
+
+
+unsigned long long GetTimeSinceBoot();
