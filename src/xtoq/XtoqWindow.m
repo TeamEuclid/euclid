@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 Ben Huddle, Braden Wooley
+/*Copyright (C) 2012 Ben Huddle, Braden Wooley, David Snyder
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -31,6 +31,13 @@
                     defer:(BOOL)flag {
     
     notificationCenter = [NSNotificationCenter defaultCenter];
+    
+    // Hack job, probably -- David
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+                                             selector: @selector(windowDidBecomeKey:) 
+                                                 name: @"NSWindowDidBecomeKeyNotification" 
+                                               object: self];
+    // End Hack job -- David
     
     XtoqWindow *result = [super initWithContentRect:contentRect
                                         styleMask:aStyle
@@ -67,6 +74,12 @@
     
     // keep window from closing till server tells it to
     return NO;
+}
+
+-(void)windowDidBecomeKey:(NSNotification *)note {
+    
+    xtoq_set_input_focus(winContext);
+    xtoq_set_window_to_top(winContext);
 }
 
 @end

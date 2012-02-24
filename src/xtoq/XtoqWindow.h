@@ -61,4 +61,9 @@
  */
 - (BOOL)windowShouldClose:(id)sender;
 
+/*
+ * Catches the event that a window gains focus
+ */
+-(void)windowDidBecomeKey:(NSNotification *)note;
+
 @end
