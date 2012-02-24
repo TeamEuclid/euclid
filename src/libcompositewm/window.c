@@ -51,7 +51,7 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
     xtoq_context_t *context = malloc(sizeof(xtoq_context_t));
     
     xcb_get_geometry_reply_t *geom;
-    geom = xcb_get_geometry_reply (conn, xcb_get_geometry (conn, event->window), NULL);
+    geom = _xtoq_get_window_geometry(conn, event->window);
     
     // set any available values from xcb_create_notify_event_t object pointer
     // and geom pointer
@@ -67,7 +67,7 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
     free (geom);
 
 	/* Set the ICCCM properties we care about */
-	set_icccm_properties(context);
+/* 	set_icccm_properties(context); */
     
     //register for damage
     _xtoq_init_damage(context);
@@ -111,8 +111,7 @@ set_wm_name_in_context (xtoq_context_t *context)
 	xcb_get_property_cookie_t cookie;
 	xcb_get_property_reply_t *reply;
 	xcb_generic_error_t *error;
-	uint8_t ret_val;
-	void *value;
+	char *value;
 	int length;
 
 	cookie = xcb_get_property(context->conn,
@@ -130,9 +129,9 @@ set_wm_name_in_context (xtoq_context_t *context)
 		return;
 	}
 	length = xcb_get_property_value_length(reply);
-	value = xcb_get_property_value(reply);
+	value = (char *) xcb_get_property_value(reply);
 
-	context->name = strdup((char *)value);
+	context->name = strdup(value);
 }
 
 void

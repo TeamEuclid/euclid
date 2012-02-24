@@ -52,8 +52,8 @@
     return winContext;
 }
 
--(void) setRootDataPointer:(xtoq_context_t)xqContext {
-    xtoqLocalData = xqContext.local_data;
+-(void) setRootDataPointer:(xtoq_context_t *)xqContext {
+    return;
 }
 
 

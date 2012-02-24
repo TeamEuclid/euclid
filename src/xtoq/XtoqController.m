@@ -60,11 +60,11 @@
     
     
     // setup X connection and get the initial image from the server
-NSLog(@"screen = %s", screen);
+	NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
     
-NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
-      rootContext->height, rootContext->x, rootContext->y);
+	NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
+		  rootContext->height, rootContext->x, rootContext->y);
     
     winList = [[NSMutableDictionary alloc] init];
     winCount = 0;    
@@ -102,7 +102,6 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
     // add root window to list, increment count of windows
     NSString *key = [NSString stringWithFormat:@"%d", winCount];
     [xtoqWindow setContext:rootContext withId:key];
-    [xtoqWindow setRootDataPointer:rootContext];
     [winList setObject:xtoqWindow forKey:key];
     ++winCount;
   
@@ -188,42 +187,6 @@ NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width,
         [ourView setNeedsDisplayInRect:rect];
     }
 }
-
-
-- (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
-    
-    id key;
-    int index;
-    xtoq_context_t *xqWinContxt;
-    NSArray *keyArray = [winList allKeys];
-    XtoqWindow *xqWin;
-    
-    for (index = 0; index < [keyArray count]; index++) {
-        key = [keyArray objectAtIndex:index];
-        xqWin = [winList objectForKey:key];
-        xqWinContxt = [xqWin getContext:xqWin];
-        if (xqWinContxt->window == xtoqContxt->window) {
-            return xqWin;
-        }
-    }
-    
-    return nil;
-}
-
-
-- (void) addWindowInList:(XtoqWindow *)xqWin 
-             withContext: (xtoq_context_t *) aContext{
-    NSString *key = [NSString stringWithFormat:@"%d", winCount];
-    [xqWin setContext:aContext withId:key];
-    [winList setObject:xqWin forKey:key];
-    ++winCount;
-}
-
-- (void) removeWindowInLIst:(id)akey {
-    [winList removeObjectForKey:akey];
-    --winCount;
-}
-
 
 - (void) setScreen:(char *)scrn {
     screen = scrn;
