@@ -74,6 +74,21 @@ _xtoq_init_damage(xtoq_context_t *contxt)
     
 }
 
+void 
+_xtoq_init_composite(xtoq_context_t *contxt) {
+    xcb_query_extension_reply_t *reply = _xtoq_init_extension(contxt->conn, "Composite");
+    
+    xcb_composite_query_version_cookie_t cookie = xcb_composite_query_version (contxt->conn, XCB_COMPOSITE_MAJOR_VERSION, XCB_COMPOSITE_MINOR_VERSION);
+    
+    xcb_composite_query_version_reply_t *version_reply = 	xcb_composite_query_version_reply (contxt->conn, cookie, NULL);
+    
+    xcb_composite_redirect_subwindows_checked(contxt->conn, contxt->window, XCB_COMPOSITE_REDIRECT_MANUAL);
+    
+    free(version_reply);
+    free(reply);
+    
+}
+
 void
 _xtoq_init_xfixes (xtoq_context_t *contxt)
 {

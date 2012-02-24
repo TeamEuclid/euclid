@@ -74,6 +74,8 @@ xtoq_init(char *display) {
     root_context->x = 0;
     root_context->y = 0;
 
+    _xtoq_init_composite(root_context);
+    
     _xtoq_init_damage(root_context);
     
     _xtoq_init_xfixes(root_context);

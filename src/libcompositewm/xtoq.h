@@ -34,6 +34,7 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
+#include <xcb/composite.h>
 #include <xcb/xtest.h>
 #include <xcb/xfixes.h>
 #include "data.h"

@@ -118,6 +118,9 @@ _xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 void 
 _xtoq_init_damage(xtoq_context_t *contxt);
 
+void 
+_xtoq_init_composite(xtoq_context_t *contxt);
+
 void
 _xtoq_init_xfixes (xtoq_context_t *contxt);
 
