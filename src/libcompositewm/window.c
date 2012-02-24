@@ -40,6 +40,39 @@ set_wm_name_in_context (xtoq_context_t *context);
 void
 set_wm_delete_win_in_context (xtoq_context_t *context);
 
+/* Set window to the top of the stack */
+void
+xtoq_set_window_to_top(xtoq_context_t *context) {
+    
+    const static uint32_t values[] = { XCB_STACK_MODE_ABOVE };
+    
+    /* Move the window on the top of the stack */
+    xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
+}
+
+/* Set input focus to window */ 
+void
+xtoq_set_input_focus(xtoq_context_t *context) {
+    
+   // values[0] = CHILD_EVENT_MASK & ~(XCB_EVENT_MASK_FOCUS_CHANGE);
+   // xcb_change_window_attributes(context->conn, context->window, XCB_CW_EVENT_MASK, values);
+                                     // or is it XCB_INPUT_FOCUS_PARENT
+    xcb_set_input_focus(context->conn, XCB_INPUT_FOCUS_POINTER_ROOT, context->window, XCB_CURRENT_TIME);
+
+    //values[0] = CHILD_EVENT_MASK;
+    //xcb_change_window_attributes(context->conn, context->window, XCB_CW_EVENT_MASK, values);
+}
+
+/* Set window to the bottom of the stack */
+void
+xtoq_set_window_to_bottom(xtoq_context_t *context) {
+    
+    const static uint32_t values[] = { XCB_STACK_MODE_BELOW };
+    
+    /* Move the window on the top of the stack */
+    xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
+}
+
 xtoq_context_t *
 _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) {
 

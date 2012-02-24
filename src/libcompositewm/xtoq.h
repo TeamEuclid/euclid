@@ -60,6 +60,28 @@ xtoq_init(char *display);
 xcb_image_t *
 xtoq_get_image(xtoq_context_t *context);
 
+/*
+ * Set input focus to the window in context
+ * @param context The context containing the window
+ */
+
+void
+xtoq_set_input_focus(xtoq_context_t *context);
+
+/**
+ * Set a window to the bottom of the window stack.
+ * @param context The context containing the window
+ */
+void
+xtoq_set_window_to_bottom(xtoq_context_t *context);
+
+/**
+ * Set a window to the top of the window stack.
+ * @param context The context containing the window
+ */
+void
+xtoq_set_window_to_top(xtoq_context_t *context);
+
 /**
  * Starts the event loop and listens on the connection specified in
  * the given xtoq_context_t. Uses callback as the function to call
