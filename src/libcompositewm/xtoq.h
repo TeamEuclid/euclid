@@ -60,6 +60,13 @@ xtoq_init(char *display);
 xcb_image_t *
 xtoq_get_image(xtoq_context_t *context);
 
+/**
+ * Free the image returned by xtoq_get_image
+ * @param img The xcb_image_t that needs to
+ * be freed
+ */
+void
+xtoq_free_image(xcb_image_t *img);
 /*
  * Set input focus to the window in context
  * @param context The context containing the window

@@ -115,6 +115,11 @@ xtoq_get_image(xtoq_context_t *context) {
     return image;
 }
 
+void
+xtoq_free_image(xcb_image_t *img) {
+    free(img);
+}
+
 int 
 xtoq_start_event_loop (xtoq_context_t *context,
                        xtoq_event_cb_t callback)
