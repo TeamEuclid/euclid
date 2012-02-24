@@ -142,6 +142,12 @@ void *run_event_loop (void *thread_arg_struct)
                 // Window destroyed in root window
                 xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
                 xtoq_context_t *context = _xtoq_destroy_window(notify);
+
+				if (!context) {
+					/* Not a window in the list, don't try and destroy */
+					free(notify);
+					break;
+				}
                 
                 return_evt = malloc(sizeof(xtoq_event_t));
                 return_evt->event_type = XTOQ_DESTROY;

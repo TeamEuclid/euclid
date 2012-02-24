@@ -136,9 +136,9 @@ _xtoq_get_wm_atoms (xtoq_context_t *context)
 									   atom_cookie,
 									   NULL);
     if (!atom_reply) {
-        wm_delete_atom = 0;
+        _wm_atoms->wm_delete_window_atom = 0;
     } else {
-        wm_delete_atom = atom_reply->atom;
+        _wm_atoms->wm_delete_window_atom = atom_reply->atom;
         free(atom_reply);
     }
 }

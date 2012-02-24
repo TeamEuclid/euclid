@@ -80,11 +80,12 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
 
 xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     
-  //  if (_xtoq_get_context_node_by_window_id(event->window) == NULL)
-    //    return NULL;
-    
     xtoq_context_t *context = _xtoq_get_context_node_by_window_id(event->window);
-    
+    if (!context) {
+		/* Window isn't being managed */
+		return NULL;
+	}
+
     // Destroy the damage object associated with the window.
     // TODO: I'm not sure if this frees the damage object...
     xcb_damage_destroy(context->conn,context->damage);
@@ -100,8 +101,6 @@ void
 set_icccm_properties (xtoq_context_t *context)
 {
 	set_wm_name_in_context(context);
-
-	
 	set_wm_delete_win_in_context(context);
 }
 
@@ -131,7 +130,9 @@ set_wm_name_in_context (xtoq_context_t *context)
 	length = xcb_get_property_value_length(reply);
 	value = (char *) xcb_get_property_value(reply);
 
-	context->name = strdup(value);
+	context->name = malloc(sizeof(char) * (length + 1));
+	strncpy(context->name, value, length);
+	context->name[length] = '\0';
 }
 
 void
@@ -148,7 +149,7 @@ set_wm_delete_win_in_context (xtoq_context_t *context)
 	cookie = xcb_get_property(context->conn,
 							  0,
 							  context->window,
-							  wm_protocols_atom,
+							  _wm_atoms->wm_protocols_atom,
 							  XCB_ATOM_ATOM,
 							  0,
 							  UINT_MAX);
@@ -167,7 +168,7 @@ set_wm_delete_win_in_context (xtoq_context_t *context)
 
     /* See if the WM_DELETE_WINDOW is in WM_PROTOCOLS */
     for (i = 0; i < prop_length; i++) {
-        if (prop_atoms[i] == wm_delete_window) {
+        if (prop_atoms[i] == _wm_atoms->wm_delete_window_atom) {
             context->wm_delete_set = 1;
             return;
         }

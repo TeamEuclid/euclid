@@ -52,8 +52,8 @@ typedef struct xtoq_event_connetion {
  * Structure to hold WM_* atoms that we care about
  */
 typedef struct xtoq_wm_atoms {
-    xcb_atom_t wm_protocols;
-    xcb_atom_t wm_delete_window;
+    xcb_atom_t wm_protocols_atom;
+    xcb_atom_t wm_delete_window_atom;
 } xtoq_wm_atoms;
 
 /**
