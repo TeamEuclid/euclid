@@ -100,6 +100,10 @@
     //set context
     [xtoqWindow setContext:rootContext];
   
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyDownInView:)
@@ -110,11 +114,22 @@
                                              selector: @selector(mouseButtonDownInView:)
                                                  name: @"XTOQmouseButtonDownEvent"
                                                object: nil];
-    
+    // register for destroy event
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(destroy:)
                                                  name: @"XTOQdestroyTheWindow"
                                                object: nil];
+    
+    // regester for window will/did movement notification
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(windowWillMove:) 
+                                                 name:NSWindowWillMoveNotification 
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(windowDidMove:) 
+                                                 name:NSWindowDidMoveNotification 
+                                               object:nil];
     
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
     
@@ -235,14 +250,14 @@
 
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
-   
+   /*
     NSLog(@"windowContext");
     NSLog(@"x = %i",windowContext->x);
     NSLog(@"y = %i",windowContext->y);
     NSLog(@"width = %i",windowContext->width);
     NSLog(@"height = %i",windowContext->height);
     NSLog(@"Window title \"%s\" ",windowContext->name);
-    
+  */  
     
     XtoqWindow *newWindow;
     XtoqView *newView;
@@ -260,7 +275,7 @@
                   backing: NSBackingStoreBuffered
                   defer: YES];
     
-    // set context in window
+    // save context in window
     [newWindow setContext:windowContext];
     
     // save the newWindow pointer into the context
@@ -276,9 +291,6 @@
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
     
-    //shows the window
-    [newWindow makeKeyAndOrderFront:nil];        
-    
     // set the initial image in the window
     [newView setImage:imageRep];
     
@@ -288,21 +300,21 @@
     // set title
     NSString *winTitle;
     winTitle = [NSString stringWithCString:windowContext->name encoding:NSUTF8StringEncoding];
-    //winTitle = [[ NSString alloc ] initWithUTF8String:windowContext->name];
-    
     [newWindow setTitle:winTitle];
-
+    
+    //shows the window
+    [newWindow makeKeyAndOrderFront:self];
+    
 }
 
-- (void) destroyWindow: (xtoq_context_t *) windowContext {
-    
+- (void) destroyWindow:(xtoq_context_t *) windowContext {
+    // set the window to be closed
     XtoqWindow *destWindow = windowContext->local_data;
-    
     //close window
     [destWindow close];
 }
 
-- (void) destroy: (NSNotification *) aNotification {    
+- (void) destroy:(NSNotification *) aNotification {    
     
     NSDictionary *contextInfo = [aNotification userInfo];    
     XtoqWindow *aWindow = [contextInfo objectForKey: @"1"];
@@ -320,6 +332,29 @@
           NSLog(@"Call xtoq_close_window(theContext)");
           //xtoq_close_window(theContext);
       });
+}
+
+- (void)windowWillMove:(NSNotification*)notification
+{
+    NSLog(@"window will move");
+}
+
+- (void)windowDidMove:(NSNotification*)notification
+{
+    NSLog(@"window did move");    
+    
+    XtoqWindow *moveWindow = [NSApp mainWindow];
+    if (moveWindow == nil) {
+        // this happens when window is first crated
+        NSLog(@"Window is nil do nothing");        
+    }
+    else {
+        xtoq_context_t *moveContext = [moveWindow getContext];
+        NSLog(@"Window title \"%s\" ",moveContext->name);
+        
+        //NSPoint *movedToPoint = [moveWindow convertBaseToScreen];
+        NSLog(@"xtoq_updatewindowposition(x,y)");
+    }
 }
 
 @end

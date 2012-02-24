@@ -87,6 +87,9 @@ id referenceToSelf;
  */
 - (void) setScreen: (char *) scrn;
 
+- (void)windowWillMove:(NSNotification*)notification;
+- (void)windowDidMove:(NSNotification*)notification;
+
 @end
 
 /**
