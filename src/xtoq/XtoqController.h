@@ -60,8 +60,8 @@ id referenceToSelf;
     XtoqView *view;
     NSString *file;
     NSImage *image2;
-    NSMutableDictionary *winList; // The window list data structure.
-    NSInteger winCount;           // Used for setting keys of windows
+   // NSMutableDictionary *winList; // The window list data structure.
+   // NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
 }
@@ -94,18 +94,18 @@ id referenceToSelf;
  * a method for getting a window in the list by searching all keys
  * returns nil if no key is found.
  */
-- (XtoqWindow *) getWindowInList: (xtoq_context_t) xtoqContxt;
+//- (XtoqWindow *) getWindowInList: (xtoq_context_t) xtoqContxt;
 
 /**
  * A function that adds a window to the dictionary list.
  */
-- (void) addWindowInList: (XtoqWindow *) xqWin 
-             withContext: (xtoq_context_t) aContext;
+//- (void) addWindowInList: (XtoqWindow *) xqWin 
+//             withContext: (xtoq_context_t) aContext;
 
 /**
  * A function that removes a window from the list by key.
  */
-- (void) removeWindowInLIst: (id) akey;
+//- (void) removeWindowInList: (id) akey;
 
 /**
  * Sets the screen to command line argument.

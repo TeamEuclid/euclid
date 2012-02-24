@@ -66,8 +66,6 @@
 //NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
 //      rootContext->height, rootContext->x, rootContext->y);
     
-    winList = [[NSMutableDictionary alloc] init];
-    winCount = 0;    
     
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
@@ -98,13 +96,9 @@
     [ourView setImage:image];
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
-   
-    // add root window to list, increment count of windows
-    NSString *key = [NSString stringWithFormat:@"%d", winCount];
-    [xtoqWindow setContext:rootContext withId:key];
-    [xtoqWindow setRootDataPointer:rootContext];
-    [winList setObject:xtoqWindow forKey:key];
-    ++winCount;
+
+    //set context
+    [xtoqWindow setContext:rootContext];
   
     // Register for the key down notifications from the view
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -132,6 +126,7 @@
     
     //hide window
     [xtoqWindow orderOut:self];
+    
     // Start the event loop and set the handler function
 	xtoq_start_event_loop(rootContext, (void *) eventHandler);
 }
@@ -193,41 +188,6 @@
 }
 
 
-- (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
-    
-    id key;
-    int index;
-    xtoq_context_t *xqWinContxt;
-    NSArray *keyArray = [winList allKeys];
-    XtoqWindow *xqWin;
-    
-    for (index = 0; index < [keyArray count]; index++) {
-        key = [keyArray objectAtIndex:index];
-        xqWin = [winList objectForKey:key];
-        xqWinContxt = [xqWin getContext:xqWin];
-        if (xqWinContxt->window == xtoqContxt->window) {
-            return xqWin;
-        }
-    }
-    
-    return nil;
-}
-
-
-- (void) addWindowInList:(XtoqWindow *)xqWin 
-             withContext: (xtoq_context_t *) aContext{
-    NSString *key = [NSString stringWithFormat:@"%d", winCount];
-    [xqWin setContext:aContext withId:key];
-    [winList setObject:xqWin forKey:key];
-    ++winCount;
-}
-
-- (void) removeWindowInLIst:(id)akey {
-    [winList removeObjectForKey:akey];
-    --winCount;
-}
-
-
 - (void) setScreen:(char *)scrn {
     screen = scrn;
 }
@@ -275,13 +235,15 @@
 
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
-/*    
+   
     NSLog(@"windowContext");
     NSLog(@"x = %i",windowContext->x);
     NSLog(@"y = %i",windowContext->y);
     NSLog(@"width = %i",windowContext->width);
     NSLog(@"height = %i",windowContext->height);
-*/    
+    NSLog(@"Window title \"%s\" ",windowContext->name);
+    
+    
     XtoqWindow *newWindow;
     XtoqView *newView;
     xcb_image_t *xcbImage;
@@ -299,25 +261,16 @@
                   defer: YES];
     
     // set context in window
-    [newWindow setContext:windowContext withId:newWindow];
+    [newWindow setContext:windowContext];
     
-    //[NSWindow standardWindowButton:NSWindowCloseButton forStyleMask:NSTitledWindowMask];
-
-    // save the newWindow into the context
+    // save the newWindow pointer into the context
     windowContext->local_data = newWindow;
-    
-    // add new window to list, increment count of windows
-    NSString *key = [NSString stringWithFormat:@"%d", winCount];
-    [xtoqWindow setContext:windowContext withId:key];
-    [xtoqWindow setRootDataPointer:windowContext];
-    [winList setObject:xtoqWindow forKey:key];
-    ++winCount;
     
     // get image to darw
     xcbImage = xtoq_get_image(windowContext);
     imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
     
-    //draw the image into a rect
+    // draw the image into a rect
     NSRect imgRec = NSMakeRect(0,0, [imageRep getWidth], [imageRep getHeight]);
     
     // create a view, init'ing it with our rect
@@ -331,15 +284,22 @@
     
     // add view to its window
     [[newWindow contentView]  addSubview: newView]; 
+    
+    // set title
+    NSString *winTitle;
+    winTitle = [NSString stringWithCString:windowContext->name encoding:NSUTF8StringEncoding];
+    //winTitle = [[ NSString alloc ] initWithUTF8String:windowContext->name];
+    
+    [newWindow setTitle:winTitle];
 
 }
 
 - (void) destroyWindow: (xtoq_context_t *) windowContext {
     
-    // TODO: remove from list
-       
+    XtoqWindow *destWindow = windowContext->local_data;
+    
     //close window
-    [windowContext->local_data close];
+    [destWindow close];
 }
 
 - (void) destroy: (NSNotification *) aNotification {    
@@ -354,8 +314,6 @@
     NSLog(@"width = %i",theContext->width);
     NSLog(@"height = %i",theContext->height);
 */   
-    
-    // TODO: remove from list
     
     //use dispatch_async() to handle the actual close 
       dispatch_async(xtoqDispatchQueue, ^{
