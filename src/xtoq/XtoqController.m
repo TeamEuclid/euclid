@@ -46,18 +46,6 @@
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     
     
-    //Setting environment variable $DISPLAY to screen.
-    char *env = getenv("DISPLAY");
-    NSLog(@"$DISPLAY = %s", env);
-    if (setenv("DISPLAY", screen, 1) == 0) {
-        NSLog(@"setenv successful");
-        env = getenv("DISPLAY");
-        NSLog(@"current $DISPLAY is = %s", env);
-    }
-    else {
-        NSLog(@"not successful in attemp to set $DISPLAY");
-    }
-    
     
     // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);

@@ -24,7 +24,7 @@
 @implementation XtoqApplication
 
 int XtoqApplicationMain(int argc, char** argv){
-    /*FILE *fp;
+    FILE *fp;
     const char *fifo_path = "/tmp/xtoq_fifo";
     
     // seems to error if file already exists
@@ -80,9 +80,10 @@ int XtoqApplicationMain(int argc, char** argv){
     
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
     // Just giving up on this, too much time spent spinning wheels.
-    // Display will default to :0 */
-    char *scrn = ":0";
-    /*ssize_t bytes_read;
+    // Display will default to :0
+    
+    char *scrn;
+    ssize_t bytes_read;
     size_t len = 0;
     
     fp = fopen(fifo_path, "r");
@@ -93,7 +94,8 @@ int XtoqApplicationMain(int argc, char** argv){
     scrn=":0";
 #endif
     fclose(fp);
-    scrn[len - 1] = '\0';*/
+    
+    scrn[len - 2] = '\0';
 
     NSLog(@"xinitrc told us DISPLAY=%s\n", scrn);
     
