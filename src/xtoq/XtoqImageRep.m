@@ -42,6 +42,7 @@
 
 - (id)initWithData:(xcb_image_t *)imageData x:(int)x y:(int)y{
     // We might need implement GetSize
+    imageT = imageData;
     windowSize =  NSMakeSize(imageData->width, imageData->size);
 
     self = [super init];
@@ -134,5 +135,9 @@
 }
 - (float)imageY{
     return imageY;
+}
+- (void)destroy{
+    if (imageT)
+        xcb_image_destroy(imageT);
 }
 @end

@@ -39,6 +39,7 @@
     NSSize windowSize; 
     float imageX;
     float imageY;
+    
 }
 
 - (float)imageX;
@@ -89,4 +90,6 @@
  */
 - (id)topCrop;
 
+
+- (void)destroy;
 @end
