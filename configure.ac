@@ -20,7 +20,7 @@ AC_PROG_OBJC
 AC_PROG_INSTALL
 
 # Checks for libraries.
-PKG_CHECK_MODULES(XCB, xcb-damage xcb-event xcb-xtest xcb-image xcb-keysyms xcb-icccm xcb-atom)
+PKG_CHECK_MODULES(XCB, xcb-damage xcb-composite xcb-event xcb-xtest xcb-image xcb-keysyms xcb-icccm xcb-atom)
 
 AC_CONFIG_FILES([Makefile
                  include/Makefile
