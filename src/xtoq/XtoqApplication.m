@@ -25,6 +25,7 @@
 
 int XtoqApplicationMain(int argc, char** argv){
 
+    XtoqController *controller;
     char *scrn;
     //FILE *fp;
     scrn = findScreen(argc, argv);
@@ -102,7 +103,7 @@ int XtoqApplicationMain(int argc, char** argv){
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
-    XtoqController *controller = [[XtoqController alloc] init];
+    controller = [[XtoqController alloc] init];
     [controller setScreen:scrn];
     [NSApp setDelegate: controller];
     [NSApp run];

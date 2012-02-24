@@ -113,11 +113,12 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
 
 xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     
-  //  if (_xtoq_get_context_node_by_window_id(event->window) == NULL)
-    //    return NULL;
-    
     xtoq_context_t *context = _xtoq_get_context_node_by_window_id(event->window);
-    
+    if (!context) {
+		/* Window isn't being managed */
+		return NULL;
+	}
+
     // Destroy the damage object associated with the window.
     // TODO: I'm not sure if this frees the damage object...
     xcb_damage_destroy(context->conn,context->damage);
@@ -133,8 +134,6 @@ void
 set_icccm_properties (xtoq_context_t *context)
 {
 	set_wm_name_in_context(context);
-
-	
 	set_wm_delete_win_in_context(context);
 }
 
@@ -164,53 +163,26 @@ set_wm_name_in_context (xtoq_context_t *context)
 	length = xcb_get_property_value_length(reply);
 	value = (char *) xcb_get_property_value(reply);
 
-	context->name = strdup(value);
+	context->name = malloc(sizeof(char) * (length + 1));
+	strncpy(context->name, value, length);
+	context->name[length] = '\0';
 }
 
 void
 set_wm_delete_win_in_context (xtoq_context_t *context)
 {
-	xcb_atom_t wm_delete_atom;
-	xcb_atom_t wm_protocols_atom;
-	xcb_intern_atom_reply_t *atom_reply;
-	xcb_intern_atom_cookie_t atom_cookie;
 	xcb_get_property_cookie_t cookie;
 	xcb_get_property_reply_t *reply;
 	xcb_atom_t *prop_atoms;
 	int prop_length;
 	xcb_generic_error_t *error;
-
-	/* We need to get some atoms first - this may need to be done
-	*  in the init */
-	/* WM_PROTOCOLS atom */
-	atom_cookie = xcb_intern_atom(context->conn,
-								  0,
-								  12,
-								  "WM_PROTOCOLS");
-	atom_reply = xcb_intern_atom_reply(context->conn,
-									   atom_cookie,
-									   NULL);
-	assert(atom_reply);
-	wm_protocols_atom = atom_reply->atom;
-	free(atom_reply);
-
-	/* WM_DELETE_WINDOW atom */
-	atom_cookie = xcb_intern_atom(context->conn,
-								  0,
-								  16,
-								  "WM_DELETE_WINDOW");
-	atom_reply = xcb_intern_atom_reply(context->conn,
-									   atom_cookie,
-									   NULL);
-	assert(atom_reply);
-	wm_delete_atom = atom_reply->atom;
-	free(atom_reply);
+    int i;
 
 	/* Get the WM_PROTOCOLS */
 	cookie = xcb_get_property(context->conn,
 							  0,
 							  context->window,
-							  wm_protocols_atom,
+							  _wm_atoms->wm_protocols_atom,
 							  XCB_ATOM_ATOM,
 							  0,
 							  UINT_MAX);
@@ -226,5 +198,15 @@ set_wm_delete_win_in_context (xtoq_context_t *context)
 	prop_length = xcb_get_property_value_length(reply);
 	prop_atoms = (xcb_atom_t *) xcb_get_property_value(reply);
 	free(reply);
+
+    /* See if the WM_DELETE_WINDOW is in WM_PROTOCOLS */
+    for (i = 0; i < prop_length; i++) {
+        if (prop_atoms[i] == _wm_atoms->wm_delete_window_atom) {
+            context->wm_delete_set = 1;
+            return;
+        }
+    }
+    context->wm_delete_set = 0;
+
 	return;
 }

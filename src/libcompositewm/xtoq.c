@@ -85,7 +85,9 @@ xtoq_init(char *display) {
     syms = xcb_key_symbols_alloc(conn);
     //_xtoq_init_extension(conn, "XTEST");
 	_xtoq_init_extension(conn, "XKEYBOARD");
-    
+
+	_xtoq_get_wm_atoms(root_context);
+
     return root_context;
 }
 

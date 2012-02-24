@@ -48,6 +48,19 @@ typedef struct xtoq_event_connetion {
 	xtoq_event_cb_t event_callback;   /* Fuction to call when event caught */
 } xtoq_event_connection;
 
+/**
+ * Structure to hold WM_* atoms that we care about
+ */
+typedef struct xtoq_wm_atoms {
+    xcb_atom_t wm_protocols_atom;
+    xcb_atom_t wm_delete_window_atom;
+} xtoq_wm_atoms;
+
+/**
+ * Global for the atoms needed
+ */
+extern xtoq_wm_atoms *_wm_atoms;
+
 /* util.c */
 
 /**
@@ -123,6 +136,12 @@ _xtoq_init_composite(xtoq_context_t *contxt);
 
 void
 _xtoq_init_xfixes (xtoq_context_t *contxt);
+
+/**
+ * Get the values for the WM_* atoms that we need.
+ */
+void
+_xtoq_get_wm_atoms (xtoq_context_t *contxt);
 
 /****************
  * event_loop.c

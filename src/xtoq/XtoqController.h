@@ -76,36 +76,11 @@ id referenceToSelf;
 - (void) makeMenu;
 
 /**
- * Create the Display Number Controller
- */
-
-- (IBAction)showDisplayChooser;
-
-/**
  * Put a new image in the window / view
  */
 - (void) updateImage;
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;
-
-
-
-/**
- * a method for getting a window in the list by searching all keys
- * returns nil if no key is found.
- */
-//- (XtoqWindow *) getWindowInList: (xtoq_context_t) xtoqContxt;
-
-/**
- * A function that adds a window to the dictionary list.
- */
-//- (void) addWindowInList: (XtoqWindow *) xqWin 
-//             withContext: (xtoq_context_t) aContext;
-
-/**
- * A function that removes a window from the list by key.
- */
-//- (void) removeWindowInList: (id) akey;
 
 /**
  * Sets the screen to command line argument.
