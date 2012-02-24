@@ -49,19 +49,36 @@ initWithFrame:(NSRect)frame {
 -(void)
 drawRect:(NSRect)dirtyRect {
 
-    
     //const NSRect ** rectList;
     //NSInteger * rectInt = 0;
     //[rectList count:rectInt];
     //NSLog(@"rectInt = %ld", (long)rectInt);
     
-    while (indexTwo < index) {
-        [image[indexTwo++] draw];//InRect:dirtyRect];
+    /*const NSRect *rects;
+    int count, i;
+    id thing;
+    
+    NSEnumerator *thingEnumerator = [[self image] objectEnumerator];
+    [self getRectsBeingDrawn:&rects count:&count];
+    
+    while (thing = [thingEnumerator nextObject]) {
+        // First test against coalesced rect.
+        if (NSIntersectsRect([thing bounds], dirtyRect)) {
+            // Then test per dirty rect
+            for (i = 0; i < count; i++) {
+                if (NSIntersectsRect([thing bounds], rects[i])) {
+                    [image draw];
+                    break;
+                }
+            }
+        }
     }
-    
-
-    //[[self window] flushWindow];
-    
+       }*/
+    while (indexTwo < index) {
+        int i = indexTwo++;
+        [image[i] draw];//InRect:dirtyRect];
+        [image[i] destroy];
+    }
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect
     //   operation:NSCompositeSourceOver fraction:1.0];
@@ -136,13 +153,21 @@ mouseDown:(NSEvent *)mouseEvent {
     NSLog(@"index %i index 2 %i", index, indexTwo);
     NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
     //[image drawInRect:imageRec];
-
+    //[self ourDisp ];
     [self setNeedsDisplayInRect:imageRec];
     //[[self window] flushWindow];
 }
 
 - (BOOL)isOpaque{
     return YES;
+}
+
+- (void)ourDisp{
+    CGContextRef destCtx = (CGContextRef)[[NSGraphicsContext currentContext]
+                                          graphicsPort];
+    while (indexTwo < index) {
+        [image[indexTwo++] draw];//InRect:dirtyRect];
+    }
 }
 
 @end

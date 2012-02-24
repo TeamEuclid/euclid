@@ -57,6 +57,6 @@ SOFTWARE.
 - (void)setPartialImage:(XtoqImageRep *)newImage;
 - (id)initWithFrame:(NSRect)frame;
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
-
+- (void)ourDisp;
 @end
 
