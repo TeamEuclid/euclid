@@ -67,7 +67,7 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
     free (geom);
 
 	/* Set the ICCCM properties we care about */
-/* 	set_icccm_properties(context); */
+	set_icccm_properties(context);
     
     //register for damage
     _xtoq_init_damage(context);
