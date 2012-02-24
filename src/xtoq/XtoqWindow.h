@@ -27,7 +27,6 @@
 
 @interface XtoqWindow : NSWindow {
     xtoq_context_t *winContext;  // The context of the window.
-    void *xtoqLocalData;        // Pointer to xtoq_context's data structure.
     NSNotificationCenter * notificationCenter;
 }
 
