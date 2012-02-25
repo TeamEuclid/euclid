@@ -56,8 +56,9 @@ id referenceToSelf;
     char *screen;
     
     xtoq_context_t xcbContext;
-    xcb_image_t *imageT;
-    xtoq_image_t libImageT;
+   // xcb_image_t *imageT;
+    
+    xtoq_image_t *libImageT;
     XtoqImageRep *image;
     XtoqImageRep *imageNew;
     XtoqView *view;
@@ -117,7 +118,7 @@ id referenceToSelf;
  */
 - (void) setScreen: (char *) scrn;
 
-@end
+
 
 /**
  * Callback function that will receive events from the xtoq event loop
@@ -126,4 +127,6 @@ id referenceToSelf;
 void eventHandler (xtoq_event_t event);
 
 
-unsigned long long GetTimeSinceBoot();
+//unsigned long long GetTimeSinceBoot;
+
+@end

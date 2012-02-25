@@ -32,6 +32,7 @@
 @interface XtoqImageRep : NSImageRep {
     struct CGImage *cgImage;
     xcb_image_t *imageT;
+    xtoq_image_t * imageParent;
     NSSize size;
     CGFloat width;
     CGFloat height;
@@ -65,7 +66,7 @@
  * @param imageData The image from the Xserver that you want drawn
  * @return id It returns its own id
  */
-- (id)initWithData:(xcb_image_t *)imageData x:(int)x y:(int)y;
+- (id)initWithData:(xtoq_image_t *)imageData x:(int)x y:(int)y;
 
 /**
  * Return whether the window was drawn

@@ -61,7 +61,7 @@
     // setup X connection and get the initial image from the server
     NSLog(@"screen = %s", screen);
     xcbContext = xtoq_init(screen);
-    
+    //sleep(10);
     NSLog(@"width = %i, height = %i, x = %i, y = %i", xcbContext.width, xcbContext.height, xcbContext.x, xcbContext.y);
     
     winList = [[NSMutableDictionary alloc] init];
@@ -81,10 +81,10 @@
     [self makeMenu];        
     
     //create an XtoqImageRep with the information from X
-    imageT = xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT x:0 y:0];  
+    libImageT = test_xtoq_get_image(xcbContext);
+    image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
     //draw the image into a rect
-    imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
+    imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
     // add view to its window
@@ -145,7 +145,7 @@
     for(i = 0; i < 256; i++){
         aChar++;
         dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_key_press(xcbContext, 
+                   ^{ dummy_xtoq_key_press(&xcbContext, 
                                      (int)[event windowNumber],
                                      aChar) ;});
     }
@@ -163,7 +163,7 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_button_down (xcbContext,
+                   ^{ dummy_xtoq_button_down (&xcbContext,
                                         [event locationInWindow].x, 
                                         heightFloat - [event locationInWindow].y, 
                                         (int)[event windowNumber],
@@ -319,30 +319,28 @@
 
 - (void) updateImageNew : (xtoq_context_t *) windowContext{
     float x_transformed, y_transformed, dWidth,dHeight;
-    int numberOfRects = 1;
-	int i;
-        
-    //if (libImageT.image)
-    //    xcb_image_destroy(libImageT.image);
+    //int numberOfRects = 1;
+	//int i;
+
     libImageT = test_xtoq_get_image(*windowContext);
     NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT.image
+    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
                                                     x:((windowContext->damaged_x))
                                                     y:y_transformed];
-    NSLog(@"NSS %lu", GetTimeSinceBoot());
+    //NSLog(@"NSS %lu", [self GetTimeSinceBoot]);
     [ourView setPartialImage:imageNew];
 
 }
 
 
 
-unsigned long long GetTimeSinceBoot()
+/*unsigned long long GetTimeSinceBoot:
 {
     UnsignedWide uw = AbsoluteToNanoseconds(UpTime());
     return ((((unsigned long long)uw.hi)<<32)|(uw.lo));
-}
+}*/
 
 
 void eventHandler (xtoq_event_t event)

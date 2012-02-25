@@ -52,14 +52,18 @@ extern xtoq_context_t *root_context;
 xtoq_context_t
 xtoq_init(char *screen);
 
-
-
 xcb_image_t *
 xtoq_get_image(xtoq_context_t context);
 
 xtoq_event_t
 dummy_xtoq_wait_for_event(xtoq_context_t context);
 
+/**
+ * free the memory used by an xtoq_image_t created 
+ * during a call to test_xtoq_image_create
+ */
+void 
+xtoq_image_destroy(xtoq_image_t * xtoq_image);
 
 /**
  * Free the image returned by xtoq_get_image
@@ -92,7 +96,7 @@ xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
  * @param keyCode The key pressed.
  */
 void
-dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code);
+dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
 
 /**
  * Testing function
@@ -102,8 +106,8 @@ dummy_xtoq_key_press (xtoq_context_t context, int window, uint8_t code);
  * @param window The window that the key press was made in.
  */
 void
-dummy_xtoq_button_down (xtoq_context_t context, long x, long y, int window, int button);
+dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
 
-xtoq_image_t
+xtoq_image_t *
 test_xtoq_get_image(xtoq_context_t context);
 #endif // _XTOQ_H_

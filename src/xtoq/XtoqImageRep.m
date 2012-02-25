@@ -40,10 +40,11 @@
 }
 
 
-- (id)initWithData:(xcb_image_t *)imageData x:(int)x y:(int)y{
+- (id)initWithData:(xtoq_image_t *)imageData x:(int)x y:(int)y{
     // We might need implement GetSize
-    imageT = imageData;
-    windowSize =  NSMakeSize(imageData->width, imageData->size);
+    imageParent = imageData;
+    imageT = imageData->image;
+    windowSize =  NSMakeSize(imageT->width, 	imageT->size);
 
     self = [super init];
 	if (!self) {
@@ -51,18 +52,18 @@
     }
     CGDataProviderRef cgdat =  CGDataProviderCreateWithData (
                                                     NULL,
-                                                    imageData->data,
-                                                    imageData->size,
+                                                    imageT->data,
+                                                    imageT->size,
                                                     NULL
                                                     );
     
     CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
 
-    cgImage = CGImageCreate (imageData->width,// size_t width,
-                             imageData->height, //size_t height,
+    cgImage = CGImageCreate (imageT->width,// size_t width,
+                             imageT->height, //size_t height,
                              8, //size_t bitsPerComponent,
                              32,//size_t bitsPerPixel,
-                             imageData->stride,//size_t bytesPerRow,
+                             imageT->stride,//size_t bytesPerRow,
                              csp, //CGColorSpaceRef colorspace,
                              kCGBitmapByteOrderDefault,//CGBitmapInfo bitmapInfo,
                              cgdat,//CGDataProviderRef provider,
@@ -137,7 +138,10 @@
     return imageY;
 }
 - (void)destroy{
-    if (imageT)
-        xcb_image_destroy(imageT);
+    //if (imageT)
+    //    xcb_image_destroy(imageT);
+    if (imageParent) {
+        xtoq_image_destroy(imageParent);
+    }
 }
 @end
