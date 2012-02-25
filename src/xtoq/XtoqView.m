@@ -74,33 +74,17 @@ drawRect:(NSRect)dirtyRect {
         }
     }
        }*/
+    
     while (indexTwo < index) {
         int i = indexTwo++;
         [image[i] draw];//InRect:dirtyRect];
         [image[i] destroy];
     }
+    index = indexTwo = 0;
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect
     //   operation:NSCompositeSourceOver fraction:1.0];
 }
-
-
-/**
- * Eventually implement- draw damaged rects
- */
-/*- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
- 
- //NSRect rect = NSMakeRect(10, 10, 100, 100);
- //[[NSColor purpleColor] setFill];
- //NSRectFill(rect); 
- 
- //if (rectInt > 0){
-    [image drawInRect:dirtyRect];
- //}
- [[self window] flushWindow];
- 
- }*/
-
 
 /**
  *  This is necessary for accepting input.

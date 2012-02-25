@@ -173,9 +173,6 @@
                                         0);;});
 }
 
-
-
-
 - (XtoqWindow *) getWindowInList: (xtoq_context_t)xtoqContxt {
     
     id key;
@@ -319,12 +316,6 @@
 }
 
 - (void) updateImageNew : (xtoq_context_t *) windowContext{
-    
-    //remove this line
-    //xcbContext = windowContext->window;
-
-    
-    
     
     float  y_transformed;
 
