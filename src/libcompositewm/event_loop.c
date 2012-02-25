@@ -166,42 +166,39 @@ void *run_event_loop (void *thread_arg_struct)
                 free(context);
                 break;
             }
-			case XCB_CONFIGURE_NOTIFY: {
-				xcb_configure_notify_event_t *notify = (xcb_configure_notify_event_t *)evt;
+			case XCB_MAP_REQUEST: {
+				xcb_map_notify_event_t *notify = (xcb_map_notify_event_t *)evt;
                 return_evt = malloc(sizeof(xtoq_event_t));
                 return_evt->context = _xtoq_window_created(event_conn, notify);
                 if (!return_evt->context) {
                     free(return_evt);
                     break;
                 }
+				/* Map the window so it has an image for our client to grab */
+				_xtoq_map_window(return_evt->context);
+
                 return_evt->event_type = XTOQ_CREATE;
-                
-                printf("Got configure notify\n");
-				printf("x = %i, y = %i, w = %i, h = %i\n", notify->x, notify->y,
-					   notify->width, notify->height);
-/* 				callback_ptr(return_evt); */
+				xcb_get_geometry_reply_t *geom = 
+					_xtoq_get_window_geometry(event_conn, notify->window);
+                printf("Got map request: ");
+				printf("x = %i, y = %i, w = %i, h = %i\n", geom->x, geom->y,
+					   geom->width, geom->height);
+ 				callback_ptr(return_evt);
 
                 break;
 
 			}
-			case XCB_MAP_NOTIFY: {
-				xcb_map_notify_event_t *notify = (xcb_map_notify_event_t *)evt;
-                return_evt = malloc(sizeof(xtoq_event_t));
-/*                 return_evt->context = _xtoq_window_created(event_conn, notify); */
-/*                 if (!return_evt->context) { */
-/*                     free(return_evt); */
-/*                     break; */
-/*                 } */
-                return_evt->event_type = XTOQ_CREATE;
-				xcb_get_geometry_reply_t *geom = 
-					_xtoq_get_window_geometry(event_conn, notify->window);
-                printf("Got map notify ");
-				printf("x = %i, y = %i, w = %i, h = %i\n", geom->x, geom->y,
-					   geom->width, geom->height);
-/* 				callback_ptr(return_evt); */
+			case XCB_CONFIGURE_REQUEST: {
+				xcb_configure_request_event_t *notify =
+					(xcb_configure_request_event_t *)evt;
+                printf("Got configure request: ");
+				printf("x = %i, y = %i, w = %i, h = %i\n", notify->x, notify->y,
+					   notify->width, notify->height);
 
+				/* Change the size of the window, but not its position */
+				_xtoq_resize_window(event_conn, notify->window,
+									notify->width, notify->height);
                 break;
-
 			}
             case XCB_KEY_PRESS: {
                 printf("Key press from xserver\n");

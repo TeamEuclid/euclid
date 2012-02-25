@@ -132,6 +132,29 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     return context;
 }
 
+/* Resize the window on server side */
+void
+_xtoq_resize_window (xcb_connection_t *conn, xcb_window_t window,
+					 int width, int height)
+{
+	uint32_t values[2] = { width, height };
+
+	xcb_configure_window(conn,
+						 window,
+						 XCB_CONFIG_WINDOW_WIDTH |
+						 XCB_CONFIG_WINDOW_HEIGHT,
+						 values);
+	xcb_flush(conn);
+}
+
+void
+_xtoq_map_window (xtoq_context_t *context)
+{
+	/* Map the window. May want to handle other things here */
+	xcb_map_window(context->conn, context->window);
+	xcb_flush(context->conn);
+}
+
 void
 set_icccm_properties (xtoq_context_t *context)
 {

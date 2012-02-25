@@ -191,4 +191,22 @@ _xtoq_get_context_node_by_window_id (xcb_window_t window_id);
 xtoq_context_t *_xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *evt);
 xtoq_context_t *_xtoq_destroy_window(xcb_destroy_notify_event_t *event);
 
-#endif  /* _UTIL_H_ */
+/**
+ * Resize the window to given width and height.
+ * @param conn The connection
+ * @param window The id of window to resize
+ * @param width The new width
+ * @param height The new height
+ */
+void
+_xtoq_resize_window (xcb_connection_t *conn, xcb_window_t window,
+					 int width, int height);
+
+/**
+ * Map the given window.
+ * @param context The context of the window to map
+ */
+void
+_xtoq_map_window (xtoq_context_t *context);
+
+#endif  /* _XTOQ_INTERNAL_H_ */
