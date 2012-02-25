@@ -451,12 +451,6 @@
 @end
 - (void) updateImageNew : (xtoq_context_t *) windowContext{
     
-    //remove this line
-    //xcbContext = windowContext->window;
-
-    
-    
-    
     float  y_transformed;
 
     libImageT = test_xtoq_get_image(*windowContext);
