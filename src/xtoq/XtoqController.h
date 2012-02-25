@@ -112,6 +112,7 @@ id referenceToSelf;
 
 @end
 
+
 /**
  * Callback function that will receive events from the xtoq event loop
  * once it is started.

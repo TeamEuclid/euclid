@@ -138,19 +138,24 @@ xtoq_start_event_loop (xtoq_context_t *context,
 
 
 
+void 
+xtoq_image_destroy(xtoq_image_t * xtoq_image){
+    //FIXME - is this all that needs to be done?
+    xcb_image_destroy(xtoq_image->image);
+    free(xtoq_image);
+}
+
 void
-dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
+dummy_xtoq_key_press (xtoq_context_t * context, int window, uint8_t code)
 {
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
-
-    
     xcb_window_t none = { XCB_NONE };
 
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
-                                XCB_CURRENT_TIME, none, 0, 0, 0 );  
+                                XCB_CURRENT_TIME, context->window, 0, 0, 0 );  
     xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
-                                XCB_CURRENT_TIME, none, 0, 0, 0 );
+                                XCB_CURRENT_TIME, context->window, 0, 0, 0 );
         
     err = xcb_request_check(context->conn, cookie);
     if (err)
@@ -159,11 +164,11 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     
-    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context.window);
+    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void
-dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button)
+dummy_xtoq_button_down (xtoq_context_t * context, long x, long y, int window, int button)
 {
     //xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,

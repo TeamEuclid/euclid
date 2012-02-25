@@ -54,26 +54,8 @@ extern xtoq_context_t *root_context;
 xtoq_context_t *
 xtoq_init(char *display);
 
-/**
- *
- */
 xcb_image_t *
-xtoq_get_image(xtoq_context_t *context);
-
-/**
- * Free the image returned by xtoq_get_image
- * @param img The xcb_image_t that needs to
- * be freed
- */
-void
-xtoq_free_image(xcb_image_t *img);
-/*
- * Set input focus to the window in context
- * @param context The context containing the window
- */
-
-void
-xtoq_set_input_focus(xtoq_context_t *context);
+xtoq_get_image(xtoq_context_t context);
 
 /**
  * Set a window to the bottom of the window stack.
@@ -88,6 +70,12 @@ xtoq_set_window_to_bottom(xtoq_context_t *context);
  */
 void
 xtoq_set_window_to_top(xtoq_context_t *context);
+/**
+ * free the memory used by an xtoq_image_t created 
+ * during a call to test_xtoq_image_create
+ */
+void 
+xtoq_image_destroy(xtoq_image_t * xtoq_image);
 
 
 /**
@@ -133,14 +121,6 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
 void
 dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
 
-// not compiling right now :(
-//static bool xtoq_client_supports_protocol(xtoq_context_t * context, xcb_atom_t atom);
-/*
-void
-xtoq_request_close(xtoq_context_t *context);
-*/
-
-
-xtoq_image_t
+xtoq_image_t *
 test_xtoq_get_image(xtoq_context_t context);
 #endif // _XTOQ_H_
