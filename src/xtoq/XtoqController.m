@@ -452,7 +452,7 @@
 	//int i;
 
     libImageT = test_xtoq_get_image(*windowContext);
-    NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
     imageNew = [[XtoqImageRep alloc] initWithData:libImageT

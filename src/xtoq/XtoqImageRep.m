@@ -138,8 +138,6 @@
     return imageY;
 }
 - (void)destroy{
-    //if (imageT)
-    //    xcb_image_destroy(imageT);
     if (imageParent) {
         xtoq_image_destroy(imageParent);
     }
