@@ -28,7 +28,7 @@
 #include <pthread.h>
 #include "xtoq.h"
 #include "xtoq_internal.h"
- 
+
 typedef struct _connection_data {
 	xcb_connection_t *conn;
 	xtoq_event_cb_t callback;
@@ -53,7 +53,7 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
     
 	conn_data->conn = conn;
 	conn_data->callback = event_callback;
-
+    
 	return pthread_create(&_event_thread,
 						  NULL,
 						  run_event_loop,
@@ -73,7 +73,7 @@ void *run_event_loop (void *thread_arg_struct)
 	callback_ptr = conn_data->callback;
     
     free(thread_arg_struct);
-
+    
 	/* Start the event loop, and flush if first */
     xcb_flush(event_conn);
 	
@@ -89,24 +89,36 @@ void *run_event_loop (void *thread_arg_struct)
             // the whole window is damaged.
             xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
             xcb_rectangle_t rect;
-            rect.x = 0;
-            rect.y = 0;
-            rect.width = root_context->width;
-            rect.height= root_context->height;
+            rect.x = dmgevnt->area.x;
+            rect.y = dmgevnt->area.y;
+            rect.width = dmgevnt->area.width;
+            rect.height = dmgevnt->area.height;
+            
+           // printf("dmgevent->area: x=%d y=%d w=%d h=%d dmgevent->geometry x=%d y=%d w=%d h=%d", dmgevnt->area.x, dmgevnt->area.y, dmgevnt->area.width, dmgevnt->area.height, dmgevnt->geometry.x,dmgevnt->geometry.y, dmgevnt->geometry.width, dmgevnt->geometry.height);
+            
+            root_context->damaged_x = dmgevnt->area.x;
+            root_context->damaged_y = dmgevnt->area.y;
+            root_context->damaged_width = dmgevnt->area.width;
+            root_context->damaged_height = dmgevnt->area.height;
+            
+            return_evt.context = root_context;
+            return_evt.context->window = root_context->window;
             
             xcb_void_cookie_t cookie =
-                xcb_xfixes_create_region_checked(root_context->conn,
-                                                 region,
-                                                 1, 
-                                                 &rect);
+            xcb_xfixes_create_region_checked(root_context->conn,
+                                             region,
+                                             1, 
+                                             &rect);
             _xtoq_request_check(root_context->conn, cookie, "Failed to create region");
             cookie = xcb_damage_subtract_checked (root_context->conn,
                                                   root_context->damage,
                                                   region,
                                                   0);
             _xtoq_request_check(root_context->conn, cookie, "Failed to subtract damage");
+            
+            
             // END TODO
-
+            
             callback_ptr(return_evt);        
 		} else {
 			switch (evt->response_type & ~0x80) {

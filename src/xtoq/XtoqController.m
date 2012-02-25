@@ -30,8 +30,8 @@
 
  */
 
-#import "XtoqController.h"
 
+#import "XtoqController.h"
 
 @implementation XtoqController
 
@@ -45,7 +45,6 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     
-    
     //Setting environment variable $DISPLAY to screen.
     char *env = getenv("DISPLAY");
     NSLog(@"$DISPLAY = %s", env);
@@ -58,7 +57,7 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }
     
-    
+    screen = ":1";// comment out
     // setup X connection and get the initial image from the server
 //NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
@@ -87,13 +86,14 @@
     imageT = xtoq_get_image(rootContext);
     image = [[XtoqImageRep alloc] initWithData:imageT];  
     //draw the image into a rect
-    NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
+    imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
     // add view to its window
     [[xtoqWindow contentView]  addSubview: ourView];  
     // set the initial image in the window
-    [ourView setImage:image];
+    //[ourView setImage:image];
+
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
 
@@ -153,7 +153,8 @@
 }
 
 - (void) keyDownInView: (NSNotification *) aNotification
-{
+{   
+    int i = 0;
     NSDictionary *keyInfo = [aNotification userInfo];
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
@@ -168,24 +169,33 @@
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
-                                     code) ;});
+                                     aChar) ;});
+    }
 }
+ 
 
+// on this side all I have is a xtoq_context , on the library side I need
+// to turn that into a real context 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
 {
+    CGFloat heightFloat;
     NSDictionary *mouseDownInfo = [aNotification userInfo];
     // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
-    NSEvent * event = [mouseDownInfo objectForKey: @"2"];
+    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
+    //NSRect bnd = NSMakeRect(0,0,512,386);
+    NSNumber * heightAsNumber =  [NSNumber alloc];
+    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
+    heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_button_down (rootContext,
                                         [event locationInWindow].x, 
-                                        [event locationInWindow].y, 
+                                        heightFloat - [event locationInWindow].y, 
                                         (int)[event windowNumber],
                                         0);;});
 }
 
-// create a new image to redraw part of the screen 
+/* create a new image to redraw part of the screen 
 - (void) updateImage {
 
     int numberOfRects = 1;
@@ -206,7 +216,7 @@
          NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
         [ourView setNeedsDisplayInRect:rect];
     }
-}
+}*/
 
 
 - (void) setScreen:(char *)scrn {
@@ -251,7 +261,29 @@
     appMenu = [[NSMenu new] autorelease];
     appMenuItem = [[NSMenuItem new] autorelease];
     [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar]; 
+    [menubar addItem:startXApps];
+    [NSApp setMainMenu:menubar];
+}
+
+- (void) runXeyes:(id) sender {
+    
+    NSLog(@"Attempting to run Xeyes.");
+    const char *xArg[4];
+    xArg[0] = "/usr/X11/bin/xeyes";
+    xArg[1] = "-display";
+    xArg[2] = getenv("DISPLAY");
+    xArg[3] = NULL;
+    
+    // might try double fork like Xquartz
+    
+}
+- (void) runXclock:(id) sender {
+}
+- (void) runXlogo:(id) sender {
+}
+- (void) runXterm:(id) sender {
+}
+- (void) runXman:(id) sender {
 }
 
 // create a new window 
@@ -289,7 +321,7 @@
     
     // get image to darw
     xcbImage = xtoq_get_image(windowContext);
-    imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
+    imageRep = [[XtoqImageRep alloc] initWithData:xcbImage x:0 y:0];
     
     // draw the image into a rect
     NSRect imgRec = NSMakeRect(0,0, [imageRep getWidth], [imageRep getHeight]);
@@ -376,7 +408,12 @@
     }
 }
 
-@end
+    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
+    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
+                                                    x:((windowContext->damaged_x))
+                                                    y:y_transformed];
+    [ourView setPartialImage:imageNew];
+}
 
 void eventHandler (xtoq_event_t *event)
 {
@@ -395,3 +432,7 @@ void eventHandler (xtoq_event_t *event)
     }
     free(event);
 }
+
+@end
+
+

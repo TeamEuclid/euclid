@@ -25,6 +25,7 @@
 #import "crt_externs.h"
 #import "sys/times.h"
 #import "sys/stat.h"
+#import "string.h"
 
 #ifdef __APPLE__
 #define environ (*_NSGetEnviron())
@@ -33,10 +34,5 @@
 @interface XtoqApplication : NSApplication
 
 int XtoqApplicationMain(int argc, char** argv);
-
-/**
- * Find's which element screen is in argv, otherwise returns 0 if not found.
- */
-char* findScreen(int argc, char **argv);
 
 @end

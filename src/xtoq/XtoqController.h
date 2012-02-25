@@ -24,7 +24,7 @@
  *  AppController.h
  *  xtoq
  *
-  *  TODO: rename this class to XtoqController
+ *  TODO: rename this class to XtoqController
  *  This was controller for the Popup to retreive the display number
  *  from the user.
  *
@@ -38,7 +38,9 @@
 #import "XtoqImageRep.h"
 #import "XtoqView.h"
 #import "xtoq.h"
+#import "unistd.h"
 #import <dispatch/dispatch.h>
+
 
 @class DisplayNumberController;
 
@@ -57,6 +59,7 @@ id referenceToSelf;
     xtoq_context_t *rootContext;
     xcb_image_t *imageT;
     XtoqImageRep *image;
+    XtoqImageRep *imageNew;
     XtoqView *view;
     NSString *file;
     NSImage *image2;
@@ -64,6 +67,8 @@ id referenceToSelf;
    // NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
+    NSRect imageRec;
+    NSString *keyFirst;
 }
 
 - (id) init;
@@ -73,7 +78,17 @@ id referenceToSelf;
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+
+/**
+ * Makemenu and related selector functions for launching X applications.
+ */
 - (void) makeMenu;
+- (void) runXeyes: (id) sender;
+- (void) runXclock: (id) sender;
+- (void) runXlogo: (id) sender;
+- (void) runXterm: (id) sedner;
+- (void) runXman: (id) sender;
+
 
 /**
  * Put a new image in the window / view
@@ -85,7 +100,8 @@ id referenceToSelf;
 /**
  * Sets the screen to command line argument.
  */
-- (void) setScreen: (char *) scrn;
+- (void) setScreen: (const char *) scrn;
+
 
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
