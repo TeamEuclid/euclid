@@ -175,7 +175,10 @@
                                      aChar) ;});
     }
 }
+ 
 
+// on this side all I have is a xtoq_context , on the library side I need
+// to turn that into a real context 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
 {
     CGFloat heightFloat;
@@ -447,9 +450,14 @@
 
 @end
 - (void) updateImageNew : (xtoq_context_t *) windowContext{
-    float x_transformed, y_transformed, dWidth,dHeight;
-    //int numberOfRects = 1;
-	//int i;
+    
+    //remove this line
+    //xcbContext = windowContext->window;
+
+    
+    
+    
+    float  y_transformed;
 
     libImageT = test_xtoq_get_image(*windowContext);
     //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
@@ -458,19 +466,8 @@
     imageNew = [[XtoqImageRep alloc] initWithData:libImageT
                                                     x:((windowContext->damaged_x))
                                                     y:y_transformed];
-    //NSLog(@"NSS %lu", [self GetTimeSinceBoot]);
     [ourView setPartialImage:imageNew];
-
 }
-
-
-
-/*unsigned long long GetTimeSinceBoot:
-{
-    UnsignedWide uw = AbsoluteToNanoseconds(UpTime());
-    return ((((unsigned long long)uw.hi)<<32)|(uw.lo));
-}*/
-
 
 void eventHandler (xtoq_event_t event)
 {

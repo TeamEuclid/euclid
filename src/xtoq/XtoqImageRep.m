@@ -41,7 +41,6 @@
 
 
 - (id)initWithData:(xtoq_image_t *)imageData x:(int)x y:(int)y{
-    // We might need implement GetSize
     imageParent = imageData;
     imageT = imageData->image;
     windowSize =  NSMakeSize(imageT->width, 	imageT->size);
