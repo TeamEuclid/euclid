@@ -89,6 +89,7 @@ id referenceToSelf;
 
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
+- (void)windowDidResize:(NSNotification*)notification;
 
 @end
 

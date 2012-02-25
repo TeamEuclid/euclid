@@ -130,6 +130,12 @@
                                              selector:@selector(windowDidMove:) 
                                                  name:NSWindowDidMoveNotification 
                                                object:nil];
+
+    // regester for window resize notification
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(windowDidResize:) 
+                                                 name:NSWindowDidResizeNotification 
+                                               object:nil];
     
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
     
@@ -345,10 +351,7 @@
     
     XtoqWindow *moveWindow = [NSApp mainWindow];
     
-    if (moveWindow == nil) {
-        NSLog(@"Window is nil do nothing");        
-    }
-    else {
+    if (moveWindow != nil) {
         // origin is the NSPoint that is part of the frame  
         // x & y are CGFloat
         // (0,0) is the bottom left of the screen
@@ -356,14 +359,27 @@
         NSRect moveFrame = [moveWindow frame];
         
         // update context
-        moveContext->x = moveFrame.origin.x;
-        moveContext->y = moveFrame.origin.y;
+        moveContext->x = (int)moveFrame.origin.x;
+        moveContext->y = (int)moveFrame.origin.y;       
         
         NSLog(@"Window title \"%s\" ",moveContext->name);
-        NSLog(@"window context x = %f, y = %f ",moveContext->x, moveContext->y);
+        NSLog(@"window context after x = %d, y = %d ", moveContext->x, moveContext->y);
         NSLog(@"Call xtoq_updatewindowposition(moveContext)"); 
         //xtoq_updatewindowposition (moveContext);
+       
     }
+}
+
+- (void)windowDidResize:(NSNotification*)notification {
+    NSLog(@"window did resize");
+    XtoqWindow *resizeWindow = [NSApp mainWindow];
+    if (resizeWindow == nil) {
+        NSLog(@"Window is nil don't resize");        
+    }
+    else {
+        NSLog(@"Change size");
+    }
+
 }
 
 @end
