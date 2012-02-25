@@ -28,7 +28,6 @@
 
 #include "xtoq.h"
 #include "xtoq_internal.h"
-#include "X11/keysym.h" //aaron
 #include <string.h>
 
 // aaron key stuff
@@ -156,7 +155,7 @@ xtoq_start_event_loop (xtoq_context_t *root_context, void *callback)
 }
 
 xtoq_image_t *
-test_xtoq_get_image(xtoq_context_t context) {
+test_xtoq_get_image(xtoq_context_t *context) {
     
    // printf("Top of test get image\n");
     //xcb_get_geometry_reply_t *geom_reply;
@@ -168,12 +167,12 @@ test_xtoq_get_image(xtoq_context_t context) {
     
 	//xcb_flush(context.conn);
     /* Get the image of the root window */
-    image = xcb_image_get(context.conn,
-                          context.window,
-                          context.damaged_x,
-                          context.damaged_y,
-                          context.damaged_width,
-                          context.damaged_height,
+    image = xcb_image_get(context->conn,
+                          context->window,
+                          context->damaged_x,
+                          context->damaged_y,
+                          context->damaged_width,
+                          context->damaged_height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
     //xtoq_image_t * xtoq_image;
@@ -182,10 +181,10 @@ test_xtoq_get_image(xtoq_context_t context) {
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
     xtoq_image->image = image;
-    xtoq_image->x = context.damaged_x;
-    xtoq_image->y = context.damaged_y;
-    xtoq_image->width = context.damaged_width;
-    xtoq_image->height = context.damaged_height;
+    xtoq_image->x = context->damaged_x;
+    xtoq_image->y = context->damaged_y;
+    xtoq_image->width = context->damaged_width;
+    xtoq_image->height = context->damaged_height;
     
     //printf("Returning image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
  
@@ -202,7 +201,7 @@ xtoq_image_destroy(xtoq_image_t * xtoq_image){
 }
  
 void
-dummy_xtoq_key_press (xtoq_context_t * context, int window, uint8_t code)
+dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
 {
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
@@ -226,14 +225,14 @@ dummy_xtoq_key_press (xtoq_context_t * context, int window, uint8_t code)
 }
 
 void
-dummy_xtoq_button_down (xtoq_context_t * context, long x, long y, int window, int button)
+dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button)
 {
     //xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn,XCB_BUTTON_PRESS,1,XCB_CURRENT_TIME,
-                         context->window,x,y,0);
+    xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
+                         context->parent, x, y, 0);
                          // x has to be translated (?in the view)
-    xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE,1,XCB_CURRENT_TIME,
-                         context->window,	x,y,0);
+    xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
+                         context->parent, x, y, 0);
     
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }

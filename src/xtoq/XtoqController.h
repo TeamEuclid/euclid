@@ -33,7 +33,6 @@
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
-#include <CoreServices/CoreServices.h> // timestamp
 #import <AppKit/AppKit.h>
 #import "XtoqWindow.h"
 #import "XtoqImageRep.h"
@@ -57,7 +56,7 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-    xtoq_context_t xcbContext;
+    xtoq_context_t * xcbContext;
    // xcb_image_t *imageT;
     
     xtoq_image_t *libImageT;
