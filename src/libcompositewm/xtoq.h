@@ -89,6 +89,16 @@ xtoq_set_window_to_bottom(xtoq_context_t *context);
 void
 xtoq_set_window_to_top(xtoq_context_t *context);
 
+
+/**
+ * Free the image returned by xtoq_get_image
+ * @param img The xcb_image_t that needs to
+ * be freed
+ */
+
+void
+xtoq_free_image(xcb_image_t *img);
+
 /**
  * Starts the event loop and listens on the connection specified in
  * the given xtoq_context_t. Uses callback as the function to call
