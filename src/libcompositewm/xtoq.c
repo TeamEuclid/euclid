@@ -39,7 +39,7 @@ xtoq_context_t *root_context = NULL;
 
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
-xtoq_context_t
+xtoq_context_t *
 xtoq_init(char *screen) {
     xcb_connection_t *conn;
     int conn_screen;
@@ -100,23 +100,23 @@ xtoq_init(char *screen) {
     _xtoq_init_extension(conn, "XTEST");
 	_xtoq_init_extension(conn, "XKEYBOARD");
     
-    return init_reply;
+    return root_context;
 }
 
 xcb_image_t *
-xtoq_get_image(xtoq_context_t context) {
+xtoq_get_image(xtoq_context_t *context) {
     
     xcb_get_geometry_reply_t *geom_reply;
     
     //image_data_t img_data;
     xcb_image_t *image;
     
-    geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
+    geom_reply = _xtoq_get_window_geometry(context->conn, context->window);
     
 	//xcb_flush(context.conn);
     /* Get the image of the root window */
-    image = xcb_image_get(context.conn,
-                          context.window,
+    image = xcb_image_get(context->conn,
+                          context->window,
                           geom_reply->x,
                           geom_reply->y,
                           geom_reply->width,
@@ -149,10 +149,10 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
 }
 
 int 
-xtoq_start_event_loop (xtoq_context_t root_context, void *callback)
+xtoq_start_event_loop (xtoq_context_t *root_context, void *callback)
 {
 	/* Simply call our internal function to do the actual setup */
-	return _xtoq_start_event_loop(root_context.conn, callback);
+	return _xtoq_start_event_loop(root_context->conn, callback);
 }
 
 xtoq_image_t *
@@ -238,4 +238,3 @@ dummy_xtoq_button_down (xtoq_context_t * context, long x, long y, int window, in
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
-/* #endif //_XTOQ_C_ */

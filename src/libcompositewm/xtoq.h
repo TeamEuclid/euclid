@@ -49,14 +49,11 @@ extern xtoq_context_t *root_context;
  * Sets up the connection and grabs the root window from the specified screen
  * @param screen The screen that we wish to connect to
  */
-xtoq_context_t
+xtoq_context_t *
 xtoq_init(char *screen);
 
 xcb_image_t *
-xtoq_get_image(xtoq_context_t context);
-
-xtoq_event_t
-dummy_xtoq_wait_for_event(xtoq_context_t context);
+xtoq_get_image(xtoq_context_t *context);
 
 /**
  * free the memory used by an xtoq_image_t created 
@@ -87,7 +84,7 @@ xtoq_free_image(xcb_image_t *img);
  * the return value.
  */
 int
-xtoq_start_event_loop (xtoq_context_t root_context, void *callback);
+xtoq_start_event_loop (xtoq_context_t *root_context, void *callback);
 
 /**
  * Testing function
