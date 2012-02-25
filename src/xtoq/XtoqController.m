@@ -365,21 +365,15 @@
         NSLog(@"Window title \"%s\" ",moveContext->name);
         NSLog(@"window context after x = %d, y = %d ", moveContext->x, moveContext->y);
         NSLog(@"Call xtoq_updatewindowposition(moveContext)"); 
-        //xtoq_updatewindowposition (moveContext);
-       
+        //xtoq_updatewindowposition (moveContext);       
     }
 }
 
 - (void)windowDidResize:(NSNotification*)notification {
-    NSLog(@"window did resize");
     XtoqWindow *resizeWindow = [NSApp mainWindow];
-    if (resizeWindow == nil) {
-        NSLog(@"Window is nil don't resize");        
+    if (resizeWindow != nil) {
+        NSLog(@"Window did resize, change the size");
     }
-    else {
-        NSLog(@"Change size");
-    }
-
 }
 
 @end
