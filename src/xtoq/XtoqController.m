@@ -354,10 +354,15 @@
         // (0,0) is the bottom left of the screen
         xtoq_context_t *moveContext = [moveWindow getContext];        
         NSRect moveFrame = [moveWindow frame];
+        
+        // update context
+        moveContext->x = moveFrame.origin.x;
+        moveContext->y = moveFrame.origin.y;
+        
         NSLog(@"Window title \"%s\" ",moveContext->name);
-        NSLog(@"window x = %f, y = %f ",moveFrame.origin.x, moveFrame.origin.y);
-        NSLog(@"Call xtoq_updatewindowposition"); 
-        //xtoq_updatewindowposition (moveFrame.origin.x, moveFrame.origin.y);
+        NSLog(@"window context x = %f, y = %f ",moveContext->x, moveContext->y);
+        NSLog(@"Call xtoq_updatewindowposition(moveContext)"); 
+        //xtoq_updatewindowposition (moveContext);
     }
 }
 
