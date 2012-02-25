@@ -200,18 +200,20 @@ xtoq_image_destroy(xtoq_image_t * xtoq_image){
     xcb_image_destroy(xtoq_image->image);
     free(xtoq_image);
 }
-
+ 
 void
 dummy_xtoq_key_press (xtoq_context_t * context, int window, uint8_t code)
 {
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
     xcb_window_t none = { XCB_NONE };
+    
+    // context->window 
 
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
-                                XCB_CURRENT_TIME, context->window, 0, 0, 0 );  
+                                XCB_CURRENT_TIME, none, 0, 0, 1 );  
     xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
-                                XCB_CURRENT_TIME, context->window, 0, 0, 0 );
+                                XCB_CURRENT_TIME, none,0 ,0 , 1 );
         
     err = xcb_request_check(context->conn, cookie);
     if (err)
