@@ -149,9 +149,9 @@ mouseDown:(NSEvent *)mouseEvent {
     image[index++] = newImage;
     //XtoqImageRep imageCopy = [[XtoqImageRep alloc] ]
     NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
-    RECTLOG(imageRec);
-    NSLog(@"index %i index 2 %i", index, indexTwo);
-    NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
+    //RECTLOG(imageRec);
+    //NSLog(@"index %i index 2 %i", index, indexTwo);
+    //NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
     //[image drawInRect:imageRec];
     //[self ourDisp ];
     [self setNeedsDisplayInRect:imageRec];

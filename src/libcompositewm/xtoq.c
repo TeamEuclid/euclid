@@ -158,7 +158,7 @@ xtoq_start_event_loop (xtoq_context_t root_context, void *callback)
 xtoq_image_t *
 test_xtoq_get_image(xtoq_context_t context) {
     
-    printf("Top of test get image\n");
+   // printf("Top of test get image\n");
     //xcb_get_geometry_reply_t *geom_reply;
     
     //image_data_t img_data;
@@ -187,7 +187,7 @@ test_xtoq_get_image(xtoq_context_t context) {
     xtoq_image->width = context.damaged_width;
     xtoq_image->height = context.damaged_height;
     
-    printf("Returning image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
+    //printf("Returning image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
  
     //free(geom_reply);
     return xtoq_image;
