@@ -112,6 +112,7 @@ xtoq_get_image(xtoq_context_t *context) {
     
     geom_reply = _xtoq_get_window_geometry(context->conn, context->window);
     
+    //FIXME - right size
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
 	//xcb_flush(context.conn);
@@ -132,6 +133,8 @@ xtoq_get_image(xtoq_context_t *context) {
     xtoq_image->height = geom_reply->height;
     
     free(geom_reply);
+    
+    printf("Returning initial image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
     return xtoq_image;
 }
 
