@@ -121,4 +121,6 @@ id referenceToSelf;
 void eventHandler (xtoq_event_t event);
 
 
-unsigned long long GetTimeSinceBoot();
+//unsigned long long GetTimeSinceBoot;
+
+@end

@@ -198,6 +198,8 @@
                                         0);;});
 }
 
+/* create a new image to redraw part of the screen 
+- (void) updateImage {
 
     int numberOfRects = 1;
 	int i;
