@@ -82,10 +82,10 @@
 
     // Make the menu
     [self makeMenu];
-    sleep(10);
+    //sleep(10);
     //create an XtoqImageRep with the information from X
-    libImageT = test_xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
+    //libImageT = xtoq_get_image(xcbContext);
+    //image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
     //draw the image into a rect
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
@@ -97,7 +97,7 @@
 
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
-    [ourView setPartialImage:imageNew];
+    //[ourView setPartialImage:imageNew];
     
     
     // add root window to list, increment count of windows

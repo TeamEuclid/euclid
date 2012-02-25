@@ -52,7 +52,7 @@ extern xtoq_context_t *root_context;
 xtoq_context_t *
 xtoq_init(char *screen);
 
-xcb_image_t *
+xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context);
 
 /**
