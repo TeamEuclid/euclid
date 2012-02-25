@@ -45,6 +45,7 @@ xtoq_init(char *display) {
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
+	xcb_void_cookie_t cookie;
     uint32_t mask_values[1];
  
     conn = xcb_connect(display, &conn_screen);
@@ -59,8 +60,14 @@ xtoq_init(char *display) {
                      XCB_EVENT_MASK_BUTTON_PRESS |
                      XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
 		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
-    xcb_change_window_attributes (conn, root_window,
-                                  XCB_CW_EVENT_MASK, mask_values);
+    cookie = xcb_change_window_attributes_checked(conn, root_window,
+												  XCB_CW_EVENT_MASK,
+												  mask_values);
+	if (_xtoq_request_check(conn, cookie, "Could not set root window mask.")) {
+			fprintf(stderr, "Is another window manager running?\n");
+			xcb_disconnect(conn);
+			exit(1);
+	}
 
 	xcb_flush(conn);
 
