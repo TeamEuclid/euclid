@@ -54,8 +54,8 @@ extern xtoq_context_t *root_context;
 xtoq_context_t *
 xtoq_init(char *display);
 
-xcb_image_t *
-xtoq_get_image(xtoq_context_t context);
+xtoq_image_t *
+xtoq_get_image(xtoq_context_t *context);
 
 /**
  * Set a window to the bottom of the window stack.

@@ -99,7 +99,7 @@ xtoq_init(char *display) {
     return root_context;
 }
 
-xcb_image_t *
+xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context) {
     
     xcb_get_geometry_reply_t *geom_reply;
@@ -108,6 +108,8 @@ xtoq_get_image(xtoq_context_t *context) {
     xcb_image_t *image;
     
     geom_reply = _xtoq_get_window_geometry(context->conn, context->window);
+    
+    xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
 	//xcb_flush(context.conn);
     /* Get the image of the root window */
@@ -119,8 +121,15 @@ xtoq_get_image(xtoq_context_t *context) {
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
+    
+    xtoq_image->image = image;
+    xtoq_image->x = geom_reply->x;
+    xtoq_image->y = geom_reply->y;
+    xtoq_image->width = geom_reply->width;
+    xtoq_image->height = geom_reply->height;
+    
     free(geom_reply);
-    return image;
+    return xtoq_image;
 }
 
 void

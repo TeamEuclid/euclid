@@ -81,8 +81,8 @@
     [self makeMenu];
     
     //create an XtoqImageRep with the information from X
-    libImageT = test_xtoq_get_image(xcbContext);
-    image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
+    //libImageT = xtoq_get_image(xcbContext);
+    //image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
     //draw the image into a rect
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
@@ -94,11 +94,7 @@
 
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
-    [ourView setPartialImage:imageNew x:0 y:0 dx:originalWidth dy:originalHeight];
-
-    //set context
-    [xtoqWindow setContext:rootContext];
-  
+    //[ourView setPartialImage:imageNew];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     
