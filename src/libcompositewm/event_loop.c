@@ -125,16 +125,16 @@ void *run_event_loop (void *thread_arg_struct)
             case XCB_CREATE_NOTIFY: {
                 // Window created as child of root window
                 xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
-                return_evt = malloc(sizeof(xtoq_event_t));
-                return_evt->context = _xtoq_window_created(event_conn, notify);
-                if (!return_evt->context) {
-                    free(return_evt);
-                    break;
-                }
-                return_evt->event_type = XTOQ_CREATE;
+/*                 return_evt = malloc(sizeof(xtoq_event_t)); */
+/*                 return_evt->context = _xtoq_window_created(event_conn, notify); */
+/*                 if (!return_evt->context) { */
+/*                     free(return_evt); */
+/*                     break; */
+/*                 } */
+/*                 return_evt->event_type = XTOQ_CREATE; */
                 
                 printf("Got create notify\n");
-				callback_ptr(return_evt);
+/* 				callback_ptr(return_evt); */
 
                 break;
             }
@@ -161,14 +161,48 @@ void *run_event_loop (void *thread_arg_struct)
                 //return_evt->context->window = notify->window;
                 
                 free(notify);
-                				
-                // TODO: Remove the window from the data structure.
-                // Need to figure out where memory is freed.
-                
+
                 callback_ptr(return_evt);
                 free(context);
                 break;
             }
+			case XCB_CONFIGURE_NOTIFY: {
+				xcb_configure_notify_event_t *notify = (xcb_configure_notify_event_t *)evt;
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->context = _xtoq_window_created(event_conn, notify);
+                if (!return_evt->context) {
+                    free(return_evt);
+                    break;
+                }
+                return_evt->event_type = XTOQ_CREATE;
+                
+                printf("Got configure notify\n");
+				printf("x = %i, y = %i, w = %i, h = %i\n", notify->x, notify->y,
+					   notify->width, notify->height);
+/* 				callback_ptr(return_evt); */
+
+                break;
+
+			}
+			case XCB_MAP_NOTIFY: {
+				xcb_map_notify_event_t *notify = (xcb_map_notify_event_t *)evt;
+                return_evt = malloc(sizeof(xtoq_event_t));
+/*                 return_evt->context = _xtoq_window_created(event_conn, notify); */
+/*                 if (!return_evt->context) { */
+/*                     free(return_evt); */
+/*                     break; */
+/*                 } */
+                return_evt->event_type = XTOQ_CREATE;
+				xcb_get_geometry_reply_t *geom = 
+					_xtoq_get_window_geometry(event_conn, notify->window);
+                printf("Got map notify ");
+				printf("x = %i, y = %i, w = %i, h = %i\n", geom->x, geom->y,
+					   geom->width, geom->height);
+/* 				callback_ptr(return_evt); */
+
+                break;
+
+			}
             case XCB_KEY_PRESS: {
                 printf("Key press from xserver\n");
                 break;
@@ -178,7 +212,7 @@ void *run_event_loop (void *thread_arg_struct)
                 break;
             }
             default: {
-                printf("UNKNOWN EVENT\n");
+                printf("UNKNOWN EVENT: %ld\n", (evt->response_type & ~0x80));
                 break;
             }
 			}
