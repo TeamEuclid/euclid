@@ -344,16 +344,20 @@
     NSLog(@"window did move");    
     
     XtoqWindow *moveWindow = [NSApp mainWindow];
+    
     if (moveWindow == nil) {
-        // this happens when window is first crated
         NSLog(@"Window is nil do nothing");        
     }
     else {
-        xtoq_context_t *moveContext = [moveWindow getContext];
+        // origin is the NSPoint that is part of the frame  
+        // x & y are CGFloat
+        // (0,0) is the bottom left of the screen
+        xtoq_context_t *moveContext = [moveWindow getContext];        
+        NSRect moveFrame = [moveWindow frame];
         NSLog(@"Window title \"%s\" ",moveContext->name);
-        
-        //NSPoint *movedToPoint = [moveWindow convertBaseToScreen];
-        NSLog(@"xtoq_updatewindowposition(x,y)");
+        NSLog(@"window x = %f, y = %f ",moveFrame.origin.x, moveFrame.origin.y);
+        NSLog(@"Call xtoq_updatewindowposition"); 
+        //xtoq_updatewindowposition (moveFrame.origin.x, moveFrame.origin.y);
     }
 }
 
