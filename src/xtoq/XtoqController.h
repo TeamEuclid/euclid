@@ -57,6 +57,10 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
+    xtoq_context_t * xcbContext;
+   // xcb_image_t *imageT;
+    
+    xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
     xcb_image_t *imageT;
     xtoq_image_t libImageT;
@@ -91,6 +95,12 @@ id referenceToSelf;
 - (void) runXterm: (id) sedner;
 - (void) runXman: (id) sender;
 
+
+/**
+ * Create the Display Number Controller
+ */
+
+//- (IBAction)showDisplayChooser;
 
 /**
  * Put a new image in the window / view

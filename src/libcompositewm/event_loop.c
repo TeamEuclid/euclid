@@ -62,15 +62,15 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
 
 void *run_event_loop (void *thread_arg_struct)
 {
-	_connection_data *conn_data;
-	xcb_connection_t *event_conn;
-	xcb_generic_event_t *evt;
-	xtoq_event_t *return_evt;
+    _connection_data *conn_data;
+    xcb_connection_t *event_conn;
+    xcb_generic_event_t *evt;
+    xtoq_event_t *return_evt;
     xtoq_event_cb_t callback_ptr;
-
-	conn_data = thread_arg_struct;
-	event_conn = conn_data->conn;
-	callback_ptr = conn_data->callback;
+    
+    conn_data = thread_arg_struct;
+    event_conn = conn_data->conn;
+    callback_ptr = conn_data->callback;
     
     free(thread_arg_struct);
     
@@ -98,8 +98,8 @@ void *run_event_loop (void *thread_arg_struct)
             root_context->damaged_width = dmgevnt->area.width;
             root_context->damaged_height = dmgevnt->area.height;
             
-            return_evt.context = root_context;
-            return_evt.context->window = root_context->window;
+            return_evt->context = root_context;
+            return_evt->context->window = root_context->window;
             
             xcb_void_cookie_t cookie =
             xcb_xfixes_create_region_checked(root_context->conn,
@@ -130,6 +130,7 @@ void *run_event_loop (void *thread_arg_struct)
                 return_evt->event_type = XTOQ_EXPOSE;
                 free(exevnt);
                 callback_ptr(return_evt);
+                break;
             }
             case XCB_CREATE_NOTIFY: {
                 // Window created as child of root window
@@ -175,33 +176,24 @@ void *run_event_loop (void *thread_arg_struct)
                 if (!return_evt->context) {
                     free(return_evt);
 					free(request);
-                    break;
                 }
-				/* Map the window so it has an image for our client to grab */
-				_xtoq_map_window(return_evt->context);
-
+                _xtoq_map_window(return_evt->context);
                 return_evt->event_type = XTOQ_CREATE;
-                printf("Got map request: ");
-				printf("x = %i, y = %i, w = %i, h = %i\n", return_evt->context->x,
-					   return_evt->context->y,
-					   return_evt->context->width,
-					   return_evt->context->height);
- 				callback_ptr(return_evt);
-				free(request);
+                callback_ptr(return_evt);
+                free(request);
                 break;
-
-			}
-			case XCB_CONFIGURE_REQUEST: {
-				xcb_configure_request_event_t *request =
-					(xcb_configure_request_event_t *)evt;
+            }
+            case XCB_CONFIGURE_REQUEST: {
+                xcb_configure_request_event_t *request =
+                    (xcb_configure_request_event_t *)evt;
                 printf("Got configure request: ");
-				printf("x = %i, y = %i, w = %i, h = %i\n", request->x, request->y,
-					   request->width, request->height);
+                printf("x = %i, y = %i, w = %i, h = %i\n", request->x, request->y,
+                    request->width, request->height);
 
-				/* Change the size of the window, but not its position */
-				_xtoq_resize_window(event_conn, request->window,
+                /* Change the size of the window, but not its position */
+                _xtoq_resize_window(event_conn, request->window,
 									request->width, request->height);
-				free(request);
+                /* free(request); */	
                 break;
 			}
             case XCB_KEY_PRESS: {

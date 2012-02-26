@@ -215,7 +215,7 @@
          NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
         [ourView setNeedsDisplayInRect:rect];
     }
-}
+}*/
 
 
 - (void) setScreen:(char *)scrn {
@@ -249,16 +249,11 @@
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    // Quit    
+    // Xtoq -> Quit    
     quitTitle = [@"Quit " stringByAppendingString:appName];
-    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle
-									   action:@selector(terminate:)
-									   keyEquivalent:@"q"];
+    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
-    
-    
-    
     
     //TEST
     // Menu under Applications
@@ -266,6 +261,7 @@
     NSMenuItem *startXApps = [NSMenuItem new];
     [startXMenu setTitle:@"Applications"];
     
+    /*
     // Run Xeyes
     NSString *xTitle;
     NSMenuItem *xeyesMenuItem;
@@ -280,18 +276,22 @@
     xclockMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"c"];
     [startXMenu addItem:xclockMenuItem];
     [startXApps setSubmenu:startXMenu];
+    
+    
     // Run Xlogo
     NSMenuItem *xlogoMenuItem;
     xTitle = [@"Run Xlogo on" stringByAppendingString:appName];
     xlogoMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"l"];
     [startXMenu addItem:xlogoMenuItem];
     [startXApps setSubmenu:startXMenu];
+    
     // Run Xterm
     NSMenuItem *xtermMenuItem;
     xTitle = [@"Run Xterm on" stringByAppendingString:appName];
     xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"t"];
     [startXMenu addItem:xtermMenuItem];
     [startXApps setSubmenu:startXMenu];
+    
     // Run Xman
     NSMenuItem *xmanMenuItem;
     xTitle = [@"Run Xman on" stringByAppendingString:appName];
@@ -306,7 +306,7 @@
     
     
     
-    [menubar addItem:appMenuItem];
+    [menubar addItem:appMenuItem]; */
     [menubar addItem:startXApps];
     [NSApp setMainMenu:menubar];
 }
@@ -414,6 +414,19 @@
 {
     NSLog(@"window will move");
 }
+- (void) updateImageNew : (xtoq_context_t *) windowContext{
+    
+    float  y_transformed;
+
+    libImageT = test_xtoq_get_image(windowContext);
+    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+
+    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
+    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
+                                                    x:((windowContext->damaged_x))
+                                                    y:y_transformed];
+    [ourView setPartialImage:imageNew];
+}
 
 - (void)windowDidMove:(NSNotification*)notification
 {
@@ -447,26 +460,13 @@
 }
 
 @end
-- (void) updateImageNew : (xtoq_context_t *) windowContext{
-    
-    float  y_transformed;
 
-    libImageT = test_xtoq_get_image(*windowContext);
-    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
-
-    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-                                                    x:((windowContext->damaged_x))
-                                                    y:y_transformed];
-    [ourView setPartialImage:imageNew];
-}
-
-void eventHandler (xtoq_event_t event)
+void eventHandler (xtoq_event_t *event)
 {
     if (event->event_type == XTOQ_DAMAGE) {
         // This message generates a lot of console spam - only uncomment when testing
         //NSLog(@"Got damage event");
-        [referenceToSelf updateImage];
+        [referenceToSelf updateImageNew: event->context];
     } else if (event->event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
         [referenceToSelf createNewWindow: event->context];
