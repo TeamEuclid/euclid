@@ -140,8 +140,6 @@ xtoq_free_image(xcb_image_t *img) {
     free(img);
 }
 
-
-
 xtoq_event_t
 dummy_xtoq_wait_for_event(xtoq_context_t context) {
     
@@ -154,11 +152,6 @@ dummy_xtoq_wait_for_event(xtoq_context_t context) {
     event.event_type = XTOQ_DAMAGE;
     
     return event;
-}
-
-void
-xtoq_free_image(xcb_image_t *img) {
-    free(img);
 }
 
 int 

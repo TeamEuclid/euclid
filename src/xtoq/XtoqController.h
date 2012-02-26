@@ -56,6 +56,10 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
+    xtoq_context_t * xcbContext;
+   // xcb_image_t *imageT;
+    
+    xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
     xcb_image_t *imageT;
     XtoqImageRep *image;
@@ -91,9 +95,17 @@ id referenceToSelf;
 
 
 /**
+ * Create the Display Number Controller
+ */
+
+//- (IBAction)showDisplayChooser;
+
+/**
  * Put a new image in the window / view
  */
-- (void) updateImage;
+- (void) updateImageNew: (xtoq_context_t *) windowContext;
+
+
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;
 
@@ -102,12 +114,12 @@ id referenceToSelf;
  */
 - (void) setScreen: (const char *) scrn;
 
-
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
 - (void)windowDidResize:(NSNotification*)notification;
 
 @end
+
 
 /**
  * Callback function that will receive events from the xtoq event loop

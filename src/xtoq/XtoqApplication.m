@@ -28,18 +28,9 @@ int XtoqApplicationMain(int argc, char** argv){
     XtoqController *controller;
     char *scrn;
     //FILE *fp;
-    scrn = findScreen(argc, argv);
+    //scrn = findScreen(argc, argv);
     /*const char *fifo_path = "/tmp/xtoq_fifo";
     int ret = 0;
-    
-    ret = mkfifo(fifo_path, S_IRUSR | S_IWUSR);
-    if (ret == -1) {
-        NSLog(@"mkfifo unsuccessful");
-    }
-    ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
-    if (ret != 0) {
-        NSLog(@"problem with setenv");
-    }
     
     // seems to error if file already exists
     mkfifo(fifo_path, S_IRUSR | S_IWUSR);    
@@ -95,7 +86,7 @@ int XtoqApplicationMain(int argc, char** argv){
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
     // Just giving up on this, too much time spent spinning wheels.
     // Display will default to :0 */
-    char *scrn = ":0";
+    scrn = ":0";
     /*ssize_t bytes_read;
     size_t len = 0;
     

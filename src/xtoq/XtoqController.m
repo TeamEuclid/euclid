@@ -57,7 +57,7 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }
     
-    screen = ":1";// comment out
+    screen = ":0";// comment out
     // setup X connection and get the initial image from the server
 //NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
@@ -83,8 +83,8 @@
     [self makeMenu];        
 
     //create an XtoqImageRep with the information from X
-    imageT = xtoq_get_image(rootContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];  
+    //libImageT = xtoq_get_image(xcbContext);
+    //image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
     //draw the image into a rect
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
@@ -165,9 +165,13 @@
     printf( "\n--------------------------------------------\n" );
     // translate key here code = translate(charcharstar);
     NSLog(@"%s pressed", charcharstar);
-    uint8_t code = (unsigned char)0x10;
-    dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_key_press(rootContext, 
+    //uint8_t code = (unsigned char)0x10;
+    //uint8_t code = 
+    
+    for(i = 0; i < 256; i++){
+        aChar++;
+        dispatch_async(xtoqDispatchQueue, 
+                   ^{ dummy_xtoq_key_press(xcbContext, 
                                      (int)[event windowNumber],
                                      aChar) ;});
     }
@@ -250,17 +254,64 @@
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    // Quit    
+    // Xtoq -> Quit    
     quitTitle = [@"Quit " stringByAppendingString:appName];
-    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle
-									   action:@selector(terminate:)
-									   keyEquivalent:@"q"];
+    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    appMenu = [[NSMenu new] autorelease];
-    appMenuItem = [[NSMenuItem new] autorelease];
-    [menubar addItem:appMenuItem];
+    //TEST
+    // Menu under Applications
+    NSMenu *startXMenu = [NSMenu new];
+    NSMenuItem *startXApps = [NSMenuItem new];
+    [startXMenu setTitle:@"Applications"];
+    
+    /*
+    // Run Xeyes
+    NSString *xTitle;
+    NSMenuItem *xeyesMenuItem;
+    xTitle = [@"Run Xeyes on " stringByAppendingString:appName];
+    xeyesMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:@selector(runXeyes:) keyEquivalent:@"e"];
+    [startXMenu addItem:xeyesMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xclock
+    NSMenuItem *xclockMenuItem;
+    xTitle = [@"Run Xclock on" stringByAppendingString:appName];
+    xclockMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"c"];
+    [startXMenu addItem:xclockMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    
+    // Run Xlogo
+    NSMenuItem *xlogoMenuItem;
+    xTitle = [@"Run Xlogo on" stringByAppendingString:appName];
+    xlogoMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"l"];
+    [startXMenu addItem:xlogoMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xterm
+    NSMenuItem *xtermMenuItem;
+    xTitle = [@"Run Xterm on" stringByAppendingString:appName];
+    xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"t"];
+    [startXMenu addItem:xtermMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xman
+    NSMenuItem *xmanMenuItem;
+    xTitle = [@"Run Xman on" stringByAppendingString:appName];
+    xmanMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"m"];
+    [startXMenu addItem:xmanMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    //idea: might just have one "run" function and send the string of the
+    // executable to sprintf'd onto the end of the path.
+    
+    //TEST
+    
+    
+    
+    [menubar addItem:appMenuItem]; */
     [menubar addItem:startXApps];
     [NSApp setMainMenu:menubar];
 }
@@ -317,6 +368,16 @@
     [newWindow setContext:windowContext];
     
     // save the newWindow pointer into the context
+    /*newWindow =  [[XtoqWindow alloc] initWithContentRect: 
+                  //NSMakeRect(0, 0, 1024,768)
+                  NSMakeRect(0, 0, 1024,768)
+                                               styleMask: (NSTitledWindowMask |
+                                                           NSMiniaturizableWindowMask |
+                                                           NSResizableWindowMask)
+                                                 backing: NSBackingStoreBuffered
+                                                   defer: YES]; */
+
+    
     windowContext->local_data = newWindow;
     
     // get image to darw
@@ -376,6 +437,19 @@
 {
     NSLog(@"window will move");
 }
+- (void) updateImageNew : (xtoq_context_t *) windowContext{
+    
+    float  y_transformed;
+
+    libImageT = test_xtoq_get_image(windowContext);
+    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+
+    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
+    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
+                                                    x:((windowContext->damaged_x))
+                                                    y:y_transformed];
+    [ourView setPartialImage:imageNew];
+}
 
 - (void)windowDidMove:(NSNotification*)notification
 {
@@ -408,19 +482,14 @@
     }
 }
 
-    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-                                                    x:((windowContext->damaged_x))
-                                                    y:y_transformed];
-    [ourView setPartialImage:imageNew];
-}
+@end
 
 void eventHandler (xtoq_event_t *event)
 {
     if (event->event_type == XTOQ_DAMAGE) {
         // This message generates a lot of console spam - only uncomment when testing
         //NSLog(@"Got damage event");
-        [referenceToSelf updateImage];
+        [referenceToSelf updateImageNew: event->context];
     } else if (event->event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
         [referenceToSelf createNewWindow: event->context];
