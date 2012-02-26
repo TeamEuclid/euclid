@@ -255,38 +255,48 @@
     // Run Xeyes
     NSString *xTitle;
     NSMenuItem *xeyesMenuItem;
-    xTitle = [@"Run Xeyes on " stringByAppendingString:appName];
-    xeyesMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:@selector(runXeyes:) keyEquivalent:@"e"];
+    xTitle = @"Run Xeyes";
+    xeyesMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                               action:@selector(runXeyes:) 
+                                        keyEquivalent:@""];
     [startXMenu addItem:xeyesMenuItem];
     [startXApps setSubmenu:startXMenu];
     
     // Run Xclock
     NSMenuItem *xclockMenuItem;
-    xTitle = [@"Run Xclock on" stringByAppendingString:appName];
-    xclockMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"c"];
+    xTitle = @"Run Xclock";
+    xclockMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                                action:@selector(runXclock:)
+                                         keyEquivalent:@""];
     [startXMenu addItem:xclockMenuItem];
     [startXApps setSubmenu:startXMenu];
+    
     // Run Xlogo
     NSMenuItem *xlogoMenuItem;
-    xTitle = [@"Run Xlogo on" stringByAppendingString:appName];
-    xlogoMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"l"];
+    xTitle = @"Run Xlogo";
+    xlogoMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                               action:@selector(runXlogo:)
+                                        keyEquivalent:@""];
     [startXMenu addItem:xlogoMenuItem];
     [startXApps setSubmenu:startXMenu];
+    
     // Run Xterm
     NSMenuItem *xtermMenuItem;
-    xTitle = [@"Run Xterm on" stringByAppendingString:appName];
-    xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"t"];
+    xTitle = @"Run Xterm";
+    xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                               action:@selector(runXterm:)
+                                        keyEquivalent:@""];
     [startXMenu addItem:xtermMenuItem];
     [startXApps setSubmenu:startXMenu];
+                                                                
     // Run Xman
     NSMenuItem *xmanMenuItem;
-    xTitle = [@"Run Xman on" stringByAppendingString:appName];
-    xmanMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle action:NULL keyEquivalent:@"m"];
+    xTitle = @"Run Xman";
+    xmanMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                              action:@selector(runXman:)
+                                       keyEquivalent:@""];
     [startXMenu addItem:xmanMenuItem];
     [startXApps setSubmenu:startXMenu];
-    
-    //idea: might just have one "run" function and send the string of the
-    // executable to sprintf'd onto the end of the path.
     
     //TEST
     
@@ -297,25 +307,46 @@
     [NSApp setMainMenu:menubar];
 }
 
+- (void) launch_client:(NSString *)filename
+{
+    NSLog(@"Launching the file: %@", filename);
+    int child;
+    int status;
+    const char *newargv[4];
+    
+    newargv[0] = "/bin/sh";
+    newargv[1] = "-c";
+    newargv[2] = [filename UTF8String];
+    newargv[3] = NULL;
+    
+    //close(0);
+    //open("/dev/null", O_RDONLY);
+    
+    status = posix_spawnp(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
+    if(status) {
+        NSLog(@"Error spawning file for launch.");
+    }
+    
+    waitpid(child, &status, 0);
+    
+    
+}
+
 - (void) runXeyes:(id) sender {
-    
     NSLog(@"Attempting to run Xeyes.");
-    const char *xArg[4];
-    xArg[0] = "/usr/X11/bin/xeyes";
-    xArg[1] = "-display";
-    xArg[2] = getenv("DISPLAY");
-    xArg[3] = NULL;
-    
-    // might try double fork like Xquartz
-    
+    [self launch_client:@"xeyes"];
 }
 - (void) runXclock:(id) sender {
+    NSLog(@"Attempting to run Xclock.");
 }
 - (void) runXlogo:(id) sender {
+    NSLog(@"Attempting to run Xlogo.");
 }
 - (void) runXterm:(id) sender {
+    NSLog(@"Attempting to run Xterm.");
 }
 - (void) runXman:(id) sender {
+    NSLog(@"Attempting to run Xman.");
 }
 
 // create a new window 

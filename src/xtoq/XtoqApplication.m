@@ -79,8 +79,6 @@ int XtoqApplicationMain(int argc, char** argv){
 //    });
     
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
-    // Just giving up on this, too much time spent spinning wheels.
-    // Display will default to :0
     
     char *scrn;
     ssize_t bytes_read;
@@ -95,7 +93,8 @@ int XtoqApplicationMain(int argc, char** argv){
 #endif
     fclose(fp);
     
-    scrn[len - 2] = '\0';
+    if (bytes_read && scrn[bytes_read - 1] == '\n')
+        scrn[bytes_read - 1] = '\0';
 
     NSLog(@"xinitrc told us DISPLAY=%s\n", scrn);
     

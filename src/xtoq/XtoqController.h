@@ -38,9 +38,16 @@
 #import "XtoqImageRep.h"
 #import "XtoqView.h"
 #import "xtoq.h"
+#import "spawn.h"
+#import "crt_externs.h"
+#import "sys/times.h"
+#import "sys/stat.h"
 #import "unistd.h"
 #import <dispatch/dispatch.h>
 
+#ifdef __APPLE__
+#define environ (*_NSGetEnviron())
+#endif
 
 @class DisplayNumberController;
 
@@ -80,6 +87,7 @@ id referenceToSelf;
  * Makemenu and related selector functions for launching X applications.
  */
 - (void) makeMenu;
+- (void) launch_client: (NSString *) filename;
 - (void) runXeyes: (id) sender;
 - (void) runXclock: (id) sender;
 - (void) runXlogo: (id) sender;
