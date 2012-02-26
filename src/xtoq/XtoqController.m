@@ -83,7 +83,7 @@
     [self makeMenu];        
 
     //create an XtoqImageRep with the information from X
-    //libImageT = xtoq_get_image(xcbContext);
+    //libImageT = xtoq_get_image(rootContext);
     //image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
     //draw the image into a rect
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
@@ -171,7 +171,7 @@
     for(i = 0; i < 256; i++){
         aChar++;
         dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_key_press(xcbContext, 
+                   ^{ dummy_xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar) ;});
     }
@@ -501,7 +501,4 @@ void eventHandler (xtoq_event_t *event)
     }
     free(event);
 }
-
-@end
-
 

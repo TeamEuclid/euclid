@@ -179,6 +179,7 @@ void *run_event_loop (void *thread_arg_struct)
                 if (!return_evt->context) {
                     free(return_evt);
 					free(request);
+					break;
                 }
                 _xtoq_map_window(return_evt->context);
                 return_evt->event_type = XTOQ_CREATE;
@@ -196,7 +197,7 @@ void *run_event_loop (void *thread_arg_struct)
                 /* Change the size of the window, but not its position */
                 _xtoq_resize_window(event_conn, request->window,
 									request->width, request->height);
-                /* free(request); */	
+                free(request);
                 break;
 			}
             case XCB_KEY_PRESS: {
