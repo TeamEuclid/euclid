@@ -92,7 +92,6 @@ id referenceToSelf;
 - (void) runXclock: (id) sender;
 - (void) runXlogo: (id) sender;
 - (void) runXterm: (id) sedner;
-- (void) runXman: (id) sender;
 
 
 /**

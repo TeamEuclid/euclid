@@ -233,20 +233,20 @@
     
     // Xtoq -> About
     NSString *aboutTitle = [@"About " stringByAppendingString:appName];
-    NSMenuItem *aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle action:NULL keyEquivalent:@"a"]; // About is greyed out since action is null
+    NSMenuItem *aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle 
+                                                           action:NULL 
+                                                    keyEquivalent:@"a"];
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
     // Xtoq -> Quit    
     NSString *quitTitle = [@"Quit " stringByAppendingString:appName];
-    NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"];
+    NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle 
+                                                          action:@selector(terminate:) 
+                                                   keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    
-    
-    
-    //TEST
     // Menu under Applications
     NSMenu *startXMenu = [NSMenu new];
     NSMenuItem *startXApps = [NSMenuItem new];
@@ -280,73 +280,50 @@
     [startXMenu addItem:xlogoMenuItem];
     [startXApps setSubmenu:startXMenu];
     
-    // Run Xterm
+    // Run Xterm, does not seem to properly launch Xterm, might just scrap this.
     NSMenuItem *xtermMenuItem;
     xTitle = @"Run Xterm";
     xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
-                                               action:@selector(runXterm:)
+                                               action:NULL //@selector(runXterm:)
                                         keyEquivalent:@""];
     [startXMenu addItem:xtermMenuItem];
     [startXApps setSubmenu:startXMenu];
-                                                                
-    // Run Xman
-    NSMenuItem *xmanMenuItem;
-    xTitle = @"Run Xman";
-    xmanMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
-                                              action:@selector(runXman:)
-                                       keyEquivalent:@""];
-    [startXMenu addItem:xmanMenuItem];
-    [startXApps setSubmenu:startXMenu];
     
-    //TEST
-    
-    
-    
+    // Adding all the menu items to the main menu for XtoQ.
     [menubar addItem:appMenuItem];
     [menubar addItem:startXApps];
     [NSApp setMainMenu:menubar];
 }
 
-- (void) launch_client:(NSString *)filename
-{
-    NSLog(@"Launching the file: %@", filename);
-    int child;
+- (void) launch_client:(NSString *)filename {
     int status;
-    const char *newargv[4];
+    pid_t child;
+    const char *newargv[6];
     
     newargv[0] = "/bin/sh";
     newargv[1] = "-c";
     newargv[2] = [filename UTF8String];
-    newargv[3] = NULL;
-    
-    //close(0);
-    //open("/dev/null", O_RDONLY);
+    newargv[3] = "-display";
+    newargv[4] = getenv("DISPLAY");
+    newargv[5] = NULL;
     
     status = posix_spawnp(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
     if(status) {
         NSLog(@"Error spawning file for launch.");
     }
-    
-    waitpid(child, &status, 0);
-    
-    
 }
 
 - (void) runXeyes:(id) sender {
-    NSLog(@"Attempting to run Xeyes.");
     [self launch_client:@"xeyes"];
 }
 - (void) runXclock:(id) sender {
-    NSLog(@"Attempting to run Xclock.");
+    [self launch_client:@"xclock"];
 }
 - (void) runXlogo:(id) sender {
-    NSLog(@"Attempting to run Xlogo.");
+    [self launch_client:@"xlogo"];    
 }
 - (void) runXterm:(id) sender {
-    NSLog(@"Attempting to run Xterm.");
-}
-- (void) runXman:(id) sender {
-    NSLog(@"Attempting to run Xman.");
+    [self launch_client:@"xterm"];    
 }
 
 // create a new window 
