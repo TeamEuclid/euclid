@@ -95,13 +95,6 @@ id referenceToSelf;
 - (void) runXterm: (id) sedner;
 - (void) runXman: (id) sender;
 
-
-/**
- * Create the Display Number Controller
- */
-
-//- (IBAction)showDisplayChooser;
-
 /**
  * Put a new image in the window / view
  */
