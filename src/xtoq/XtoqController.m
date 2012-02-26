@@ -414,11 +414,14 @@
 {
     NSLog(@"window will move");
 }
-- (void) updateImageNew : (xtoq_context_t *) windowContext{
+- (void) updateImageNew : (xtoq_context_t *) windowContext
+{
     
     float  y_transformed;
+	
+	// libImageT = test_xtoq_get_image(windowContext);
+	libImageT = xtoq_get_image(windowContext);
 
-    libImageT = test_xtoq_get_image(windowContext);
     //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
@@ -463,16 +466,17 @@
 
 void eventHandler (xtoq_event_t *event)
 {
+    xtoq_context_t *context = event->context;
     if (event->event_type == XTOQ_DAMAGE) {
         // This message generates a lot of console spam - only uncomment when testing
         //NSLog(@"Got damage event");
-        [referenceToSelf updateImageNew: event->context];
+	  [referenceToSelf updateImageNew: context];
     } else if (event->event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
-        [referenceToSelf createNewWindow: event->context];
+        [referenceToSelf createNewWindow: context];
     } else if (event->event_type == XTOQ_DESTROY) {
         NSLog(@"Window was destroyed");
-        [referenceToSelf destroyWindow: event->context];
+        [referenceToSelf destroyWindow: context];
     } else { 
         NSLog(@"Hey I'm Not damage!"); 
     }
