@@ -40,6 +40,11 @@ set_wm_name_in_context (xtoq_context_t *context);
 void
 set_wm_delete_win_in_context (xtoq_context_t *context);
 
+/* Initialize damage on a window */
+void
+init_damage_on_window (xtoq_context_t *context);
+
+
 /* Set window to the top of the stack */
 void
 xtoq_set_window_to_top(xtoq_context_t *context) {
@@ -105,7 +110,7 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) 
 	set_icccm_properties(context);
     
     //register for damage
-    _xtoq_init_damage(context);
+    init_damage_on_window(context);
 
     // add context to context_list
     context = _xtoq_add_context_t(context);
@@ -234,4 +239,30 @@ set_wm_delete_win_in_context (xtoq_context_t *context)
     context->wm_delete_set = 0;
 
 	return;
+}
+
+void
+init_damage_on_window (xtoq_context_t *context)
+{
+	xcb_damage_damage_t damage_id;
+	uint8_t level;
+    xcb_void_cookie_t cookie;
+
+	damage_id = xcb_generate_id(context->conn);
+    
+    // Refer to the Damage Protocol. level = 0 corresponds to the level
+    // DamageReportRawRectangles.  Another level may be more appropriate.
+    level = XCB_DAMAGE_REPORT_LEVEL_BOUNDING_BOX;
+    cookie = xcb_damage_create(context->conn,
+							   damage_id,
+							   context->window,
+							   level);
+    
+	if (_xtoq_request_check(context->conn, cookie,
+							"Could not create damage for window")) {
+		context->damage = 0;
+		return;
+	}
+    /* Assign this damage object to the roots window's context */
+    context->damage = damage_id;
 }
