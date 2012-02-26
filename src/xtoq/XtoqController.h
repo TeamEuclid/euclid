@@ -47,7 +47,6 @@
 id referenceToSelf;
 
 @interface XtoqController : NSObject {
-    DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
     XtoqView * ourView;
     
@@ -56,9 +55,7 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-    xtoq_context_t * xcbContext;
    // xcb_image_t *imageT;
-    
     xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
     xcb_image_t *imageT;
@@ -67,8 +64,6 @@ id referenceToSelf;
     XtoqView *view;
     NSString *file;
     NSImage *image2;
-   // NSMutableDictionary *winList; // The window list data structure.
-   // NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
     NSRect imageRec;
@@ -97,7 +92,6 @@ id referenceToSelf;
  * Put a new image in the window / view
  */
 - (void) updateImageNew: (xtoq_context_t *) windowContext;
-
 
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;
