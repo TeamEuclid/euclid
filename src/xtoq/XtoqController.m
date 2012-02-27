@@ -227,31 +227,29 @@
 
     menubar = [[NSMenu new] autorelease];
     appMenuItem = [[NSMenuItem new] autorelease];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
     
     appMenu = [[NSMenu new] autorelease];
     appName = [[NSProcessInfo processInfo] processName];
 
     // Xtoq -> About
-    NSString *aboutTitle = [@"About " stringByAppendingString:appName];
-    NSMenuItem *aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle 
+    aboutTitle = [@"About " stringByAppendingString:appName];
+    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle 
                                                            action:NULL 
                                                     keyEquivalent:@"a"];
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
     // Xtoq -> Quit
-    NSString *quitTitle = [@"Quit " stringByAppendingString:appName];
-    NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle 
+    quitTitle = [@"Quit " stringByAppendingString:appName];
+    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle 
                                                           action:@selector(terminate:) 
                                                    keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
     // Menu under Applications
-    NSMenu *startXMenu = [NSMenu new];
-    NSMenuItem *startXApps = [NSMenuItem new];
+    NSMenu *startXMenu = [[NSMenu new] autorelease];
+    NSMenuItem *startXApps = [[NSMenuItem new] autorelease];
     [startXMenu setTitle:@"Applications"];
     
     // Run Xeyes
@@ -300,16 +298,15 @@
 - (void) launch_client:(NSString *)filename {
     int status;
     pid_t child;
-    const char *newargv[6];
+    const char *file_name = [filename UTF8String];
+    const char *newargv[4];
     
-    newargv[0] = "/bin/sh";
-    newargv[1] = "-c";
-    newargv[2] = [filename UTF8String];
-    newargv[3] = "-display";
-    newargv[4] = getenv("DISPLAY");
-    newargv[5] = NULL;
+    asprintf(&newargv[0], "/usr/X11/bin/%s", file_name);
+    newargv[1] = "-display";
+    newargv[2] = screen;
+    newargv[3] = NULL;
     
-    status = posix_spawnp(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
+    status = posix_spawn(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
     if(status) {
         NSLog(@"Error spawning file for launch.");
     }
