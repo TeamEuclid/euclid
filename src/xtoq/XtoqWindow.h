@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 Ben Huddle
+/*Copyright (C) 2012 Ben Huddle, Braden Wooley
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -27,8 +27,7 @@
 
 @interface XtoqWindow : NSWindow {
     xtoq_context_t *winContext;  // The context of the window.
-    id winId;                   // String id of window in list (i.e. 0,1,2,3)
-    void *xtoqLocalData;        // Pointer to xtoq_context's data structure.
+    NSNotificationCenter * notificationCenter;
 }
 
 /**
@@ -45,16 +44,26 @@
 /**
  * Used for setting member variables context and id.
  */
--(void) setContext: (xtoq_context_t *) aContext withId: (id) theId;
+-(void) setContext: (xtoq_context_t *) aContext;
 
 /**
  * Function for getting context of window from list.
  */
--(xtoq_context_t *) getContext:(XtoqWindow *) win;
+-(xtoq_context_t *) getContext;
 
 /**
  * Sets the root window's pointer xtoqLocalData to the context's pointer.
  */
--(void) setRootDataPointer: (xtoq_context_t *) xqContext;
+//-(void) setRootDataPointer: (xtoq_context_t *) xqContext;
+
+/**
+ * Catches the close event from clicking the red button or from preformClose.
+ */
+- (BOOL)windowShouldClose:(id)sender;
+
+/*
+ * Catches the event that a window gains focus
+ */
+-(void)windowDidBecomeKey:(NSNotification *)note;
 
 @end

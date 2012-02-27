@@ -28,10 +28,10 @@
 #include <pthread.h>
 #include "xtoq.h"
 #include "xtoq_internal.h"
- 
+
 typedef struct _connection_data {
 	xcb_connection_t *conn;
-	void * callback;
+	xtoq_event_cb_t callback;
 } _connection_data;
 
 /* The thread that is running the event loop */
@@ -44,7 +44,7 @@ void *run_event_loop(void *thread_arg_struct);
 
 int
 _xtoq_start_event_loop (xcb_connection_t *conn,
-						void *event_callback)
+						xtoq_event_cb_t event_callback)
 {
 	_connection_data *conn_data;
     
@@ -53,7 +53,7 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
     
 	conn_data->conn = conn;
 	conn_data->callback = event_callback;
-
+    
 	return pthread_create(&_event_thread,
 						  NULL,
 						  run_event_loop,
@@ -62,50 +62,63 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
 
 void *run_event_loop (void *thread_arg_struct)
 {
-	_connection_data *conn_data;
-	xcb_connection_t *event_conn;
-	xcb_generic_event_t *evt;
-	xtoq_event_t return_evt;
-    void (*callback_ptr) (xtoq_event_t event);
-
-	conn_data = thread_arg_struct;
-	event_conn = conn_data->conn;
-	callback_ptr = conn_data->callback;
+    _connection_data *conn_data;
+    xcb_connection_t *event_conn;
+    xcb_generic_event_t *evt;
+    xtoq_event_t *return_evt;
+    xtoq_event_cb_t callback_ptr;
+    
+    conn_data = thread_arg_struct;
+    event_conn = conn_data->conn;
+    callback_ptr = conn_data->callback;
     
     free(thread_arg_struct);
-
+    
 	/* Start the event loop, and flush if first */
     xcb_flush(event_conn);
 	
     while ((evt = xcb_wait_for_event(event_conn))) {
 		if ((evt->response_type & ~0x80) == _damage_event) {
             xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
-			return_evt.event_type = XTOQ_DAMAGE;
-			return_evt.context = NULL;
+            return_evt = malloc(sizeof(xtoq_event_t));
+			return_evt->event_type = XTOQ_DAMAGE;
+			return_evt->context = NULL;
             
             // TODO: Do this better - in a different function, but a least we're doing some
             // damage processing. This just assumes that its the root window, and that
             // the whole window is damaged.
             xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
             xcb_rectangle_t rect;
-            rect.x = 0;
-            rect.y = 0;
-            rect.width = root_context->width;
-            rect.height= root_context->height;
+            rect.x = dmgevnt->area.x;
+            rect.y = dmgevnt->area.y;
+            rect.width = dmgevnt->area.width;
+            rect.height = dmgevnt->area.height;
+            
+           // printf("dmgevent->area: x=%d y=%d w=%d h=%d dmgevent->geometry x=%d y=%d w=%d h=%d", dmgevnt->area.x, dmgevnt->area.y, dmgevnt->area.width, dmgevnt->area.height, dmgevnt->geometry.x,dmgevnt->geometry.y, dmgevnt->geometry.width, dmgevnt->geometry.height);
+            
+            root_context->damaged_x = dmgevnt->area.x;
+            root_context->damaged_y = dmgevnt->area.y;
+            root_context->damaged_width = dmgevnt->area.width;
+            root_context->damaged_height = dmgevnt->area.height;
+            
+            return_evt->context = root_context;
+            return_evt->context->window = root_context->window;
             
             xcb_void_cookie_t cookie =
-                xcb_xfixes_create_region_checked(root_context->conn,
-                                                 region,
-                                                 1, 
-                                                 &rect);
+            xcb_xfixes_create_region_checked(root_context->conn,
+                                             region,
+                                             1, 
+                                             &rect);
             _xtoq_request_check(root_context->conn, cookie, "Failed to create region");
             cookie = xcb_damage_subtract_checked (root_context->conn,
                                                   root_context->damage,
                                                   region,
                                                   0);
             _xtoq_request_check(root_context->conn, cookie, "Failed to subtract damage");
+            
+            
             // END TODO
-
+            
             callback_ptr(return_evt);        
 		} else {
 			switch (evt->response_type & ~0x80) {
@@ -116,45 +129,77 @@ void *run_event_loop (void *thread_arg_struct)
                        exevnt->window, exevnt->x, exevnt->y);
                 printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
                 
-                return_evt.event_type = XTOQ_EXPOSE;
+				return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_EXPOSE;
                 free(exevnt);
                 callback_ptr(return_evt);
+                break;
             }
             case XCB_CREATE_NOTIFY: {
                 // Window created as child of root window
                 xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
-                return_evt.context = _xtoq_window_created(event_conn, notify);
-                if (!return_evt.context)
-                    break;
-                return_evt.event_type = XTOQ_CREATE;
-                
+				/* We don't actually allow our client to create its
+				 * window here, wait until the XCB_MAP_REQUEST */
                 printf("Got create notify\n");
-				callback_ptr(return_evt);
-
+				free(notify);
                 break;
             }
             case XCB_DESTROY_NOTIFY: {
                 // Window destroyed in root window
                 xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
-                return_evt.event_type = XTOQ_DESTROY;
+                xtoq_context_t *context = _xtoq_destroy_window(notify);
+
+				if (!context) {
+					/* Not a window in the list, don't try and destroy */
+					free(notify);
+					break;
+				}
+                
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_DESTROY;
                 
                 // Memory for context will need to be freed by caller
                 // Only setting the window - other values will be garbage.
                 
-                _xtoq_remove_context_node(notify->window);
-                return_evt.context = malloc(sizeof(xtoq_context_t));
-                return_evt.context->conn = event_conn;
-                return_evt.context->window = notify->window;
+                //_xtoq_remove_context_node(notify->window);
+                return_evt->context = context;
+                //return_evt->context->conn = event_conn;
+                //return_evt->context->window = notify->window;
                 
                 free(notify);
-                				
-                // TODO: Remove the window from the data structure.
-                // Need to figure out where memory is freed.
-                
+
                 callback_ptr(return_evt);
-                
+                free(context);
                 break;
             }
+			case XCB_MAP_REQUEST: {
+				xcb_map_request_event_t *request = (xcb_map_request_event_t *)evt;
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->context = _xtoq_window_created(event_conn, request);
+                if (!return_evt->context) {
+                    free(return_evt);
+					free(request);
+					break;
+                }
+                _xtoq_map_window(return_evt->context);
+                return_evt->event_type = XTOQ_CREATE;
+                callback_ptr(return_evt);
+                free(request);
+                break;
+            }
+            case XCB_CONFIGURE_REQUEST: {
+                xcb_configure_request_event_t *request =
+                    (xcb_configure_request_event_t *)evt;
+                printf("Got configure request: ");
+                printf("x = %i, y = %i, w = %i, h = %i\n", request->x, request->y,
+                    request->width, request->height);
+
+                /* Change the size of the window, but not its position */
+                _xtoq_resize_window(event_conn, request->window,
+									request->width, request->height);
+                free(request);
+                break;
+			}
             case XCB_KEY_PRESS: {
                 printf("Key press from xserver\n");
                 break;
@@ -164,7 +209,7 @@ void *run_event_loop (void *thread_arg_struct)
                 break;
             }
             default: {
-                printf("UNKNOWN EVENT\n");
+                printf("UNKNOWN EVENT: %i\n", (evt->response_type & ~0x80));
                 break;
             }
 			}

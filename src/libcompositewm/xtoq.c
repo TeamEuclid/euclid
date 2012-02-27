@@ -34,26 +34,22 @@
 #define XK_Shift_L                       0xffe1
 xcb_key_symbols_t *syms = NULL;
 // end aaron key stuff
+
 xtoq_context_t *root_context = NULL;
 
 // This init function needs set the window to be registered for events!
 // First one we should handle is damage
 xtoq_context_t *
-xtoq_init(char *screen) {
+xtoq_init(char *display) {
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
     xcb_drawable_t root_window;
+	xcb_void_cookie_t cookie;
     uint32_t mask_values[1];
  
-    conn = xcb_connect(screen, &conn_screen);
-
-	// Check to make sure connection is valid
-	if (xcb_connection_has_error(conn)) {
-		fprintf(stderr, "ERROR: xtoq_init failed to get connection\n");
-		exit(1);
-	}
-
+    conn = xcb_connect(display, &conn_screen);
+    
     root_screen = xcb_aux_get_screen(conn, conn_screen);
     root_window = root_screen->root;
     
@@ -62,16 +58,19 @@ xtoq_init(char *screen) {
     // we care about catching on the root window.
     mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
                      XCB_EVENT_MASK_BUTTON_PRESS |
-                     XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
-    xcb_change_window_attributes (conn, root_window,
-                                  XCB_CW_EVENT_MASK, mask_values);
+                     XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
+		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
+    cookie = xcb_change_window_attributes_checked(conn, root_window,
+												  XCB_CW_EVENT_MASK,
+												  mask_values);
+	if (_xtoq_request_check(conn, cookie, "Could not set root window mask.")) {
+			fprintf(stderr, "Is another window manager running?\n");
+			xcb_disconnect(conn);
+			exit(1);
+	}
 
 	xcb_flush(conn);
-    
-    // TODO: Creating this reference to the root window so there is a way
-    // to get at it from other functions - since we don't have a data
-    // structure for the windows yet. This should be deleted later
-    // because this is getting VERY HACKY
+
     root_context = malloc(sizeof(xtoq_context_t));
     root_context->conn = conn;
     root_context->parent = 0;
@@ -82,33 +81,25 @@ xtoq_init(char *screen) {
     root_context->height = root_screen->height_in_pixels;
     root_context->x = 0;
     root_context->y = 0;
-    // TODO END
+
+    _xtoq_init_composite(root_context);
     
-    xtoq_context_t init_reply;
-    init_reply.conn = conn;
-    init_reply.window = root_window;
-    
-    // Set width, height, x, & y from root_screen into the xtoq_context_t
-    init_reply.width = root_screen->width_in_pixels;
-    init_reply.height = root_screen->height_in_pixels;
-    init_reply.x = 0;
-    init_reply.y = 0;    
-    
-    // TODO: May want to send &init_reply instead of root window
     _xtoq_init_damage(root_context);
     
     _xtoq_init_xfixes(root_context);
     
-    _xtoq_add_context_t(&init_reply);
+    _xtoq_add_context_t(root_context);
         
     syms = xcb_key_symbols_alloc(conn);
-    //_xtoq_init_extension(conn, "XTEST");
+    _xtoq_init_extension(conn, "XTEST");
 	_xtoq_init_extension(conn, "XKEYBOARD");
-    
+
+	_xtoq_get_wm_atoms(root_context);
+
     return root_context;
 }
 
-xcb_image_t *
+xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context) {
     
     xcb_get_geometry_reply_t *geom_reply;
@@ -117,6 +108,9 @@ xtoq_get_image(xtoq_context_t *context) {
     xcb_image_t *image;
     
     geom_reply = _xtoq_get_window_geometry(context->conn, context->window);
+    
+    //FIXME - right size
+    xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
 	//xcb_flush(context.conn);
     /* Get the image of the root window */
@@ -128,32 +122,105 @@ xtoq_get_image(xtoq_context_t *context) {
                           geom_reply->height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
+    
+    xtoq_image->image = image;
+    xtoq_image->x = geom_reply->x;
+    xtoq_image->y = geom_reply->y;
+    xtoq_image->width = geom_reply->width;
+    xtoq_image->height = geom_reply->height;
+    
     free(geom_reply);
-    return image;
+    
+    printf("Returning initial image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
+    return xtoq_image;
+}
+
+void
+xtoq_free_image(xcb_image_t *img) {
+    free(img);
+}
+
+xtoq_event_t
+dummy_xtoq_wait_for_event(xtoq_context_t context) {
+    
+    sleep(4);
+    xtoq_event_t event;
+    xtoq_context_t new_context;
+    new_context.window = context.window;
+    new_context.conn = context.conn;
+    event.context = &new_context;
+    event.event_type = XTOQ_DAMAGE;
+    
+    return event;
 }
 
 int 
-xtoq_start_event_loop (xtoq_context_t *root_context, void *callback)
+xtoq_start_event_loop (xtoq_context_t *context,
+                       xtoq_event_cb_t callback)
 {
 	/* Simply call our internal function to do the actual setup */
-	return _xtoq_start_event_loop(root_context->conn, callback);
+	return _xtoq_start_event_loop(context->conn, callback);
+}
+
+xtoq_image_t *
+test_xtoq_get_image(xtoq_context_t *context) {
+    
+   // printf("Top of test get image\n");
+    //xcb_get_geometry_reply_t *geom_reply;
+    
+    //image_data_t img_data;
+    xcb_image_t *image;
+    
+    //geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
+    
+	//xcb_flush(context.conn);
+    /* Get the image of the root window */
+    image = xcb_image_get(context->conn,
+                          context->window,
+                          context->damaged_x,
+                          context->damaged_y,
+                          context->damaged_width,
+                          context->damaged_height,
+                          (unsigned int) ~0L,
+                          XCB_IMAGE_FORMAT_Z_PIXMAP);
+    //xtoq_image_t * xtoq_image;
+    
+    //FIXME - Calculate memory size correctly
+    xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
+    
+    xtoq_image->image = image;
+    xtoq_image->x = context->damaged_x;
+    xtoq_image->y = context->damaged_y;
+    xtoq_image->width = context->damaged_width;
+    xtoq_image->height = context->damaged_height;
+    
+    //printf("Returning image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
+ 
+    //free(geom_reply);
+    return xtoq_image;
 }
 
 
-
+void 
+xtoq_image_destroy(xtoq_image_t * xtoq_image){
+    //FIXME - is this all that needs to be done?
+    xcb_image_destroy(xtoq_image->image);
+    free(xtoq_image);
+}
+ 
 void
 dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
 {
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
-
-    
     xcb_window_t none = { XCB_NONE };
+    
+    // context->window 
 
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
-                                XCB_CURRENT_TIME, none, 0, 0, 0 );  
+                                XCB_CURRENT_TIME, none, 0, 0, 1 );  
     xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
-                                XCB_CURRENT_TIME, none, 0, 0, 0 );
+                                XCB_CURRENT_TIME, none,0 ,0 , 1 );
         
     err = xcb_request_check(context->conn, cookie);
     if (err)
@@ -162,7 +229,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     
-    printf("key press received by xtoq.c - uint8_t '%i',  in Mac window #%i - \n", code,  window);
+    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void

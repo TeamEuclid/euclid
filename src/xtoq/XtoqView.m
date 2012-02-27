@@ -20,7 +20,7 @@
  */
 
 #import "XtoqView.h"
-
+#define RECTLOG(rect)    (NSLog(@""  #rect @" x:%f y:%f w:%f h:%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height ));
 @implementation XtoqView
 
 /**
@@ -34,7 +34,8 @@ initWithFrame:(NSRect)frame {
         notificationCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
-        
+        index = 0;
+        indexTwo = 0;
         // Leaving these in for testing
         // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
         // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];        
@@ -43,43 +44,47 @@ initWithFrame:(NSRect)frame {
 }
 
 /**
- *  This function draws the initial image to the window.
+ *  Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
  */
-- (void)
+-(void)
 drawRect:(NSRect)dirtyRect {
 
-    /*
-    const NSRect ** rectList;
-    NSInteger * rectInt = 0;
-    [rectList count:rectInt];
-    NSLog(@"rectInt = %ld", (long)rectInt);*/
+    //const NSRect ** rectList;
+    //NSInteger * rectInt = 0;
+    //[rectList count:rectInt];
+    //NSLog(@"rectInt = %ld", (long)rectInt);
     
-    [image drawInRect:dirtyRect];
-
-    //[[self window] flushWindow];
+    /*const NSRect *rects;
+    int count, i;
+    id thing;
     
+    NSEnumerator *thingEnumerator = [[self image] objectEnumerator];
+    [self getRectsBeingDrawn:&rects count:&count];
+    
+    while (thing = [thingEnumerator nextObject]) {
+        // First test against coalesced rect.
+        if (NSIntersectsRect([thing bounds], dirtyRect)) {
+            // Then test per dirty rect
+            for (i = 0; i < count; i++) {
+                if (NSIntersectsRect([thing bounds], rects[i])) {
+                    [image draw];
+                    break;
+                }
+            }
+        }
+    }
+       }*/
+    
+    while (indexTwo < index) {
+        int i = indexTwo++;
+        [image[i] draw];//InRect:dirtyRect];
+        [image[i] destroy];
+    }
+    index = indexTwo = 0;
     // Leaving in for testing
     //[image2 drawInRect:destRect fromRect:NSZeroRect
     //   operation:NSCompositeSourceOver fraction:1.0];
 }
-
-
-/**
- * Eventually implement- draw damaged rects
- */
-/*- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count{
- 
- //NSRect rect = NSMakeRect(10, 10, 100, 100);
- //[[NSColor purpleColor] setFill];
- //NSRectFill(rect); 
- 
- //if (rectInt > 0){
-    [image drawInRect:dirtyRect];
- //}
- [[self window] flushWindow];
- 
- }*/
-
 
 /**
  *  This is necessary for accepting input.
@@ -104,34 +109,49 @@ keyDown:(NSEvent *)theEvent {
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
-    
-    //NSPoint p = [mouseEvent locationInWindow];
-    //downPoint = [self convertPoint:p fromView:nil];
-    
-    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:mouseEvent 
-                                                            forKey:@"2"];
-    
+    NSRect bnd = [self bounds];
+    CGFloat f = CGRectGetHeight(bnd);
+    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
+    [twoInfoDict setObject:mouseEvent forKey:@"1"];
+    [twoInfoDict setObject:n forKey:@"2"];
+
+    NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
+    	
     [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
                                       object:self 
-                                    userInfo:dictionary];
+                                    userInfo:twoInfoDict];
 }
 
 // This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
-    image = newImage;
-    //[[self window] flushWindow];
-    [self setNeedsDisplay:YES];
+    image[index++] = newImage;
 }
 
-- (void)setPartialImage:(XtoqImageRep *)newImage {
-    image = newImage;
-    //NSRect imageRec = NSMakeRect(40, 100, [image getWidth]-150, [image getHeight]-150);
-    //[self window] flushWindow];
-    //[self setNeedsDisplayInRect:imageRec];
+- (void)setPartialImage:(XtoqImageRep *)newImage{
+
+    image[index++] = newImage;
+    //XtoqImageRep imageCopy = [[XtoqImageRep alloc] ]
+    NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
+    //RECTLOG(imageRec);
+    //NSLog(@"index %i index 2 %i", index, indexTwo);
+    //NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
+    //[image drawInRect:imageRec];
+    //[self ourDisp ];
+    [self setNeedsDisplayInRect:imageRec];
+    //[[self window] flushWindow];
 }
 
 - (BOOL)isOpaque{
     return YES;
+}
+
+- (void)ourDisp{
+    CGContextRef destCtx = (CGContextRef)[[NSGraphicsContext currentContext]
+                                          graphicsPort];
+    while (indexTwo < index) {
+        [image[indexTwo++] draw];//InRect:dirtyRect];
+    }
 }
 
 @end

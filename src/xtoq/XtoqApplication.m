@@ -26,7 +26,7 @@
 int XtoqApplicationMain(int argc, char** argv){
     FILE *fp;
     const char *fifo_path = "/tmp/xtoq_fifo";
-    
+
     // seems to error if file already exists
     mkfifo(fifo_path, S_IRUSR | S_IWUSR);    
     

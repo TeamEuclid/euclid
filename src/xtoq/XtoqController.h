@@ -24,7 +24,7 @@
  *  AppController.h
  *  xtoq
  *
-  *  TODO: rename this class to XtoqController
+ *  TODO: rename this class to XtoqController
  *  This was controller for the Popup to retreive the display number
  *  from the user.
  *
@@ -54,7 +54,6 @@
 id referenceToSelf;
 
 @interface XtoqController : NSObject {
-    DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
     XtoqView * ourView;
     
@@ -63,16 +62,19 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-    xtoq_context_t *xcbContext;
+   // xcb_image_t *imageT;
+    xtoq_image_t *libImageT;
+    xtoq_context_t *rootContext;
     xcb_image_t *imageT;
     XtoqImageRep *image;
+    XtoqImageRep *imageNew;
     XtoqView *view;
     NSString *file;
     NSImage *image2;
-    NSMutableDictionary *winList; // The window list data structure.
-    NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
+    NSRect imageRec;
+    NSString *keyFirst;
 }
 
 - (id) init;
@@ -93,48 +95,29 @@ id referenceToSelf;
 - (void) runXlogo: (id) sender;
 - (void) runXterm: (id) sedner;
 
-
-/**
- * Create the Display Number Controller
- */
-
-- (IBAction)showDisplayChooser;
-
 /**
  * Put a new image in the window / view
  */
-- (void) updateImage;
-
+- (void) updateImageNew: (xtoq_context_t *) windowContext;
 
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
-
-
-/**
- * a method for getting a window in the list by searching all keys
- * returns nil if no key is found.
- */
-- (XtoqWindow *) getWindowInList: (xtoq_context_t) xtoqContxt;
-
-/**
- * A function that adds a window to the dictionary list.
- */
-- (void) addWindowInList: (XtoqWindow *) xqWin 
-             withContext: (xtoq_context_t) aContext;
-
-/**
- * A function that removes a window from the list by key.
- */
-- (void) removeWindowInLIst: (id) akey;
+- (void) destroyWindow:   (xtoq_context_t *) windowContext;
 
 /**
  * Sets the screen to command line argument.
  */
 - (void) setScreen: (const char *) scrn;
 
+- (void)windowWillMove:(NSNotification*)notification;
+- (void)windowDidMove:(NSNotification*)notification;
+- (void)windowDidResize:(NSNotification*)notification;
+
 @end
+
 
 /**
  * Callback function that will receive events from the xtoq event loop
  * once it is started.
+ * @param event The event received.
  */
-void eventHandler (xtoq_event_t event);
+void eventHandler (xtoq_event_t *event);
