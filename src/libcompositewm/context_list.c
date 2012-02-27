@@ -104,7 +104,7 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     _xtoq_context_node *curr;
     
     curr = _xtoq_window_list_head;
-    while (curr) {
+    while (curr != NULL) {
         if (curr->context->window == window_id) {
             // this will be freed in the event_loop
             //free(curr->context);
