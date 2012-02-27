@@ -123,4 +123,12 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
 void
 dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
 
+// not compiling right now :(
+//static bool xtoq_client_supports_protocol(xtoq_context_t * context, xcb_atom_t atom);
+/*
+void
+xtoq_request_close(xtoq_context_t *context);
+*/
+
+
 #endif // _XTOQ_H_
