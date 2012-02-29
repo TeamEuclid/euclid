@@ -90,6 +90,10 @@ id referenceToSelf;
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
 - (void)windowDidResize:(NSNotification*)notification;
+- (void)reshape;
+
+- (int) xserverToOSX:(int)yValue windowHeight:(int)windowH;
+- (int) osxToXserver:(int)yValue windowHeight:(int)windowH;
 
 @end
 

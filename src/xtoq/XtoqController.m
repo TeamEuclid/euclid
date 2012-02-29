@@ -32,6 +32,7 @@
 
 #import "XtoqController.h"
 
+#define WINDOWBAR 22
 
 @implementation XtoqController
 
@@ -41,6 +42,20 @@
         referenceToSelf = self;
     }
     return self;
+}
+
+- (int) xserverToOSX:(int)yValue windowHeight:(int)windowH {
+    
+    int height = [[NSScreen mainScreen] frame].size.height;    
+    return height - WINDOWBAR - windowH + yValue;
+    
+}
+
+- (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
+    
+    int height = [[NSScreen mainScreen] frame].size.height;    
+    return height - yValue;
+    
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
@@ -56,16 +71,10 @@
     }
     else {
         NSLog(@"not successful in attemp to set $DISPLAY");
-    }
-    
+    }    
     
     // setup X connection and get the initial image from the server
-//NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
-    
-//NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
-//      rootContext->height, rootContext->x, rootContext->y);
-    
     
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
@@ -256,23 +265,16 @@
 
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
-   /*
-    NSLog(@"windowContext");
-    NSLog(@"x = %i",windowContext->x);
-    NSLog(@"y = %i",windowContext->y);
-    NSLog(@"width = %i",windowContext->width);
-    NSLog(@"height = %i",windowContext->height);
-    NSLog(@"Window title \"%s\" ",windowContext->name);
-  */  
     
-    XtoqWindow *newWindow;
-    XtoqView *newView;
-    xcb_image_t *xcbImage;
-    XtoqImageRep *imageRep;
-    //NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);    
+    XtoqWindow   *newWindow;
+    XtoqView     *newView;
+    xcb_image_t  *xcbImage;
+    XtoqImageRep *imageRep;  
+
+    int y = [self xserverToOSX:windowContext->y windowHeight:windowContext->height];
     
     newWindow =  [[XtoqWindow alloc] 
-                  initWithContentRect: NSMakeRect(windowContext->x, windowContext->y, 
+                  initWithContentRect: NSMakeRect(windowContext->x, y, 
                                                   windowContext->width, windowContext->height)
                   styleMask: (NSTitledWindowMask |
                               NSClosableWindowMask |
@@ -292,7 +294,7 @@
     imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
     
     // draw the image into a rect
-    NSRect imgRec = NSMakeRect(0,0, [imageRep getWidth], [imageRep getHeight]);
+    NSRect imgRec = NSMakeRect(0, 0, [imageRep getWidth], [imageRep getHeight]);
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
@@ -325,13 +327,6 @@
     NSDictionary *contextInfo = [aNotification userInfo];    
     XtoqWindow *aWindow = [contextInfo objectForKey: @"1"];
     xtoq_context_t *theContext = [aWindow getContext];
-/*   
-    NSLog(@"windowContext");
-    NSLog(@"x = %i",theContext->x);
-    NSLog(@"y = %i",theContext->y);
-    NSLog(@"width = %i",theContext->width);
-    NSLog(@"height = %i",theContext->height);
-*/   
     
     //use dispatch_async() to handle the actual close 
       dispatch_async(xtoqDispatchQueue, ^{
@@ -340,40 +335,34 @@
       });
 }
 
-- (void)windowWillMove:(NSNotification*)notification
-{
-    NSLog(@"window will move");
+- (void) windowWillMove:(NSNotification*)notification {
+    //NSLog(@"window will move");
 }
 
-- (void)windowDidMove:(NSNotification*)notification
-{
-    NSLog(@"window did move");    
+- (void) windowDidMove:(NSNotification*)notification {
+    [self reshape];
+}
+
+- (void) windowDidResize:(NSNotification*)notification {
+    [self reshape];
+}
+
+- (void) reshape {
     
     XtoqWindow *moveWindow = [NSApp mainWindow];
     
-    if (moveWindow != nil) {
-        // origin is the NSPoint that is part of the frame  
-        // x & y are CGFloat
-        // (0,0) is the bottom left of the screen
+    if (moveWindow != nil) {        
         xtoq_context_t *moveContext = [moveWindow getContext];        
         NSRect moveFrame = [moveWindow frame];
         
-        // update context
-        moveContext->x = (int)moveFrame.origin.x;
-        moveContext->y = (int)moveFrame.origin.y;       
-        
-        NSLog(@"Window title \"%s\" ",moveContext->name);
-        NSLog(@"window context after x = %d, y = %d ", moveContext->x, moveContext->y);
-        NSLog(@"Call xtoq_updatewindowposition(moveContext)"); 
-        //xtoq_updatewindowposition (moveContext);       
-    }
-}
-
-- (void)windowDidResize:(NSNotification*)notification {
-    XtoqWindow *resizeWindow = [NSApp mainWindow];
-    if (resizeWindow != nil) {
-        NSLog(@"Window did resize, change the size");
-    }
+        int x = (int)moveFrame.origin.x;
+        int y = [self osxToXserver:(int)moveFrame.origin.y windowHeight:moveContext->height];
+        int width = (int)moveFrame.size.width;
+        int height = (int)moveFrame.size.height;
+        NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
+        NSLog(@"Call xtoq_updatewindowposition(moveContext, x, y, width, height)"); 
+        //xtoq_updatewindowposition (moveContext, x, y, width, height);       
+    }    
 }
 
 @end
