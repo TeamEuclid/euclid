@@ -82,9 +82,6 @@ void *run_event_loop (void *thread_arg_struct)
             xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
 			return_evt = malloc(sizeof(xtoq_event_t));
 			return_evt->event_type = XTOQ_DAMAGE;            
-            // TODO: Do this better - in a different function, but a least we're doing some
-            // damage processing. This just assumes that its the root window, and that
-            // the whole window is damaged.
             xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
             xcb_rectangle_t rect;
             rect.x = dmgevnt->area.x;
@@ -114,10 +111,8 @@ void *run_event_loop (void *thread_arg_struct)
                                                   0);
             _xtoq_request_check(root_context->conn, cookie, "Failed to subtract damage");
             
-            
-            // END TODO
-            
             callback_ptr(return_evt);        
+
 		} else {
 			switch (evt->response_type & ~0x80) {
             case XCB_EXPOSE: {

@@ -183,30 +183,6 @@
                                         0);;});
 }
 
-/* create a new image to redraw part of the screen 
-- (void) updateImage {
-
-    int numberOfRects = 1;
-	int i;
-    
-    for (i = 0; i < numberOfRects; i++) {
-    
-        //NSLog(@"update Image");
-        
-        xcb_image_destroy(imageT);
-        imageT = xtoq_get_image(rootContext);
-        image = [[XtoqImageRep alloc] initWithData:imageT];
-
-        [image topCrop];
-        [ourView setPartialImage:image x:0 y:0];
-        
-        //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-         NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
-        [ourView setNeedsDisplayInRect:rect];
-    }
-}*/
-
-
 - (void) setScreen:(char *)scrn {
     screen = scrn;
 }
