@@ -176,63 +176,37 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 }
 
 /* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
-/*
+
 void
 xtoq_request_close(xtoq_context_t *context) {
-    xcb_get_property_cookie_t cookie;
-    xcb_get_wm_protocols_reply_t protocols;
-
+    
     // remove node from context list
-    if (context = _xtoq_get_context_node_by_window_id(context->window))
-        context = _xtoq_remove_context_node(context->window);
+    context = _xtoq_get_context_node_by_window_id(context->window);
+    if (context)
+        _xtoq_remove_context_node(context->window);
     
     // kill using xcb_kill_client                              
-    if (!xtoq_client_supports_protocol(context->conn, window, atoms[WM_DELETE_WINDOW])) {
+    if (!context->wm_delete_set == 1) {
         xcb_kill_client(context->conn, context->window);
             return;
     }
     // kill using WM_DELETE_WINDOW
-    else if (context->wm_delete_flag == 1){
+    if (context->wm_delete_set == 1){
         xcb_client_message_event_t event;
         
         memset(&event, 0, sizeof(xcb_client_message_event_t));
 
         event.response_type = XCB_CLIENT_MESSAGE;
         event.window = context->window;
-        event.type = atoms[WM_PROTOCOLS];
+        event.type = _wm_atoms->wm_protocols_atom;//atoms[WM_PROTOCOLS];
         event.format = 32;
-        event.data.data32[0] = atoms[WM_DELETE_WINDOW];
+        event.data.data32[0] = _wm_atoms->wm_delete_window_atom;//atoms[WM_DELETE_WINDOW];
         event.data.data32[1] = XCB_CURRENT_TIME;
         
-        xcb_send_event(context->conn, false, context->window, XCB_EVENT_MASK_NO_EVENT, (char*)&ev);
+        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
+                       (char*)&event);
         xcb_flush(context->conn);
-        free(event);
+        
     }
     return;
 }
- 
-*/
-/* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
-
-/*
-static bool xtoq_client_supports_protocol(xtoq_context_t * context, xcb_atom_t atom) {
-    xcb_get_property_cookie_t cookie;
-    xcb_get_wm_protocols_reply_t protocols;
-    bool result = false;
-    
-    cookie = xcb_get_wm_protocols_unchecked(context->conn, context->window, atoms[WM_PROTOCOLS]);
-    if (xcb_get_wm_protocols_reply(context->conn, cookie, &protocols, NULL) != 1)
-        return false;
-    
-    //Check if the client’s protocols have the requested atom sets
-    for (uint32_t i = 0; i < protocols.atoms_len; i++)
-        if (protocols.atoms[i] == atom)
-            result = true;
-    
-    xcb_get_wm_protocols_reply_wipe(&protocols);
-    
-    return result;
-}
-*/
-
-
