@@ -24,7 +24,7 @@
  *  AppController.h
  *  xtoq
  *
-  *  TODO: rename this class to XtoqController
+ *  TODO: rename this class to XtoqController
  *  This was controller for the Popup to retreive the display number
  *  from the user.
  *
@@ -33,19 +33,28 @@
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
+#include <CoreServices/CoreServices.h> // timestamp
 #import <AppKit/AppKit.h>
 #import "XtoqWindow.h"
 #import "XtoqImageRep.h"
 #import "XtoqView.h"
 #import "xtoq.h"
+#import "spawn.h"
+#import "crt_externs.h"
+#import "sys/times.h"
+#import "sys/stat.h"
+#import "unistd.h"
 #import <dispatch/dispatch.h>
+
+#ifdef __APPLE__
+#define environ (*_NSGetEnviron())
+#endif
 
 @class DisplayNumberController;
 
 id referenceToSelf;
 
 @interface XtoqController : NSObject {
-    DisplayNumberController *displayNumberController;
     XtoqWindow *xtoqWindow;
     XtoqView * ourView;
     
@@ -54,16 +63,18 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
+    xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
     xcb_image_t *imageT;
     XtoqImageRep *image;
+    XtoqImageRep *imageNew;
     XtoqView *view;
     NSString *file;
     NSImage *image2;
-   // NSMutableDictionary *winList; // The window list data structure.
-   // NSInteger winCount;           // Used for setting keys of windows
     int originalHeight;
     int originalWidth;
+    NSRect imageRec;
+    NSString *keyFirst;
 }
 
 - (id) init;
@@ -73,25 +84,40 @@ id referenceToSelf;
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+
+/**
+ * Makemenu and related selector functions for launching X applications.
+ */
 - (void) makeMenu;
+- (void) launch_client: (NSString *) filename;
+- (void) runXeyes: (id) sender;
+- (void) runXclock: (id) sender;
+- (void) runXlogo: (id) sender;
+- (void) runXterm: (id) sedner;
 
 /**
  * Put a new image in the window / view
  */
-- (void) updateImage;
+- (void) updateImageNew: (xtoq_context_t *) windowContext;
+
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;
 
 /**
  * Sets the screen to command line argument.
  */
-- (void) setScreen: (char *) scrn;
+- (void) setScreen: (const char *) scrn;
 
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
 - (void)windowDidResize:(NSNotification*)notification;
+- (void)reshape;
+
+- (int) xserverToOSX:(int)yValue windowHeight:(int)windowH;
+- (int) osxToXserver:(int)yValue windowHeight:(int)windowH;
 
 @end
+
 
 /**
  * Callback function that will receive events from the xtoq event loop

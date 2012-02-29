@@ -27,79 +27,80 @@ int XtoqApplicationMain(int argc, char** argv){
 
     XtoqController *controller;
     char *scrn;
-    //FILE *fp;
-    scrn = findScreen(argc, argv);
-    /*const char *fifo_path = "/tmp/xtoq_fifo";
-    int ret = 0;
+    FILE *fp;
+    const char *fifo_path = "/tmp/xtoq_fifo";
     
-    ret = mkfifo(fifo_path, S_IRUSR | S_IWUSR);
-    if (ret == -1) {
-        NSLog(@"mkfifo unsuccessful");
-    }
-    ret = setenv("XTOQ_DISPLAY_FIFO", fifo_path, 1);
-    if (ret != 0) {
-        NSLog(@"problem with setenv");
-    }
+    // seems to error if file already exists
+    mkfifo(fifo_path, S_IRUSR | S_IWUSR);    
     
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CFBundleRef bundle = CFBundleGetMainBundle();
+        assert(bundle);
+
         CFURLRef resourcesURL = CFBundleCopyBundleURL(bundle);
-        CFStringRef str = CFURLCopyFileSystemPath( resourcesURL, kCFURLPOSIXPathStyle );
+        assert(resourcesURL);
+
+        CFStringRef bundle_path_cfstr = CFURLCopyFileSystemPath(resourcesURL, kCFURLPOSIXPathStyle);
+        assert(bundle_path_cfstr);
+
         char bundle_path[PATH_MAX];
-        CFStringGetCString( str, bundle_path, FILENAME_MAX, kCFStringEncodingASCII );
+        CFStringGetCString(bundle_path_cfstr, bundle_path, PATH_MAX, kCFStringEncodingUTF8);
         
         const char *startx_path = "/opt/X11/bin/startx";
         const char *Xorg_path = "/opt/X11/bin/Xorg";
         char *xinitrc_path;
-        asprintf(&xinitrc_path, "%s/Contents/Resources/X11/lib/X11/xinit/xinitrc", bundle_path);
-        NSLog(@"bundle_path=%s", bundle_path);
-        NSLog(@"xinitrc_path=%s", xinitrc_path);
-        if (xinitrc_path == NULL) {
-            //... perhaps create dir or exit program
-            NSLog(@"xinitrc path is null");
-        }
+        asprintf(&xinitrc_path, 
+                 "%s/Contents/Resources/X11/lib/X11/xinit/xinitrc", 
+                 bundle_path);
+        assert(xinitrc_path);
         
         const char *spawn[5];
         spawn[0] = startx_path;
         spawn[1] = xinitrc_path;
         spawn[2] = "--";
         spawn[3] = Xorg_path;
-        spawn[4] = '\0';
+        spawn[4] = NULL;
         
         pid_t child;
+
+        NSLog(@"Executing: %s %s %s %s", spawn[0], spawn[1], spawn[2], spawn[3]);
         
-        int error = posix_spawnp(&child, spawn[0], NULL, NULL, spawn, environ);
+        int error = posix_spawnp(&child, spawn[0], NULL, NULL, (char * const *)spawn, environ);
         if (error) {
             //... exit program if connection was not made.
             NSLog(@"error with posix_spawnp");
+            exit(1);
         }
-        
-        int retval;
-        waitpid(child, &retval, 0);
-        if (retval != 0) {
-            //... probably just exit here as well & set errno.
-            NSLog(@"error with waitpid");
-        }
-    });
+
+// TODO: Collect the zombie child in SIGCHLD  
+//        int retval;
+//        waitpid(child, &retval, 0);
+//        if (retval != 0) {
+//            NSLog(@"The X11 server shutdown.");
+//            exit(EXIT_SUCCESS);
+//        }
+//    });
     
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
-
-    char *xtoq_fifo = NULL;
-    size_t read;
+    // Just giving up on this, too much time spent spinning wheels.
+    // Display will default to :0
+    scrn = NULL;
+    ssize_t bytes_read;
     size_t len = 0;
     
     fp = fopen(fifo_path, "r");
-    if (fp == NULL) {
-        NSLog(@"Problem with fp");
-        //exit(1);
-    }
-    read = getline(&xtoq_fifo, &len, fp);
-    xtoq_fifo[len - 1] = '\0';
-    NSLog(@"from fifo: %s", xtoq_fifo);
+    assert(fp);
+#if 1
+    bytes_read = getline(&scrn, &len, fp);
+#else
+    scrn=":0";
+#endif
     fclose(fp);
-    // setenv("DISPLAY", scrn, 1);    
-    */
+    
+    if (bytes_read && scrn[bytes_read - 1] == '\n')
+        scrn[bytes_read - 1] = '\0';
+
+    NSLog(@"xinitrc told us DISPLAY=%s\n", scrn);
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
@@ -109,34 +110,6 @@ int XtoqApplicationMain(int argc, char** argv){
     [NSApp run];
 
     return 1;
-}
-
-
-char* findScreen(int argc, char **argv) {
-    /*int i;
-    int j;
-    int loc;
-    char place;
-    bool toBreak = false;
-    
-    for (i = 1; !toBreak && i < argc; ++i) {
-        for (j = 0; argv[i][j] != '\0'; ++j) {
-            place = argv[i][j];
-            if (place == ':') {
-                toBreak = true;
-                loc = i;
-                break;
-            }
-            else loc = 0;
-        }
-    }
-    
-    if ( loc != 0) {
-        return argv[loc];
-    }
-    else */
-        return ":1";
-    
 }
 
 @end

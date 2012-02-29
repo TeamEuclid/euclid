@@ -58,11 +58,6 @@
     return winContext;
 }
 
-//-(void) setRootDataPointer:(xtoq_context_t)xqContext {
-//    xtoqLocalData = xqContext.local_data;
-//}
-
-
 - (BOOL) windowShouldClose:(id)sender {    
     // send notification to controller to close the window
     XtoqWindow * aWindow = self;

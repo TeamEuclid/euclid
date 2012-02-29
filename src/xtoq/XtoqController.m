@@ -29,9 +29,9 @@
  *  from the user.
 
  */
-
 #import "XtoqController.h"
 
+#define WINDOWBAR 22
 
 @implementation XtoqController
 
@@ -41,6 +41,20 @@
         referenceToSelf = self;
     }
     return self;
+}
+
+- (int) xserverToOSX:(int)yValue windowHeight:(int)windowH {
+    
+    int height = [[NSScreen mainScreen] frame].size.height;    
+    return height - WINDOWBAR - windowH + yValue;
+    
+}
+
+- (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
+    
+    int height = [[NSScreen mainScreen] frame].size.height;    
+    return height - yValue;
+    
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
@@ -56,16 +70,10 @@
     }
     else {
         NSLog(@"not successful in attemp to set $DISPLAY");
-    }
-    
+    }    
     
     // setup X connection and get the initial image from the server
-//NSLog(@"screen = %s", screen);
     rootContext = xtoq_init(screen);
-    
-//NSLog(@"width = %i, height = %i, x = %i, y = %i", rootContext->width, 
-//      rootContext->height, rootContext->x, rootContext->y);
-    
     
     [[NSGraphicsContext currentContext]
      setImageInterpolation:NSImageInterpolationHigh];
@@ -80,26 +88,26 @@
                               backing: NSBackingStoreBuffered
                                 defer: YES];
 
-    // Make the menu
-    [self makeMenu];        
+	[xtoqWindow setContext: rootContext];
 
+    // Make the menu
+    [self makeMenu];
+    
     //create an XtoqImageRep with the information from X
-    imageT = xtoq_get_image(rootContext);
-    image = [[XtoqImageRep alloc] initWithData:imageT];  
+    //libImageT = xtoq_get_image(rootContext);
+    //image = [[XtoqImageRep alloc] initWithData:libImageT x:0 y:0];  
     //draw the image into a rect
-    NSRect imageRec = NSMakeRect(0, 0, [image getWidth], [image getHeight]);
+    imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
     // add view to its window
     [[xtoqWindow contentView]  addSubview: ourView];  
     // set the initial image in the window
-    [ourView setImage:image];
+    //[ourView setImage:image];
+
     originalWidth = [image getWidth];
     originalHeight = [image getHeight];
-
-    //set context
-    [xtoqWindow setContext:rootContext];
-  
+    //[ourView setPartialImage:imageNew];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     
@@ -153,7 +161,8 @@
 }
 
 - (void) keyDownInView: (NSNotification *) aNotification
-{
+{   
+    int i = 0;
     NSDictionary *keyInfo = [aNotification userInfo];
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
@@ -164,50 +173,39 @@
     printf( "\n--------------------------------------------\n" );
     // translate key here code = translate(charcharstar);
     NSLog(@"%s pressed", charcharstar);
-    uint8_t code = (unsigned char)0x10;
-    dispatch_async(xtoqDispatchQueue, 
+    //uint8_t code = (unsigned char)0x10;
+    //uint8_t code = 
+    
+    for(i = 0; i < 256; i++){
+        aChar++;
+        dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
-                                     code) ;});
+                                     aChar) ;});
+    }
 }
+ 
 
+// on this side all I have is a xtoq_context , on the library side I need
+// to turn that into a real context 
 - (void) mouseButtonDownInView: (NSNotification *) aNotification
 {
+    CGFloat heightFloat;
     NSDictionary *mouseDownInfo = [aNotification userInfo];
     // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
-    NSEvent * event = [mouseDownInfo objectForKey: @"2"];
+    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
+    //NSRect bnd = NSMakeRect(0,0,512,386);
+    NSNumber * heightAsNumber =  [NSNumber alloc];
+    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
+    heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_button_down (rootContext,
                                         [event locationInWindow].x, 
-                                        [event locationInWindow].y, 
+                                        heightFloat - [event locationInWindow].y, 
                                         (int)[event windowNumber],
                                         0);;});
 }
-
-// create a new image to redraw part of the screen 
-- (void) updateImage {
-
-    int numberOfRects = 1;
-	int i;
-    
-    for (i = 0; i < numberOfRects; i++) {
-    
-        //NSLog(@"update Image");
-        
-        xcb_image_destroy(imageT);
-        imageT = xtoq_get_image(rootContext);
-        image = [[XtoqImageRep alloc] initWithData:imageT];
-
-        [image topCrop];
-        [ourView setPartialImage:image];
-        
-        //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-         NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
-        [ourView setNeedsDisplayInRect:rect];
-    }
-}
-
 
 - (void) setScreen:(char *)scrn {
     screen = scrn;
@@ -226,53 +224,116 @@
 
     menubar = [[NSMenu new] autorelease];
     appMenuItem = [[NSMenuItem new] autorelease];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];    
     
     appMenu = [[NSMenu new] autorelease];
     appName = [[NSProcessInfo processInfo] processName];
-    
-    // About
-    aboutTitle = [@"About " stringByAppendingString:appName];        
-    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle
-										action:NULL
-										keyEquivalent:@"a"]; // About is greyed out since action is null
+
+    // Xtoq -> About
+    aboutTitle = [@"About " stringByAppendingString:appName];
+    aboutMenuItem = [[NSMenuItem alloc] initWithTitle:aboutTitle 
+                                                           action:NULL 
+                                                    keyEquivalent:@"a"];
     [appMenu addItem:aboutMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    // Quit    
+    // Xtoq -> Quit
     quitTitle = [@"Quit " stringByAppendingString:appName];
-    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle
-									   action:@selector(terminate:)
-									   keyEquivalent:@"q"];
+    quitMenuItem = [[NSMenuItem alloc] initWithTitle:quitTitle 
+                                                          action:@selector(terminate:) 
+                                                   keyEquivalent:@"q"];
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     
-    appMenu = [[NSMenu new] autorelease];
-    appMenuItem = [[NSMenuItem new] autorelease];
+    // Menu under Applications
+    NSMenu *startXMenu = [[NSMenu new] autorelease];
+    NSMenuItem *startXApps = [[NSMenuItem new] autorelease];
+    [startXMenu setTitle:@"Applications"];
+    
+    // Run Xeyes
+    NSString *xTitle;
+    NSMenuItem *xeyesMenuItem;
+    xTitle = @"Run Xeyes";
+    xeyesMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                               action:@selector(runXeyes:) 
+                                        keyEquivalent:@""];
+    [startXMenu addItem:xeyesMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xclock
+    NSMenuItem *xclockMenuItem;
+    xTitle = @"Run Xclock";
+    xclockMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                                action:@selector(runXclock:)
+                                         keyEquivalent:@""];
+    [startXMenu addItem:xclockMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xlogo
+    NSMenuItem *xlogoMenuItem;
+    xTitle = @"Run Xlogo";
+    xlogoMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                               action:@selector(runXlogo:)
+                                        keyEquivalent:@""];
+    [startXMenu addItem:xlogoMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Run Xterm, does not seem to properly launch Xterm, might just scrap this.
+    NSMenuItem *xtermMenuItem;
+    xTitle = @"Run Xterm";
+    xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
+                                               action:NULL //@selector(runXterm:)
+                                        keyEquivalent:@""];
+    [startXMenu addItem:xtermMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
+    // Adding all the menu items to the main menu for XtoQ.
     [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar]; 
+    [menubar addItem:startXApps];
+    [NSApp setMainMenu:menubar];
+}
+
+- (void) launch_client:(NSString *)filename {
+    int status;
+    pid_t child;
+    const char *file_name = [filename UTF8String];
+    const char *newargv[4];
+    
+    asprintf(&newargv[0], "/usr/X11/bin/%s", file_name);
+    newargv[1] = "-display";
+    newargv[2] = screen;
+    newargv[3] = NULL;
+    
+    status = posix_spawn(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
+    if(status) {
+        NSLog(@"Error spawning file for launch.");
+    }
+}
+
+- (void) runXeyes:(id) sender {
+    [self launch_client:@"xeyes"];
+}
+- (void) runXclock:(id) sender {
+    [self launch_client:@"xclock"];
+}
+- (void) runXlogo:(id) sender {
+    [self launch_client:@"xlogo"];    
+}
+- (void) runXterm:(id) sender {
+    [self launch_client:@"xterm"];    
 }
 
 // create a new window 
 - (void) createNewWindow: (xtoq_context_t *) windowContext {
-   /*
-    NSLog(@"windowContext");
-    NSLog(@"x = %i",windowContext->x);
-    NSLog(@"y = %i",windowContext->y);
-    NSLog(@"width = %i",windowContext->width);
-    NSLog(@"height = %i",windowContext->height);
-    NSLog(@"Window title \"%s\" ",windowContext->name);
-  */  
     
-    XtoqWindow *newWindow;
-    XtoqView *newView;
-    xcb_image_t *xcbImage;
-    XtoqImageRep *imageRep;
-    //NSLog(@"width = %i, height = %i, x = %i, y = %i", windowContext->width, windowContext->height, windowContext->x, windowContext->y);    
+    XtoqWindow   *newWindow;
+    XtoqView     *newView;
+    xcb_image_t  *xcbImage;
+    XtoqImageRep *imageRep;  
+
+    int y = [self xserverToOSX:windowContext->y windowHeight:windowContext->height];
     
     newWindow =  [[XtoqWindow alloc] 
-                  initWithContentRect: NSMakeRect(windowContext->x, windowContext->y, 
+                  initWithContentRect: NSMakeRect(windowContext->x, y, 
                                                   windowContext->width, windowContext->height)
                   styleMask: (NSTitledWindowMask |
                               NSClosableWindowMask |
@@ -289,10 +350,10 @@
     
     // get image to darw
     xcbImage = xtoq_get_image(windowContext);
-    imageRep = [[XtoqImageRep alloc] initWithData:xcbImage];
+    imageRep = [[XtoqImageRep alloc] initWithData:xcbImage x: 0 y: 0];
     
     // draw the image into a rect
-    NSRect imgRec = NSMakeRect(0,0, [imageRep getWidth], [imageRep getHeight]);
+    NSRect imgRec = NSMakeRect(0, 0, [imageRep getWidth], [imageRep getHeight]);
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
@@ -325,13 +386,6 @@
     NSDictionary *contextInfo = [aNotification userInfo];    
     XtoqWindow *aWindow = [contextInfo objectForKey: @"1"];
     xtoq_context_t *theContext = [aWindow getContext];
-/*   
-    NSLog(@"windowContext");
-    NSLog(@"x = %i",theContext->x);
-    NSLog(@"y = %i",theContext->y);
-    NSLog(@"width = %i",theContext->width);
-    NSLog(@"height = %i",theContext->height);
-*/   
     
     //use dispatch_async() to handle the actual close 
       dispatch_async(xtoqDispatchQueue, ^{
@@ -340,56 +394,67 @@
       });
 }
 
-- (void)windowWillMove:(NSNotification*)notification
+- (void) windowWillMove:(NSNotification*)notification {
+    //NSLog(@"window will move");
+}
+- (void) updateImageNew : (xtoq_context_t *) windowContext
 {
-    NSLog(@"window will move");
+    
+    float  y_transformed;
+	
+	// libImageT = test_xtoq_get_image(windowContext);
+	libImageT = xtoq_get_image(windowContext);
+
+    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+
+    y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
+    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
+                                                    x:((windowContext->damaged_x))
+                                                    y:y_transformed];
+    [ourView setPartialImage:imageNew];
 }
 
-- (void)windowDidMove:(NSNotification*)notification
-{
-    NSLog(@"window did move");    
+- (void) windowDidMove:(NSNotification*)notification {
+    [self reshape];
+}
+
+- (void) windowDidResize:(NSNotification*)notification {
+    [self reshape];
+}
+
+- (void) reshape {
     
     XtoqWindow *moveWindow = [NSApp mainWindow];
     
-    if (moveWindow != nil) {
-        // origin is the NSPoint that is part of the frame  
-        // x & y are CGFloat
-        // (0,0) is the bottom left of the screen
+    if (moveWindow != nil) {        
         xtoq_context_t *moveContext = [moveWindow getContext];        
         NSRect moveFrame = [moveWindow frame];
         
-        // update context
-        moveContext->x = (int)moveFrame.origin.x;
-        moveContext->y = (int)moveFrame.origin.y;       
-        
-        NSLog(@"Window title \"%s\" ",moveContext->name);
-        NSLog(@"window context after x = %d, y = %d ", moveContext->x, moveContext->y);
-        NSLog(@"Call xtoq_updatewindowposition(moveContext)"); 
-        //xtoq_updatewindowposition (moveContext);       
-    }
-}
-
-- (void)windowDidResize:(NSNotification*)notification {
-    XtoqWindow *resizeWindow = [NSApp mainWindow];
-    if (resizeWindow != nil) {
-        NSLog(@"Window did resize, change the size");
-    }
+        int x = (int)moveFrame.origin.x;
+        int y = [self osxToXserver:(int)moveFrame.origin.y windowHeight:moveContext->height];
+        int width = (int)moveFrame.size.width;
+        int height = (int)moveFrame.size.height;
+        NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
+        NSLog(@"Call xtoq_updatewindowposition(moveContext, x, y, width, height)"); 
+        //xtoq_updatewindowposition (moveContext, x, y, width, height);       
+    }    
 }
 
 @end
 
 void eventHandler (xtoq_event_t *event)
 {
+    xtoq_context_t *context = event->context;
     if (event->event_type == XTOQ_DAMAGE) {
         // This message generates a lot of console spam - only uncomment when testing
         //NSLog(@"Got damage event");
-        [referenceToSelf updateImage];
+	  [referenceToSelf updateImageNew: context];
     } else if (event->event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
-        [referenceToSelf createNewWindow: event->context];
+        [referenceToSelf createNewWindow: context];
     } else if (event->event_type == XTOQ_DESTROY) {
         NSLog(@"Window was destroyed");
-        [referenceToSelf destroyWindow: event->context];
+        [referenceToSelf destroyWindow: context];
     } else { 
         NSLog(@"Hey I'm Not damage!"); 
     }

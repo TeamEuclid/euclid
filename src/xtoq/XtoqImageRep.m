@@ -40,28 +40,28 @@
 }
 
 
-- (id)initWithData:(xcb_image_t *)imageData{
-    // We might need implement GetSize
-    windowSize =  NSMakeSize(imageData->width, imageData->size);
-
+- (id)initWithData:(xtoq_image_t *)imageData x:(int)x y:(int)y{
+    imageParent = imageData;
+    imageT = imageData->image;
+    windowSize =  NSMakeSize(imageT->width, imageT->size);
     self = [super init];
 	if (!self) {
 		return nil;
     }
     CGDataProviderRef cgdat =  CGDataProviderCreateWithData (
                                                     NULL,
-                                                    imageData->data,
-                                                    imageData->size,
+                                                    imageT->data,
+                                                    imageT->size,
                                                     NULL
                                                     );
     
     CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
 
-    cgImage = CGImageCreate (imageData->width,// size_t width,
-                             imageData->height, //size_t height,
+    cgImage = CGImageCreate (imageT->width,// size_t width,
+                             imageT->height, //size_t height,
                              8, //size_t bitsPerComponent,
                              32,//size_t bitsPerPixel,
-                             imageData->stride,//size_t bytesPerRow,
+                             imageT->stride,//size_t bytesPerRow,
                              csp, //CGColorSpaceRef colorspace,
                              kCGBitmapByteOrderDefault,//CGBitmapInfo bitmapInfo,
                              cgdat,//CGDataProviderRef provider,
@@ -72,7 +72,8 @@
     width = CGImageGetWidth(cgImage);
     height = CGImageGetHeight(cgImage);
     size = NSMakeSize (width, height);
-    
+    imageX =x;
+    imageY =y;
     return self;
 }
 
@@ -96,8 +97,8 @@
         NSLog(@"No image");
 		return NO;
 	}
-    
-    CGContextDrawImage(contextMac, CGRectMake(0, 0, width, height), cgImage);
+    //    CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
+    CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
     
 	return YES;
 }
@@ -110,8 +111,8 @@
         NSLog(@"No image");
 		return NO;
 	}
-    
-    CGContextDrawImage(contextMac, rect, cgImage);
+    //changed origin to imageX imageY to get damage to work
+    CGContextDrawImage(contextMac, CGRectMake(imageX, imageY, width, height), cgImage);
     
 	return YES;
 }
@@ -128,5 +129,15 @@
     return height;
 }
 
-
+- (float)imageX{
+    return imageX;
+}
+- (float)imageY{
+    return imageY;
+}
+- (void)destroy{
+    if (imageParent) {
+        xtoq_image_destroy(imageParent);
+    }
+}
 @end

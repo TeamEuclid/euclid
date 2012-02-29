@@ -54,24 +54,29 @@ extern xtoq_context_t *root_context;
 xtoq_context_t *
 xtoq_init(char *display);
 
-/**
- *
- */
-xcb_image_t *
+xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context);
+
+/**
+ * free the memory used by an xtoq_image_t created 
+ * during a call to test_xtoq_image_create
+ */
+void 
+xtoq_image_destroy(xtoq_image_t * xtoq_image);
 
 /**
  * Free the image returned by xtoq_get_image
  * @param img The xcb_image_t that needs to
  * be freed
  */
+
 void
 xtoq_free_image(xcb_image_t *img);
-/*
+
+/**
  * Set input focus to the window in context
  * @param context The context containing the window
  */
-
 void
 xtoq_set_input_focus(xtoq_context_t *context);
 
@@ -128,4 +133,6 @@ xtoq_request_close(xtoq_context_t *context);
 
 
 
+xtoq_image_t *
+test_xtoq_get_image(xtoq_context_t * context);
 #endif // _XTOQ_H_

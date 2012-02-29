@@ -7,11 +7,11 @@ BUILDDIR=$2
 BUNDLE_ROOT=$3
 
 if [ -d ${SRCDIR}/Resources ] ; then
-	/usr/bin/ditto ${SRCDIR}/Resources ${BUNDLE_ROOT}/Resources
+	/usr/bin/ditto ${SRCDIR}/Resources ${BUNDLE_ROOT}/Contents/Resources
 fi
 
 if [ -d ${SRCDIR}/Resources ] ; then
-	/usr/bin/ditto ${BUILDDIR}/Resources ${BUNDLE_ROOT}/Resources
+	/usr/bin/ditto ${BUILDDIR}/Resources ${BUNDLE_ROOT}/Contents/Resources
 fi
 
 mkdir -p ${BUNDLE_ROOT}/Contents/MacOS
