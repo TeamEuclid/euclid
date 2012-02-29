@@ -80,6 +80,7 @@ void *run_event_loop (void *thread_arg_struct)
     while ((evt = xcb_wait_for_event(event_conn))) {
 		if ((evt->response_type & ~0x80) == _damage_event) {
             xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
+			return_evt = malloc(sizeof(xtoq_event_t));
 			return_evt->event_type = XTOQ_DAMAGE;            
             // TODO: Do this better - in a different function, but a least we're doing some
             // damage processing. This just assumes that its the root window, and that

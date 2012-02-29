@@ -96,7 +96,9 @@ int XtoqApplicationMain(int argc, char** argv){
     scrn=":0";
 #endif
     fclose(fp);
-    scrn[len - 1] = '\0';
+    
+    if (bytes_read && scrn[bytes_read - 1] == '\n')
+        scrn[bytes_read - 1] = '\0';
 
     NSLog(@"xinitrc told us DISPLAY=%s\n", scrn);
     
