@@ -127,7 +127,6 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
 	}
 
     // Destroy the damage object associated with the window.
-    // TODO: I'm not sure if this frees the damage object...
     xcb_damage_destroy(context->conn,context->damage);
     
     // Call the remove function in context_list.c
@@ -266,3 +265,21 @@ init_damage_on_window (xtoq_context_t *context)
     /* Assign this damage object to the roots window's context */
     context->damage = damage_id;
 }
+
+void
+xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width) {
+    
+    // Set values for xtoq_context_t
+    context->x = x;
+    context->y = y;
+    context->width = width;
+    context->height = height;
+    
+    uint32_t values[] = {(uint32_t)x, (uint32_t)y, (uint32_t)width, (uint32_t)height };
+    /* The connection c and the window win are supposed to be defined */
+    
+    xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_X 
+                          | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);    
+    return;
+}
+

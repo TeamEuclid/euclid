@@ -131,6 +131,8 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 void
 xtoq_request_close(xtoq_context_t *context);
 
+void
+xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width);
 
 
 xtoq_image_t *
