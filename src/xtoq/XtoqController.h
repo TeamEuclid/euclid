@@ -56,11 +56,9 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-   // xcb_image_t *imageT;
     xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
     xcb_image_t *imageT;
-    xtoq_image_t libImageT;
     XtoqImageRep *image;
     XtoqImageRep *imageNew;
     XtoqView *view;
@@ -115,9 +113,6 @@ id referenceToSelf;
  * once it is started.
  * @param event The event received.
  */
-void eventHandler (xtoq_event_t event);
-
+void eventHandler (xtoq_event_t *event);
 
 //unsigned long long GetTimeSinceBoot;
-
-@end

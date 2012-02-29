@@ -74,15 +74,6 @@ typedef struct xtoq_image_t {
 
 typedef void (*xtoq_event_cb_t) (xtoq_event_t const *event);
 
-typedef struct xtoq_image_t {
-    xcb_image_t *image;
-    int x;
-    int y;
-    int width;
-    int height;
-} xtoq_image_t;
-
-// TODO: Decide where this variable needs to live.
 extern int _damage_event;
 
 #endif

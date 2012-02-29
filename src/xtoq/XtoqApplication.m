@@ -84,7 +84,7 @@ int XtoqApplicationMain(int argc, char** argv){
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
     // Just giving up on this, too much time spent spinning wheels.
     // Display will default to :0
-    char *scrn = NULL;
+    scrn = NULL;
     ssize_t bytes_read;
     size_t len = 0;
     
