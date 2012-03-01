@@ -113,10 +113,8 @@ acceptsFirstResponder {
 
 - (void)mouseMoved:(NSEvent *)mouseMovedEvent
 { 
-    NSLog(@"mouse moved ------");
-   // NSPoint mouseLoc;
-    //mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-   // NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent forKey:@"1"];
+   // NSLog(@"mouse moved ------");
+
     NSRect bnd = [self bounds];
     CGFloat f = CGRectGetHeight(bnd);
     NSNumber *n = [[NSNumber alloc] initWithFloat:f];
@@ -124,7 +122,7 @@ acceptsFirstResponder {
     [twoInfoDict setObject:mouseMovedEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
     
-    NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseMovedEvent locationInWindow].y );
+    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseMovedEvent locationInWindow].y );
     [notificationCenter postNotificationName:@"XTOQviewMouseMovedEvent" 
                                       object:self 
                                     userInfo:twoInfoDict];
