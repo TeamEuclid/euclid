@@ -281,7 +281,7 @@
     NSMenuItem *xtermMenuItem;
     xTitle = @"Run Xterm";
     xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
-                                               action:NULL //@selector(runXterm:)
+                                               action:@selector(runXterm:)
                                         keyEquivalent:@""];
     [startXMenu addItem:xtermMenuItem];
     [startXApps setSubmenu:startXMenu];
