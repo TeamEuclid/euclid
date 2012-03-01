@@ -188,9 +188,7 @@
 {
     CGFloat heightFloat;
     NSDictionary *mouseDownInfo = [aNotification userInfo];
-    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
     NSEvent * event = [mouseDownInfo objectForKey: @"1"];
-    //NSRect bnd = NSMakeRect(0,0,512,386);
     NSNumber * heightAsNumber =  [NSNumber alloc];
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];

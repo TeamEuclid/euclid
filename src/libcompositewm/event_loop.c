@@ -186,7 +186,6 @@ void *run_event_loop (void *thread_arg_struct)
                             bp->event, bp->event_x, bp->event_y );
                     break;
                 }
-                    
                 default: {
                     printf("UNKNOWN EVENT\n");
                     break;
