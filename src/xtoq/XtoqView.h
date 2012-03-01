@@ -46,8 +46,8 @@ SOFTWARE.
     NSPoint currentPoint;
     
     NSNotificationCenter * notificationCenter;
-    
-    //junk
+    NSTrackingArea * trackingArea;
+
     int index;
     int indexTwo;
 }

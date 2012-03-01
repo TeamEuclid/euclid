@@ -38,7 +38,20 @@ initWithFrame:(NSRect)frame {
         indexTwo = 0;
         // Leaving these in for testing
         // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];        
+        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];   
+        //[[self window] setAcceptsMouseMovedEvents:YES];
+        //[[self window] makeFirstResponder:self];
+        trackingArea = [[NSTrackingArea alloc] initWithRect:frame
+                        
+                                                    options: (NSTrackingMouseEnteredAndExited |
+                                                              NSTrackingMouseMoved 
+                                                              | NSTrackingActiveInKeyWindow
+                                                              )
+                        
+                                                      owner:self userInfo:nil];
+        
+        [self addTrackingArea:trackingArea];
+        
     }
     return self;
 }
@@ -93,6 +106,29 @@ drawRect:(NSRect)dirtyRect {
 acceptsFirstResponder {
     return YES;
 }
+
+- (BOOL)acceptsMouseMovedEvents {
+    return YES;
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent
+{ NSLog(@"mouse moved ------");
+    NSPoint mouseLoc;
+    // never reach here.
+    mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+}
+
+
+- (void)mouseEntered:(NSEvent *)theEvent {
+    
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+    
+}
+
+
+
 
 /**
  *  Capture keyboard events
