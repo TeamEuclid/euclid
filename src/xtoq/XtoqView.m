@@ -162,7 +162,7 @@ mouseDown:(NSEvent *)mouseEvent {
     [twoInfoDict setObject:mouseEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
 
-    NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
+    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
     	
     [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
                                       object:self 

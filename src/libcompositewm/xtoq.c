@@ -233,7 +233,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     
-    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+    //printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void
