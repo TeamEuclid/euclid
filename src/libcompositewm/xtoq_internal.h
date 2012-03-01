@@ -152,10 +152,18 @@ _xtoq_get_wm_atoms (xtoq_context_t *contxt);
  * calls event_callback if an event is caught.
  * @param *conn The connection to listen for X events on
  * @param event_callback The callback function to call when a event is caught.
+ * @return 0 on success, nonzero on failure.
  */
 int
 _xtoq_start_event_loop (xcb_connection_t *conn,
 						xtoq_event_cb_t event_callback);
+
+/**
+ * Stops the thread running the event loop.
+ * @return 0 on success, otherwise zero.
+ */
+int
+_xtoq_stop_event_loop (void);
 
 /****************
  * context_list.c

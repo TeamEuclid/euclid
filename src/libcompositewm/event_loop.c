@@ -35,10 +35,11 @@ typedef struct _connection_data {
 } _connection_data;
 
 /* The thread that is running the event loop */
-pthread_t _event_thread;
+pthread_t _event_thread = 0;
 
 /* Functions only called within event_loop.c */
-void *run_event_loop(void *thread_arg_struct);
+void
+*run_event_loop(void *thread_arg_struct);
 
 /* Functions included in xtoq_internal.h */
 
@@ -47,6 +48,8 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
 						xtoq_event_cb_t event_callback)
 {
 	_connection_data *conn_data;
+	int ret_val;
+	int oldstate;
     
     conn_data = malloc(sizeof(_connection_data));
     assert(conn_data);
@@ -54,10 +57,24 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
 	conn_data->conn = conn;
 	conn_data->callback = event_callback;
     
-	return pthread_create(&_event_thread,
+    ret_val = pthread_create(&_event_thread,
 						  NULL,
 						  run_event_loop,
 						  (void *) conn_data);
+
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &oldstate);
+
+	return ret_val;
+}
+
+int
+_xtoq_stop_event_loop(void)
+{
+	if (_event_thread) {
+		return pthread_cancel(_event_thread);
+	}
+	return 1;
 }
 
 void *run_event_loop (void *thread_arg_struct)
