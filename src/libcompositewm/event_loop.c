@@ -179,6 +179,14 @@ void *run_event_loop (void *thread_arg_struct)
                             bp->event, bp->event_x, bp->event_y );
                     break;
                 }
+                case XCB_MOTION_NOTIFY: {
+                    printf("mouse motion from from xserver-");
+                    xcb_button_press_event_t *bp = (xcb_button_press_event_t *)evt;
+                    printf ("mouse motion in window %ld, at coordinates (%d,%d)\n",
+                            bp->event, bp->event_x, bp->event_y );
+                    break;
+                }
+                    
                 default: {
                     printf("UNKNOWN EVENT\n");
                     break;

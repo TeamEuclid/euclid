@@ -118,6 +118,14 @@
                                                  name: @"XTOQmouseButtonDownEvent"
                                                object: nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(mouseMovedInView:)
+                                                 name: @"XTOQviewMouseMovedEvent" 
+                                               object: nil];
+    
+    
+    
+
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
     
 }
@@ -175,6 +183,27 @@
                                         (int)[event windowNumber],
                                         0);;});
 }
+
+- (void) mouseMovedInView: (NSNotification *) aNotification
+{
+    CGFloat heightFloat;
+    NSDictionary *mouseDownInfo = [aNotification userInfo];
+    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
+    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
+    //NSRect bnd = NSMakeRect(0,0,512,386);
+    NSNumber * heightAsNumber =  [NSNumber alloc];
+    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
+    heightFloat = [heightAsNumber floatValue];
+    //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ dummy_xtoq_mouse_motion (xcbContext,
+                                              [event locationInWindow].x, 
+                                              heightFloat - [event locationInWindow].y, 
+                                              (int)[event windowNumber],
+                                              0);;});
+}
+
+
 
 /* create a new image to redraw part of the screen 
 - (void) updateImage {

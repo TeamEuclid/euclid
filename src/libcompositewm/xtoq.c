@@ -251,14 +251,11 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 
 
 void
-dummy_xtoq_motion (xtoq_context_t *context, long x, long y, int window, int button)
+dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
 {
     //xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
-                         context->parent, x, y, 0);
-    // x has to be translated (?in the view)
-    xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
+    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
     
-    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
+    printf("mouse motion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }

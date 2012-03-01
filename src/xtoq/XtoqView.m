@@ -112,10 +112,16 @@ acceptsFirstResponder {
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
-{ NSLog(@"mouse moved ------");
-    NSPoint mouseLoc;
-    // never reach here.
-    mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+{ 
+    NSLog(@"mouse moved ------");
+   // NSPoint mouseLoc;
+    //mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent 
+                                                            forKey:@"1"];
+    
+    [notificationCenter postNotificationName:@"XTOQviewMouseMovedEvent" 
+                                      object:self 
+                                    userInfo:dictionary];
 }
 
 

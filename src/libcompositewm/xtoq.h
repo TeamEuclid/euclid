@@ -106,7 +106,7 @@ void
 dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
 
 void
-dummy_xtoq_motion (xtoq_context_t *context, long x, long y, int window, int button);
+dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
 
 xtoq_image_t *
 test_xtoq_get_image(xtoq_context_t * context);
