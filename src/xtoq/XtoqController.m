@@ -176,12 +176,12 @@
     //uint8_t code = (unsigned char)0x10;
     //uint8_t code = 
     
-    for(i = 0; i < 256; i++){
+    for(i = 8; i < 256; i++){
         aChar++;
         dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
-                                     aChar) ;});
+                                     i) ;});
     }
 }
  
