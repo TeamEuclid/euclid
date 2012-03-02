@@ -131,7 +131,7 @@ xtoq_get_image(xtoq_context_t *context) {
     
     free(geom_reply);
     
-    printf("Returning initial image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
+/*     printf("Returning initial image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height); */
     return xtoq_image;
 }
 

@@ -78,6 +78,7 @@ xtoq_set_input_focus(xtoq_context_t *context) {
     // End test -- David
     
     xcb_set_input_focus(context->conn, XCB_INPUT_FOCUS_PARENT, context->window, XCB_CURRENT_TIME);
+	xcb_flush(context->conn);
 }
 
 xtoq_context_t *
