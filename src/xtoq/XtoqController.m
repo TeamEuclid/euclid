@@ -177,19 +177,19 @@
     unsigned short aChar = [[event characters] characterAtIndex:0];
     NSString* charNSString = [event characters]; 
     const char* charcharstar = [charNSString UTF8String];
-    printf( "\n--------------------------------------------\n" );
+    //printf( "\n--------------------------------------------\n" );
     // translate key here code = translate(charcharstar);
     NSLog(@"%s pressed", charcharstar);
     //uint8_t code = (unsigned char)0x10;
     //uint8_t code = 
     
-    for(i = 0; i < 256; i++){
-        aChar++;
+    //for(i = 0; i < 256; i++){
+        //aChar++;
         dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar) ;});
-    }
+    //}
 }
  
 
@@ -227,39 +227,13 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_mouse_motion (xcbContext,
+                   ^{ dummy_xtoq_mouse_motion (rootContext,
                                               [event locationInWindow].x, 
                                               heightFloat - [event locationInWindow].y, 
                                               (int)[event windowNumber],
                                               0);;});
 }
-
-
-
-/* create a new image to redraw part of the screen 
-- (void) updateImage {
-
-    int numberOfRects = 1;
-	int i;
-    
-    for (i = 0; i < numberOfRects; i++) {
-    
-        //NSLog(@"update Image");
-        
-        xcb_image_destroy(imageT);
-        imageT = xtoq_get_image(xcbContext);
-        image = [[XtoqImageRep alloc] initWithData:imageT];
-
-        [image topCrop];
-        [ourView setPartialImage:image];
-        
-        //NSRect rect = NSMakeRect(0, 0, [image getWidth]-30, [image getHeight]-30);
-         NSRect rect = NSMakeRect(0, 0, originalWidth-30, originalHeight-30);
-        [ourView setNeedsDisplayInRect:rect];
-    }
-}*/
-
-
+/*
 - (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
     
     id key;
@@ -278,7 +252,7 @@
     }
     
     return nil;
-}
+}*/
 
 - (void) makeMenu {
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
