@@ -59,19 +59,6 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     
-    
-    //Setting environment variable $DISPLAY to screen.
-    char *env = getenv("DISPLAY");
-    NSLog(@"$DISPLAY = %s", env);
-    if (setenv("DISPLAY", screen, 1) == 0) {
-        NSLog(@"setenv successful");
-        env = getenv("DISPLAY");
-        NSLog(@"current $DISPLAY is = %s", env);
-    }
-    else {
-        NSLog(@"not successful in attemp to set $DISPLAY");
-    }    
-    
     // setup X connection and get the initial image from the server
     rootContext = xtoq_init(screen);
     
@@ -208,11 +195,18 @@
 }
 
 - (void) setScreen:(char *)scrn {
-    screen = scrn;
+    free(screen);
+    screen = strdup(scrn);
+    if (screen == NULL) {
+        perror(strerror(errno));
+    }
+    else {
+        setenv("DISPLAY", screen, 1);
+    }
 }
 
 - (void) makeMenu {
-    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
+    // Create menu  
     NSMenu *menubar;
     NSMenuItem *appMenuItem;
     NSMenu *appMenu;
@@ -277,7 +271,7 @@
     [startXMenu addItem:xlogoMenuItem];
     [startXApps setSubmenu:startXMenu];
     
-    // Run Xterm, does not seem to properly launch Xterm, might just scrap this.
+    // Run Xterm
     NSMenuItem *xtermMenuItem;
     xTitle = @"Run Xterm";
     xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
