@@ -48,8 +48,8 @@ SOFTWARE.
     NSNotificationCenter * notificationCenter;
     NSTrackingArea * trackingArea;
 
-    int index;
-    int indexTwo;
+    int bufferIndex;
+    int bufferIndexTwo;
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;
