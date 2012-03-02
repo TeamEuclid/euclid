@@ -140,20 +140,6 @@ xtoq_free_image(xcb_image_t *img) {
     free(img);
 }
 
-xtoq_event_t
-dummy_xtoq_wait_for_event(xtoq_context_t context) {
-    
-    sleep(4);
-    xtoq_event_t event;
-    xtoq_context_t new_context;
-    new_context.window = context.window;
-    new_context.conn = context.conn;
-    event.context = &new_context;
-    event.event_type = XTOQ_DAMAGE;
-    
-    return event;
-}
-
 int 
 xtoq_start_event_loop (xtoq_context_t *context,
                        xtoq_event_cb_t callback)
