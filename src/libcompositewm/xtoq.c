@@ -58,6 +58,7 @@ xtoq_init(char *display) {
     // we care about catching on the root window.
     mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
                      XCB_EVENT_MASK_BUTTON_PRESS |
+                     //XCB_MOTION_NOTIFY |
                      XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
 		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
     cookie = xcb_change_window_attributes_checked(conn, root_window,
@@ -226,7 +227,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         printf("err ");
         free(err);
     }	
-    printf("xtoq.c key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+    printf("key press xtoq.c  - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
     xcb_flush(context->conn);
 }
 
@@ -239,7 +240,7 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
                          // x has to be translated (?in the view)
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, 0,
                          none, x, y, 0);
-    printf("in xtoq.c- (%ld,%ld) in Mac window #%i ", x, y, window);
+    printf("bdown in xtoq.c- (%ld,%ld) in Mac window #%i ", x, y, window);
     xcb_flush(context->conn);
 }
 
@@ -247,10 +248,10 @@ void
 dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
 {
     xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 1, 0,
-                         none//context->parent
+    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, 0,
+                         context->window//root_context->window//none//context->parent
                          ,x, y, 0);
-    printf("mouse motion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
+    printf("mmotion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
     xcb_flush(context->conn);
 }
 
