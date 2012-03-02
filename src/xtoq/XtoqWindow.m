@@ -1,4 +1,4 @@
-/*Copyright (C) 2012 Ben Huddle
+/*Copyright (C) 2012 Ben Huddle, Braden Wooley, David Snyder
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -23,10 +23,21 @@
 
 @implementation XtoqWindow
 
+
+
 -(id) initWithContentRect:(NSRect)contentRect 
                 styleMask:(NSUInteger)aStyle 
                   backing:(NSBackingStoreType)bufferingType 
                     defer:(BOOL)flag {
+    
+    notificationCenter = [NSNotificationCenter defaultCenter];
+    
+    // Hack job, probably -- David
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+                                             selector: @selector(windowDidBecomeKey:) 
+                                                 name: @"NSWindowDidBecomeKeyNotification" 
+                                               object: self];
+    // End Hack job -- David
     
     XtoqWindow *result = [super initWithContentRect:contentRect
                                         styleMask:aStyle
@@ -39,17 +50,31 @@
     [super makeKeyAndOrderFront:sender];
 }
 
--(void) setContext:(xtoq_context_t *)aContext withId:(id)theId {
+-(void) setContext:(xtoq_context_t *)aContext {
     winContext = aContext;
-    winId = theId;
 }
 
--(xtoq_context_t *) getContext:(XtoqWindow *)win {
-    return win->winContext;
+-(xtoq_context_t *) getContext {
+    return winContext;
 }
 
--(void) setRootDataPointer:(xtoq_context_t)xqContext {
-    xtoqLocalData = xqContext.local_data;
+- (BOOL) windowShouldClose:(id)sender {    
+    // send notification to controller to close the window
+    XtoqWindow * aWindow = self;
+    NSDictionary * dictionary = [NSDictionary dictionaryWithObject:aWindow 
+                                                            forKey:@"1"];    
+    [notificationCenter postNotificationName:@"XTOQdestroyTheWindow" 
+                                      object:self
+                                    userInfo:dictionary];  
+    
+    // keep window from closing till server tells it to
+    return NO;
+}
+
+-(void)windowDidBecomeKey:(NSNotification *)note {
+    
+    xtoq_set_input_focus(winContext);
+    xtoq_set_window_to_top(winContext);
 }
 
 @end

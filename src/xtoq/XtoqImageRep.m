@@ -43,8 +43,7 @@
 - (id)initWithData:(xtoq_image_t *)imageData x:(int)x y:(int)y{
     imageParent = imageData;
     imageT = imageData->image;
-    windowSize =  NSMakeSize(imageT->width, 	imageT->size);
-
+    windowSize =  NSMakeSize(imageT->width, imageT->size);
     self = [super init];
 	if (!self) {
 		return nil;

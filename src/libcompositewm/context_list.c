@@ -82,7 +82,7 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
     return new_node->context;
 }       
 
-_xtoq_context_node *
+xtoq_context_t *
 _xtoq_get_context_node_by_window_id (xcb_window_t window_id)
 {
     _xtoq_context_node *curr;
@@ -90,7 +90,7 @@ _xtoq_get_context_node_by_window_id (xcb_window_t window_id)
     curr = _xtoq_window_list_head;
     while (curr) {
         if (curr->context->window == window_id) {
-            return curr;
+            return curr->context;
         }
         curr = curr->next;
     }
@@ -104,9 +104,10 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     _xtoq_context_node *curr;
     
     curr = _xtoq_window_list_head;
-    while (curr) {
+    while (curr != NULL) {
         if (curr->context->window == window_id) {
-            free(curr->context);
+            // this will be freed in the event_loop
+            //free(curr->context);
             if(curr->next){
                 curr->next->prev = curr->prev;
             }

@@ -34,6 +34,7 @@
 #include <xcb/xcb_image.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/damage.h>
+#include <xcb/composite.h>
 #include <xcb/xtest.h>
 #include <xcb/xfixes.h>
 #include "data.h"
@@ -45,12 +46,13 @@
 // root window's context in any function
 extern xtoq_context_t *root_context;
 
+
 /**
  * Sets up the connection and grabs the root window from the specified screen
- * @param screen The screen that we wish to connect to
+ * @param display The display to connect to
  */
 xtoq_context_t *
-xtoq_init(char *screen);
+xtoq_init(char *display);
 
 xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context);
@@ -72,11 +74,32 @@ void
 xtoq_free_image(xcb_image_t *img);
 
 /**
+ * Set input focus to the window in context
+ * @param context The context containing the window
+ */
+void
+xtoq_set_input_focus(xtoq_context_t *context);
+
+/**
+ * Set a window to the bottom of the window stack.
+ * @param context The context containing the window
+ */
+void
+xtoq_set_window_to_bottom(xtoq_context_t *context);
+
+/**
+ * Set a window to the top of the window stack.
+ * @param context The context containing the window
+ */
+void
+xtoq_set_window_to_top(xtoq_context_t *context);
+
+/**
  * Starts the event loop and listens on the connection specified in
  * the given xtoq_context_t. Uses callback as the function to call
  * when an event of interest is received. Callback must be able to
  * take an xtoq_event_t as its one and only parameter.
- * @param root_context The context containing the connection to listen
+ * @param context The context containing the connection to listen
  * for events on.
  * @param callback The function to call when an event of interest is
  * received.
@@ -84,7 +107,7 @@ xtoq_free_image(xcb_image_t *img);
  * the return value.
  */
 int
-xtoq_start_event_loop (xtoq_context_t *root_context, void *callback);
+xtoq_start_event_loop (xtoq_context_t *context, xtoq_event_cb_t callback);
 
 /**
  * Testing function

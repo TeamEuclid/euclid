@@ -29,9 +29,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
+#include <limits.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
+#include <xcb/xcb_icccm.h>
+#include <xcb/xcb_atom.h>
 #include "data.h"
 #include "xtoq.h"
 
@@ -40,9 +44,22 @@
  * Strucuture used to pass nesessary data to xtoq_start_event_loop.
  */
 typedef struct xtoq_event_connetion {
-	xcb_connection_t *conn;		/* Connection to listen to events on */
-	void * event_callback;		/* Fuction to call when event caught */
+	xcb_connection_t *conn;	          /* Connection to listen to events on */
+	xtoq_event_cb_t event_callback;   /* Fuction to call when event caught */
 } xtoq_event_connection;
+
+/**
+ * Structure to hold WM_* atoms that we care about
+ */
+typedef struct xtoq_wm_atoms {
+    xcb_atom_t wm_protocols_atom;
+    xcb_atom_t wm_delete_window_atom;
+} xtoq_wm_atoms;
+
+/**
+ * Global for the atoms needed
+ */
+extern xtoq_wm_atoms *_wm_atoms;
 
 /* util.c */
 
@@ -114,8 +131,17 @@ _xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 void 
 _xtoq_init_damage(xtoq_context_t *contxt);
 
+void 
+_xtoq_init_composite(xtoq_context_t *contxt);
+
 void
 _xtoq_init_xfixes (xtoq_context_t *contxt);
+
+/**
+ * Get the values for the WM_* atoms that we need.
+ */
+void
+_xtoq_get_wm_atoms (xtoq_context_t *contxt);
 
 /****************
  * event_loop.c
@@ -126,10 +152,18 @@ _xtoq_init_xfixes (xtoq_context_t *contxt);
  * calls event_callback if an event is caught.
  * @param *conn The connection to listen for X events on
  * @param event_callback The callback function to call when a event is caught.
+ * @return 0 on success, nonzero on failure.
  */
 int
 _xtoq_start_event_loop (xcb_connection_t *conn,
-						void *event_callback);
+						xtoq_event_cb_t event_callback);
+
+/**
+ * Stops the thread running the event loop.
+ * @return 0 on success, otherwise zero.
+ */
+int
+_xtoq_stop_event_loop (void);
 
 /****************
  * context_list.c
@@ -156,13 +190,31 @@ _xtoq_add_context_t(struct xtoq_context_t *context);
 void
 _xtoq_remove_context_node(xcb_window_t window_id);
 
-_xtoq_context_node *
+xtoq_context_t *
 _xtoq_get_context_node_by_window_id (xcb_window_t window_id);
 
 /****************
  * window.c
  ****************/
 xtoq_context_t *_xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *evt);
+xtoq_context_t *_xtoq_destroy_window(xcb_destroy_notify_event_t *event);
 
+/**
+ * Resize the window to given width and height.
+ * @param conn The connection
+ * @param window The id of window to resize
+ * @param width The new width
+ * @param height The new height
+ */
+void
+_xtoq_resize_window (xcb_connection_t *conn, xcb_window_t window,
+					 int width, int height);
 
-#endif  /* _UTIL_H_ */
+/**
+ * Map the given window.
+ * @param context The context of the window to map
+ */
+void
+_xtoq_map_window (xtoq_context_t *context);
+
+#endif  /* _XTOQ_INTERNAL_H_ */

@@ -24,7 +24,10 @@
 @implementation XtoqApplication
 
 int XtoqApplicationMain(int argc, char** argv){
-    /*FILE *fp;
+
+    XtoqController *controller;
+    char *scrn;
+    FILE *fp;
     const char *fifo_path = "/tmp/xtoq_fifo";
     
     // seems to error if file already exists
@@ -80,9 +83,9 @@ int XtoqApplicationMain(int argc, char** argv){
     
     // Read $DISPLAY from XTOQ_DISPLAY_FIFO
     // Just giving up on this, too much time spent spinning wheels.
-    // Display will default to :0 */
-    char *scrn = ":0";
-    /*ssize_t bytes_read;
+    // Display will default to :0
+    scrn = NULL;
+    ssize_t bytes_read;
     size_t len = 0;
     
     fp = fopen(fifo_path, "r");
@@ -93,13 +96,15 @@ int XtoqApplicationMain(int argc, char** argv){
     scrn=":0";
 #endif
     fclose(fp);
-    scrn[len - 1] = '\0';*/
+    
+    if (bytes_read && scrn[bytes_read - 1] == '\n')
+        scrn[bytes_read - 1] = '\0';
 
     NSLog(@"xinitrc told us DISPLAY=%s\n", scrn);
     
     // initializes simple subclass
     [XtoqApplication sharedApplication];
-    XtoqController *controller = [[XtoqController alloc] init];
+    controller = [[XtoqController alloc] init];
     [controller setScreen:scrn];
     [NSApp setDelegate: controller];
     [NSApp run];
