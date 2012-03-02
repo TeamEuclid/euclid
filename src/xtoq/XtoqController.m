@@ -129,6 +129,10 @@
                                                  name: @"XTOQdestroyTheWindow"
                                                object: nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(mouseMovedInView:)
+                                                 name: @"XTOQviewMouseMovedEvent" 
+                                               object: nil];
     // regester for window will/did movement notification
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(windowWillMove:) 
@@ -145,12 +149,6 @@
                                              selector:@selector(windowDidResize:) 
                                                  name:NSWindowDidResizeNotification 
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(mouseMovedInView:)
-                                                 name: @"XTOQviewMouseMovedEvent" 
-                                               object: nil];
-    
     
     
 
@@ -216,6 +214,9 @@
                                         0);;});
 }
 
+- (void) setScreen:(char *)scrn {
+    screen = scrn;
+}
 - (void) mouseMovedInView: (NSNotification *) aNotification
 {
     CGFloat heightFloat;
@@ -277,33 +278,6 @@
     }
     
     return nil;
-}
-
-
-- (void) addWindowInList:(XtoqWindow *)xqWin 
-             withContext: (xtoq_context_t *) aContext{
-    NSString *key = [NSString stringWithFormat:@"%d", winCount];
-    [xqWin setContext:aContext withId:key];
-    [winList setObject:xqWin forKey:key];
-    ++winCount;
-}
-
-- (void) removeWindowInLIst:(id)akey {
-    [winList removeObjectForKey:akey];
-    --winCount;
-}
-
-
-- (void) setScreen:(const char *)scrn {
-    free(screen);
-    screen = strdup(scrn);
-    NSLog(@"screen = %s", screen);
-    if(screen == NULL) {
-        perror(strerror(errno));
-    }
-    else {
-        setenv("DISPLAY", screen, 1);
-    }
 }
 
 - (void) makeMenu {

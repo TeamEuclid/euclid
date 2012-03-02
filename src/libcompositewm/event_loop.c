@@ -135,55 +135,64 @@ void *run_event_loop (void *thread_arg_struct)
 
 		} else {
 			switch (evt->response_type & ~0x80) {
-                case XCB_EXPOSE: {
-                    xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
-                    
-                    printf("Window %u exposed. Region to be redrawn at location (%d, %d), ",
-                           exevnt->window, exevnt->x, exevnt->y);
-                    printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
-                    
-                    return_evt.event_type = XTOQ_EXPOSE;
-                    free(exevnt);
-                    callback_ptr(return_evt);
-                }
-                case XCB_CREATE_NOTIFY: {
-                    // Window created as child of root window
-                    xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
-                    return_evt.context = _xtoq_window_created(event_conn, notify);
-                    if (!return_evt.context)
-                        break;
-                    return_evt.event_type = XTOQ_CREATE;
-                    
-                    printf("Got create notify\n");
-                    callback_ptr(return_evt);
-                    
-                    break;
-                }
-                case XCB_DESTROY_NOTIFY: {
-                    // Window destroyed in root window
-                    xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
-                    return_evt.event_type = XTOQ_DESTROY;
-                    
-                    // Memory for context will need to be freed by caller
-                    // Only setting the window - other values will be garbage.
-                    
-                    _xtoq_remove_context_node(notify->window);
-                    return_evt.context = malloc(sizeof(xtoq_context_t));
-                    return_evt.context->conn = event_conn;
-                    return_evt.context->window = notify->window;
-                    
-                    free(notify);
-                    
-                    // TODO: Remove the window from the data structure.
-                    // Need to figure out where memory is freed.
-                    
-                    callback_ptr(return_evt);
-                    
-                    break;
-                }
-                default: {
-                    printf("UNKNOWN EVENT\n");
-                    break;
+            case XCB_EXPOSE: {
+                xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
+                
+                printf("Window %u exposed. Region to be redrawn at location (%d, %d), ",
+                       exevnt->window, exevnt->x, exevnt->y);
+                printf("with dimentions (%d, %d).\n", exevnt->width, exevnt->height);
+                
+				return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_EXPOSE;
+                free(exevnt);
+                callback_ptr(return_evt);
+                break;
+            }
+            case XCB_CREATE_NOTIFY: {
+                // Window created as child of root window
+                xcb_create_notify_event_t *notify = (xcb_create_notify_event_t *)evt;
+				/* We don't actually allow our client to create its
+				 * window here, wait until the XCB_MAP_REQUEST */
+                printf("Got create notify\n");
+				free(notify);
+                break;
+            }
+            case XCB_DESTROY_NOTIFY: {
+                // Window destroyed in root window
+                xcb_destroy_notify_event_t *notify = (xcb_destroy_notify_event_t *)evt;
+                xtoq_context_t *context = _xtoq_destroy_window(notify);
+
+				if (!context) {
+					/* Not a window in the list, don't try and destroy */
+					free(notify);
+					break;
+				}
+                
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_DESTROY;
+                
+                // Memory for context will need to be freed by caller
+                // Only setting the window - other values will be garbage.
+                
+                //_xtoq_remove_context_node(notify->window);
+                return_evt->context = context;
+                //return_evt->context->conn = event_conn;
+                //return_evt->context->window = notify->window;
+                
+                free(notify);
+
+                callback_ptr(return_evt);
+                free(context);
+                break;
+            }
+			case XCB_MAP_REQUEST: {
+				xcb_map_request_event_t *request = (xcb_map_request_event_t *)evt;
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->context = _xtoq_window_created(event_conn, request);
+                if (!return_evt->context) {
+                    free(return_evt);
+					free(request);
+					break;
                 }
                 _xtoq_map_window(return_evt->context);
                 return_evt->event_type = XTOQ_CREATE;

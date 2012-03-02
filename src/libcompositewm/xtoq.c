@@ -229,7 +229,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     
-    //printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void
@@ -237,24 +237,59 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 {
     xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
-                         //context->parent
-                         none, 100, y, 100);
+                         context->parent, x, y, 0);
                          // x has to be translated (?in the view)
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
-                         //context->parent
-                         none, x, y, 0);
+                         context->parent, x, y, 0);
     
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
-
 void
 dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
 {
-    //xcb_window_t none = { XCB_NONE };
+    xcb_window_t none = { XCB_NONE };
+    
     xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 1, 0,
                          context->parent
                          ,x, y, 0);
-    
     printf("mouse motion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
+
+
+/* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
+
+void
+xtoq_request_close(xtoq_context_t *context) {
+    
+    // remove node from context list
+    context = _xtoq_get_context_node_by_window_id(context->window);
+    if (context)
+        _xtoq_remove_context_node(context->window);
+    
+    // kill using xcb_kill_client                              
+    if (!context->wm_delete_set == 1) {
+        xcb_kill_client(context->conn, context->window);
+            return;
+    }
+    // kill using WM_DELETE_WINDOW
+    if (context->wm_delete_set == 1){
+        xcb_client_message_event_t event;
+        
+        memset(&event, 0, sizeof(xcb_client_message_event_t));
+
+        event.response_type = XCB_CLIENT_MESSAGE;
+        event.window = context->window;
+        event.type = _wm_atoms->wm_protocols_atom;//atoms[WM_PROTOCOLS];
+        event.format = 32;
+        event.data.data32[0] = _wm_atoms->wm_delete_window_atom;//atoms[WM_DELETE_WINDOW];
+        event.data.data32[1] = XCB_CURRENT_TIME;
+        
+        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
+                       (char*)&event);
+        xcb_flush(context->conn);
+        
+    }
+    return;
+}
+
