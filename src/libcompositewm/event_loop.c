@@ -143,7 +143,8 @@ void *run_event_loop (void *thread_arg_struct)
 				fprintf(stderr, "Error received in event loop.\n"
 						"Error code: %i\n",
 						err->error_code);
-				if (err->error_code == XCB_VALUE) {
+				if ((err->error_code >= XCB_VALUE)
+					&& (err->error_code <= XCB_FONT)) {
 					xcb_value_error_t *val_err = (xcb_value_error_t *)evt;
 					fprintf(stderr, "Bad value: %i\n"
 							"Major opcode: %i\n"
@@ -152,9 +153,10 @@ void *run_event_loop (void *thread_arg_struct)
 							val_err->major_opcode,
 							val_err->minor_opcode);
 				}
-				fprintf(stderr, "Exiting....\n");
-				free(evt);
-				exit(1);
+/* 				fprintf(stderr, "Exiting....\n"); */
+/* 				free(evt); */
+                /* exit(1); */
+				break;
 			}
             case XCB_EXPOSE: {
                 xcb_expose_event_t *exevnt = (xcb_expose_event_t *)evt;
