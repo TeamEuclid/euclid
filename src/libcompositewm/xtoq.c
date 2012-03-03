@@ -112,7 +112,7 @@ xtoq_get_image(xtoq_context_t *context) {
     //FIXME - right size
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
-	//xcb_flush(context.conn);
+	xcb_flush(context->conn);
     /* Get the image of the root window */
     image = xcb_image_get(context->conn,
                           context->window,
@@ -159,7 +159,7 @@ test_xtoq_get_image(xtoq_context_t *context) {
     
     //geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
-	//xcb_flush(context.conn);
+	xcb_flush(context->conn);
     /* Get the image of the root window */
     image = xcb_image_get(context->conn,
                           context->window,

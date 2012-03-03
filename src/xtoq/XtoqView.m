@@ -75,8 +75,10 @@ drawRect:(NSRect)dirtyRect {
     }
        }*/
     
+    int i;
     while (indexTwo < index) {
-        int i = indexTwo++;
+        i = indexTwo;
+		indexTwo = indexTwo + 1;
         [image[i] draw];//InRect:dirtyRect];
         [image[i] destroy];
     }
