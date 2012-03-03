@@ -154,7 +154,7 @@
     [xtoqWindow makeKeyAndOrderFront: self];
     
     //hide window
-	//    [xtoqWindow orderOut:self];
+    [xtoqWindow orderOut:self];
     
     // Start the event loop and set the handler function
 	xtoq_start_event_loop(rootContext, (void *) eventHandler);
