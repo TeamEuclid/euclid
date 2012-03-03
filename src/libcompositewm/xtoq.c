@@ -112,7 +112,7 @@ xtoq_get_image(xtoq_context_t *context) {
     //FIXME - right size
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
-	//xcb_flush(context.conn);
+	xcb_flush(context->conn);
     /* Get the image of the root window */
     image = xcb_image_get(context->conn,
                           context->window,
@@ -140,20 +140,6 @@ xtoq_free_image(xcb_image_t *img) {
     free(img);
 }
 
-xtoq_event_t
-dummy_xtoq_wait_for_event(xtoq_context_t context) {
-    
-    sleep(4);
-    xtoq_event_t event;
-    xtoq_context_t new_context;
-    new_context.window = context.window;
-    new_context.conn = context.conn;
-    event.context = &new_context;
-    event.event_type = XTOQ_DAMAGE;
-    
-    return event;
-}
-
 int 
 xtoq_start_event_loop (xtoq_context_t *context,
                        xtoq_event_cb_t callback)
@@ -173,7 +159,7 @@ test_xtoq_get_image(xtoq_context_t *context) {
     
     //geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
-	//xcb_flush(context.conn);
+	xcb_flush(context->conn);
     /* Get the image of the root window */
     image = xcb_image_get(context->conn,
                           context->window,
@@ -228,7 +214,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         printf("err ");
         free(err);
     }	
-    
+    xcb_flush(context->conn);
     printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
@@ -241,7 +227,7 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
                          // x has to be translated (?in the view)
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
-    
+	xcb_flush(context->conn);
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
