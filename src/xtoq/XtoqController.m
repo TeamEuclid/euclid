@@ -390,7 +390,7 @@
     //use dispatch_async() to handle the actual close 
       dispatch_async(xtoqDispatchQueue, ^{
           NSLog(@"Call xtoq_request_close(theContext)");
-          xtoq_request_close(theContext);
+          //xtoq_request_close(theContext);
       });
 }
 
