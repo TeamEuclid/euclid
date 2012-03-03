@@ -72,7 +72,6 @@
         NSLog(@"not successful in attemp to set $DISPLAY");
     }    
     
-    //screen = ":1";// comment out
     // setup X connection and get the initial image from the server
     rootContext = xtoq_init(screen);
     

@@ -203,9 +203,9 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
     xcb_window_t none = { XCB_NONE };
 
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
-                                XCB_CURRENT_TIME, none, 0, 0, 0 );  
+                                XCB_CURRENT_TIME, none, 0, 0, 1 );  
     xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
-                                XCB_CURRENT_TIME, none,0 ,0 , 0 );
+                                XCB_CURRENT_TIME, none,0 ,0 , 1 );
         
     err = xcb_request_check(context->conn, cookie);
     if (err)
@@ -213,21 +213,21 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         printf("err ");
         free(err);
     }	
-    printf("key press xtoq.c  - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
     xcb_flush(context->conn);
+    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void
 dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button)
 {
-    xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, 0,
-                         none, x, y, 0);
+    //xcb_window_t none = { XCB_NONE };
+    xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
+                         context->parent, x, y, 0);
                          // x has to be translated (?in the view)
-    xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, 0,
-                         none, x, y, 0);
-    printf("bdown in xtoq.c- (%ld,%ld) in Mac window #%i ", x, y, window);
-    xcb_flush(context->conn);
+    xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
+                         context->parent, x, y, 0);
+	xcb_flush(context->conn);
+    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
 void
