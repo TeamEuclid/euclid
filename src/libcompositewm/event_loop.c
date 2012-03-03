@@ -98,12 +98,18 @@ void *run_event_loop (void *thread_arg_struct)
 		if ((evt->response_type & ~0x80) == _damage_event) {
             xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
 			xcb_void_cookie_t cookie;
+            xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
+            xcb_rectangle_t rect;
+
 			return_evt = malloc(sizeof(xtoq_event_t));
 			return_evt->event_type = XTOQ_DAMAGE;
             return_evt->context =
 				_xtoq_get_context_node_by_window_id(dmgevnt->drawable);
-            xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
-            xcb_rectangle_t rect;
+			if (!return_evt->context) {
+				free(return_evt);
+				continue;
+			}
+
             rect.x = dmgevnt->area.x;
             rect.y = dmgevnt->area.y;
             rect.width = dmgevnt->area.width;
@@ -194,6 +200,26 @@ void *run_event_loop (void *thread_arg_struct)
                 free(context);
                 break;
             }
+			case XCB_UNMAP_NOTIFY: {
+				/* Received an unmap notify for a window. Right now we
+				 * are going to assume that the unmap = killed client,
+				 * so we'll call code to destroy the window. */
+				xcb_unmap_notify_event_t *notify = (xcb_unmap_notify_event_t *)evt;
+				xtoq_context_t *context = _xtoq_destroy_window(notify);
+
+				if (!context) {
+					/* Not a window in the list, don't try and destroy */
+					break;
+				}
+                
+                return_evt = malloc(sizeof(xtoq_event_t));
+                return_evt->event_type = XTOQ_DESTROY;
+                return_evt->context = context;
+
+                callback_ptr(return_evt);
+                free(context);
+                break;
+			}
 			case XCB_MAP_REQUEST: {
 				xcb_map_request_event_t *request = (xcb_map_request_event_t *)evt;
                 return_evt = malloc(sizeof(xtoq_event_t));
