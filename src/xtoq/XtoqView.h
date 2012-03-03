@@ -58,4 +58,4 @@ SOFTWARE.
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
 - (void)ourDisp;
 @end
-
+    
