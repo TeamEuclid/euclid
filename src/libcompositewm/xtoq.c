@@ -276,6 +276,7 @@ xtoq_request_close(xtoq_context_t *context) {
         xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
                        (char*)&event);
         xcb_flush(context->conn);
+        return;
         
     }
     return;
