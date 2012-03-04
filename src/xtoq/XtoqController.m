@@ -152,8 +152,7 @@
     
 
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
-    //DarwinKeyboardReloadHandler();
-    [self runXmodMap:self];
+    [self cosmeticKeyboard:self];
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
@@ -173,23 +172,15 @@
     NSDictionary *keyInfo = [aNotification userInfo];
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
-    //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
     unsigned short aChar = [event keyCode];
     NSString* charNSString = [event characters]; 
     const char* charcharstar = [charNSString UTF8String];
-    //printf( "\n--------------------------------------------\n" );
-    // translate key here code = translate(charcharstar);
-    NSLog(@"%s pressed", charcharstar);
-    //uint8_t code = (unsigned char)0x10;
-    //uint8_t code = 
+    //NSLog(@"%s pressed", charcharstar);
     
-	//    for(i = 8; i < 256; i++){
-    //    aChar++;
-        dispatch_async(xtoqDispatchQueue, 
+    dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar + 8) ;});
-		// }
 }
  
 
@@ -199,9 +190,7 @@
 {
     CGFloat heightFloat;
     NSDictionary *mouseDownInfo = [aNotification userInfo];
-    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
     NSEvent * event = [mouseDownInfo objectForKey: @"1"];
-    //NSRect bnd = NSMakeRect(0,0,512,386);
     NSNumber * heightAsNumber =  [NSNumber alloc];
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
@@ -233,26 +222,6 @@
                                               (int)[event windowNumber],
                                               0);;});
 }
-/*
-- (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
-    
-    id key;
-    int index;
-    xtoq_context_t *xqWinContxt;
-    NSArray *keyArray = [winList allKeys];
-    XtoqWindow *xqWin;
-    
-    for (index = 0; index < [keyArray count]; index++) {
-        key = [keyArray objectAtIndex:index];
-        xqWin = [winList objectForKey:key];
-        xqWinContxt = [xqWin getContext:xqWin];
-        if (xqWinContxt->window == xtoqContxt->window) {
-            return xqWin;
-        }
-    }
-    
-    return nil;
-}*/
 
 - (void) makeMenu {
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
@@ -352,40 +321,9 @@
     }
 }
 
-- (void) runXmodMap:(id)sender{
+- (void) cosmeticKeyboard:(id)sender{
     NSString * comm = @"xmodmap";
     const char *comm_name = [comm UTF8String];
-    /*FILE * modmap;
-    if ((modmap = freopen("/tmp/temp.keys", "w", stdout)) == NULL)
-        NSLog(@"error in key mapping");
-    
-
-    int status;
-    pid_t child;
-
-    const char *newargv[5];
-    
-    asprintf(&newargv[0], "/usr/X11/bin/%s", comm_name);
-    newargv[1] = "-display";
-    newargv[2] = screen;
-    newargv[3] = "-pke";
-    newargv[4] = NULL;
-        
-    int j;
-    for ( j= 0 ; j < 4; j++){
-        NSLog(@"%s ", newargv[j]);
-
-    }
-            NSLog(@"\n");
-    status = posix_spawn(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
-    if(status) {
-        NSLog(@"Error file write spawn.");
-    }
-
-    if (modmap = fclose(stdout))
-        NSLog(@"error in key mapping");*/
-    
-    NSString *file = @"src/xtoq/bundle/xmodmap.local";
     
     int statusTwo;
     pid_t childTwo;
@@ -394,32 +332,15 @@
     asprintf(&newargvTwo[0], "/usr/X11/bin/%s", comm_name);
     newargvTwo[1] = "-display";
     newargvTwo[2] = screen;
-    newargvTwo[3] = "src/xtoq/bundle/xmodmap.local";
+    newargvTwo[3] = "/Applications/Xtoq.app/Contents/Resources/xmodmap.local";
     newargvTwo[4] = NULL;
-        
-    int i;
-    for ( i= 0 ; i < 4; i++){
-        NSLog(@"%s ", newargvTwo[i]);
 
-    }            NSLog(@"\n");
-    
     statusTwo = posix_spawn(&childTwo, newargvTwo[0], NULL, NULL, (char * const *) newargvTwo, environ);
     if(statusTwo) {
-        NSLog(@"Error spawning file for launch.");
+        NSLog(@"Error spawning launch for cosmetic keyboard.");
     }
-    
-    /*ulutong:fa2011cs487-euclid aas$ xmodmap -pke > /tmp/temp.keys
-     lulutong:fa2011cs487-euclid aas$ xmodmap -display :1 temp.keys*/
-   // NSString *pre = @"xmodmap -display ";
-   // char *env = getenv("DISPLAY");
-   // NSString* s = [NSString stringWithFormat:@"%s" , env];
-    //s = [pre stringByAppendingString:s];
-    //NSString *post = @" /tmp/temp.keys";
-    //post = [s stringByAppendingString:post];
-    //NSString *full = post;
-    //[self launch_client:@"xmodmap -pke > /tmp/temp.keys"];
-    //[self launch_client:full];
 }
+
 - (void) runXeyes:(id) sender {
     [self launch_client:@"xeyes"];
 }
@@ -514,9 +435,6 @@
     float  y_transformed;
 	
     libImageT = test_xtoq_get_image(windowContext);
-	//	libImageT = xtoq_get_image(windowContext);
-
-    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
     imageNew = [[XtoqImageRep alloc] initWithData:libImageT

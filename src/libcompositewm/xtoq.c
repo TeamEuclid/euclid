@@ -214,7 +214,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     xcb_flush(context->conn);
-    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+   // printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void
@@ -227,7 +227,7 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
 	xcb_flush(context->conn);
-    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
+    //printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
 void

@@ -94,7 +94,7 @@ id referenceToSelf;
 - (void) runXclock: (id) sender;
 - (void) runXlogo: (id) sender;
 - (void) runXterm: (id) sedner;
-- (void) runXmodMap:(id)sender;
+- (void) cosmeticKeyboard:(id)sender;
 /**
  * Put a new image in the window / view
  */

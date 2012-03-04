@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		48CF949F150336AC0011A919 /* xmodmap.local */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = xmodmap.local; path = ../xmodmap.local; sourceTree = "<group>"; };
+		48CF94A515033F810011A919 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48CF94A615033F810011A919 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		48CF94A715033F810011A919 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		48CF94A815033F810011A919 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		48CF94A915033F810011A919 /* mk_bundke.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mk_bundke.sh; sourceTree = "<group>"; };
+		48CF94AA15033F810011A919 /* PkgInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PkgInfo; sourceTree = "<group>"; };
+		48CF94BB150340340011A919 /* xmodmap.local */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xmodmap.local; sourceTree = "<group>"; };
 		52BF61D114F5607E00CA8AA0 /* xinitrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = xinitrc; sourceTree = "<group>"; };
 		E1D4D05614EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		E1D4D05814EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = ../Makefile.am; sourceTree = "<group>"; };
@@ -55,6 +61,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		48CF94A415033F810011A919 /* bundle */ = {
+			isa = PBXGroup;
+			children = (
+				48CF94A515033F810011A919 /* Info.plist */,
+				48CF94A615033F810011A919 /* Makefile */,
+				48CF94A715033F810011A919 /* Makefile.am */,
+				48CF94A815033F810011A919 /* Makefile.in */,
+				48CF94A915033F810011A919 /* mk_bundke.sh */,
+				48CF94AA15033F810011A919 /* PkgInfo */,
+			);
+			name = bundle;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		52BF61CC14F55F0A00CA8AA0 /* X11 */ = {
 			isa = PBXGroup;
 			children = (
@@ -181,7 +201,8 @@
 		E1D4D0A214EE5011000AB51B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				48CF949F150336AC0011A919 /* xmodmap.local */,
+				48CF94BB150340340011A919 /* xmodmap.local */,
+				48CF94A415033F810011A919 /* bundle */,
 				52BF61CC14F55F0A00CA8AA0 /* X11 */,
 				E1D4D0A314EE5011000AB51B /* Credits.rtf */,
 				E1D4D0A514EE5011000AB51B /* DisplayNumberDialog.xib */,
