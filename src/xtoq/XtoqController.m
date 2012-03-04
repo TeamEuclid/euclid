@@ -148,6 +148,19 @@
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
     xtoq_close();
+    
+    // If xtoq_close does not kill all, this will.
+    const char *spawn[4];
+    pid_t child;
+    int error = 0;
+     
+    spawn[0] = "/usr/bin/killall";
+    spawn[1] = "-9";
+    spawn[2] = "Xorg";
+    spawn[3] = NULL;
+     
+    NSLog(@"Killing the Xorg Connection.");
+    posix_spawn(&child, spawn[0], NULL, NULL, (const * const*)spawn, environ);
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
