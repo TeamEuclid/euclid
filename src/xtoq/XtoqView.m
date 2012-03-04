@@ -34,11 +34,20 @@ initWithFrame:(NSRect)frame {
         notificationCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
-        index = 0;
-        indexTwo = 0;
-        // Leaving these in for testing
-        // file = @"Xtoq.app/Contents/Resources/Mac-Logo.jpg";
-        // image2 = [[NSImage alloc] initWithContentsOfFile:(file)];        
+        bufferIndex = 0;
+        bufferIndexTwo = 0;
+
+        trackingArea = [[NSTrackingArea alloc] initWithRect:frame
+                        
+                                                    options: (NSTrackingMouseEnteredAndExited |
+                                                              NSTrackingMouseMoved 
+                                                              | NSTrackingActiveInKeyWindow
+                                                              )
+                        
+                                                      owner:self userInfo:nil];
+        
+        [self addTrackingArea:trackingArea];
+        
     }
     return self;
 }
@@ -49,41 +58,12 @@ initWithFrame:(NSRect)frame {
 -(void)
 drawRect:(NSRect)dirtyRect {
 
-    //const NSRect ** rectList;
-    //NSInteger * rectInt = 0;
-    //[rectList count:rectInt];
-    //NSLog(@"rectInt = %ld", (long)rectInt);
-    
-    /*const NSRect *rects;
-    int count, i;
-    id thing;
-    
-    NSEnumerator *thingEnumerator = [[self image] objectEnumerator];
-    [self getRectsBeingDrawn:&rects count:&count];
-    
-    while (thing = [thingEnumerator nextObject]) {
-        // First test against coalesced rect.
-        if (NSIntersectsRect([thing bounds], dirtyRect)) {
-            // Then test per dirty rect
-            for (i = 0; i < count; i++) {
-                if (NSIntersectsRect([thing bounds], rects[i])) {
-                    [image draw];
-                    break;
-                }
-            }
-        }
-    }
-       }*/
-    
-    while (indexTwo < index) {
-        int i = indexTwo++;
+    while (bufferIndexTwo < bufferIndex) {
+        int i = bufferIndexTwo++;
         [image[i] draw];//InRect:dirtyRect];
         [image[i] destroy];
     }
-    index = indexTwo = 0;
-    // Leaving in for testing
-    //[image2 drawInRect:destRect fromRect:NSZeroRect
-    //   operation:NSCompositeSourceOver fraction:1.0];
+    bufferIndex = bufferIndexTwo = 0;
 }
 
 /**
@@ -93,6 +73,34 @@ drawRect:(NSRect)dirtyRect {
 acceptsFirstResponder {
     return YES;
 }
+
+- (BOOL)acceptsMouseMovedEvents {
+    return YES;
+}
+
+- (void)mouseMoved:(NSEvent *)mouseMovedEvent
+{ 
+    NSRect bnd = [self bounds];
+    CGFloat f = CGRectGetHeight(bnd);
+    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
+    [twoInfoDict setObject:mouseMovedEvent forKey:@"1"];
+    [twoInfoDict setObject:n forKey:@"2"];
+    
+    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseMovedEvent locationInWindow].y );
+    [notificationCenter postNotificationName:@"XTOQviewMouseMovedEvent" 
+                                      object:self 
+                                    userInfo:twoInfoDict];
+}
+
+
+/*- (void)mouseEntered:(NSEvent *)theEvent {
+    
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+    
+}*/
 
 /**
  *  Capture keyboard events
@@ -116,28 +124,22 @@ mouseDown:(NSEvent *)mouseEvent {
     [twoInfoDict setObject:mouseEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
 
-    NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
-    	
+    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
     [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
                                       object:self 
                                     userInfo:twoInfoDict];
 }
 
-// This is getting called from the controller
 - (void)setImage:(XtoqImageRep *)newImage {
-    image[index++] = newImage;
+    image[bufferIndex++] = newImage;
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage{
 
-    image[index++] = newImage;
-    //XtoqImageRep imageCopy = [[XtoqImageRep alloc] ]
+    image[bufferIndex++] = newImage;
+
     NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
-    //RECTLOG(imageRec);
-    //NSLog(@"index %i index 2 %i", index, indexTwo);
-    //NSLog(@"frameRect = %@", NSStringFromRect(imageRec));    
-    //[image drawInRect:imageRec];
-    //[self ourDisp ];
+
     [self setNeedsDisplayInRect:imageRec];
     //[[self window] flushWindow];
 }
@@ -149,8 +151,8 @@ mouseDown:(NSEvent *)mouseEvent {
 - (void)ourDisp{
     CGContextRef destCtx = (CGContextRef)[[NSGraphicsContext currentContext]
                                           graphicsPort];
-    while (indexTwo < index) {
-        [image[indexTwo++] draw];//InRect:dirtyRect];
+    while (bufferIndexTwo < bufferIndex) {
+        [image[bufferIndexTwo++] draw];
     }
 }
 

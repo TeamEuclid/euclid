@@ -46,10 +46,10 @@ SOFTWARE.
     NSPoint currentPoint;
     
     NSNotificationCenter * notificationCenter;
-    
-    //junk
-    int index;
-    int indexTwo;
+    NSTrackingArea * trackingArea;
+
+    int bufferIndex;
+    int bufferIndexTwo;
 }
 
 - (void)setImage:(XtoqImageRep *)newImage;
@@ -58,4 +58,4 @@ SOFTWARE.
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
 - (void)ourDisp;
 @end
-
+    

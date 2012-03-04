@@ -41,6 +41,7 @@ xtoq_context_t *root_context = NULL;
 // First one we should handle is damage
 xtoq_context_t *
 xtoq_init(char *display) {
+    
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
@@ -58,6 +59,7 @@ xtoq_init(char *display) {
     // we care about catching on the root window.
     mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
                      XCB_EVENT_MASK_BUTTON_PRESS |
+		             XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                      XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
 		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
     cookie = xcb_change_window_attributes_checked(conn, root_window,
@@ -112,7 +114,7 @@ xtoq_get_image(xtoq_context_t *context) {
     //FIXME - right size
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
     
-	//xcb_flush(context.conn);
+	xcb_flush(context->conn);
     /* Get the image of the root window */
     image = xcb_image_get(context->conn,
                           context->window,
@@ -140,20 +142,6 @@ xtoq_free_image(xcb_image_t *img) {
     free(img);
 }
 
-xtoq_event_t
-dummy_xtoq_wait_for_event(xtoq_context_t context) {
-    
-    sleep(4);
-    xtoq_event_t event;
-    xtoq_context_t new_context;
-    new_context.window = context.window;
-    new_context.conn = context.conn;
-    event.context = &new_context;
-    event.event_type = XTOQ_DAMAGE;
-    
-    return event;
-}
-
 int 
 xtoq_start_event_loop (xtoq_context_t *context,
                        xtoq_event_cb_t callback)
@@ -173,7 +161,7 @@ test_xtoq_get_image(xtoq_context_t *context) {
     
     //geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
-	//xcb_flush(context.conn);
+	xcb_flush(context->conn);
     /* Get the image of the root window */
     image = xcb_image_get(context->conn,
                           context->window,
@@ -214,8 +202,6 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
     xcb_window_t none = { XCB_NONE };
-    
-    // context->window 
 
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
                                 XCB_CURRENT_TIME, none, 0, 0, 1 );  
@@ -228,7 +214,7 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         printf("err ");
         free(err);
     }	
-    
+    xcb_flush(context->conn);
     printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
@@ -241,29 +227,41 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
                          // x has to be translated (?in the view)
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
-    
+	xcb_flush(context->conn);
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
+
+void
+dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
+{
+    xcb_window_t none = { XCB_NONE };
+    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, 0,
+                         context->window//root_context->window//none//context->parent
+                         ,x, y, 0);
+	xcb_flush(context->conn);
+}
+
 
 /* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
 
 void
 xtoq_request_close(xtoq_context_t *context) {
     
-    // remove node from context list
+    // is the context in the list?
     context = _xtoq_get_context_node_by_window_id(context->window);
-    if (context)
-        _xtoq_remove_context_node(context->window);
+    if (!context)
+        return;
     
     // kill using xcb_kill_client                              
     if (!context->wm_delete_set == 1) {
         xcb_kill_client(context->conn, context->window);
-            return;
+        xcb_flush(context->conn);
+        return;
     }
     // kill using WM_DELETE_WINDOW
     if (context->wm_delete_set == 1){
         xcb_client_message_event_t event;
-        
+                
         memset(&event, 0, sizeof(xcb_client_message_event_t));
 
         event.response_type = XCB_CLIENT_MESSAGE;
@@ -276,8 +274,35 @@ xtoq_request_close(xtoq_context_t *context) {
         xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
                        (char*)&event);
         xcb_flush(context->conn);
+        return;
         
     }
     return;
+}
+
+/* Close all windows, the connection, as well as the event loop */
+void xtoq_close(void) {
+    
+    _xtoq_context_node *head = _xtoq_window_list_head;
+    xcb_connection_t *conn = head->context->conn;
+    xcb_flush(conn);
+    
+    // Close all windows
+    while(head) {
+        xtoq_request_close(head->context);
+        _xtoq_window_list_head = head->next;
+        free(head);
+        head = _xtoq_window_list_head;
+    }
+    
+    // Disconnect from the display
+    xcb_disconnect(conn);
+    
+    // Terminate the event loop
+    int ret = _xtoq_stop_event_loop();
+    if (ret != 1) printf("Event loop failed to close\n");
+    
+    return;
+    
 }
 

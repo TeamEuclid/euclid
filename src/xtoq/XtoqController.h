@@ -111,6 +111,7 @@ id referenceToSelf;
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
 - (void)windowDidResize:(NSNotification*)notification;
+- (void)applicationWillTerminate:(NSNotification *)aNotification;
 - (void)reshape;
 
 - (int) xserverToOSX:(int)yValue windowHeight:(int)windowH;
