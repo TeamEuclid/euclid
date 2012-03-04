@@ -41,6 +41,7 @@ xtoq_context_t *root_context = NULL;
 // First one we should handle is damage
 xtoq_context_t *
 xtoq_init(char *display) {
+    
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
@@ -237,18 +238,21 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 void
 xtoq_request_close(xtoq_context_t *context) {
     
-    // remove node from context list
+    // is the context in the list?
     context = _xtoq_get_context_node_by_window_id(context->window);
+    if (!context)
+        return;
     
     // kill using xcb_kill_client                              
     if (!context->wm_delete_set == 1) {
         xcb_kill_client(context->conn, context->window);
-            return;
+        xcb_flush(context->conn);
+        return;
     }
     // kill using WM_DELETE_WINDOW
     if (context->wm_delete_set == 1){
         xcb_client_message_event_t event;
-        
+                
         memset(&event, 0, sizeof(xcb_client_message_event_t));
 
         event.response_type = XCB_CLIENT_MESSAGE;
@@ -258,12 +262,38 @@ xtoq_request_close(xtoq_context_t *context) {
         event.data.data32[0] = _wm_atoms->wm_delete_window_atom;//atoms[WM_DELETE_WINDOW];
         event.data.data32[1] = XCB_CURRENT_TIME;
         
-        xcb_send_event(context->conn, XCB_SEND_EVENT_DEST_POINTER_WINDOW, context->window, XCB_EVENT_MASK_NO_EVENT, 
+        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
                        (char*)&event);
         xcb_flush(context->conn);
         return;
         
     }
     return;
+}
+
+/* Close all windows, the connection, as well as the event loop */
+void xtoq_close(void) {
+    
+    _xtoq_context_node *head = _xtoq_window_list_head;
+    xcb_connection_t *conn = head->context->conn;
+    xcb_flush(conn);
+    
+    // Close all windows
+    while(head) {
+        xtoq_request_close(head->context);
+        _xtoq_window_list_head = head->next;
+        free(head);
+        head = _xtoq_window_list_head;
+    }
+    
+    // Disconnect from the display
+    xcb_disconnect(conn);
+    
+    // Terminate the event loop
+    int ret = _xtoq_stop_event_loop();
+    if (ret != 1) printf("Event loop failed to close\n");
+    
+    return;
+    
 }
 

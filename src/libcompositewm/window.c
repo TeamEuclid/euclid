@@ -281,6 +281,7 @@ xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int wid
     
     xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_X 
                           | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);    
+    xcb_flush(context->conn);
     return;
 }
 

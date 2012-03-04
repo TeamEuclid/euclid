@@ -144,9 +144,17 @@
                                              selector:@selector(windowDidResize:) 
                                                  name:NSWindowDidResizeNotification 
                                                object:nil];
+   /* [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillTerminate:)
+                                                 name:NSApplicationWillTerminateNotification object:nil]; */
     
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
     
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+    xtoq_close();
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
@@ -436,8 +444,8 @@
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height;
         NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
-        NSLog(@"Call xtoq_updatewindowposition(moveContext, x, y, width, height)"); 
-        //xtoq_updatewindowposition (moveContext, x, y, width, height);       
+        NSLog(@"Call xtoq_configure_window(moveContext, x, y, height, width)"); 
+        xtoq_configure_window(moveContext, x, y, height, width);       
     }    
 }
 

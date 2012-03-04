@@ -67,7 +67,8 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
         new_node->prev = NULL;
         new_node->next = NULL;
         _xtoq_window_list_head = new_node;
-    } else {
+    } else { 
+        /*
         curr = _xtoq_window_list_head;
         while (curr->next) {
             prev = curr;
@@ -75,7 +76,17 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
         }
         curr->next = new_node;
         new_node->prev = curr;
-        new_node->next = NULL;
+        new_node->next = NULL; 
+         */
+        
+        // Add the new node to the beginning of the list,
+        // rather than the end.
+        new_node->next = _xtoq_window_list_head;
+        _xtoq_window_list_head->prev = new_node;
+        new_node->prev = NULL;
+        
+        _xtoq_window_list_head = new_node;
+        
     }
     
     
