@@ -109,6 +109,12 @@ xtoq_set_window_to_top(xtoq_context_t *context);
 int
 xtoq_start_event_loop (xtoq_context_t *context, xtoq_event_cb_t callback);
 
+/* Closes the windows open on the X Server, the connection, and the event
+ * loop. 
+ */
+void 
+xtoq_close(void);
+
 /**
  * Testing function
  * @param context xtoq_context_t 

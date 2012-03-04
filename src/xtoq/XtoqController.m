@@ -144,9 +144,17 @@
                                              selector:@selector(windowDidResize:) 
                                                  name:NSWindowDidResizeNotification 
                                                object:nil];
+   /* [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillTerminate:)
+                                                 name:NSApplicationWillTerminateNotification object:nil]; */
     
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
     
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+    xtoq_close();
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification

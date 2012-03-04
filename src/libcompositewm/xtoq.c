@@ -41,6 +41,7 @@ xtoq_context_t *root_context = NULL;
 // First one we should handle is damage
 xtoq_context_t *
 xtoq_init(char *display) {
+    
     xcb_connection_t *conn;
     int conn_screen;
     xcb_screen_t *root_screen;
@@ -267,5 +268,31 @@ xtoq_request_close(xtoq_context_t *context) {
         
     }
     return;
+}
+
+/* Close all windows, the connection, as well as the event loop */
+void xtoq_close(void) {
+    
+    _xtoq_context_node *head = _xtoq_window_list_head;
+    xcb_connection_t *conn = head->context->conn;
+    xcb_flush(conn);
+    
+    // Close all windows
+    while(head) {
+        xtoq_request_close(head->context);
+        _xtoq_window_list_head = head->next;
+        free(head);
+        head = _xtoq_window_list_head;
+    }
+    
+    // Disconnect from the display
+    xcb_disconnect(conn);
+    
+    // Terminate the event loop
+    int ret = _xtoq_stop_event_loop();
+    if (ret != 1) printf("Event loop failed to close\n");
+    
+    return;
+    
 }
 
