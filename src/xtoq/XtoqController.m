@@ -394,7 +394,7 @@
     asprintf(&newargvTwo[0], "/usr/X11/bin/%s", comm_name);
     newargvTwo[1] = "-display";
     newargvTwo[2] = screen;
-    newargvTwo[3] = "Xtoq.app/Contents/Resources/xmodmap.local";
+    newargvTwo[3] = "src/xtoq/bundle/xmodmap.local";
     newargvTwo[4] = NULL;
         
     int i;
