@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		48CF949F150336AC0011A919 /* xmodmap.local */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = xmodmap.local; path = ../xmodmap.local; sourceTree = "<group>"; };
 		52BF61D114F5607E00CA8AA0 /* xinitrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = xinitrc; sourceTree = "<group>"; };
 		E1D4D05614EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		E1D4D05814EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = ../Makefile.am; sourceTree = "<group>"; };
@@ -180,6 +181,7 @@
 		E1D4D0A214EE5011000AB51B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				48CF949F150336AC0011A919 /* xmodmap.local */,
 				52BF61CC14F55F0A00CA8AA0 /* X11 */,
 				E1D4D0A314EE5011000AB51B /* Credits.rtf */,
 				E1D4D0A514EE5011000AB51B /* DisplayNumberDialog.xib */,

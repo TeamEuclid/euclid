@@ -237,7 +237,7 @@ dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, in
     xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, 0,
                          context->window//root_context->window//none//context->parent
                          ,x, y, 0);
-    printf("mmotion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
+    //printf("mmotion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
     xcb_flush(context->conn);
 }
 

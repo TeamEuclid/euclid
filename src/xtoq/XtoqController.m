@@ -30,7 +30,7 @@
 
  */
 #import "XtoqController.h"
-
+#include <mach/mach.h> //aaron keyboard
 #define WINDOWBAR 22
 
 @implementation XtoqController
@@ -152,7 +152,8 @@
     
 
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
-    
+    //DarwinKeyboardReloadHandler();
+    [self runXmodMap:self];
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
@@ -351,6 +352,74 @@
     }
 }
 
+- (void) runXmodMap:(id)sender{
+    NSString * comm = @"xmodmap";
+    const char *comm_name = [comm UTF8String];
+    /*FILE * modmap;
+    if ((modmap = freopen("/tmp/temp.keys", "w", stdout)) == NULL)
+        NSLog(@"error in key mapping");
+    
+
+    int status;
+    pid_t child;
+
+    const char *newargv[5];
+    
+    asprintf(&newargv[0], "/usr/X11/bin/%s", comm_name);
+    newargv[1] = "-display";
+    newargv[2] = screen;
+    newargv[3] = "-pke";
+    newargv[4] = NULL;
+        
+    int j;
+    for ( j= 0 ; j < 4; j++){
+        NSLog(@"%s ", newargv[j]);
+
+    }
+            NSLog(@"\n");
+    status = posix_spawn(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
+    if(status) {
+        NSLog(@"Error file write spawn.");
+    }
+
+    if (modmap = fclose(stdout))
+        NSLog(@"error in key mapping");*/
+    
+    NSString *file = @"Xtoq.app/Contents/Resources/xmodmap.local";
+    
+    int statusTwo;
+    pid_t childTwo;
+    const char *newargvTwo[5];
+        
+    asprintf(&newargvTwo[0], "/usr/X11/bin/%s", comm_name);
+    newargvTwo[1] = "-display";
+    newargvTwo[2] = screen;
+    newargvTwo[3] = "Xtoq.app/Contents/Resources/xmodmap.local";
+    newargvTwo[4] = NULL;
+        
+    int i;
+    for ( i= 0 ; i < 4; i++){
+        NSLog(@"%s ", newargvTwo[i]);
+
+    }            NSLog(@"\n");
+    
+    statusTwo = posix_spawn(&childTwo, newargvTwo[0], NULL, NULL, (char * const *) newargvTwo, environ);
+    if(statusTwo) {
+        NSLog(@"Error spawning file for launch.");
+    }
+    
+    /*ulutong:fa2011cs487-euclid aas$ xmodmap -pke > /tmp/temp.keys
+     lulutong:fa2011cs487-euclid aas$ xmodmap -display :1 temp.keys*/
+   // NSString *pre = @"xmodmap -display ";
+   // char *env = getenv("DISPLAY");
+   // NSString* s = [NSString stringWithFormat:@"%s" , env];
+    //s = [pre stringByAppendingString:s];
+    //NSString *post = @" /tmp/temp.keys";
+    //post = [s stringByAppendingString:post];
+    //NSString *full = post;
+    //[self launch_client:@"xmodmap -pke > /tmp/temp.keys"];
+    //[self launch_client:full];
+}
 - (void) runXeyes:(id) sender {
     [self launch_client:@"xeyes"];
 }
@@ -483,7 +552,7 @@
     }    
 }
 
-@end
+
 
 void eventHandler (xtoq_event_t *event)
 {
@@ -503,3 +572,7 @@ void eventHandler (xtoq_event_t *event)
     }
     free(event);
 }
+
+
+    
+@end

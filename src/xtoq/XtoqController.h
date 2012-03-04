@@ -94,7 +94,7 @@ id referenceToSelf;
 - (void) runXclock: (id) sender;
 - (void) runXlogo: (id) sender;
 - (void) runXterm: (id) sedner;
-
+- (void) runXmodMap:(id)sender;
 /**
  * Put a new image in the window / view
  */
@@ -125,3 +125,4 @@ id referenceToSelf;
  * @param event The event received.
  */
 void eventHandler (xtoq_event_t *event);
+
