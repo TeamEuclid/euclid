@@ -236,20 +236,21 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 void
 xtoq_request_close(xtoq_context_t *context) {
     
-    // remove node from context list
+    // is the context in the list?
     context = _xtoq_get_context_node_by_window_id(context->window);
-    if (context)
-        _xtoq_remove_context_node(context->window);
+    if (!context)
+        return;
     
     // kill using xcb_kill_client                              
     if (!context->wm_delete_set == 1) {
         xcb_kill_client(context->conn, context->window);
-            return;
+        xcb_flush(context->conn);
+        return;
     }
     // kill using WM_DELETE_WINDOW
     if (context->wm_delete_set == 1){
         xcb_client_message_event_t event;
-        
+                
         memset(&event, 0, sizeof(xcb_client_message_event_t));
 
         event.response_type = XCB_CLIENT_MESSAGE;

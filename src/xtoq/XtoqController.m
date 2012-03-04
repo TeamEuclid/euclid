@@ -390,7 +390,7 @@
     //use dispatch_async() to handle the actual close 
       dispatch_async(xtoqDispatchQueue, ^{
           NSLog(@"Call xtoq_request_close(theContext)");
-          //xtoq_request_close(theContext);
+          xtoq_request_close(theContext);
       });
 }
 
@@ -436,8 +436,8 @@
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height;
         NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
-        NSLog(@"Call xtoq_updatewindowposition(moveContext, x, y, width, height)"); 
-        //xtoq_updatewindowposition (moveContext, x, y, width, height);       
+        NSLog(@"Call xtoq_configure_window(moveContext, x, y, height, width)"); 
+        xtoq_configure_window(moveContext, x, y, height, width);       
     }    
 }
 
