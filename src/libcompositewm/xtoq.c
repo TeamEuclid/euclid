@@ -58,6 +58,7 @@ xtoq_init(char *display) {
     // we care about catching on the root window.
     mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
                      XCB_EVENT_MASK_BUTTON_PRESS |
+		             XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                      XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
 		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
     cookie = xcb_change_window_attributes_checked(conn, root_window,
@@ -238,8 +239,6 @@ xtoq_request_close(xtoq_context_t *context) {
     
     // remove node from context list
     context = _xtoq_get_context_node_by_window_id(context->window);
-    if (context)
-        _xtoq_remove_context_node(context->window);
     
     // kill using xcb_kill_client                              
     if (!context->wm_delete_set == 1) {
@@ -259,7 +258,7 @@ xtoq_request_close(xtoq_context_t *context) {
         event.data.data32[0] = _wm_atoms->wm_delete_window_atom;//atoms[WM_DELETE_WINDOW];
         event.data.data32[1] = XCB_CURRENT_TIME;
         
-        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
+        xcb_send_event(context->conn, XCB_SEND_EVENT_DEST_POINTER_WINDOW, context->window, XCB_EVENT_MASK_NO_EVENT, 
                        (char*)&event);
         xcb_flush(context->conn);
         return;

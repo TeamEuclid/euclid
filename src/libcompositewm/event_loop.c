@@ -200,26 +200,6 @@ void *run_event_loop (void *thread_arg_struct)
                 free(context);
                 break;
             }
-			case XCB_UNMAP_NOTIFY: {
-				/* Received an unmap notify for a window. Right now we
-				 * are going to assume that the unmap = killed client,
-				 * so we'll call code to destroy the window. */
-				xcb_unmap_notify_event_t *notify = (xcb_unmap_notify_event_t *)evt;
-				xtoq_context_t *context = _xtoq_destroy_window(notify);
-
-				if (!context) {
-					/* Not a window in the list, don't try and destroy */
-					break;
-				}
-                
-                return_evt = malloc(sizeof(xtoq_event_t));
-                return_evt->event_type = XTOQ_DESTROY;
-                return_evt->context = context;
-
-                callback_ptr(return_evt);
-                free(context);
-                break;
-			}
 			case XCB_MAP_REQUEST: {
 				xcb_map_request_event_t *request = (xcb_map_request_event_t *)evt;
                 return_evt = malloc(sizeof(xtoq_event_t));
