@@ -53,7 +53,7 @@
 - (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - yValue + WINDOWBAR;
+    return height - yValue - WINDOWBAR;
     
 }
 
@@ -236,30 +236,10 @@
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_mouse_motion (rootContext,
                                               [event locationInWindow].x, 
-                                              heightFloat - [event locationInWindow].y, 
+											   heightFloat - [event locationInWindow].y, 
                                               (int)[event windowNumber],
                                               0);;});
 }
-/*
-- (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
-    
-    id key;
-    int index;
-    xtoq_context_t *xqWinContxt;
-    NSArray *keyArray = [winList allKeys];
-    XtoqWindow *xqWin;
-    
-    for (index = 0; index < [keyArray count]; index++) {
-        key = [keyArray objectAtIndex:index];
-        xqWin = [winList objectForKey:key];
-        xqWinContxt = [xqWin getContext:xqWin];
-        if (xqWinContxt->window == xtoqContxt->window) {
-            return xqWin;
-        }
-    }
-    
-    return nil;
-}*/
 
 - (void) makeMenu {
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
@@ -470,7 +450,7 @@
 }
 
 - (void) windowDidResize:(NSNotification*)notification {
-    [self reshape];
+  //    [self reshape];
 }
 
 - (void) reshape {
@@ -482,7 +462,8 @@
         NSRect moveFrame = [moveWindow frame];
         
         int x = (int)moveFrame.origin.x;
-        int y = [self osxToXserver:(int)moveFrame.origin.y windowHeight:moveContext->height];
+        int y = [self osxToXserver:(int)moveFrame.origin.y
+					  windowHeight:moveContext->height] - WINDOWBAR;
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height - WINDOWBAR;
         NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
