@@ -202,8 +202,6 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
     xcb_window_t none = { XCB_NONE };
-    
-    // context->window 
 
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
                                 XCB_CURRENT_TIME, none, 0, 0, 1 );  
@@ -232,6 +230,17 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 	xcb_flush(context->conn);
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
+
+void
+dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
+{
+    xcb_window_t none = { XCB_NONE };
+    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 1, 0,
+                         context->window//root_context->window//none//context->parent
+                         ,x, y, 0);
+	xcb_flush(context->conn);
+}
+
 
 /* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
 

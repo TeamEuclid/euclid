@@ -53,7 +53,7 @@
 - (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - yValue;
+    return height - yValue + WINDOWBAR;
     
 }
 
@@ -128,6 +128,10 @@
                                                  name: @"XTOQdestroyTheWindow"
                                                object: nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(mouseMovedInView:)
+                                                 name: @"XTOQviewMouseMovedEvent" 
+                                               object: nil];
     // regester for window will/did movement notification
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(windowWillMove:) 
@@ -148,6 +152,8 @@
                                              selector:@selector(applicationWillTerminate:)
                                                  name:NSApplicationWillTerminateNotification object:nil]; */
     
+    
+
     xtoqDispatchQueue = dispatch_queue_create("xtoq.dispatch.queue", NULL);
     
 }
@@ -178,7 +184,7 @@
     unsigned short aChar = [event keyCode];
     NSString* charNSString = [event characters]; 
     const char* charcharstar = [charNSString UTF8String];
-    printf( "\n--------------------------------------------\n" );
+    //printf( "\n--------------------------------------------\n" );
     // translate key here code = translate(charcharstar);
     NSLog(@"%s pressed", charcharstar);
     //uint8_t code = (unsigned char)0x10;
@@ -218,6 +224,42 @@
 - (void) setScreen:(char *)scrn {
     screen = scrn;
 }
+- (void) mouseMovedInView: (NSNotification *) aNotification
+{
+    CGFloat heightFloat;
+    NSDictionary *mouseDownInfo = [aNotification userInfo];
+    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
+    NSNumber * heightAsNumber =  [NSNumber alloc];
+    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
+    heightFloat = [heightAsNumber floatValue];
+    //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ dummy_xtoq_mouse_motion (rootContext,
+                                              [event locationInWindow].x, 
+                                              heightFloat - [event locationInWindow].y, 
+                                              (int)[event windowNumber],
+                                              0);;});
+}
+/*
+- (XtoqWindow *) getWindowInList: (xtoq_context_t *)xtoqContxt {
+    
+    id key;
+    int index;
+    xtoq_context_t *xqWinContxt;
+    NSArray *keyArray = [winList allKeys];
+    XtoqWindow *xqWin;
+    
+    for (index = 0; index < [keyArray count]; index++) {
+        key = [keyArray objectAtIndex:index];
+        xqWin = [winList objectForKey:key];
+        xqWinContxt = [xqWin getContext:xqWin];
+        if (xqWinContxt->window == xtoqContxt->window) {
+            return xqWin;
+        }
+    }
+    
+    return nil;
+}*/
 
 - (void) makeMenu {
     // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
@@ -442,7 +484,7 @@
         int x = (int)moveFrame.origin.x;
         int y = [self osxToXserver:(int)moveFrame.origin.y windowHeight:moveContext->height];
         int width = (int)moveFrame.size.width;
-        int height = (int)moveFrame.size.height;
+        int height = (int)moveFrame.size.height - WINDOWBAR;
         NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
         NSLog(@"Call xtoq_configure_window(moveContext, x, y, height, width)"); 
         xtoq_configure_window(moveContext, x, y, height, width);       
