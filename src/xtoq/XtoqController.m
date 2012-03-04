@@ -385,7 +385,7 @@
     if (modmap = fclose(stdout))
         NSLog(@"error in key mapping");*/
     
-    NSString *file = @"Xtoq.app/Contents/Resources/xmodmap.local";
+    NSString *file = @"src/xtoq/bundle/xmodmap.local";
     
     int statusTwo;
     pid_t childTwo;
