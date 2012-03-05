@@ -86,11 +86,5 @@
 - (CGFloat)getHeight;
 - (BOOL)drawInRect:(NSRect)rect;
 
-/**
- * testing function
- */
-- (id)topCrop;
-
-
 - (void)destroy;
 @end
