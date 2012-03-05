@@ -82,11 +82,12 @@ xtoq_set_input_focus(xtoq_context_t *context) {
 }
 
 xtoq_context_t *
-_xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *event) {
+_xtoq_window_created(xcb_connection_t * conn, xcb_map_request_event_t *event) {
 
-    // Check to see if the window is already created
-    if (_xtoq_get_context_node_by_window_id(event->window))
+    /* Check to see if the window is already created */
+    if (_xtoq_get_context_node_by_window_id(event->window)) {
         return NULL;
+	}
     
     // allocate memory for new xtoq_context_t
     xtoq_context_t *context = malloc(sizeof(xtoq_context_t));

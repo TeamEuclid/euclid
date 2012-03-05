@@ -50,8 +50,6 @@
 #define environ (*_NSGetEnviron())
 #endif
 
-@class DisplayNumberController;
-
 id referenceToSelf;
 
 @interface XtoqController : NSObject {
@@ -106,7 +104,7 @@ id referenceToSelf;
 /**
  * Sets the screen to command line argument.
  */
-- (void) setScreen: (const char *) scrn;
+- (void) setScreen: (char *) scrn;
 
 - (void)windowWillMove:(NSNotification*)notification;
 - (void)windowDidMove:(NSNotification*)notification;
