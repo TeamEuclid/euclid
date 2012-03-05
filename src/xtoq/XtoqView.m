@@ -80,9 +80,8 @@ acceptsFirstResponder {
 
 - (void)mouseMoved:(NSEvent *)mouseMovedEvent
 { 
-    NSRect bnd = [self bounds];
-    CGFloat f = CGRectGetHeight(bnd);
-    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+	CGFloat f = [self bounds].size.height;
+	NSNumber *n = [[NSNumber alloc] initWithFloat:f];
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
     [twoInfoDict setObject:mouseMovedEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
@@ -117,8 +116,7 @@ keyDown:(NSEvent *)theEvent {
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
-    NSRect bnd = [self bounds];
-    CGFloat f = CGRectGetHeight(bnd);
+	CGFloat f = [self bounds].size.height;
     NSNumber *n = [[NSNumber alloc] initWithFloat:f];
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
     [twoInfoDict setObject:mouseEvent forKey:@"1"];
