@@ -196,7 +196,16 @@ _xtoq_get_context_node_by_window_id (xcb_window_t window_id);
 /****************
  * window.c
  ****************/
-xtoq_context_t *_xtoq_window_created(xcb_connection_t * conn, xcb_create_notify_event_t *evt);
+
+/**
+ * Create a new context for the window specified in the event.
+ * @param conn The connection to xserver
+ * @param evt The map event for the window
+ * @return Pointer to new context. NULL if window already exists.
+ */
+xtoq_context_t *_xtoq_window_created(xcb_connection_t * conn,
+									 xcb_map_request_event_t *evt);
+
 xtoq_context_t *_xtoq_destroy_window(xcb_destroy_notify_event_t *event);
 
 /**
