@@ -160,7 +160,7 @@
     spawn[3] = NULL;
      
     NSLog(@"Killing the Xorg Connection.");
-    posix_spawn(&child, spawn[0], NULL, NULL, (const * const*)spawn, environ);
+    posix_spawn(&child, spawn[0], NULL, NULL, (char * const*)spawn, environ);
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
