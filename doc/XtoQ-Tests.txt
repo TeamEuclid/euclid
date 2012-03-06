@@ -1,0 +1,205 @@
+/**
+ *                            XtoQ
+ * Some sample test cases for testing the XtoQ.app created by
+ * Team Euclid: Aaron Skomra, Benjamin Carr, Benjamin Huddle,
+ * Braden Wooley, David Snyder, and Jess VanDerwalker.
+ *
+ * The following test cases were designed by: Benjamin Huddle
+ */
+
+/**
+ * General Functionality
+ */
+
+1)  Run autogen.sh, configure, and sudo make install.  Run the
+    application after this.
+
+2)  From the menu bar at the top of the screen, under 'Applications'
+    drop down menu select xlogo with the mouse.
+
+3)  Drag the xlogo window with the mouse to the upper right hand corner
+    of the screen.  Then drag it to the lower right hand corner of
+    the screen.
+    Finally drag it to the lower left hand corner of the screen.
+
+4)  Open up xeyes.  Drag this window with the mouse to the lower left.
+    Then to the lower right and finally to the upper right corner
+    of the screen.
+
+5)  Open up xclock.  Drag this window diagonally with the mouse to the
+    lower right corner of the screen.
+
+6)  Open up Xterm, with the mouse drag this window to the center
+    of the screen.
+
+7)  With the mouse move the xeyes window to the closest corner of the
+    xterm window so that xeyes will still be visible behind the xterm
+    window.
+
+8)  Do the same with xlogo and xclock.
+
+9)  Click on xterm so that xeyes, xlogo, and xclock are all behind the
+    xterm window.
+
+10) Rotate through the focus of each window with the mouse by clicking on
+    the title bar of the window.
+
+11) Quit the XtoQ application under XtoQ by selecting Quit or by the
+    shortcut key of "cmd+q".
+
+12) At the terminal, check that the Xorg connection is closed and all
+    other running applications (xeyes, xclock, xterm, xlogo) are closed.
+    (By running "ps" at the terminal.)
+
+EXPECTED BEHAVIOR: Xlogo should pop up in the upper left hand corner of
+the screen.  It should stay the same as it is moved from corner to
+corner.  Xeyes should open in the same location that xlogo opens from.
+It should also stay the same dimension as it is moved from corner to
+corner.  The same should happen with xclock.  Xterm will open in the
+same corner of the screen as all other applications have.  After dragging
+them all to the center, as described above, switching focus of windows
+is can be seen by the title bar of the selected window is more vivid in
+color.  Windows not in focus will have a dull appearance to their title
+bar (usually faded gray.)  Quiting the application will close down all
+open applications by either using key shortcut or selecting quit from
+menu.  Ideally when 'ps' is run on the terminal, nothing will show up
+except from the current terminal window.
+
+/**
+ * Testing Input
+ */
+
+1)  Run the application.
+
+2)  Open xterm under 'Applications' menu by clicking on xterm.
+
+3)  Click in the window and type "echo hello world".
+
+4)  Verify that it echo's the correct response.
+
+5)  Quit the XtoQ application by selecting quit under XtoQ.
+
+EXPECTED BEHAVIOR:  Xterm should open up and the keyboard mapping should
+correspond to the keys correctly.  This test can be extended by typing
+in different inputs and examining how they should be the same (so that
+keys special characters and modifiers) are included as well.
+
+/**
+ * Testing Output
+ */
+
+1)  Run the application.
+
+2)  Open up xeyes by clicking on xeyes under the applications menu.
+    Make sure the eyes follow the mouse.
+
+3)  Open up xclock by clicking on xclock under the applications menu.
+    Watch the hand on the clock to make sure it is moving and updating
+    properly.
+
+4)  The above step might be easier to see if first opening xterm (or
+    in terminal) and running "xclock -digital -update 1 -display :0"
+    or similar.
+
+5)  Quit the XtoQ application by selecting quit under XtoQ.
+
+EXPECTED BEHAVIOR:  Both xeyes and xclock should open in the upper left
+hand corner of the screen.  The clocks hands should move (every minute)
+and the eyes should follow the mouse when it is inside the window
+boundries as well as outside the window.  As mentioned above, it might
+be easier to tell of an update with something that updates more often
+than every minute, this is where digital xclock comes into play.  By
+typing in the command listed above, the digital clock will update every
+second, thus making visual updates easier to notice.
+
+/**
+ * Testing Exiting
+ */
+
+1)  Run the application.
+
+2)  Open up xeyes under the applications menu.  Move it to a different
+    location on the screen by clicking on the title bar and dragging it.
+
+3)  Do the same with xterm, xclock, and xlogo.
+
+4)  Close all the applications that are open by clicking the red x button
+    and quit XtoQ by selecting quit under XtoQ's menu.
+
+5)  Open up a terminal and type "ps".
+
+6)  Verify that all the running applications are closed, along with
+    the Xorg connection. (xeyes, xclock, xterm, and xlogo are no longer
+    running on the system.)
+
+7)  Repeat steps 1-6 but on step 4 quit the XtoQ application without
+    closing all the open applications (i.e. leave xterm, xeyes, xlogo,
+    and xclock open upon quiting.)
+
+EXPECTED BEHAVIOR:  All applications should open in the upper left hand
+corner of the screen.  All applications should close by clicking on the
+red close button on the upper left corner of their window.  After closing
+the windows manually and exiting the program, none should remain when
+'ps' is run on the terminal.  The same goes when the program is quit
+without closing all the windows down manually.
+
+/**
+ * Testing Resizing
+ */
+1)  Run the application.
+
+2)  Open up xlogo, xclock, xterm, and xeyes by selecting them from the
+    drop down menu under 'Applications'.
+
+3)  Since xeyes was the last application opened, click and drag the
+    lower right corner of the window and drag it with the mouse to
+    approximately double the size of the current xeyes window.
+    (Making the window bigger)
+
+4)  Close xeyes by clicking the red close button.
+
+5)  Xterm should be the next visible window.  Click and drag the lower
+    right corner of this window to approximately half the size of the
+    current xterm window. (Making the window smaller)
+
+6)  Close xterm by clicking the red close button.
+
+7)  Xclock will be the next visible window.  Click and drag the right
+    verticle side of the window to double the current width.
+
+8)  Next click and drag the bottom side of the window to double the
+    current height of the window.
+
+9)  Close the xclock window by clicking the red close button.
+
+10) Finally, xlogo should be the only open window.
+
+11) Click the green maximize button to bring the window to full screen.
+
+12) Click and drag the right verticle side of the window to half the
+    current width.
+
+13) Click and drag the bottom side of the window to half the current
+    height.
+
+14) Close the xlogo window by clicking the red close button.
+
+15) Quit XtoQ by selecting quit on the drop down menu under XtoQ.
+
+EXPECTED BEHAVIOR:  Xlogo, xclock, xterm, and xeyes should all open up
+in the upper left hand corner of the screen.  Xeyes when resized should
+update accordingly displaying a larger set of eyes to follow the mouse
+around the screen.  Notice this resizing does both X and Y cooridnates,
+increasing the size of the window.  Xterm opens as a larger window and
+was best choice to shrink.  This resizing decreases both X and Y
+resulting in a smaller xterm window.  Xclock will be resized in a
+different manner then the previous two windows.  First the width will
+be doubled (increase in X) and then height will be doubled (increase in
+Y).  This ensures that height and width can be modified independent of
+each other.  Xlogo is the last window to be modified and should maximize
+to the full resolution of the screen.  This corner case may not be dealt
+with by the capstone team, so it is alright if the program breaks at this
+point.  Ideally, it should maximize to the full screen resolution and
+should then be decreased in width and height.  After each modification of
+the windows size it should update appropriately.  The program should exit
+Normally after this has taken place.
