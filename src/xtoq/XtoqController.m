@@ -100,44 +100,44 @@
     
     
     // Register for the key down notifications from the view
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(keyDownInView:)
-                                                 name: @"XTOQviewKeyDownEvent"
-                                               object: nil];
+    [nc addObserver: self
+		   selector: @selector(keyDownInView:)
+		       name: @"XTOQviewKeyDownEvent"
+		     object: nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(mouseButtonDownInView:)
-                                                 name: @"XTOQmouseButtonDownEvent"
-                                               object: nil];
+    [nc addObserver: self
+		   selector: @selector(mouseButtonDownInView:)
+		       name: @"XTOQmouseButtonDownEvent"
+		     object: nil];
     // register for destroy event
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(destroy:)
-                                                 name: @"XTOQdestroyTheWindow"
-                                               object: nil];
+    [nc addObserver: self
+		   selector: @selector(destroy:)
+		       name: @"XTOQdestroyTheWindow"
+		     object: nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(mouseMovedInView:)
-                                                 name: @"XTOQviewMouseMovedEvent" 
-                                               object: nil];
+    [nc addObserver: self
+		   selector: @selector(mouseMovedInView:)
+		       name: @"XTOQviewMouseMovedEvent" 
+		     object: nil];
     // regester for window will/did movement notification
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(windowWillMove:) 
-                                                 name:NSWindowWillMoveNotification 
-                                               object:nil];
+    [nc addObserver:self 
+		   selector:@selector(windowWillMove:) 
+		       name:NSWindowWillMoveNotification 
+		     object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(windowDidMove:) 
-                                                 name:NSWindowDidMoveNotification 
-                                               object:nil];
+    [nc addObserver:self 
+		   selector:@selector(windowDidMove:) 
+		       name:NSWindowDidMoveNotification 
+		     object:nil];
 
     // regester for window resize notification
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(windowDidResize:) 
-                                                 name:NSWindowDidResizeNotification 
-                                               object:nil];
-   /* [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillTerminate:)
-                                                 name:NSApplicationWillTerminateNotification object:nil]; */
+    [nc addObserver:self 
+		   selector:@selector(windowDidResize:) 
+		       name:NSWindowDidResizeNotification 
+		     object:nil];
+   /* [nc addObserver:self
+	         selector:@selector(applicationWillTerminate:)
+			     name:NSApplicationWillTerminateNotification object:nil]; */
     
     
 
@@ -462,7 +462,7 @@
 
 - (void) reshape {
     
-    XtoqWindow *moveWindow = [NSApp mainWindow];
+  XtoqWindow *moveWindow = (XtoqWindow *)[NSApp mainWindow];
     
     if (moveWindow != nil) {        
         xtoq_context_t *moveContext = [moveWindow getContext];        
