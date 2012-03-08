@@ -30,7 +30,7 @@
 
 
 @interface XtoqImageRep : NSImageRep {
-    struct CGImage *cgImage;
+    CGImageRef *cgImage;
     xcb_image_t *imageT;
     xtoq_image_t * imageParent;
     NSSize size;
@@ -87,4 +87,5 @@
 - (BOOL)drawInRect:(NSRect)rect;
 
 - (void)destroy;
+
 @end
