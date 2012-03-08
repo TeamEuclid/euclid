@@ -189,14 +189,12 @@
     NSLog(@"%s pressed", charcharstar);
     //uint8_t code = (unsigned char)0x10;
     //uint8_t code = 
-    
-	//    for(i = 8; i < 256; i++){
-    //    aChar++;
+
         dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_key_press(rootContext, 
+                   ^{ xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar + 8) ;});
-		// }
+
 }
  
 
@@ -214,7 +212,7 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_button_down (rootContext,
+                   ^{ xtoq_button_press (rootContext,
                                         [event locationInWindow].x, 
                                         heightFloat - [event locationInWindow].y, 
                                         (int)[event windowNumber],
@@ -234,7 +232,7 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_mouse_motion (rootContext,
+                   ^{ xtoq_mouse_motion (rootContext,
                                               [event locationInWindow].x, 
 											   heightFloat - [event locationInWindow].y, 
                                               (int)[event windowNumber],

@@ -116,26 +116,52 @@ void
 xtoq_close(void);
 
 /**
- * Testing function
+ * function
  * @param context xtoq_context_t 
  * @param window The window that the key press was made in.
  * @param keyCode The key pressed.
  */
 void
-dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
+xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
 
 /**
- * Testing function
+ * function
+ * @param context xtoq_context_t 
+ * @param window The window that the key press was made in.
+ * @param keyCode The key released.
+ */
+void
+xtoq_key_release (xtoq_context_t *context, int window, uint8_t code);
+
+/**
+ * function
  * @param context xtoq_context_t 
  * @param x - x coordinate
  * @param y - y coordinate
  * @param window The window that the key press was made in.
  */
 void
-dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
+xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int button);
 
+/**
+ * function
+ * @param context xtoq_context_t 
+ * @param x - x coordinate
+ * @param y - y coordinate
+ * @param window The window that the key release was made in.
+ */
 void
-dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
+xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int button);
+
+/**
+ * function
+ * @param context xtoq_context_t 
+ * @param x - x coordinate
+ * @param y - y coordinate
+ * @param window The window that the key release was made in.
+ */
+void
+xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
 
 void
 xtoq_request_close(xtoq_context_t *context);

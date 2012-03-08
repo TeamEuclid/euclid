@@ -27,7 +27,7 @@
 #include "xtoq.h"
 
 void
-dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
+xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
 {
     xcb_generic_error_t *err;
     xcb_void_cookie_t cookie;
@@ -35,6 +35,24 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
     
     cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
                                  XCB_CURRENT_TIME, none, 0, 0, 1 );  
+    
+    err = xcb_request_check(context->conn, cookie);
+    if (err)
+    {
+        printf("err ");
+        free(err);
+    }	
+    xcb_flush(context->conn);
+    printf("xtoq.c received key down - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+}
+
+void
+xtoq_key_release (xtoq_context_t *context, int window, uint8_t code)
+{
+    xcb_generic_error_t *err;
+    xcb_void_cookie_t cookie;
+    xcb_window_t none = { XCB_NONE };
+    
     xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
                         XCB_CURRENT_TIME, none,0 ,0 , 1 );
     
@@ -45,16 +63,23 @@ dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     xcb_flush(context->conn);
-    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+    printf("xtoq.c received key release- uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
 }
 
 void
-dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button)
+xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int button)
 {
     //xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
-    // x has to be translated (?in the view)
+	xcb_flush(context->conn);
+    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
+}
+
+void
+xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int button)
+{
+    //xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
 	xcb_flush(context->conn);
@@ -62,7 +87,7 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 }
 
 void
-dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
+xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
 {
     xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, 0,
