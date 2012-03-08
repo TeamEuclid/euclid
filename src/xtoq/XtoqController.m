@@ -180,21 +180,19 @@
     NSDictionary *keyInfo = [aNotification userInfo];
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
-    //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
     unsigned short aChar = [event keyCode];
     NSString* charNSString = [event characters]; 
     const char* charcharstar = [charNSString UTF8String];
-    //printf( "\n--------------------------------------------\n" );
-    // translate key here code = translate(charcharstar);
-    NSLog(@"%s pressed", charcharstar);
-    //uint8_t code = (unsigned char)0x10;
-    //uint8_t code = 
 
-        dispatch_async(xtoqDispatchQueue, 
+    NSLog(@"%s pressed", charcharstar);
+    dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar + 8) ;});
-
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_key_release(rootContext, 
+                                     (int)[event windowNumber],
+                                     aChar + 8) ;});
 }
  
 
