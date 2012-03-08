@@ -84,14 +84,63 @@ id referenceToSelf;
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
 
 /**
- * Makemenu and related selector functions for launching X applications.
+ * Makemenu sets the menu for the application.
+ *
+ * Sets main menu for the XtoQ.app.  Also enables an 'applications' menu
+ * in which xeyes, xclock, xterm, and xlogo can be launched.
  */
 - (void) makeMenu;
+
+/**
+ * Launches the application based on filename.
+ *
+ * Launches the selected application based on the filename passed in as an
+ * argument.  Uses posix_spawn() to launch the application after the arguments
+ * have been filled in.
+ *
+ * @param filename The name of the application to be run within XtoQ.app.
+ */
 - (void) launch_client: (NSString *) filename;
+
+/**
+ * Runs xeyes.
+ *
+ * Sends "xeyes" argument to the launch client function to open up the
+ * application xeyes within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
 - (void) runXeyes: (id) sender;
+
+/**
+ * Runs xclock.
+ *
+ * Sends "xclock" argument to the launch client function to open up the
+ * application xclock within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
 - (void) runXclock: (id) sender;
+
+/**
+ * Runs xlogo.
+ *
+ * Sends "xlogo" argument to the launch client function to open up the
+ * application xlogo within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
 - (void) runXlogo: (id) sender;
-- (void) runXterm: (id) sedner;
+
+/**
+ * Runs xterm.
+ *
+ * Sends "xterm" argument to the launch client function to open up the
+ * application xterm within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
+- (void) runXterm: (id) sender;
 
 /**
  * Put a new image in the window / view
@@ -102,7 +151,13 @@ id referenceToSelf;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;
 
 /**
- * Sets the screen to command line argument.
+ * Sets the variable screen to correct display.
+ *
+ * Sets class variable screen to correct display and also sets the environment
+ * variable "DISPLAY" to correct value.
+ *
+ * @param scrn This value is determined in XtoqApplication before connection
+ *   to Xorg is established.
  */
 - (void) setScreen: (char *) scrn;
 

@@ -33,6 +33,18 @@
 
 @interface XtoqApplication : NSApplication
 
+/**
+ * The main of our Application.
+ *
+ * Specifically this function starts up Xorg connection, defaulting to 
+ * ':0' if it is available.  It also sets the environment variable to the 
+ * correct display.
+ *
+ * @param argc Number of command line arguments.
+ * @param argv The command line entered in.
+ *
+ * @return Returns 1.
+ */
 int XtoqApplicationMain(int argc, char** argv);
 
 @end
