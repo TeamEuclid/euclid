@@ -98,7 +98,8 @@ acceptsFirstResponder {
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    
+    }
+- (void)rightMouseDown:(NSEvent *)theEvent 
 }*/
 
 /**
@@ -126,6 +127,20 @@ mouseDown:(NSEvent *)mouseEvent {
     [notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
                                       object:self 
                                     userInfo:twoInfoDict];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+	CGFloat f = [self bounds].size.height;
+    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
+    [twoInfoDict setObject:theEvent forKey:@"1"];
+    [twoInfoDict setObject:n forKey:@"2"];
+    
+    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
+    [notificationCenter postNotificationName:@"XTOQmouseButtonReleaseEvent" 
+                                      object:self 
+                                    userInfo:twoInfoDict];
+    
 }
 
 - (void)setImage:(XtoqImageRep *)newImage {

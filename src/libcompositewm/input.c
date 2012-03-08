@@ -83,7 +83,7 @@ xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int bu
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
                          context->parent, x, y, 0);
 	xcb_flush(context->conn);
-    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
+    printf("button release received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
 
 void

@@ -59,6 +59,7 @@ xtoq_init(char *display) {
     // we care about catching on the root window.
     mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
                      XCB_EVENT_MASK_BUTTON_PRESS |
+                     XCB_EVENT_MASK_BUTTON_RELEASE |
 		             XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                      XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
 		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;

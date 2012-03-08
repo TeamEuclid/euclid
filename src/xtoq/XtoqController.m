@@ -122,6 +122,12 @@
 		   selector: @selector(mouseButtonDownInView:)
 		       name: @"XTOQmouseButtonDownEvent"
 		     object: nil];
+    
+    [nc addObserver: self
+		   selector: @selector(mouseButtonReleaseInView:)
+		       name: @"XTOQmouseButtonReleaseEvent" 
+		     object: nil];
+
     // register for destroy event
     [nc addObserver: self
 		   selector: @selector(destroy:)
@@ -216,6 +222,30 @@
                                         (int)[event windowNumber],
                                         0);;});
 }
+
+// on this side all I have is a xtoq_context , on the library side I need
+// to turn that into a real context 
+- (void) mouseButtonReleaseInView: (NSNotification *) aNotification
+{
+    CGFloat heightFloat;
+    NSDictionary *mouseReleaseInfo = [aNotification userInfo];
+    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
+    NSEvent * event = [mouseReleaseInfo objectForKey: @"1"];
+    //NSRect bnd = NSMakeRect(0,0,512,386);
+    NSNumber * heightAsNumber =  [NSNumber alloc];
+    heightAsNumber = [mouseReleaseInfo objectForKey: @"2"];
+    heightFloat = [heightAsNumber floatValue];
+    //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_button_release (rootContext,
+                                         [event locationInWindow].x, 
+                                         heightFloat - [event locationInWindow].y, 
+                                         (int)[event windowNumber],
+                                         0);;});
+}
+
+
+
 
 - (void) setScreen:(char *)scrn {
     screen = scrn;
