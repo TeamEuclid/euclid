@@ -60,7 +60,7 @@ same corner of the screen as all other applications have.  After dragging
 them all to the center, as described above, switching focus of windows
 is can be seen by the title bar of the selected window is more vivid in
 color.  Windows not in focus will have a dull appearance to their title
-bar (usually faded gray.)  Quiting the application will close down all
+bar (usually faded gray.)  Quitting the application will close down all
 open applications by either using key shortcut or selecting quit from
 menu.  Ideally when 'ps' is run on the terminal, nothing will show up
 except from the current terminal window.
@@ -106,7 +106,7 @@ keys special characters and modifiers) are included as well.
 EXPECTED BEHAVIOR:  Both xeyes and xclock should open in the upper left
 hand corner of the screen.  The clocks hands should move (every minute)
 and the eyes should follow the mouse when it is inside the window
-boundries as well as outside the window.  As mentioned above, it might
+boundaries as well as outside the window.  As mentioned above, it might
 be easier to tell of an update with something that updates more often
 than every minute, this is where digital xclock comes into play.  By
 typing in the command listed above, the digital clock will update every
@@ -134,7 +134,7 @@ second, thus making visual updates easier to notice.
 
 7)  Repeat steps 1-6 but on step 4 quit the XtoQ application without
     closing all the open applications (i.e. leave xterm, xeyes, xlogo,
-    and xclock open upon quiting.)
+    and xclock open upon quitting.)
 
 EXPECTED BEHAVIOR:  All applications should open in the upper left hand
 corner of the screen.  All applications should close by clicking on the
@@ -165,7 +165,7 @@ without closing all the windows down manually.
 6)  Close xterm by clicking the red close button.
 
 7)  Xclock will be the next visible window.  Click and drag the right
-    verticle side of the window to double the current width.
+    vertical side of the window to double the current width.
 
 8)  Next click and drag the bottom side of the window to double the
     current height of the window.
@@ -176,7 +176,7 @@ without closing all the windows down manually.
 
 11) Click the green maximize button to bring the window to full screen.
 
-12) Click and drag the right verticle side of the window to half the
+12) Click and drag the right vertical side of the window to half the
     current width.
 
 13) Click and drag the bottom side of the window to half the current
