@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		48D40DB41508870C00DD5428 /* input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = input.c; sourceTree = "<group>"; };
 		52BF61D114F5607E00CA8AA0 /* xinitrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = xinitrc; sourceTree = "<group>"; };
 		E1D4D05614EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		E1D4D05814EE5011000AB51B /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = ../Makefile.am; sourceTree = "<group>"; };
@@ -139,6 +140,7 @@
 				E1D4D08714EE5011000AB51B /* xtoq.c */,
 				E1D4D08814EE5011000AB51B /* xtoq.h */,
 				E1D4D08B14EE5011000AB51B /* xtoq_internal.h */,
+				48D40DB41508870C00DD5428 /* input.c */,
 			);
 			path = libcompositewm;
 			sourceTree = "<group>";
