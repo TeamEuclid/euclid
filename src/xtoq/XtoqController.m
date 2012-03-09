@@ -218,8 +218,8 @@
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
-                                         [NSEvent mouseLocation].x, 
-                                         heightFloat - [NSEvent mouseLocation].y,  
+                                         0, 
+                                         0,  
                                         (int)[event windowNumber],
                                         0);;});
 }
@@ -239,13 +239,11 @@
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
-                                           [NSEvent mouseLocation].x, 
-                                           heightFloat - [NSEvent mouseLocation].y,  
+                                           0, 
+                                           0,  
                                          (int)[event windowNumber],
                                          0);;});
 }
-
-
 
 
 - (void) setScreen:(char *)scrn {
@@ -263,6 +261,7 @@
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_mouse_motion (rootContext,
                                          [NSEvent mouseLocation].x, 
+                                         //[NSEvent mouseLocation].y,
                                         [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y,
                                               (int)[event windowNumber],
                                               0);;});
