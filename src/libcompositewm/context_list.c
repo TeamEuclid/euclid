@@ -30,37 +30,17 @@ _xtoq_context_node *_xtoq_window_list_head = NULL;
 xtoq_context_t *
 _xtoq_add_context_t(struct xtoq_context_t *context)
 {
-    /* Does the window already exist */
-    /*
-    if (_xtoq_get_context_node_by_window_id(context->window))
-        return NULL;
-    
-    xtoq_context_t * new_context;
-    new_context = malloc(sizeof(xtoq_context_t));
-    
-    new_context->conn = context->conn;
-    new_context->window = context->window;
-    new_context->parent = context->parent;
-    new_context->damage = context->damage;
-    new_context->x = context->x;
-    new_context->y = context->y;
-    new_context->width = context->width;
-    new_context->height = context->height;
-    new_context->local_data = context->local_data;
-     */
+    /* temp pointers for traversing */
     _xtoq_context_node *new_node;
     _xtoq_context_node *curr;
     _xtoq_context_node *prev;
     
-    
     /* Create node to hold the new window */
-    
     new_node = malloc(sizeof(_xtoq_context_node));
     if (!new_node) {
         exit(1);
     }
     new_node->context = context;
-    //new_node->context = new_context;
     
     /* Handle the case where this is the first node added */
     if (!_xtoq_window_list_head) {
@@ -68,28 +48,13 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
         new_node->next = NULL;
         _xtoq_window_list_head = new_node;
     } else { 
-        /*
-        curr = _xtoq_window_list_head;
-        while (curr->next) {
-            prev = curr;
-            curr = curr->next;
-        }
-        curr->next = new_node;
-        new_node->prev = curr;
-        new_node->next = NULL; 
-         */
-        
-        // Add the new node to the beginning of the list,
-        // rather than the end.
+        /* Add the new node to the beginning of the list */
         new_node->next = _xtoq_window_list_head;
         _xtoq_window_list_head->prev = new_node;
         new_node->prev = NULL;
-        
         _xtoq_window_list_head = new_node;
         
     }
-    
-    
     return new_node->context;
 }       
 
@@ -118,7 +83,6 @@ _xtoq_remove_context_node(xcb_window_t window_id) {
     while (curr != NULL) {
         if (curr->context->window == window_id) {
             // this will be freed in the event_loop
-            //free(curr->context);
             if(curr->next){
                 curr->next->prev = curr->prev;
             }

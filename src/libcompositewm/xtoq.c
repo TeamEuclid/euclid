@@ -242,44 +242,6 @@ dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, in
 }
 
 
-/* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
-
-void
-xtoq_request_close(xtoq_context_t *context) {
-    
-    // is the context in the list?
-    context = _xtoq_get_context_node_by_window_id(context->window);
-    if (!context)
-        return;
-    
-    // kill using xcb_kill_client                              
-    if (!context->wm_delete_set == 1) {
-        xcb_kill_client(context->conn, context->window);
-        xcb_flush(context->conn);
-        return;
-    }
-    // kill using WM_DELETE_WINDOW
-    if (context->wm_delete_set == 1){
-        xcb_client_message_event_t event;
-                
-        memset(&event, 0, sizeof(xcb_client_message_event_t));
-
-        event.response_type = XCB_CLIENT_MESSAGE;
-        event.window = context->window;
-        event.type = _wm_atoms->wm_protocols_atom;//atoms[WM_PROTOCOLS];
-        event.format = 32;
-        event.data.data32[0] = _wm_atoms->wm_delete_window_atom;//atoms[WM_DELETE_WINDOW];
-        event.data.data32[1] = XCB_CURRENT_TIME;
-        
-        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
-                       (char*)&event);
-        xcb_flush(context->conn);
-        return;
-        
-    }
-    return;
-}
-
 /* Close all windows, the connection, as well as the event loop */
 void xtoq_close(void) {
     
