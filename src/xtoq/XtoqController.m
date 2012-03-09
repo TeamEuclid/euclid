@@ -32,6 +32,7 @@
 #import "XtoqController.h"
 
 #define WINDOWBAR 22
+#define FILEBAR 23
 
 @implementation XtoqController
 
@@ -46,14 +47,14 @@
 - (int) xserverToOSX:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - WINDOWBAR - windowH + yValue;
+    return height - windowH + yValue;
     
 }
 
 - (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - yValue - WINDOWBAR;
+    return height - yValue;
     
 }
 
@@ -215,10 +216,13 @@
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+        
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
-                                        [event locationInWindow].x, 
-                                        heightFloat - [event locationInWindow].y, 
+                                        [NSEvent mouseLocation].x, 
+                                        height - FILEBAR - [NSEvent mouseLocation].y, 
                                         (int)[event windowNumber],
                                         0);;});
 }
@@ -236,12 +240,15 @@
     heightAsNumber = [mouseReleaseInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
-                                         [event locationInWindow].x, 
-                                         heightFloat - [event locationInWindow].y, 
-                                         (int)[event windowNumber],
-                                         0);;});
+                                           [NSEvent mouseLocation].x, 
+                                           height - FILEBAR - [NSEvent mouseLocation].y, 
+                                           (int)[event windowNumber],
+                                           0);;});
 }
 
 
@@ -259,12 +266,18 @@
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+    
+    NSLog(@"Mouse x = %i, y = %i", (int)[NSEvent mouseLocation].x, 
+          (int)[[NSScreen mainScreen] frame].size.height - FILEBAR - (int)[NSEvent mouseLocation].y);
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_mouse_motion (rootContext,
-                                              [event locationInWindow].x, 
-											   heightFloat - [event locationInWindow].y, 
-                                              (int)[event windowNumber],
-                                              0);;});
+                                         [NSEvent mouseLocation].x, 
+                                         height - FILEBAR - [NSEvent mouseLocation].y, 
+                                         (int)[event windowNumber],
+                                         0);;});
 }
 
 - (void) makeMenu {
