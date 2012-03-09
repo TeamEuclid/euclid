@@ -211,15 +211,15 @@
     NSDictionary *mouseDownInfo = [aNotification userInfo];
     // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
     NSEvent * event = [mouseDownInfo objectForKey: @"1"];
-    //NSRect bnd = NSMakeRect(0,0,512,386);
+
     NSNumber * heightAsNumber =  [NSNumber alloc];
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
-                                        [event locationInWindow].x, 
-                                        heightFloat - [event locationInWindow].y, 
+                                         [NSEvent mouseLocation].x, 
+                                         heightFloat - [NSEvent mouseLocation].y,  
                                         (int)[event windowNumber],
                                         0);;});
 }
@@ -239,8 +239,8 @@
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
-                                         [event locationInWindow].x, 
-                                         heightFloat - [event locationInWindow].y, 
+                                           [NSEvent mouseLocation].x, 
+                                           heightFloat - [NSEvent mouseLocation].y,  
                                          (int)[event windowNumber],
                                          0);;});
 }
@@ -262,8 +262,8 @@
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_mouse_motion (rootContext,
-                                              [event locationInWindow].x, 
-											   heightFloat - [event locationInWindow].y, 
+                                         [NSEvent mouseLocation].x, 
+                                        [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y,
                                               (int)[event windowNumber],
                                               0);;});
 }

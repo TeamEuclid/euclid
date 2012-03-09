@@ -117,8 +117,13 @@ keyDown:(NSEvent *)theEvent {
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
-	CGFloat f = [self bounds].size.height;
+    CGFloat f = [self bounds].size.height;
     NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    //NSLog(@"mouseevent %i", [mouseEvent mouseLocation]->x);
+   // NSLog(@"mouse event bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
+    
+
+    
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
     [twoInfoDict setObject:mouseEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
@@ -148,11 +153,8 @@ mouseDown:(NSEvent *)mouseEvent {
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage{
-
     image[bufferIndex++] = newImage;
-
     NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
-
     [self setNeedsDisplayInRect:imageRec];
     //[[self window] flushWindow];
 }

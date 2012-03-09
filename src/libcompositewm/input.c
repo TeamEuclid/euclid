@@ -71,7 +71,7 @@ xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int butt
 {
     //xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
-                         context->parent, x, y, 0);
+                         root_context->window, 0, 0, 0);
 	xcb_flush(context->conn);
     printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
@@ -79,9 +79,8 @@ xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int butt
 void
 xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int button)
 {
-    //xcb_window_t none = { XCB_NONE };
     xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
-                         context->parent, x, y, 0);
+                         root_context->window, 0, 0, 0);
 	xcb_flush(context->conn);
     printf("button release received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
@@ -89,9 +88,9 @@ xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int bu
 void
 xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
 {
-    xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, 0,
-                         context->window//root_context->window//none//context->parent
+    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, XCB_CURRENT_TIME,
+                         root_context->window//root_context->window//none//context->parent
                          ,x, y, 0);
 	xcb_flush(context->conn);
+    printf("mouse motion received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
 }
