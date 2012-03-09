@@ -32,6 +32,7 @@
 #import "XtoqController.h"
 
 #define WINDOWBAR 22
+#define FILEBAR 23
 
 @implementation XtoqController
 
@@ -46,14 +47,14 @@
 - (int) xserverToOSX:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - WINDOWBAR - windowH + yValue;
+    return height - windowH + yValue;
     
 }
 
 - (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - yValue - WINDOWBAR;
+    return height - yValue;
     
 }
 
