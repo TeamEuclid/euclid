@@ -221,10 +221,10 @@
         
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
-                                         0, 
-                                         0,  
-                                        (int)[event windowNumber],
-                                        0);;});
+                                         0,//[NSEvent mouseLocation].x, 
+                                         0,// height - FILEBAR - [NSEvent mouseLocation].y, 
+                                         (int)[event windowNumber],
+                                         0);;});
 }
 
 // on this side all I have is a xtoq_context , on the library side I need
@@ -245,10 +245,10 @@
     
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
-                                           0, 
-                                           0,  
-                                         (int)[event windowNumber],
-                                         0);;});
+                                           0,//[NSEvent mouseLocation].x, 
+                                           0,//height - FILEBAR - [NSEvent mouseLocation].y, 
+                                           (int)[event windowNumber],
+                                           0);;});
 }
 
 
@@ -273,10 +273,9 @@
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_mouse_motion (rootContext,
                                          [NSEvent mouseLocation].x, 
-                                         //[NSEvent mouseLocation].y,
-                                        [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y,
-                                              (int)[event windowNumber],
-                                              0);;});
+                                         height - FILEBAR - [NSEvent mouseLocation].y, 
+                                         (int)[event windowNumber],
+                                         0);;});
 }
 
 - (void) makeMenu {
