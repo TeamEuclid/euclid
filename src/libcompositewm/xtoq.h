@@ -137,9 +137,26 @@ dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int
 void
 dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
 
+/****************
+ * window.c
+ ****************/
+
+/**
+ * kill the window, if possible using WM_DELETE_WINDOW (icccm) 
+ * otherwise using xcb_kill_client.
+ * @param context The context of the window to be killed
+ */
 void
 xtoq_request_close(xtoq_context_t *context);
 
+/**
+ * move and/or resize the window, update the context 
+ * @param context the context of the window to configure
+ * @param x The new x coordinate
+ * @param y The new y coordinate
+ * @param height The new height
+ * @param width The new width
+ */
 void
 xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width);
 
