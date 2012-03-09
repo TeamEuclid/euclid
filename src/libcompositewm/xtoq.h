@@ -134,7 +134,10 @@ void
 xtoq_key_release (xtoq_context_t *context, int window, uint8_t code);
 
 /**
- * function
+ * Uses the XTEST protocol to send input events to the X Server (The X Server
+ * is usually in the position of sending input events to a client). The client
+ * will often choose to send coordinates through mouse motion and set the params 
+ * x & y to 0 here.
  * @param context xtoq_context_t 
  * @param x - x coordinate
  * @param y - y coordinate
@@ -144,7 +147,10 @@ void
 xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int button);
 
 /**
- * function
+ * Uses the XTEST protocol to send input events to the X Server (The X Server
+ * is usually in the position of sending input events to a client). The client
+ * will often choose to send coordinates through mouse motion and set the params 
+ * x & y to 0 here.
  * @param context xtoq_context_t 
  * @param x - x coordinate
  * @param y - y coordinate
