@@ -216,6 +216,9 @@
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+        
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
                                          0, 
@@ -237,6 +240,9 @@
     heightAsNumber = [mouseReleaseInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
                                            0, 
@@ -258,6 +264,12 @@
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+    
+    NSLog(@"Mouse x = %i, y = %i", (int)[NSEvent mouseLocation].x, 
+          (int)[[NSScreen mainScreen] frame].size.height - FILEBAR - (int)[NSEvent mouseLocation].y);
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_mouse_motion (rootContext,
                                          [NSEvent mouseLocation].x, 
