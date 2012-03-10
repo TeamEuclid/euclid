@@ -28,7 +28,7 @@ SOFTWARE.
  */
 
 #import <Cocoa/Cocoa.h>
-#import "xtoq_internal.h"
+// #import "xtoq_internal.h"
 #import "XtoqImageRep.h"
 #import "xtoq.h"
 
@@ -80,8 +80,4 @@ SOFTWARE.
 
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
 
-/**
- * Not used
- */
-- (void)ourDisp;
 @end

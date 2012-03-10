@@ -20,10 +20,8 @@
  */
 
 #import "XtoqView.h"
-#include <pthread.h>
 
 #define RECTLOG(rect)    (NSLog(@""  #rect @" x:%f y:%f w:%f h:%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height ));
-pthread_mutex_t image_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 @implementation XtoqView
 
@@ -56,15 +54,16 @@ initWithFrame:(NSRect)frame {
 // Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
 -(void)
 drawRect:(NSRect)dirtyRect {
-    pthread_mutex_lock(&image_mutex); {
-        while (bufferIndexTwo < bufferIndex) {
-            int i = bufferIndexTwo++;
-            [image[i] draw];//InRect:dirtyRect];
-            [image[i] destroy];
-        }
-        bufferIndex = bufferIndexTwo = 0;
-    } pthread_mutex_unlock(&image_mutex); 
+    xtoq_get_event_thread_lock();
+	while (bufferIndexTwo < bufferIndex) {
+	    int i = bufferIndexTwo++;
+	    [image[i] draw];//InRect:dirtyRect];
+	    [image[i] destroy];
+	}
+	bufferIndex = bufferIndexTwo = 0;
+	xtoq_release_event_thread_lock();
 }
+
 
 
 //This is necessary for accepting input.
@@ -144,13 +143,15 @@ mouseDown:(NSEvent *)mouseEvent {
 }
 
 - (void)setImage:(XtoqImageRep *)newImage {
+    xtoq_get_event_thread_lock();
     image[bufferIndex++] = newImage;
+	xtoq_release_event_thread_lock();
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage{
-    pthread_mutex_lock(&image_mutex); {
+    xtoq_get_event_thread_lock(); {
         image[bufferIndex++] = newImage;
-    }pthread_mutex_unlock(&image_mutex); 
+    } xtoq_release_event_thread_lock();
     
     NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
     [self setNeedsDisplayInRect:imageRec];
@@ -159,14 +160,6 @@ mouseDown:(NSEvent *)mouseEvent {
 
 - (BOOL)isOpaque{
     return YES;
-}
-
-- (void)ourDisp{
-    CGContextRef destCtx = (CGContextRef)[[NSGraphicsContext currentContext]
-                                          graphicsPort];
-    while (bufferIndexTwo < bufferIndex) {
-        [image[bufferIndexTwo++] draw];
-    }
 }
 
 @end
