@@ -110,7 +110,7 @@ int XtoqApplicationMain(int argc, char** argv){
     [controller setScreen:scrn];
     [NSApp setDelegate: controller];
     
-    notificationCenter = [NSNotificationCenter defaultCenter];
+	//    notificationCenter = [NSNotificationCenter defaultCenter];
     
     [NSApp run];
 
@@ -136,9 +136,10 @@ int XtoqApplicationMain(int argc, char** argv){
             [threeInfoDict setObject:e forKey:@"1"];
             [threeInfoDict setObject:xObject forKey:@"2"];  
             [threeInfoDict setObject:yObject forKey:@"3"];
-            [notificationCenter postNotificationName:@"MouseMovedEvent" 
-                                              object:self 
-                                            userInfo:threeInfoDict];
+            [[NSNotificationCenter defaultCenter]
+			    postNotificationName:@"MouseMovedEvent" 
+			                  object:self 
+			                userInfo:threeInfoDict];
             break;
             
         default: [super sendEvent:e];

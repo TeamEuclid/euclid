@@ -28,7 +28,6 @@ SOFTWARE.
  */
 
 #import <Cocoa/Cocoa.h>
-// #import "xtoq_internal.h"
 #import "XtoqImageRep.h"
 #import "xtoq.h"
 
