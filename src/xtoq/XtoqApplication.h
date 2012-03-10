@@ -35,5 +35,6 @@
 
 int XtoqApplicationMain(int argc, char** argv);
 - (void) sendEvent:(NSEvent *)e;
+NSNotificationCenter * notificationCenter;
 
 @end

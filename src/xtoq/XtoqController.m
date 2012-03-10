@@ -128,6 +128,11 @@
 		   selector: @selector(mouseButtonReleaseInView:)
 		       name: @"XTOQmouseButtonReleaseEvent" 
 		     object: nil];
+    
+    [nc addObserver: self
+           selector: @selector(mouseMovedInApp:)
+               name: @"MouseMovedEvent" 
+             object: nil];
 
     // register for destroy event
     [nc addObserver: self
@@ -135,10 +140,6 @@
 		       name: @"XTOQdestroyTheWindow"
 		     object: nil];
     
-    [nc addObserver: self
-		   selector: @selector(mouseMovedInView:)
-		       name: @"XTOQviewMouseMovedEvent" 
-		     object: nil];
     // regester for window will/did movement notification
     [nc addObserver:self 
 		   selector:@selector(windowWillMove:) 
@@ -181,6 +182,33 @@
 	xtoq_start_event_loop(rootContext, (void *) eventHandler);
 }
 
+- (void) mouseMovedInApp: (NSNotification *) aNotification {
+
+    //CGFloat heightFloat;
+    NSDictionary *mouseMoveInfo = [aNotification userInfo];
+    NSEvent * event = [mouseMoveInfo objectForKey: @"1"];
+    NSNumber * xVal =  [NSNumber alloc];
+    NSNumber * yVal =  [NSNumber alloc];
+    xVal = [mouseMoveInfo objectForKey: @"2"];
+    yVal = [mouseMoveInfo objectForKey: @"3"];
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+    
+    int yInt = height - FILEBAR - [yVal intValue];
+    yVal = [[NSNumber alloc] initWithInt:yInt];
+    
+    NSLog(@"Mouse x = %i, y = %i", [xVal intValue], [yVal intValue]);
+    
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_mouse_motion (rootContext,
+                                         [xVal intValue], 
+                                         [yVal intValue], 
+                                         (int)[event windowNumber],
+                                         0);;});
+
+    
+}
+
 - (void) keyDownInView: (NSNotification *) aNotification
 {   
     int i = 0;
@@ -221,8 +249,8 @@
         
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
-                                         0,//[NSEvent mouseLocation].x, 
-                                         0,// height - FILEBAR - [NSEvent mouseLocation].y, 
+                                         0,
+                                         0, 
                                          (int)[event windowNumber],
                                          0);;});
 }
@@ -245,8 +273,8 @@
     
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
-                                           0,//[NSEvent mouseLocation].x, 
-                                           0,//height - FILEBAR - [NSEvent mouseLocation].y, 
+                                           0,
+                                           0,
                                            (int)[event windowNumber],
                                            0);;});
 }
@@ -254,29 +282,6 @@
 
 - (void) setScreen:(char *)scrn {
     screen = scrn;
-}
-
-- (void) mouseMovedInView: (NSNotification *) aNotification
-{
-    CGFloat heightFloat;
-    NSDictionary *mouseDownInfo = [aNotification userInfo];
-    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
-    NSNumber * heightAsNumber =  [NSNumber alloc];
-    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
-    heightFloat = [heightAsNumber floatValue];
-    //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
-    
-    float height = [[NSScreen mainScreen] frame].size.height;
-    
-    NSLog(@"Mouse x = %i, y = %i", (int)[NSEvent mouseLocation].x, 
-          (int)[[NSScreen mainScreen] frame].size.height - FILEBAR - (int)[NSEvent mouseLocation].y);
-    
-    dispatch_async(xtoqDispatchQueue, 
-                   ^{ xtoq_mouse_motion (rootContext,
-                                         [NSEvent mouseLocation].x, 
-                                         height - FILEBAR - [NSEvent mouseLocation].y, 
-                                         (int)[event windowNumber],
-                                         0);;});
 }
 
 - (void) makeMenu {
@@ -495,15 +500,13 @@
     if (moveWindow != nil) {        
         xtoq_context_t *moveContext = [moveWindow getContext];        
         NSRect moveFrame = [moveWindow frame];
-        
         int x = (int)moveFrame.origin.x;
         int y = [self osxToXserver:(int)moveFrame.origin.y
 					  windowHeight:moveContext->height] - WINDOWBAR;
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height - WINDOWBAR;
-        NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
-        NSLog(@"Call xtoq_configure_window(moveContext, x, y, height, width)"); 
-        xtoq_configure_window(moveContext, x, y, height, width);       
+        NSLog(@"Call xtoq_configure_window(moveContext, x = %i, y = %i, height = %i, width = %i)", x, y, height, width); 
+        xtoq_configure_window(moveContext, x, y - height, height, width);       
     }    
 }
 

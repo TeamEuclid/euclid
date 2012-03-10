@@ -67,8 +67,7 @@ id referenceToSelf;
     XtoqImageRep *image;
     XtoqImageRep *imageNew;
     XtoqView *view;
-    NSString *file;
-    NSImage *image2;
+
     int originalHeight;
     int originalWidth;
     NSRect imageRec;
@@ -106,6 +105,8 @@ id referenceToSelf;
 - (void) runXclock: (id) sender;
 - (void) runXlogo: (id) sender;
 - (void) runXterm: (id) sedner;
+
+- (void) mouseMovedInApp: (NSNotification *) aNotification;
 
 /**
  * Send an image to the view after being notified of a damage event from 

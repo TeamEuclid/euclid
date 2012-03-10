@@ -109,17 +109,36 @@ int XtoqApplicationMain(int argc, char** argv){
     controller = [[XtoqController alloc] init];
     [controller setScreen:scrn];
     [NSApp setDelegate: controller];
+    
+    notificationCenter = [NSNotificationCenter defaultCenter];
+    
     [NSApp run];
 
     return 1;
 }
 
 - (void) sendEvent:(NSEvent *)e {
-    CGFloat y;
+    CGFloat x, y;
+    NSNumber *xObject, *yObject;
+    NSMutableDictionary *threeInfoDict;
     switch ([e type]) {
         case NSMouseMoved:
-            y = [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y;
-            NSLog(@"Mouse Moved y=%f", y);         
+           // height = [[NSScreen mainScreen] frame].size.height;
+            // you can't call mouseLocation on "e"  
+            x = [NSEvent mouseLocation].x;
+            y = [NSEvent mouseLocation].y;
+            
+            //NSLog(@"Mouse Moved y=%f", y);         
+                        
+            xObject = [[NSNumber alloc] initWithFloat:x];
+            yObject = [[NSNumber alloc] initWithFloat:y];
+            threeInfoDict = [[NSMutableDictionary alloc] initWithCapacity:3];
+            [threeInfoDict setObject:e forKey:@"1"];
+            [threeInfoDict setObject:xObject forKey:@"2"];  
+            [threeInfoDict setObject:yObject forKey:@"3"];
+            [notificationCenter postNotificationName:@"MouseMovedEvent" 
+                                              object:self 
+                                            userInfo:threeInfoDict];
             break;
             
         default: [super sendEvent:e];
