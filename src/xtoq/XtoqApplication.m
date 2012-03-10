@@ -21,6 +21,8 @@
 
 #import "XtoqApplication.h"
 
+#define FILEBAR 23
+
 @implementation XtoqApplication
 
 int XtoqApplicationMain(int argc, char** argv){
@@ -110,6 +112,19 @@ int XtoqApplicationMain(int argc, char** argv){
     [NSApp run];
 
     return 1;
+}
+
+- (void) sendEvent:(NSEvent *)e {
+    CGFloat y;
+    switch ([e type]) {
+        case NSMouseMoved:
+            y = [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y;
+            NSLog(@"Mouse Moved y=%f", y);         
+            break;
+            
+        default: [super sendEvent:e];
+            break;
+    }
 }
 
 @end
