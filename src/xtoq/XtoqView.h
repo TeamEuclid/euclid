@@ -63,7 +63,7 @@ SOFTWARE.
  * @param a "fake" NSRect which is not actually used within the body of the 
  * method
  */
-drawRect:(NSRect)dirtyRect;
+-(void)drawRect:(NSRect)dirtyRect;
 
 /**
  * Set the entire image contents in the view
