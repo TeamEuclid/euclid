@@ -46,7 +46,6 @@ SOFTWARE.
     NSPoint currentPoint;
     
     NSNotificationCenter * notificationCenter;
-    NSTrackingArea * trackingArea;
 
     int bufferIndex;
     int bufferIndexTwo;

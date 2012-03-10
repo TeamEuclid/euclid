@@ -39,15 +39,7 @@ initWithFrame:(NSRect)frame {
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
         bufferIndex = 0;
-        bufferIndexTwo = 0;
-
-        trackingArea = [[NSTrackingArea alloc] initWithRect:frame
-                        options: (NSTrackingMouseEnteredAndExited |
-                        NSTrackingMouseMoved 
-                        | NSTrackingActiveInKeyWindow)
-                                                      owner:self userInfo:nil];
-        [self addTrackingArea:trackingArea];
-        
+        bufferIndexTwo = 0;       
     }
     return self;
 }
