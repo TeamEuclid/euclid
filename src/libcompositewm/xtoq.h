@@ -54,8 +54,24 @@ extern xtoq_context_t *root_context;
 xtoq_context_t *
 xtoq_init(char *display);
 
+/**
+ * Returns a window's entire image
+ * @param an xtoq_context_t 
+ * FIXME: this might be for the root window
+ * @return an xtoq_image_t with an the image of a window
+ */
 xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context);
+
+/**
+ * Intended for servicing to a client's reaction to a damage notification
+ * this window returns the modified subrectangle of a window
+ * @param an xtoq_context_t of the damaged window
+ * @return an xtoq_image_t with partial image window contents
+ */
+xtoq_image_t *
+test_xtoq_get_image(xtoq_context_t * context);
+
 
 /**
  * free the memory used by an xtoq_image_t created 
@@ -175,7 +191,4 @@ xtoq_request_close(xtoq_context_t *context);
 void
 xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width);
 
-
-xtoq_image_t *
-test_xtoq_get_image(xtoq_context_t * context);
 #endif // _XTOQ_H_

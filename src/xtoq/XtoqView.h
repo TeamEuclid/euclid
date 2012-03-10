@@ -52,10 +52,36 @@ SOFTWARE.
     int bufferIndexTwo;
 }
 
-- (void)setImage:(XtoqImageRep *)newImage;
-- (void)setPartialImage:(XtoqImageRep *)newImage;
+/**
+ * Intialize the view given its bounds
+ * @param an NSRect with the bounds (size) of the view 
+ */
 - (id)initWithFrame:(NSRect)frame;
+
+/**
+ * The OS X magic loop which is responsible for drawing content to the screen
+ * @param a "fake" NSRect which is not actually used within the body of the 
+ * method
+ */
+drawRect:(NSRect)dirtyRect;
+
+/**
+ * Set the entire image contents in the view
+ * @param an XtoqImageRep
+ */
+- (void)setImage:(XtoqImageRep *)newImage;
+
+/**
+ * Set the partial image contents in the view
+ * @param an XtoqImageRep
+ */
+- (void)setPartialImage:(XtoqImageRep *)newImage;
+
+
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
+
+/**
+ * Not used
+ */
 - (void)ourDisp;
 @end
-    

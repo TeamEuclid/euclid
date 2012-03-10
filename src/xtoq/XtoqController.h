@@ -79,9 +79,23 @@ id referenceToSelf;
 - (void) applicationWillFinishLaunching:(NSNotification *) aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
+/**
+ * Receive notification of a key down event from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
 - (void) keyDownInView: (NSNotification *) aNotification;
 
+/**
+ * Receive notification of a mouse button press from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
+
+/**
+ * Receive notification of a mouse button release from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
+- (void) mouseButtonReleaseInView: (NSNotification *) aNotification;
 
 /**
  * Makemenu and related selector functions for launching X applications.
@@ -94,9 +108,11 @@ id referenceToSelf;
 - (void) runXterm: (id) sedner;
 
 /**
- * Put a new image in the window / view
+ * Send an image to the view after being notified of a damage event from 
+ * the event handler.
+ * @param an xtoq_context_t sent from eventHandler
  */
-- (void) updateImageNew: (xtoq_context_t *) windowContext;
+- (void) updateImage: (xtoq_context_t *) windowContext;
 
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;

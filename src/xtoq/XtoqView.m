@@ -20,7 +20,11 @@
  */
 
 #import "XtoqView.h"
+#include <pthread.h>
+
 #define RECTLOG(rect)    (NSLog(@""  #rect @" x:%f y:%f w:%f h:%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height ));
+pthread_mutex_t image_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 @implementation XtoqView
 
 /**
@@ -38,37 +42,32 @@ initWithFrame:(NSRect)frame {
         bufferIndexTwo = 0;
 
         trackingArea = [[NSTrackingArea alloc] initWithRect:frame
-                        
-                                                    options: (NSTrackingMouseEnteredAndExited |
-                                                              NSTrackingMouseMoved 
-                                                              | NSTrackingActiveInKeyWindow
-                                                              )
-                        
+                        options: (NSTrackingMouseEnteredAndExited |
+                        NSTrackingMouseMoved 
+                        | NSTrackingActiveInKeyWindow)
                                                       owner:self userInfo:nil];
-        
         [self addTrackingArea:trackingArea];
         
     }
     return self;
 }
 
-/**
- *  Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
- */
+
+// Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
 -(void)
 drawRect:(NSRect)dirtyRect {
-
-    while (bufferIndexTwo < bufferIndex) {
-        int i = bufferIndexTwo++;
-        [image[i] draw];//InRect:dirtyRect];
-        [image[i] destroy];
-    }
-    bufferIndex = bufferIndexTwo = 0;
+    pthread_mutex_lock(&image_mutex); {
+        while (bufferIndexTwo < bufferIndex) {
+            int i = bufferIndexTwo++;
+            [image[i] draw];//InRect:dirtyRect];
+            [image[i] destroy];
+        }
+        bufferIndex = bufferIndexTwo = 0;
+    } pthread_mutex_unlock(&image_mutex); 
 }
 
-/**
- *  This is necessary for accepting input.
- */
+
+//This is necessary for accepting input.
 - (BOOL)
 acceptsFirstResponder {
     return YES;
@@ -94,12 +93,15 @@ acceptsFirstResponder {
 
 
 /*- (void)mouseEntered:(NSEvent *)theEvent {
-    
+
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    }
+
+}
+ 
 - (void)rightMouseDown:(NSEvent *)theEvent 
+
 }*/
 
 /**
@@ -109,7 +111,6 @@ acceptsFirstResponder {
 keyDown:(NSEvent *)theEvent {      
     NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent 
                                                             forKey:@"1"];
-
     [notificationCenter postNotificationName:@"XTOQviewKeyDownEvent" 
                                       object:self 
                                     userInfo:dictionary];
@@ -121,9 +122,6 @@ mouseDown:(NSEvent *)mouseEvent {
     NSNumber *n = [[NSNumber alloc] initWithFloat:f];
     //NSLog(@"mouseevent %i", [mouseEvent mouseLocation]->x);
    // NSLog(@"mouse event bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
-    
-
-    
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
     [twoInfoDict setObject:mouseEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
@@ -140,12 +138,9 @@ mouseDown:(NSEvent *)mouseEvent {
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
     [twoInfoDict setObject:theEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
-    
-    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
     [notificationCenter postNotificationName:@"XTOQmouseButtonReleaseEvent" 
                                       object:self 
                                     userInfo:twoInfoDict];
-    
 }
 
 - (void)setImage:(XtoqImageRep *)newImage {
@@ -153,7 +148,10 @@ mouseDown:(NSEvent *)mouseEvent {
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage{
-    image[bufferIndex++] = newImage;
+    pthread_mutex_lock(&image_mutex); {
+        image[bufferIndex++] = newImage;
+    }pthread_mutex_unlock(&image_mutex); 
+    
     NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
     [self setNeedsDisplayInRect:imageRec];
     //[[self window] flushWindow];
