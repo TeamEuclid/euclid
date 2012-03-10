@@ -82,7 +82,6 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
 						  run_event_loop,
 						  (void *) conn_data);
 
-	
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &oldstate);
 
@@ -271,10 +270,10 @@ void *run_event_loop (void *thread_arg_struct)
                 break;
             }        
             case XCB_MOTION_NOTIFY: {
-                printf("X mouse motion from from xserver-");
+                //printf("X mouse motion from from xserver-");
                 xcb_button_press_event_t *bp = (xcb_button_press_event_t *)evt;
-                printf ("mouse motion in window %u, at coordinates (%d,%d)\n",
-                        bp->event, bp->event_x, bp->event_y );
+               // printf ("mouse motion in window %ld, at coordinates (%d,%d)\n",
+                //        bp->event, bp->event_x, bp->event_y );
                 break;
             }
             default: {
