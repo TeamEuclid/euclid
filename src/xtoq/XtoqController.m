@@ -32,7 +32,6 @@
 #import "XtoqController.h"
 
 #define WINDOWBAR 22
-#define FILEBAR 23
 
 @implementation XtoqController
 
@@ -128,7 +127,7 @@
 		   selector: @selector(mouseButtonReleaseInView:)
 		       name: @"XTOQmouseButtonReleaseEvent" 
 		     object: nil];
-    
+
     [nc addObserver: self
            selector: @selector(mouseMovedInApp:)
                name: @"MouseMovedEvent" 
@@ -187,22 +186,16 @@
     //CGFloat heightFloat;
     NSDictionary *mouseMoveInfo = [aNotification userInfo];
     NSEvent * event = [mouseMoveInfo objectForKey: @"1"];
-    NSNumber * xVal =  [NSNumber alloc];
-    NSNumber * yVal =  [NSNumber alloc];
-    xVal = [mouseMoveInfo objectForKey: @"2"];
-    yVal = [mouseMoveInfo objectForKey: @"3"];
+    NSNumber *xNum =  [mouseMoveInfo objectForKey: @"2"];
+    NSNumber *yNum =  [mouseMoveInfo objectForKey: @"3"];
     
-    float height = [[NSScreen mainScreen] frame].size.height;
-    
-    int yInt = height - FILEBAR - [yVal intValue];
-    yVal = [[NSNumber alloc] initWithInt:yInt];
-    
-    NSLog(@"Mouse x = %i, y = %i", [xVal intValue], [yVal intValue]);
-    
+    int height = [[NSScreen mainScreen] frame].size.height;
+        
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_mouse_motion (rootContext,
-                                         [xVal intValue], 
-                                         [yVal intValue], 
+                                         [xNum intValue], 
+                                         //Converting OSX coordinates to X11
+                                         height - WINDOWBAR - [yNum intValue], 
                                          (int)[event windowNumber],
                                          0);;});
 
