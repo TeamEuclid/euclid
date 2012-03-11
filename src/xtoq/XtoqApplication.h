@@ -31,10 +31,14 @@
 #define environ (*_NSGetEnviron())
 #endif
 
-@interface XtoqApplication : NSApplication
+@interface XtoqApplication : NSApplication {
 
-int XtoqApplicationMain(int argc, char** argv);
+}
+
 - (void) sendEvent:(NSEvent *)e;
-NSNotificationCenter * notificationCenter;
 
 @end
+
+int
+XtoqApplicationMain(int argc, char** argv);
+

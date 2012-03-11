@@ -76,7 +76,7 @@
     rootContext = xtoq_init(screen);
     
     [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
+    setImageInterpolation:NSImageInterpolationHigh];
     
     xtoqWindow = [[XtoqWindow alloc] 
                   initWithContentRect: NSMakeRect(rootContext->x, rootContext->y, 
@@ -204,7 +204,6 @@
 
 - (void) keyDownInView: (NSNotification *) aNotification
 {   
-    int i = 0;
     NSDictionary *keyInfo = [aNotification userInfo];
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
@@ -483,7 +482,7 @@
 }
 
 - (void) windowDidResize:(NSNotification*)notification {
-  //    [self reshape];
+    [self reshape];
 }
 
 - (void) reshape {

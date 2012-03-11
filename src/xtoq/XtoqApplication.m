@@ -108,8 +108,6 @@ int XtoqApplicationMain(int argc, char** argv){
     [controller setScreen:scrn];
     [NSApp setDelegate: controller];
     
-    notificationCenter = [NSNotificationCenter defaultCenter];
-    
     [NSApp run];
 
     return 1;

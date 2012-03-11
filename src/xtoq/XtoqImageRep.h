@@ -30,7 +30,7 @@
 
 
 @interface XtoqImageRep : NSImageRep {
-    CGImageRef *cgImage;
+    CGImageRef cgImage;
     xcb_image_t *imageT;
     xtoq_image_t * imageParent;
     NSSize size;

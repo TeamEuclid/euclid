@@ -37,9 +37,27 @@ typedef struct _connection_data {
 /* The thread that is running the event loop */
 pthread_t _event_thread = 0;
 
+pthread_mutex_t _event_thread_lock;
+
+/* Mutex lock supplied to clients */
+/* pthread_mutex_t _event_thread_lock = 0; */
+
 /* Functions only called within event_loop.c */
 void
 *run_event_loop(void *thread_arg_struct);
+
+/* Functions included in xtoq.h */
+int
+xtoq_get_event_thread_lock (void)
+{
+	return pthread_mutex_lock(&_event_thread_lock);
+}
+
+int
+xtoq_release_event_thread_lock(void)
+{
+	return pthread_mutex_unlock(&_event_thread_lock);
+}
 
 /* Functions included in xtoq_internal.h */
 
@@ -57,6 +75,8 @@ _xtoq_start_event_loop (xcb_connection_t *conn,
 	conn_data->conn = conn;
 	conn_data->callback = event_callback;
     
+	pthread_mutex_init(&_event_thread_lock, NULL);
+
     ret_val = pthread_create(&_event_thread,
 						  NULL,
 						  run_event_loop,
@@ -213,6 +233,9 @@ void *run_event_loop (void *thread_arg_struct)
                 callback_ptr(return_evt);
                 break;
             }
+			case XCB_CONFIGURE_NOTIFY: {
+				break;
+			}
             case XCB_CONFIGURE_REQUEST: {
                 xcb_configure_request_event_t *request =
                     (xcb_configure_request_event_t *)evt;
@@ -228,21 +251,21 @@ void *run_event_loop (void *thread_arg_struct)
             case XCB_KEY_PRESS: {
                 printf("X Key press from xserver-");
                 xcb_button_press_event_t *kp = (xcb_button_press_event_t *)evt;
-                printf ("Key pressed in window %ld detail %ld\n",
+                printf ("Key pressed in window %u detail %c\n",
                         kp->event, kp->detail);
                 break;
             }
             case XCB_BUTTON_PRESS: {
                 printf("X Button press from xserver ");
                 xcb_button_press_event_t *bp = (xcb_button_press_event_t *)evt;
-                printf ("in window %ld, at coordinates (%d,%d)\n",
+                printf ("in window %u, at coordinates (%d,%d)\n",
                         bp->event, bp->event_x, bp->event_y );
                 break;
             }
             case XCB_BUTTON_RELEASE: {
                 printf("X Button release from xserver ");
                 xcb_button_press_event_t *bp = (xcb_button_press_event_t *)evt;
-                printf ("in window %ld, at coordinates (%d,%d)\n",
+                printf ("in window %u, at coordinates (%d,%d)\n",
                         bp->event, bp->event_x, bp->event_y );
                 break;
             }        
