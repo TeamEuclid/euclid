@@ -114,6 +114,7 @@ int XtoqApplicationMain(int argc, char** argv){
 }
 
 - (void) sendEvent:(NSEvent *)e {
+    notificationCenter = [NSNotificationCenter defaultCenter];
     NSMutableDictionary *InfoDict;
     NSPoint ns_location = [e locationInWindow];
     NSWindow *ns_window = [e window];
