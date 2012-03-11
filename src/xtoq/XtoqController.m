@@ -32,6 +32,7 @@
 #import "XtoqController.h"
 
 #define WINDOWBAR 22
+#define FILEBAR 23
 
 @implementation XtoqController
 
@@ -46,14 +47,14 @@
 - (int) xserverToOSX:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - WINDOWBAR - windowH + yValue;
+    return height - windowH + yValue;
     
 }
 
 - (int) osxToXserver:(int)yValue windowHeight:(int)windowH {
     
     int height = [[NSScreen mainScreen] frame].size.height;    
-    return height - yValue - WINDOWBAR;
+    return height - yValue;
     
 }
 
@@ -213,8 +214,8 @@
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_button_down (rootContext,
-                                        [event locationInWindow].x, 
-                                        heightFloat - [event locationInWindow].y, 
+                                        [NSEvent mouseLocation].x, 
+                                        heightFloat - [NSEvent mouseLocation].y, 
                                         (int)[event windowNumber],
                                         0);;});
 }
@@ -238,10 +239,13 @@
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    //NSLog(@"Mouse x = %i, y = %i", (int)[NSEvent mouseLocation].x, 
+    //      (int)[[NSScreen mainScreen] frame].size.height - FILEBAR - (int)[NSEvent mouseLocation].y);
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ dummy_xtoq_mouse_motion (rootContext,
-                                              [event locationInWindow].x, 
-											   heightFloat - [event locationInWindow].y, 
+                                              [NSEvent mouseLocation].x, 
+                                              [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y, 
                                               (int)[event windowNumber],
                                               0);;});
 }
