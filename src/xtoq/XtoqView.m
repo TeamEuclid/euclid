@@ -20,7 +20,9 @@
  */
 
 #import "XtoqView.h"
+
 #define RECTLOG(rect)    (NSLog(@""  #rect @" x:%f y:%f w:%f h:%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height ));
+
 @implementation XtoqView
 
 /**
@@ -38,37 +40,33 @@ initWithFrame:(NSRect)frame {
         bufferIndexTwo = 0;
 
         trackingArea = [[NSTrackingArea alloc] initWithRect:frame
-                        
-                                                    options: (NSTrackingMouseEnteredAndExited |
-                                                              NSTrackingMouseMoved 
-                                                              | NSTrackingActiveInKeyWindow
-                                                              )
-                        
+                        options: (NSTrackingMouseEnteredAndExited |
+                        NSTrackingMouseMoved 
+                        | NSTrackingActiveInKeyWindow)
                                                       owner:self userInfo:nil];
-        
         [self addTrackingArea:trackingArea];
         
     }
     return self;
 }
 
-/**
- *  Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
- */
+
+// Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
 -(void)
 drawRect:(NSRect)dirtyRect {
-
-    while (bufferIndexTwo < bufferIndex) {
-        int i = bufferIndexTwo++;
-        [image[i] draw];//InRect:dirtyRect];
-        [image[i] destroy];
-    }
-    bufferIndex = bufferIndexTwo = 0;
+    xtoq_get_event_thread_lock();
+	while (bufferIndexTwo < bufferIndex) {
+	    int i = bufferIndexTwo++;
+	    [image[i] draw];//InRect:dirtyRect];
+	    [image[i] destroy];
+	}
+	bufferIndex = bufferIndexTwo = 0;
+	xtoq_release_event_thread_lock();
 }
 
-/**
- *  This is necessary for accepting input.
- */
+
+
+//This is necessary for accepting input.
 - (BOOL)
 acceptsFirstResponder {
     return YES;
@@ -78,27 +76,16 @@ acceptsFirstResponder {
     return YES;
 }
 
-- (void)mouseMoved:(NSEvent *)mouseMovedEvent
-{ 
-	CGFloat f = [self bounds].size.height;
-	NSNumber *n = [[NSNumber alloc] initWithFloat:f];
-    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
-    [twoInfoDict setObject:mouseMovedEvent forKey:@"1"];
-    [twoInfoDict setObject:n forKey:@"2"];
-    
-    //NSLog(@"bound %f location %f", CGRectGetHeight(bnd), [mouseMovedEvent locationInWindow].y );
-    [notificationCenter postNotificationName:@"XTOQviewMouseMovedEvent" 
-                                      object:self 
-                                    userInfo:twoInfoDict];
-}
-
-
 /*- (void)mouseEntered:(NSEvent *)theEvent {
-    
+
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    
+
+}
+ 
+- (void)rightMouseDown:(NSEvent *)theEvent 
+
 }*/
 
 /**
@@ -108,7 +95,6 @@ acceptsFirstResponder {
 keyDown:(NSEvent *)theEvent {      
     NSDictionary * dictionary = [NSDictionary dictionaryWithObject:theEvent 
                                                             forKey:@"1"];
-
     [notificationCenter postNotificationName:@"XTOQviewKeyDownEvent" 
                                       object:self 
                                     userInfo:dictionary];
@@ -116,8 +102,10 @@ keyDown:(NSEvent *)theEvent {
 
 -(void)
 mouseDown:(NSEvent *)mouseEvent {
-	CGFloat f = [self bounds].size.height;
+    CGFloat f = [self bounds].size.height;
     NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    //NSLog(@"mouseevent %i", [mouseEvent mouseLocation]->x);
+   // NSLog(@"mouse event bound %f location %f", CGRectGetHeight(bnd), [mouseEvent locationInWindow].y );
     NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
     [twoInfoDict setObject:mouseEvent forKey:@"1"];
     [twoInfoDict setObject:n forKey:@"2"];
@@ -128,30 +116,35 @@ mouseDown:(NSEvent *)mouseEvent {
                                     userInfo:twoInfoDict];
 }
 
+- (void)mouseUp:(NSEvent *)theEvent {
+	CGFloat f = [self bounds].size.height;
+    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
+    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
+    [twoInfoDict setObject:theEvent forKey:@"1"];
+    [twoInfoDict setObject:n forKey:@"2"];
+    [notificationCenter postNotificationName:@"XTOQmouseButtonReleaseEvent" 
+                                      object:self 
+                                    userInfo:twoInfoDict];
+}
+
 - (void)setImage:(XtoqImageRep *)newImage {
+    xtoq_get_event_thread_lock();
     image[bufferIndex++] = newImage;
+	xtoq_release_event_thread_lock();
 }
 
 - (void)setPartialImage:(XtoqImageRep *)newImage{
-
-    image[bufferIndex++] = newImage;
-
+    xtoq_get_event_thread_lock(); {
+        image[bufferIndex++] = newImage;
+    } xtoq_release_event_thread_lock();
+    
     NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
-
     [self setNeedsDisplayInRect:imageRec];
     //[[self window] flushWindow];
 }
 
 - (BOOL)isOpaque{
     return YES;
-}
-
-- (void)ourDisp{
-    CGContextRef destCtx = (CGContextRef)[[NSGraphicsContext currentContext]
-                                          graphicsPort];
-    while (bufferIndexTwo < bufferIndex) {
-        [image[bufferIndexTwo++] draw];
-    }
 }
 
 @end

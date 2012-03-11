@@ -67,8 +67,7 @@ id referenceToSelf;
     XtoqImageRep *image;
     XtoqImageRep *imageNew;
     XtoqView *view;
-    NSString *file;
-    NSImage *image2;
+
     int originalHeight;
     int originalWidth;
     NSRect imageRec;
@@ -79,15 +78,26 @@ id referenceToSelf;
 - (void) applicationWillFinishLaunching:(NSNotification *) aNotification;
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
+/**
+ * Receive notification of a key down event from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
 - (void) keyDownInView: (NSNotification *) aNotification;
 
+/**
+ * Receive notification of a mouse button press from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
 - (void) mouseButtonDownInView: (NSNotification *) aNotification;
 
 /**
- * Makemenu sets the menu for the application.
- *
- * Sets main menu for the XtoQ.app.  Also enables an 'applications' menu
- * in which xeyes, xclock, xterm, and xlogo can be launched.
+ * Receive notification of a mouse button release from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
+- (void) mouseButtonReleaseInView: (NSNotification *) aNotification;
+
+/**
+ * Makemenu and related selector functions for launching X applications.
  */
 - (void) makeMenu;
 
@@ -132,6 +142,8 @@ id referenceToSelf;
  */
 - (void) runXlogo: (id) sender;
 
+- (void) mouseMovedInApp: (NSNotification *) aNotification;
+
 /**
  * Runs xterm.
  *
@@ -144,8 +156,11 @@ id referenceToSelf;
 
 /**
  * Put a new image in the window / view
+ * Send an image to the view after being notified of a damage event from 
+ * the event handler.
+ * @param an xtoq_context_t sent from eventHandler
  */
-- (void) updateImageNew: (xtoq_context_t *) windowContext;
+- (void) updateImage: (xtoq_context_t *) windowContext;
 
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;

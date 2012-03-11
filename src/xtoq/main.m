@@ -31,7 +31,5 @@
 int main(int argc, char *argv[])
 {
     // Xcode provided code
-    //return NSApplicationMain(argc, (const char **)argv);
-    
-    return XtoqApplicationMain(argc, (const char **)argv);
+    return XtoqApplicationMain(argc, argv);
 }

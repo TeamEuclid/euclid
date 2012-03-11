@@ -31,8 +31,9 @@
 #define environ (*_NSGetEnviron())
 #endif
 
-@interface XtoqApplication : NSApplication
+@interface XtoqApplication : NSApplication {
 
+}
 /**
  * The main of our Application.
  *
@@ -47,4 +48,10 @@
  */
 int XtoqApplicationMain(int argc, char** argv);
 
+- (void) sendEvent:(NSEvent *)e;
+
 @end
+
+int
+XtoqApplicationMain(int argc, char** argv);
+

@@ -64,7 +64,7 @@
     rootContext = xtoq_init(screen);
     
     [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
+    setImageInterpolation:NSImageInterpolationHigh];
     
     xtoqWindow = [[XtoqWindow alloc] 
                   initWithContentRect: NSMakeRect(rootContext->x, rootContext->y, 
@@ -110,16 +110,23 @@
 		   selector: @selector(mouseButtonDownInView:)
 		       name: @"XTOQmouseButtonDownEvent"
 		     object: nil];
+    
+    [nc addObserver: self
+		   selector: @selector(mouseButtonReleaseInView:)
+		       name: @"XTOQmouseButtonReleaseEvent" 
+		     object: nil];
+    
+    [nc addObserver: self
+           selector: @selector(mouseMovedInApp:)
+               name: @"MouseMovedEvent" 
+             object: nil];
+
     // register for destroy event
     [nc addObserver: self
 		   selector: @selector(destroy:)
 		       name: @"XTOQdestroyTheWindow"
 		     object: nil];
     
-    [nc addObserver: self
-		   selector: @selector(mouseMovedInView:)
-		       name: @"XTOQviewMouseMovedEvent" 
-		     object: nil];
     // regester for window will/did movement notification
     [nc addObserver:self 
 		   selector:@selector(windowWillMove:) 
@@ -173,29 +180,51 @@
 	xtoq_start_event_loop(rootContext, (void *) eventHandler);
 }
 
+- (void) mouseMovedInApp: (NSNotification *) aNotification {
+
+    //CGFloat heightFloat;
+    NSDictionary *mouseMoveInfo = [aNotification userInfo];
+    NSEvent * event = [mouseMoveInfo objectForKey: @"1"];
+    NSNumber * xVal =  [NSNumber alloc];
+    NSNumber * yVal =  [NSNumber alloc];
+    xVal = [mouseMoveInfo objectForKey: @"2"];
+    yVal = [mouseMoveInfo objectForKey: @"3"];
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+    
+    int yInt = height - FILEBAR - [yVal intValue];
+    yVal = [[NSNumber alloc] initWithInt:yInt];
+    
+    NSLog(@"Mouse x = %i, y = %i", [xVal intValue], [yVal intValue]);
+    
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_mouse_motion (rootContext,
+                                         [xVal intValue], 
+                                         [yVal intValue], 
+                                         (int)[event windowNumber],
+                                         0);;});
+
+    
+}
+
 - (void) keyDownInView: (NSNotification *) aNotification
 {   
-    int i = 0;
     NSDictionary *keyInfo = [aNotification userInfo];
     // note this keyInfo is the key in <key, value> not the key pressed
     NSEvent * event = [keyInfo objectForKey: @"1"];
-    //NSLog(@"Controller Got a XTOQviewKeyDownEvent key %@", [event characters]);
     unsigned short aChar = [event keyCode];
     NSString* charNSString = [event characters]; 
     const char* charcharstar = [charNSString UTF8String];
-    //printf( "\n--------------------------------------------\n" );
-    // translate key here code = translate(charcharstar);
+
     NSLog(@"%s pressed", charcharstar);
-    //uint8_t code = (unsigned char)0x10;
-    //uint8_t code = 
-    
-	//    for(i = 8; i < 256; i++){
-    //    aChar++;
-        dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_key_press(rootContext, 
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar + 8) ;});
-		// }
+    dispatch_async(xtoqDispatchQueue, 
+                   ^{ xtoq_key_release(rootContext, 
+                                     (int)[event windowNumber],
+                                     aChar + 8) ;});
 }
  
 
@@ -207,47 +236,49 @@
     NSDictionary *mouseDownInfo = [aNotification userInfo];
     // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
     NSEvent * event = [mouseDownInfo objectForKey: @"1"];
-    //NSRect bnd = NSMakeRect(0,0,512,386);
+
     NSNumber * heightAsNumber =  [NSNumber alloc];
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
+        
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_button_down (rootContext,
-                                        [NSEvent mouseLocation].x, 
-                                        heightFloat - [NSEvent mouseLocation].y, 
-                                        (int)[event windowNumber],
-                                        0);;});
+                   ^{ xtoq_button_press (rootContext,
+                                         0,
+                                         0, 
+                                         (int)[event windowNumber],
+                                         0);;});
 }
 
-- (void) setScreen:(char *)scrn {
-    free(screen);
-    screen = strdup(scrn);
-    if (screen == NULL) {
-        perror(strerror(errno));
-    }
-    else {
-        setenv("DISPLAY", screen, 1);
-    }
-}
-- (void) mouseMovedInView: (NSNotification *) aNotification
+// on this side all I have is a xtoq_context , on the library side I need
+// to turn that into a real context 
+- (void) mouseButtonReleaseInView: (NSNotification *) aNotification
 {
     CGFloat heightFloat;
-    NSDictionary *mouseDownInfo = [aNotification userInfo];
-    NSEvent * event = [mouseDownInfo objectForKey: @"1"];
+    NSDictionary *mouseReleaseInfo = [aNotification userInfo];
+    // NSLog(@"Controller Got a XTOQmouseButtonDownEvent");
+    NSEvent * event = [mouseReleaseInfo objectForKey: @"1"];
+    //NSRect bnd = NSMakeRect(0,0,512,386);
     NSNumber * heightAsNumber =  [NSNumber alloc];
-    heightAsNumber = [mouseDownInfo objectForKey: @"2"];
+    heightAsNumber = [mouseReleaseInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
-    //NSLog(@"Mouse x = %i, y = %i", (int)[NSEvent mouseLocation].x, 
-    //      (int)[[NSScreen mainScreen] frame].size.height - FILEBAR - (int)[NSEvent mouseLocation].y);
+    
+    float height = [[NSScreen mainScreen] frame].size.height;
     
     dispatch_async(xtoqDispatchQueue, 
-                   ^{ dummy_xtoq_mouse_motion (rootContext,
-                                              [NSEvent mouseLocation].x, 
-                                              [[NSScreen mainScreen] frame].size.height - FILEBAR - [NSEvent mouseLocation].y, 
-                                              (int)[event windowNumber],
-                                              0);;});
+                   ^{ xtoq_button_release (rootContext,
+                                           0,
+                                           0,
+                                           (int)[event windowNumber],
+                                           0);;});
+}
+
+
+- (void) setScreen:(char *)scrn {
+    screen = scrn;
 }
 
 - (void) makeMenu {
@@ -436,14 +467,11 @@
 - (void) windowWillMove:(NSNotification*)notification {
     //NSLog(@"window will move");
 }
-- (void) updateImageNew : (xtoq_context_t *) windowContext
+- (void) updateImage:(xtoq_context_t *) windowContext
 {
-    
     float  y_transformed;
-	
+    //FIXME : rename test_xtoq_get_image to remove "test"
     libImageT = test_xtoq_get_image(windowContext);
-	//	libImageT = xtoq_get_image(windowContext);
-
     //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
@@ -459,7 +487,7 @@
 }
 
 - (void) windowDidResize:(NSNotification*)notification {
-  //    [self reshape];
+    [self reshape];
 }
 
 - (void) reshape {
@@ -469,15 +497,13 @@
     if (moveWindow != nil) {        
         xtoq_context_t *moveContext = [moveWindow getContext];        
         NSRect moveFrame = [moveWindow frame];
-        
         int x = (int)moveFrame.origin.x;
         int y = [self osxToXserver:(int)moveFrame.origin.y
 					  windowHeight:moveContext->height] - WINDOWBAR;
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height - WINDOWBAR;
-        NSLog(@"x = %i, y = %i, width = %i, height = %i,", x, y, width, height); 
-        NSLog(@"Call xtoq_configure_window(moveContext, x, y, height, width)"); 
-        xtoq_configure_window(moveContext, x, y, height, width);       
+        NSLog(@"Call xtoq_configure_window(moveContext, x = %i, y = %i, height = %i, width = %i)", x, y, height, width); 
+        xtoq_configure_window(moveContext, x, y - height, height, width);       
     }    
 }
 
@@ -487,9 +513,7 @@ void eventHandler (xtoq_event_t *event)
 {
     xtoq_context_t *context = event->context;
     if (event->event_type == XTOQ_DAMAGE) {
-        // This message generates a lot of console spam - only uncomment when testing
-        //NSLog(@"Got damage event");
-	  [referenceToSelf updateImageNew: context];
+	  [referenceToSelf updateImage: context];
     } else if (event->event_type == XTOQ_CREATE) {
         NSLog(@"Window was created");
         [referenceToSelf createNewWindow: context];

@@ -43,7 +43,6 @@
 - (id)initWithData:(xtoq_image_t *)imageData x:(int)x y:(int)y{
     imageParent = imageData;
     imageT = imageData->image;
-	//    windowSize =  NSMakeSize(imageT->width, imageT->height);
     self = [super init];
 	if (!self) {
 		return nil;
@@ -56,14 +55,14 @@
                                                     );
     
     CGColorSpaceRef csp = CGColorSpaceCreateDeviceRGB();
-
+    CGBitmapInfo bitmapInfo = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Host;
     cgImage = CGImageCreate (imageT->width,// size_t width,
                              imageT->height, //size_t height,
                              8, //size_t bitsPerComponent,
                              32,//size_t bitsPerPixel,
                              imageT->stride,//size_t bytesPerRow,
                              csp, //CGColorSpaceRef colorspace,
-                             kCGBitmapByteOrderDefault,//CGBitmapInfo bitmapInfo,
+                             bitmapInfo,
                              cgdat,//CGDataProviderRef provider,
                              NULL, //const CGFloat decode[],
                              YES, //bool shouldInterpolate,
@@ -74,6 +73,7 @@
     size = NSMakeSize (width, height);
     imageX =x;
     imageY =y;
+    
     return self;
 }
 
@@ -128,4 +128,7 @@
         xtoq_image_destroy(imageParent);
     }
 }
+
+
+
 @end

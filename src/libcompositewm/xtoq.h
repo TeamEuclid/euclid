@@ -41,11 +41,10 @@
 #include <xcb/xcb_keysyms.h> //aaron
 #include "xtoq_internal.h"
 
-// TODO: Remove this once we get the context_list in place. Right
-// now this is here for testing purposes to give an easy way to get the
-// root window's context in any function
+/**
+ * Context which contains the display's root window.
+ */
 extern xtoq_context_t *root_context;
-
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
@@ -54,8 +53,24 @@ extern xtoq_context_t *root_context;
 xtoq_context_t *
 xtoq_init(char *display);
 
+/**
+ * Returns a window's entire image
+ * @param an xtoq_context_t 
+ * FIXME: this might be for the root window
+ * @return an xtoq_image_t with an the image of a window
+ */
 xtoq_image_t *
 xtoq_get_image(xtoq_context_t *context);
+
+/**
+ * Intended for servicing to a client's reaction to a damage notification
+ * this window returns the modified subrectangle of a window
+ * @param an xtoq_context_t of the damaged window
+ * @return an xtoq_image_t with partial image window contents
+ */
+xtoq_image_t *
+test_xtoq_get_image(xtoq_context_t * context);
+
 
 /**
  * free the memory used by an xtoq_image_t created 
@@ -109,33 +124,81 @@ xtoq_set_window_to_top(xtoq_context_t *context);
 int
 xtoq_start_event_loop (xtoq_context_t *context, xtoq_event_cb_t callback);
 
-/* Closes the windows open on the X Server, the connection, and the event
+/**
+ * Request a lock on the mutex for the event loop thread. Blocks
+ * until lock is aquired, or error occurs.
+ * @return 0 if successful, otherwise non-zero
+ */
+int
+xtoq_get_event_thread_lock (void);
+
+/**
+ * Release the lock on the mutex for the event loop thread.
+ * @return 0 if successsful, otherwise non-zero
+ */
+int
+xtoq_release_event_thread_lock(void);
+
+/**
+ * Closes the windows open on the X Server, the connection, and the event
  * loop. 
  */
 void 
 xtoq_close(void);
 
 /**
- * Testing function
+ * function
  * @param context xtoq_context_t 
  * @param window The window that the key press was made in.
  * @param keyCode The key pressed.
  */
 void
-dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
+xtoq_key_press (xtoq_context_t *context, int window, uint8_t code);
 
 /**
- * Testing function
+ * function
+ * @param context xtoq_context_t 
+ * @param window The window that the key press was made in.
+ * @param keyCode The key released.
+ */
+void
+xtoq_key_release (xtoq_context_t *context, int window, uint8_t code);
+
+/**
+ * Uses the XTEST protocol to send input events to the X Server (The X Server
+ * is usually in the position of sending input events to a client). The client
+ * will often choose to send coordinates through mouse motion and set the params 
+ * x & y to 0 here.
  * @param context xtoq_context_t 
  * @param x - x coordinate
  * @param y - y coordinate
  * @param window The window that the key press was made in.
  */
 void
-dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button);
+xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int button);
 
+/**
+ * Uses the XTEST protocol to send input events to the X Server (The X Server
+ * is usually in the position of sending input events to a client). The client
+ * will often choose to send coordinates through mouse motion and set the params 
+ * x & y to 0 here.
+ * @param context xtoq_context_t 
+ * @param x - x coordinate
+ * @param y - y coordinate
+ * @param window The window that the key release was made in.
+ */
 void
-dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
+xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int button);
+
+/**
+ * function
+ * @param context xtoq_context_t 
+ * @param x - x coordinate
+ * @param y - y coordinate
+ * @param window The window that the key release was made in.
+ */
+void
+xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
 
 /****************
  * window.c
@@ -160,7 +223,4 @@ xtoq_request_close(xtoq_context_t *context);
 void
 xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width);
 
-
-xtoq_image_t *
-test_xtoq_get_image(xtoq_context_t * context);
 #endif // _XTOQ_H_

@@ -58,9 +58,14 @@ xtoq_init(char *display) {
     // are created on the root. This is where we add masks for the events
     // we care about catching on the root window.
     mask_values[0] = XCB_EVENT_MASK_KEY_PRESS |
+                     XCB_EVENT_MASK_KEY_RELEASE |
                      XCB_EVENT_MASK_BUTTON_PRESS |
+                     XCB_EVENT_MASK_BUTTON_RELEASE |
+                     XCB_EVENT_MASK_POINTER_MOTION |
 		             XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                      XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
+                     XCB_EVENT_MASK_ENTER_WINDOW | 
+                     XCB_EVENT_MASK_LEAVE_WINDOW | 
 		             XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
     cookie = xcb_change_window_attributes_checked(conn, root_window,
 												  XCB_CW_EVENT_MASK,
@@ -196,50 +201,7 @@ xtoq_image_destroy(xtoq_image_t * xtoq_image){
     free(xtoq_image);
 }
  
-void
-dummy_xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
-{
-    xcb_generic_error_t *err;
-    xcb_void_cookie_t cookie;
-    xcb_window_t none = { XCB_NONE };
 
-    cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
-                                XCB_CURRENT_TIME, none, 0, 0, 1 );  
-    xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
-                                XCB_CURRENT_TIME, none,0 ,0 , 1 );
-        
-    err = xcb_request_check(context->conn, cookie);
-    if (err)
-    {
-        printf("err ");
-        free(err);
-    }	
-    xcb_flush(context->conn);
-    printf("xtoq.c received key - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
-}
-
-void
-dummy_xtoq_button_down (xtoq_context_t *context, long x, long y, int window, int button)
-{
-    //xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn, XCB_BUTTON_PRESS, 1, XCB_CURRENT_TIME,
-                         context->parent, x, y, 0);
-                         // x has to be translated (?in the view)
-    xcb_test_fake_input (context->conn, XCB_BUTTON_RELEASE, 1, XCB_CURRENT_TIME,
-                         context->parent, x, y, 0);
-	xcb_flush(context->conn);
-    printf("button down received by xtoq.c - (%ld,%ld) in Mac window #%i\n", x, y, window);
-}
-
-void
-dummy_xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button)
-{
-    xcb_window_t none = { XCB_NONE };
-    xcb_test_fake_input (context->conn, XCB_MOTION_NOTIFY, 0, 0,
-                         context->window//root_context->window//none//context->parent
-                         ,x, y, 0);
-	xcb_flush(context->conn);
-}
 
 
 /* Close all windows, the connection, as well as the event loop */

@@ -61,6 +61,11 @@ typedef struct xtoq_wm_atoms {
  */
 extern xtoq_wm_atoms *_wm_atoms;
 
+/**
+ * Mutex lock supplied to client to lock event loop thread
+ */
+extern pthread_mutex_t event_thread_lock;
+
 /* util.c */
 
 /**
