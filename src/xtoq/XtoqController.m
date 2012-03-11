@@ -470,16 +470,21 @@
 - (void) updateImage:(xtoq_context_t *) windowContext
 {
     float  y_transformed;
-    //FIXME : rename test_xtoq_get_image to remove "test"
-    libImageT = test_xtoq_get_image(windowContext);
-    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+	NSRect newDamageRect;
+
+//     libImageT = test_xtoq_get_image(windowContext);
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-                                                    x:((windowContext->damaged_x))
-                                                    y:y_transformed];
+//     imageNew = [[XtoqImageRep alloc] initWithData:libImageT
+//                                                     x:((windowContext->damaged_x))
+//                                                     y:y_transformed];
+
+	newDamageRect = NSMakeRect(windowContext->damaged_x,
+							   y_transformed,
+							   windowContext->damaged_width,
+							   windowContext->damaged_height);
 	XtoqView *localView = (XtoqView *)[(XtoqWindow *)windowContext->local_data contentView];
-    [ localView setPartialImage:imageNew];
+    [ localView setPartialImage:newDamageRect];
 }
 
 - (void) windowDidMove:(NSNotification*)notification {

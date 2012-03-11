@@ -133,13 +133,8 @@ mouseDown:(NSEvent *)mouseEvent {
 	xtoq_release_event_thread_lock();
 }
 
-- (void)setPartialImage:(XtoqImageRep *)newImage{
-    xtoq_get_event_thread_lock(); {
-        image[bufferIndex++] = newImage;
-    } xtoq_release_event_thread_lock();
-    
-    NSRect imageRec = NSMakeRect([newImage imageX], [newImage imageY], [newImage getWidth] , [newImage getHeight]);
-    [self setNeedsDisplayInRect:imageRec];
+- (void)setPartialImage:(NSRect)newDamageRect {    
+    [self setNeedsDisplayInRect:newDamageRect];
     //[[self window] flushWindow];
 }
 

@@ -72,9 +72,9 @@ SOFTWARE.
 
 /**
  * Set the partial image contents in the view
- * @param an XtoqImageRep
+ * @param newDamageRect The area of the image that needs to be redrawn
  */
-- (void)setPartialImage:(XtoqImageRep *)newImage;
+- (void)setPartialImage:(NSRect)newDamageRect;
 
 
 //- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;

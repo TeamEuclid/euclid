@@ -134,14 +134,26 @@ void *run_event_loop (void *thread_arg_struct)
             rect.y = dmgevnt->area.y;
             rect.width = dmgevnt->area.width;
             rect.height = dmgevnt->area.height;
-            
-           // printf("dmgevent->area: x=%d y=%d w=%d h=%d dmgevent->geometry x=%d y=%d w=%d h=%d", dmgevnt->area.x, dmgevnt->area.y, dmgevnt->area.width, dmgevnt->area.height, dmgevnt->geometry.x,dmgevnt->geometry.y, dmgevnt->geometry.width, dmgevnt->geometry.height);
-            
-            return_evt->context->damaged_x = dmgevnt->area.x;
-            return_evt->context->damaged_y = dmgevnt->area.y;
-            return_evt->context->damaged_width = dmgevnt->area.width;
-            return_evt->context->damaged_height = dmgevnt->area.height;
-            
+
+			/* Increase the damaged area if new damage is outside the
+			 * area already marked - this should be set back to 0 by 0
+			 * when area is actually redrawn. This is likely to be
+			 * done in another thread that handles window redraws */
+			xtoq_get_event_thread_lock();
+			if (return_evt->context->damaged_x > dmgevnt->area.x) {
+				return_evt->context->damaged_x = dmgevnt->area.x;
+			}
+			if (return_evt->context->damaged_y > dmgevnt->area.y) {
+				return_evt->context->damaged_y = dmgevnt->area.y;
+			}
+			if (return_evt->context->damaged_width < dmgevnt->area.width) {
+				return_evt->context->damaged_width = dmgevnt->area.width;
+			}
+			if (return_evt->context->damaged_height = dmgevnt->area.height) {
+				return_evt->context->damaged_height = dmgevnt->area.height;
+			}
+            xtoq_release_event_thread_lock();
+
             xcb_xfixes_create_region(root_context->conn,
 									 region,
 									 1, 
