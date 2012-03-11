@@ -253,6 +253,24 @@ void *run_event_loop (void *thread_arg_struct)
                 //        bp->event, bp->event_x, bp->event_y );
                 break;
             }
+            
+            case XCB_ENTER_NOTIFY: {
+                xcb_enter_notify_event_t *enter = (xcb_enter_notify_event_t *)evt;
+                
+                printf ("Mouse entered window %ld, at coordinates (%d,%d)\n",
+                        enter->event, enter->event_x, enter->event_y );
+                break;
+            }
+                
+            case XCB_LEAVE_NOTIFY: {
+                xcb_leave_notify_event_t *leave = (xcb_leave_notify_event_t *)evt;
+                
+                printf ("Mouse left window %ld, at coordinates (%d,%d)\n",
+                        leave->event, leave->event_x, leave->event_y );
+                break;
+            }
+                    
+                    
             default: {
                 printf("UNKNOWN EVENT: %i\n", (evt->response_type & ~0x80));
                 break;
