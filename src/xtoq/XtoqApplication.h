@@ -33,7 +33,6 @@
 
 @interface XtoqApplication : NSApplication {
 
-//	NSNotificationCenter * notificationCenter;
 }
 
 - (void) sendEvent:(NSEvent *)e;

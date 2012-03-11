@@ -77,7 +77,7 @@
     rootContext = xtoq_init(screen);
     
     [[NSGraphicsContext currentContext]
-     setImageInterpolation:NSImageInterpolationHigh];
+    setImageInterpolation:NSImageInterpolationHigh];
     
     xtoqWindow = [[XtoqWindow alloc] 
                   initWithContentRect: NSMakeRect(rootContext->x, rootContext->y, 

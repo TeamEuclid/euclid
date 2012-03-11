@@ -43,7 +43,7 @@ xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     xcb_flush(context->conn);
-    printf("xtoq.c received key down - uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+    printf("xtoq.c received key down - uint8_t '%i', from Mac window #%i to context.window %u\n", code,  window, context->window);
 }
 
 void
@@ -63,7 +63,7 @@ xtoq_key_release (xtoq_context_t *context, int window, uint8_t code)
         free(err);
     }	
     xcb_flush(context->conn);
-    printf("xtoq.c received key release- uint8_t '%i', from Mac window #%i to context.window %ld\n", code,  window, context->window);
+    printf("xtoq.c received key release- uint8_t '%i', from Mac window #%i to context.window %u\n", code,  window, context->window);
 }
 
 void
