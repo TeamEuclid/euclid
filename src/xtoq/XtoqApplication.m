@@ -21,8 +21,6 @@
 
 #import "XtoqApplication.h"
 
-#define FILEBAR 23
-
 @implementation XtoqApplication
 
 int XtoqApplicationMain(int argc, char** argv){
@@ -118,32 +116,34 @@ int XtoqApplicationMain(int argc, char** argv){
 }
 
 - (void) sendEvent:(NSEvent *)e {
-    CGFloat x, y;
-    NSNumber *xObject, *yObject;
-    NSMutableDictionary *threeInfoDict;
+    NSMutableDictionary *InfoDict;
+    NSPoint ns_location = [e locationInWindow];
+    NSWindow *ns_window = [e window];
+    NSNumber *xNum, *yNum;
+    
     switch ([e type]) {
-        case NSMouseMoved:
-           // height = [[NSScreen mainScreen] frame].size.height;
-            // you can't call mouseLocation on "e"  
-            x = [NSEvent mouseLocation].x;
-            y = [NSEvent mouseLocation].y;
+        case NSMouseMoved:            
+            if (ns_window != nil)      {
+                NSRect frame = [ns_window frame];
+                ns_location.x += frame.origin.x;
+                ns_location.y += frame.origin.y;
+            }  
             
-            //NSLog(@"Mouse Moved y=%f", y);         
-                        
-            xObject = [[NSNumber alloc] initWithFloat:x];
-            yObject = [[NSNumber alloc] initWithFloat:y];
-            threeInfoDict = [[NSMutableDictionary alloc] initWithCapacity:3];
-            [threeInfoDict setObject:e forKey:@"1"];
-            [threeInfoDict setObject:xObject forKey:@"2"];  
-            [threeInfoDict setObject:yObject forKey:@"3"];
+            xNum = [[NSNumber alloc] initWithFloat:ns_location.x];
+            yNum = [[NSNumber alloc] initWithFloat:ns_location.y];
+  
+            InfoDict = [[NSMutableDictionary alloc] initWithCapacity:3];
+            [InfoDict setObject:e forKey:@"1"];
+            [InfoDict setObject:xNum forKey:@"2"];
+            [InfoDict setObject:yNum forKey:@"3"];
+            
             [notificationCenter postNotificationName:@"MouseMovedEvent" 
                                               object:self 
-                                            userInfo:threeInfoDict];
+                                            userInfo:InfoDict];
             break;
             
         default: [super sendEvent:e];
             break;
     }
 }
-
 @end
