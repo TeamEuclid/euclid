@@ -140,6 +140,13 @@ int
 xtoq_release_event_thread_lock(void);
 
 /**
+ * Remove the damage from the given context.
+ * @param context The context to remove the damage from
+ */
+void
+xtoq_remove_context_damage(xtoq_context_t *context);
+
+/**
  * Closes the windows open on the X Server, the connection, and the event
  * loop. 
  */

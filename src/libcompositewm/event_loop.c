@@ -117,9 +117,10 @@ void *run_event_loop (void *thread_arg_struct)
     while ((evt = xcb_wait_for_event(event_conn))) {
 		if ((evt->response_type & ~0x80) == _damage_event) {
             xcb_damage_notify_event_t *dmgevnt = (xcb_damage_notify_event_t *)evt;
-			xcb_void_cookie_t cookie;
-            xcb_xfixes_region_t region = xcb_generate_id(root_context->conn);
-            xcb_rectangle_t rect;
+			int old_x;
+			int old_y;
+			int old_height;
+			int old_width;
 
 			return_evt = malloc(sizeof(xtoq_event_t));
 			return_evt->event_type = XTOQ_DAMAGE;
@@ -130,45 +131,46 @@ void *run_event_loop (void *thread_arg_struct)
 				continue;
 			}
 
-            rect.x = dmgevnt->area.x;
-            rect.y = dmgevnt->area.y;
-            rect.width = dmgevnt->area.width;
-            rect.height = dmgevnt->area.height;
-
 			/* Increase the damaged area if new damage is outside the
 			 * area already marked - this should be set back to 0 by 0
 			 * when area is actually redrawn. This is likely to be
 			 * done in another thread that handles window redraws */
 			xtoq_get_event_thread_lock();
-			if (return_evt->context->damaged_x > dmgevnt->area.x) {
+
+			old_x      = return_evt->context->damaged_x;
+			old_y      = return_evt->context->damaged_y;
+			old_width  = return_evt->context->damaged_width;
+			old_height = return_evt->context->damaged_height;
+
+			if (return_evt->context->damaged_width == 0) {
+				/* We know something is damaged */
 				return_evt->context->damaged_x = dmgevnt->area.x;
-			}
-			if (return_evt->context->damaged_y > dmgevnt->area.y) {
 				return_evt->context->damaged_y = dmgevnt->area.y;
-			}
-			if (return_evt->context->damaged_width < dmgevnt->area.width) {
 				return_evt->context->damaged_width = dmgevnt->area.width;
-			}
-			if (return_evt->context->damaged_height = dmgevnt->area.height) {
 				return_evt->context->damaged_height = dmgevnt->area.height;
+			} else {
+				/* Is the new damage bigger than the old */
+				if (old_x > dmgevnt->area.x) {
+					return_evt->context->damaged_x = dmgevnt->area.x;
+				}
+				if ( old_y > dmgevnt->area.y) {
+					return_evt->context->damaged_y = dmgevnt->area.y;
+				}
+				if ( old_width < dmgevnt->area.width) {
+					return_evt->context->damaged_width = dmgevnt->area.width;
+				}
+				if ( old_height <  dmgevnt->area.height) {
+					return_evt->context->damaged_height = dmgevnt->area.height;
+				}
 			}
             xtoq_release_event_thread_lock();
 
-            xcb_xfixes_create_region(root_context->conn,
-									 region,
-									 1, 
-									 &rect);
-            
-            cookie = xcb_damage_subtract_checked (return_evt->context->conn,
-                                                  return_evt->context->damage,
-                                                  region,
-                                                  0);
-
-			if ((_xtoq_request_check(root_context->conn,
-									 cookie,
-									 "Failed to subtract damage"))) {
-				free(return_evt);
-			} else {
+			if (((old_x > dmgevnt->area.x) || (old_y > dmgevnt->area.y))
+				|| ((old_width < dmgevnt->area.width)
+					|| (old_height < dmgevnt->area.height))) {
+				/* We should only reach here if this damage event
+				 * actually increases that area of the window marked
+				 * for damage. */
 				callback_ptr(return_evt);        
 			}
 		} else {

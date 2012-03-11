@@ -52,7 +52,8 @@ initWithFrame:(NSRect)frame {
     viewContext = context;
 }
 
-// Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
+// Overridden by subclasses to draw the receiver’s image within the
+// passed-in rectangle.
 -(void)
 drawRect:(NSRect)dirtyRect {
     xtoq_image_t *imageT;
@@ -71,12 +72,10 @@ drawRect:(NSRect)dirtyRect {
 					            y:y_transformed];
 		[imageNew draw];
 		[imageNew destroy];
+		
+		// Remove the damage
+		xtoq_remove_context_damage(viewContext);
 	}
-	// Set the damage for the context back to 0
-	viewContext->damaged_x = 0;
-	viewContext->damaged_y = 0;
-	viewContext->damaged_width = 0;
-	viewContext->damaged_height = 0;
 
 	xtoq_release_event_thread_lock();
 }

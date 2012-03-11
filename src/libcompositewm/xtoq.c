@@ -202,7 +202,41 @@ xtoq_image_destroy(xtoq_image_t * xtoq_image){
 }
  
 
+void
+xtoq_remove_context_damage(xtoq_context_t *context)
+{
+	xcb_xfixes_region_t region = xcb_generate_id(context->conn);
+	xcb_rectangle_t rect;
+	xcb_void_cookie_t cookie;
 
+	if (!context) {
+		return;
+	}
+
+	rect.x = context->damaged_x;
+	rect.y = context->damaged_y;
+	rect.width = context->damaged_width;
+	rect.height = context->damaged_height;
+
+	xcb_xfixes_create_region(root_context->conn,
+							 region,
+							 1, 
+							 &rect);
+            
+	cookie = xcb_damage_subtract_checked (context->conn,
+										  context->damage,
+										  region,
+										  0);
+
+	if (!(_xtoq_request_check(context->conn, cookie,
+							  "Failed to subtract damage"))) {
+		context->damaged_x = 0;
+		context->damaged_y = 0;
+		context->damaged_width = 0;
+		context->damaged_height = 0;
+	}
+	return;
+}
 
 /* Close all windows, the connection, as well as the event loop */
 void xtoq_close(void) {
