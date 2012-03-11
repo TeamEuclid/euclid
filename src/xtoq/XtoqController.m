@@ -88,6 +88,8 @@
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
+	[ourView setContext: rootContext];
+
     // add view to its window
     [xtoqWindow setContentView: ourView];  
     // set the initial image in the window
@@ -427,9 +429,10 @@
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
+	[newView setContext:windowContext];
     
     // set the initial image in the window
-    [newView setImage:imageRep];
+    // [newView setImage:imageRep];
     
     // add view to its window
     [newWindow setContentView: newView ];

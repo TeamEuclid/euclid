@@ -36,8 +36,6 @@ initWithFrame:(NSRect)frame {
         notificationCenter = [NSNotificationCenter defaultCenter];
         [[self window] flushWindow];
         [self setNeedsDisplay:YES];
-        bufferIndex = 0;
-        bufferIndexTwo = 0;
 
         trackingArea = [[NSTrackingArea alloc] initWithRect:frame
                         options: (NSTrackingMouseEnteredAndExited |
@@ -50,17 +48,36 @@ initWithFrame:(NSRect)frame {
     return self;
 }
 
+-(void) setContext: (xtoq_context_t *)context {
+    viewContext = context;
+}
 
 // Overridden by subclasses to draw the receiver’s image within the passed-in rectangle.
 -(void)
 drawRect:(NSRect)dirtyRect {
+    xtoq_image_t *imageT;
+	float y_transformed;
+	XtoqImageRep *imageNew;
+
     xtoq_get_event_thread_lock();
-	while (bufferIndexTwo < bufferIndex) {
-	    int i = bufferIndexTwo++;
-	    [image[i] draw];//InRect:dirtyRect];
-	    [image[i] destroy];
+    imageT = test_xtoq_get_image(viewContext);
+	if (imageT->image) {
+        y_transformed =( viewContext->height
+						 - viewContext->damaged_y
+						 - viewContext->damaged_height)/1.0; 
+		imageNew = [[XtoqImageRep alloc]
+					 initWithData:imageT
+					            x:((viewContext->damaged_x))
+					            y:y_transformed];
+		[imageNew draw];
+		[imageNew destroy];
 	}
-	bufferIndex = bufferIndexTwo = 0;
+	// Set the damage for the context back to 0
+	viewContext->damaged_x = 0;
+	viewContext->damaged_y = 0;
+	viewContext->damaged_width = 0;
+	viewContext->damaged_height = 0;
+
 	xtoq_release_event_thread_lock();
 }
 
@@ -125,12 +142,6 @@ mouseDown:(NSEvent *)mouseEvent {
     [notificationCenter postNotificationName:@"XTOQmouseButtonReleaseEvent" 
                                       object:self 
                                     userInfo:twoInfoDict];
-}
-
-- (void)setImage:(XtoqImageRep *)newImage {
-    xtoq_get_event_thread_lock();
-    image[bufferIndex++] = newImage;
-	xtoq_release_event_thread_lock();
 }
 
 - (void)setPartialImage:(NSRect)newDamageRect {    
