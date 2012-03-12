@@ -28,7 +28,7 @@
 
 #include "xtoq.h"
 #include "xtoq_internal.h"
-#include "X11/keysym.h" //aaron
+#include "X11/keysym.h"
 #include <string.h>
 
 // aaron key stuff
@@ -111,7 +111,6 @@ xtoq_get_image(xtoq_context_t *context) {
     
     xcb_get_geometry_reply_t *geom_reply;
     
-    //image_data_t img_data;
     xcb_image_t *image;
     
     geom_reply = _xtoq_get_window_geometry(context->conn, context->window);
@@ -138,7 +137,6 @@ xtoq_get_image(xtoq_context_t *context) {
     
     free(geom_reply);
     
-/*     printf("Returning initial image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height); */
     return xtoq_image;
 }
 
@@ -153,13 +151,7 @@ xtoq_start_event_loop (xtoq_context_t *context,
 xtoq_image_t *
 test_xtoq_get_image(xtoq_context_t *context) {
     
-   // printf("Top of test get image\n");
-    //xcb_get_geometry_reply_t *geom_reply;
-    
-    //image_data_t img_data;
     xcb_image_t *image;
-    
-    //geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
 	xcb_flush(context->conn);
     /* Get the image of the root window */
@@ -171,7 +163,6 @@ test_xtoq_get_image(xtoq_context_t *context) {
                           context->damaged_height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
-    //xtoq_image_t * xtoq_image;
     
     //FIXME - Calculate memory size correctly
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
@@ -181,17 +172,14 @@ test_xtoq_get_image(xtoq_context_t *context) {
     xtoq_image->y = context->damaged_y;
     xtoq_image->width = context->damaged_width;
     xtoq_image->height = context->damaged_height;
-    
-    //printf("Returning image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
- 
-    //free(geom_reply);
+
     return xtoq_image;
 }
 
 
 void 
 xtoq_image_destroy(xtoq_image_t * xtoq_image){
-    //FIXME - is this all that needs to be done?
+
     xcb_image_destroy(xtoq_image->image);
     free(xtoq_image);
 }
