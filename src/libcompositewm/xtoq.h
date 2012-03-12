@@ -38,7 +38,7 @@
 #include <xcb/xtest.h>
 #include <xcb/xfixes.h>
 #include "data.h"
-#include <xcb/xcb_keysyms.h> //aaron
+#include <xcb/xcb_keysyms.h>
 #include "xtoq_internal.h"
 
 /**
@@ -48,7 +48,8 @@ extern xtoq_context_t *root_context;
 
 /**
  * Sets up the connection and grabs the root window from the specified screen
- * @param display The display to connect to
+ * @param display the display to connect to
+ * @return The root context which contains the root window
  */
 xtoq_context_t *
 xtoq_init(char *display);
@@ -75,18 +76,10 @@ test_xtoq_get_image(xtoq_context_t * context);
 /**
  * free the memory used by an xtoq_image_t created 
  * during a call to test_xtoq_image_create
+ * @param xtoq_image an image to be freed
  */
 void 
 xtoq_image_destroy(xtoq_image_t * xtoq_image);
-
-/**
- * Free the image returned by xtoq_get_image
- * @param img The xcb_image_t that needs to
- * be freed
- */
-
-void
-xtoq_free_image(xcb_image_t *img);
 
 /**
  * Set input focus to the window in context
