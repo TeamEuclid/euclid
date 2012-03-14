@@ -67,7 +67,4 @@ SOFTWARE.
  */
 - (void)setPartialImage:(NSRect)newDamageRect;
 
-
-//- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
-
 @end

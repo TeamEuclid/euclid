@@ -76,7 +76,6 @@ drawRect:(NSRect)dirtyRect {
 		// Remove the damage
 		xtoq_remove_context_damage(viewContext);
 	}
-
 	xtoq_release_event_thread_lock();
 }
 
@@ -145,7 +144,6 @@ mouseDown:(NSEvent *)mouseEvent {
 
 - (void)setPartialImage:(NSRect)newDamageRect {    
     [self setNeedsDisplayInRect:newDamageRect];
-    //[[self window] flushWindow];
 }
 
 - (BOOL)isOpaque{

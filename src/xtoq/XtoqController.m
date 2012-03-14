@@ -431,9 +431,6 @@
     newView = [[XtoqView alloc] initWithFrame:imgRec];
 	[newView setContext:windowContext];
     
-    // set the initial image in the window
-    // [newView setImage:imageRep];
-    
     // add view to its window
     [newWindow setContentView: newView ];
     
@@ -475,13 +472,7 @@
     float  y_transformed;
 	NSRect newDamageRect;
 
-//     libImageT = test_xtoq_get_image(windowContext);
-
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-//     imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-//                                                     x:((windowContext->damaged_x))
-//                                                     y:y_transformed];
-
 	newDamageRect = NSMakeRect(windowContext->damaged_x,
 							   y_transformed,
 							   windowContext->damaged_width,
