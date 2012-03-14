@@ -92,6 +92,9 @@ _xtoq_get_window_geometry (xcb_connection_t *conn, xcb_window_t window);
  * Print out information about the existing windows attached to our
  * root. Most of this code is taken from src/manage.c from the i3 code
  * by Michael Stapelberg
+ * @param conn a connection the the xserver.
+ * @param window the window.
+ * @return the geometry of the window
  */
 void
 _xtoq_write_all_children_window_info (xcb_connection_t *conn,
@@ -99,9 +102,9 @@ _xtoq_write_all_children_window_info (xcb_connection_t *conn,
 
 /**
  * Get the image data for a window.
- * @param conn The connection to the xserver.
- * @param window The window.
- * @return Structure containing data and data length
+ * @param conn the connection to the xserver.
+ * @param root the window acenstral to all children to be written.
+ * @return a structure containing data and data length.
  */
 image_data_t
 _xtoq_get_window_image_data (xcb_connection_t *conn, xcb_window_t window);
@@ -130,20 +133,41 @@ _xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
  * init.c
  ****************/
 
+/**
+ * Initializes an extension on the xserver.
+ * @param conn The connection to the xserver.
+ * @param extension_name The string specifying the name of the extension.
+ * @return The reply structure
+ */
 xcb_query_extension_reply_t * 
 _xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 
+/**
+ * Initializes damage on a window contained in a context.
+ * The context will likely contain the root window.
+ * @param contxt A context containing a window 
+ */
 void 
 _xtoq_init_damage(xtoq_context_t *contxt);
 
+/**
+ * Initializes the composite extension on the context containg
+ * the root window.
+ * @param contxt The contxt containing the root window
+ */
 void 
 _xtoq_init_composite(xtoq_context_t *contxt);
 
+/**
+ * Initialize the xfixes extension.
+ * @param contxt The context
+ */
 void
 _xtoq_init_xfixes (xtoq_context_t *contxt);
 
 /**
  * Get the values for the WM_* atoms that we need.
+ * @param contxt The context
  */
 void
 _xtoq_get_wm_atoms (xtoq_context_t *contxt);
