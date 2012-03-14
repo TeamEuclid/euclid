@@ -64,9 +64,9 @@ acceptsFirstResponder {
     return YES;
 }
 
-- (BOOL)acceptsMouseMovedEvents {
+/*- (BOOL)acceptsMouseMovedEvents {
     return YES;
-}
+}*/
 
 /*- (void)mouseEntered:(NSEvent *)theEvent {
 
