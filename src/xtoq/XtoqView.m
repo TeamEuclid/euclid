@@ -59,12 +59,12 @@ drawRect:(NSRect)dirtyRect {
 
 
 //This is necessary for accepting input.
-- (BOOL)
+/*- (BOOL)
 acceptsFirstResponder {
     return YES;
 }
 
-/*- (BOOL)acceptsMouseMovedEvents {
+- (BOOL)acceptsMouseMovedEvents {
     return YES;
 }*/
 
