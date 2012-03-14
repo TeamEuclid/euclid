@@ -363,12 +363,12 @@
     const char *file_name = [filename UTF8String];
     const char *newargv[4];
     
-    asprintf(&newargv[0], "/usr/X11/bin/%s", file_name);
+    newargv[0] = file_name;
     newargv[1] = "-display";
     newargv[2] = screen;
     newargv[3] = NULL;
     
-    status = posix_spawn(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
+    status = posix_spawnp(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
     if(status) {
         NSLog(@"Error spawning file for launch.");
     }
