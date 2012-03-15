@@ -32,13 +32,7 @@ SOFTWARE.
 #import "xtoq.h"
 
 @interface XtoqView : NSView {
-    XtoqImageRep *image[10000];  
-    
-    
-    NSImage *image2;
-    NSString *file;
-    
-    xcb_image_t *imageT;
+    xtoq_context_t *viewContext;
 
     //mouse event 
     NSPoint downPoint;
@@ -46,9 +40,6 @@ SOFTWARE.
     
     NSNotificationCenter * notificationCenter;
     NSTrackingArea * trackingArea;
-
-    int bufferIndex;
-    int bufferIndexTwo;
 }
 
 /**
@@ -58,6 +49,12 @@ SOFTWARE.
 - (id)initWithFrame:(NSRect)frame;
 
 /**
+ * Set the context associated with this view.
+ * @param context The context
+ */
+-(void)setContext:(xtoq_context_t *)context;
+
+/**
  * The OS X magic loop which is responsible for drawing content to the screen
  * @param a "fake" NSRect which is not actually used within the body of the 
  * method
@@ -65,18 +62,9 @@ SOFTWARE.
 -(void)drawRect:(NSRect)dirtyRect;
 
 /**
- * Set the entire image contents in the view
- * @param an XtoqImageRep
- */
-- (void)setImage:(XtoqImageRep *)newImage;
-
-/**
  * Set the partial image contents in the view
- * @param an XtoqImageRep
+ * @param newDamageRect The area of the image that needs to be redrawn
  */
-- (void)setPartialImage:(XtoqImageRep *)newImage;
-
-
-//- (void)getRectsBeingDrawn:(const NSRect **)rects count:(NSInteger *)count;
+- (void)setPartialImage:(NSRect)newDamageRect;
 
 @end

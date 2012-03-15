@@ -149,7 +149,12 @@ xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int wid
     uint32_t values[] = {(uint32_t)x, (uint32_t)y, (uint32_t)width, (uint32_t)height };
     
     xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_X 
-                          | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);    
+                          | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
+
+	/* Set the damage area to the new window size so its redrawn properly */
+	context->damaged_width = width;
+	context->damaged_height = height;
+
     xcb_flush(context->conn);
     return;
 }
@@ -318,6 +323,12 @@ init_damage_on_window (xtoq_context_t *context)
 	}
     /* Assign this damage object to the roots window's context */
     context->damage = damage_id;
+
+	/* Set the damage area in the context to zero */
+	context->damaged_x = 0;
+	context->damaged_y = 0;
+	context->damaged_width = 0;
+	context->damaged_height = 0;
 }
 
 

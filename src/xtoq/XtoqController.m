@@ -88,6 +88,8 @@
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
+	[ourView setContext: rootContext];
+
     // add view to its window
     [xtoqWindow setContentView: ourView];  
     // set the initial image in the window
@@ -427,9 +429,7 @@
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
-    
-    // set the initial image in the window
-    [newView setImage:imageRep];
+	[newView setContext:windowContext];
     
     // add view to its window
     [newWindow setContentView: newView ];
@@ -470,16 +470,15 @@
 - (void) updateImage:(xtoq_context_t *) windowContext
 {
     float  y_transformed;
-    //FIXME : rename test_xtoq_get_image to remove "test"
-    libImageT = test_xtoq_get_image(windowContext);
-    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+	NSRect newDamageRect;
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-                                                    x:((windowContext->damaged_x))
-                                                    y:y_transformed];
+	newDamageRect = NSMakeRect(windowContext->damaged_x,
+							   y_transformed,
+							   windowContext->damaged_width,
+							   windowContext->damaged_height);
 	XtoqView *localView = (XtoqView *)[(XtoqWindow *)windowContext->local_data contentView];
-    [ localView setPartialImage:imageNew];
+    [ localView setPartialImage:newDamageRect];
 }
 
 - (void) windowDidMove:(NSNotification*)notification {
