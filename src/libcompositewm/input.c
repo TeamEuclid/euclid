@@ -29,19 +29,11 @@
 void
 xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
 {
-    xcb_generic_error_t *err;
-    xcb_void_cookie_t cookie;
     xcb_window_t none = { XCB_NONE };
     
-    cookie = xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
-                                 XCB_CURRENT_TIME, none, 0, 0, 1 );  
+    xcb_test_fake_input( context->conn, XCB_KEY_PRESS, code, 
+						 XCB_CURRENT_TIME, none, 0, 0, 1 );  
     
-    err = xcb_request_check(context->conn, cookie);
-    if (err)
-    {
-        printf("err ");
-        free(err);
-    }	
     xcb_flush(context->conn);
     printf("xtoq.c received key down - uint8_t '%i', from Mac window #%i to context.window %u\n", code,  window, context->window);
 }
@@ -49,19 +41,11 @@ xtoq_key_press (xtoq_context_t *context, int window, uint8_t code)
 void
 xtoq_key_release (xtoq_context_t *context, int window, uint8_t code)
 {
-    xcb_generic_error_t *err;
-    xcb_void_cookie_t cookie;
     xcb_window_t none = { XCB_NONE };
     
     xcb_test_fake_input( context->conn, XCB_KEY_RELEASE, code, 
                         XCB_CURRENT_TIME, none,0 ,0 , 1 );
     
-    err = xcb_request_check(context->conn, cookie);
-    if (err)
-    {
-        printf("err ");
-        free(err);
-    }	
     xcb_flush(context->conn);
     printf("xtoq.c received key release- uint8_t '%i', from Mac window #%i to context.window %u\n", code,  window, context->window);
 }

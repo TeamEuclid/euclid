@@ -58,26 +58,17 @@
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-    
-    
-    //Setting environment variable $DISPLAY to screen.
-    char *env = getenv("DISPLAY");
-    NSLog(@"$DISPLAY = %s", env);
-    if (setenv("DISPLAY", screen, 1) == 0) {
-        NSLog(@"setenv successful");
-        env = getenv("DISPLAY");
-        NSLog(@"current $DISPLAY is = %s", env);
-    }
-    else {
-        NSLog(@"not successful in attemp to set $DISPLAY");
-    }    
-    
+  
     // setup X connection and get the initial image from the server
     rootContext = xtoq_init(screen);
     
     [[NSGraphicsContext currentContext]
     setImageInterpolation:NSImageInterpolationHigh];
-    
+  
+	// TODO: We create a window for the "root", but currently it is
+	// never displayed. Need to think about if this needs to be
+	// reworked for a "rooted" mode or if this code should simply be
+	// removed.
     xtoqWindow = [[XtoqWindow alloc] 
                   initWithContentRect: NSMakeRect(rootContext->x, rootContext->y, 
                                                   rootContext->width, rootContext->height)
@@ -100,6 +91,8 @@
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
+	[ourView setContext: rootContext];
+
     // add view to its window
     [xtoqWindow setContentView: ourView];  
     // set the initial image in the window
@@ -116,6 +109,11 @@
     [nc addObserver: self
 		   selector: @selector(keyDownInView:)
 		       name: @"XTOQviewKeyDownEvent"
+		     object: nil];
+    
+    [nc addObserver: self
+		   selector: @selector(keyUpInView:)
+		       name: @"XTOQviewKeyUpEvent"
 		     object: nil];
     
     [nc addObserver: self
@@ -168,15 +166,20 @@
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
     xtoq_close();
+    
+    const char *spawn[4];
+    pid_t child;
+     
+    spawn[0] = "/usr/bin/killall";
+    spawn[1] = "-9";
+    spawn[2] = "Xorg";
+    spawn[3] = NULL;
+     
+    posix_spawn(&child, spawn[0], NULL, NULL, (char * const*)spawn, environ);
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
-    [xtoqWindow makeKeyAndOrderFront: self];
-    
-    //hide window
-    [xtoqWindow orderOut:self];
-    
     // Start the event loop and set the handler function
 	xtoq_start_event_loop(rootContext, (void *) eventHandler);
 }
@@ -216,6 +219,15 @@
                    ^{ xtoq_key_press(rootContext, 
                                      (int)[event windowNumber],
                                      aChar + 8) ;});
+}
+
+- (void) keyUpInView: (NSNotification *) aNotification
+{   
+    NSDictionary *keyInfo = [aNotification userInfo];
+    // note this keyInfo is the key in <key, value> not the key pressed
+    NSEvent * event = [keyInfo objectForKey: @"1"];
+    unsigned short aChar = [event keyCode];
+
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_key_release(rootContext, 
                                      (int)[event windowNumber],
@@ -277,7 +289,7 @@
 }
 
 - (void) makeMenu {
-    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
+    // Create menu  
     NSMenu *menubar;
     NSMenuItem *appMenuItem;
     NSMenu *appMenu;
@@ -342,7 +354,7 @@
     [startXMenu addItem:xlogoMenuItem];
     [startXApps setSubmenu:startXMenu];
     
-    // Run Xterm, does not seem to properly launch Xterm, might just scrap this.
+    // Run Xterm
     NSMenuItem *xtermMenuItem;
     xTitle = @"Run Xterm";
     xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
@@ -422,9 +434,7 @@
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
-    
-    // set the initial image in the window
-    [newView setImage:imageRep];
+	[newView setContext:windowContext];
     
     // add view to its window
     [newWindow setContentView: newView ];
@@ -465,16 +475,15 @@
 - (void) updateImage:(xtoq_context_t *) windowContext
 {
     float  y_transformed;
-    //FIXME : rename test_xtoq_get_image to remove "test"
-    libImageT = test_xtoq_get_image(windowContext);
-    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+	NSRect newDamageRect;
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-                                                    x:((windowContext->damaged_x))
-                                                    y:y_transformed];
+	newDamageRect = NSMakeRect(windowContext->damaged_x,
+							   y_transformed,
+							   windowContext->damaged_width,
+							   windowContext->damaged_height);
 	XtoqView *localView = (XtoqView *)[(XtoqWindow *)windowContext->local_data contentView];
-    [ localView setPartialImage:imageNew];
+    [ localView setPartialImage:newDamageRect];
 }
 
 - (void) windowDidMove:(NSNotification*)notification {

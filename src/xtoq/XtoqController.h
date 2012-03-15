@@ -85,6 +85,12 @@ id referenceToSelf;
 - (void) keyDownInView: (NSNotification *) aNotification;
 
 /**
+ * Receive notification of a key up event from the view.
+ * @param an NSNotification containing an NSEvent 
+ */
+- (void) keyUpInView: (NSNotification *) aNotification;
+
+/**
  * Receive notification of a mouse button press from the view.
  * @param an NSNotification containing an NSEvent 
  */
@@ -100,15 +106,62 @@ id referenceToSelf;
  * Makemenu and related selector functions for launching X applications.
  */
 - (void) makeMenu;
+
+/**
+ * Launches the application based on filename.
+ *
+ * Launches the selected application based on the filename passed in as an
+ * argument.  Uses posix_spawn() to launch the application after the arguments
+ * have been filled in.
+ *
+ * @param filename The name of the application to be run within XtoQ.app.
+ */
 - (void) launch_client: (NSString *) filename;
+
+/**
+ * Runs xeyes.
+ *
+ * Sends "xeyes" argument to the launch client function to open up the
+ * application xeyes within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
 - (void) runXeyes: (id) sender;
+
+/**
+ * Runs xclock.
+ *
+ * Sends "xclock" argument to the launch client function to open up the
+ * application xclock within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
 - (void) runXclock: (id) sender;
+
+/**
+ * Runs xlogo.
+ *
+ * Sends "xlogo" argument to the launch client function to open up the
+ * application xlogo within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
 - (void) runXlogo: (id) sender;
-- (void) runXterm: (id) sedner;
 
 - (void) mouseMovedInApp: (NSNotification *) aNotification;
 
 /**
+ * Runs xterm.
+ *
+ * Sends "xterm" argument to the launch client function to open up the
+ * application xterm within XtoQ.app.
+ *
+ * @param sender Only needed for functionality with Makemenu's menu system.
+ */
+- (void) runXterm: (id) sender;
+
+/**
+ * Put a new image in the window / view
  * Send an image to the view after being notified of a damage event from 
  * the event handler.
  * @param an xtoq_context_t sent from eventHandler
@@ -119,7 +172,13 @@ id referenceToSelf;
 - (void) destroyWindow:   (xtoq_context_t *) windowContext;
 
 /**
- * Sets the screen to command line argument.
+ * Sets the variable screen to correct display.
+ *
+ * Sets class variable screen to correct display and also sets the environment
+ * variable "DISPLAY" to correct value.
+ *
+ * @param scrn This value is determined in XtoqApplication before connection
+ *   to Xorg is established.
  */
 - (void) setScreen: (char *) scrn;
 

@@ -140,6 +140,13 @@ int
 xtoq_release_event_thread_lock(void);
 
 /**
+ * Remove the damage from the given context.
+ * @param context The context to remove the damage from
+ */
+void
+xtoq_remove_context_damage(xtoq_context_t *context);
+
+/**
  * Closes the windows open on the X Server, the connection, and the event
  * loop. 
  */
@@ -200,9 +207,26 @@ xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int bu
 void
 xtoq_mouse_motion (xtoq_context_t *context, long x, long y, int window, int button);
 
+/****************
+ * window.c
+ ****************/
+
+/**
+ * kill the window, if possible using WM_DELETE_WINDOW (icccm) 
+ * otherwise using xcb_kill_client.
+ * @param context The context of the window to be killed
+ */
 void
 xtoq_request_close(xtoq_context_t *context);
 
+/**
+ * move and/or resize the window, update the context 
+ * @param context the context of the window to configure
+ * @param x The new x coordinate
+ * @param y The new y coordinate
+ * @param height The new height
+ * @param width The new width
+ */
 void
 xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width);
 

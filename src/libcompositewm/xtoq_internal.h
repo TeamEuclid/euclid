@@ -92,6 +92,9 @@ _xtoq_get_window_geometry (xcb_connection_t *conn, xcb_window_t window);
  * Print out information about the existing windows attached to our
  * root. Most of this code is taken from src/manage.c from the i3 code
  * by Michael Stapelberg
+ * @param conn a connection the the xserver.
+ * @param window the window.
+ * @return the geometry of the window
  */
 void
 _xtoq_write_all_children_window_info (xcb_connection_t *conn,
@@ -99,9 +102,9 @@ _xtoq_write_all_children_window_info (xcb_connection_t *conn,
 
 /**
  * Get the image data for a window.
- * @param conn The connection to the xserver.
- * @param window The window.
- * @return Structure containing data and data length
+ * @param conn the connection to the xserver.
+ * @param root the window acenstral to all children to be written.
+ * @return a structure containing data and data length.
  */
 image_data_t
 _xtoq_get_window_image_data (xcb_connection_t *conn, xcb_window_t window);
@@ -130,20 +133,41 @@ _xtoq_request_check (xcb_connection_t *conn, xcb_void_cookie_t cookie,
  * init.c
  ****************/
 
+/**
+ * Initializes an extension on the xserver.
+ * @param conn The connection to the xserver.
+ * @param extension_name The string specifying the name of the extension.
+ * @return The reply structure
+ */
 xcb_query_extension_reply_t * 
 _xtoq_init_extension(xcb_connection_t *conn, char *extension_name);
 
+/**
+ * Initializes damage on a window contained in a context.
+ * The context will likely contain the root window.
+ * @param contxt A context containing a window 
+ */
 void 
 _xtoq_init_damage(xtoq_context_t *contxt);
 
+/**
+ * Initializes the composite extension on the context containg
+ * the root window.
+ * @param contxt The contxt containing the root window
+ */
 void 
 _xtoq_init_composite(xtoq_context_t *contxt);
 
+/**
+ * Initialize the xfixes extension.
+ * @param contxt The context
+ */
 void
 _xtoq_init_xfixes (xtoq_context_t *contxt);
 
 /**
  * Get the values for the WM_* atoms that we need.
+ * @param contxt The context
  */
 void
 _xtoq_get_wm_atoms (xtoq_context_t *contxt);
@@ -174,27 +198,40 @@ _xtoq_stop_event_loop (void);
  * context_list.c
  ****************/
 
+/**
+ * A structure (doubly linked list) to hold
+ * pointers to the contexts
+ */
 typedef struct _xtoq_context_node {
-    struct xtoq_context_t *context;
-    struct _xtoq_context_node * next;
-    struct _xtoq_context_node * prev;
+    struct xtoq_context_t *context;   /**< Pointer to a context */
+    struct _xtoq_context_node * next; /**< Pointer to the next context node */
+    struct _xtoq_context_node * prev; /**< Pointer to the previous context node */
 } _xtoq_context_node;
-
-typedef struct _xtoq_context_list {
-    struct _xtoq_context_node * head;
-    int count;
-} _xtoq_context_list;
 
 /* this is the head pointer */
 extern _xtoq_context_node *_xtoq_window_list_head;
 
-
+/**
+ * Add a newly created context to the context_list.
+ * @param context The context to be added to the linked list
+ * @return Pointer to context added to the list.
+ */
 xtoq_context_t * 
 _xtoq_add_context_t(struct xtoq_context_t *context);
 
+/**
+ * Remove a context to the context_list using the window's id.
+ * @param window_id The window_id of the context which should
+ * be removed from the context_list
+ */
 void
 _xtoq_remove_context_node(xcb_window_t window_id);
 
+/**
+ * Find a context in the doubly linked list using its window_id.
+ * @param window_id The window_id of the context which should
+ * @return Pointer to context (if found), NULL if not found.
+ */
 xtoq_context_t *
 _xtoq_get_context_node_by_window_id (xcb_window_t window_id);
 
@@ -208,10 +245,19 @@ _xtoq_get_context_node_by_window_id (xcb_window_t window_id);
  * @param evt The map event for the window
  * @return Pointer to new context. NULL if window already exists.
  */
-xtoq_context_t *_xtoq_window_created(xcb_connection_t * conn,
+xtoq_context_t *
+_xtoq_window_created(xcb_connection_t * conn,
 									 xcb_map_request_event_t *evt);
-
-xtoq_context_t *_xtoq_destroy_window(xcb_destroy_notify_event_t *event);
+/**
+ * Destroy the damage object associated with the window. 
+ * Call the remove function in context_list.c
+ * @param conn The connection to xserver
+ * @param event The destroy notify event for the window
+ * @return Pointer to the context that was removed from the list, NULL if
+ * window isn't being managed by context_list
+ */
+xtoq_context_t *
+_xtoq_destroy_window(xcb_destroy_notify_event_t *event);
 
 /**
  * Resize the window to given width and height.

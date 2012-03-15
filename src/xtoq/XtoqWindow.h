@@ -52,18 +52,19 @@
 -(xtoq_context_t *) getContext;
 
 /**
- * Sets the root window's pointer xtoqLocalData to the context's pointer.
- */
-//-(void) setRootDataPointer: (xtoq_context_t *) xqContext;
-
-/**
  * Catches the close event from clicking the red button or from preformClose.
  */
 - (BOOL)windowShouldClose:(id)sender;
 
-/*
+/**
  * Catches the event that a window gains focus
  */
 -(void)windowDidBecomeKey:(NSNotification *)note;
+
+/**
+ * Handler for mouse movement events.
+ * @param event The mouse movement event.
+ */
+-(void) mouseMoved:(NSEvent *)event;
 
 @end
