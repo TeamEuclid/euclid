@@ -59,19 +59,6 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
     
-    
-    //Setting environment variable $DISPLAY to screen.
-    char *env = getenv("DISPLAY");
-    NSLog(@"$DISPLAY = %s", env);
-    if (setenv("DISPLAY", screen, 1) == 0) {
-        NSLog(@"setenv successful");
-        env = getenv("DISPLAY");
-        NSLog(@"current $DISPLAY is = %s", env);
-    }
-    else {
-        NSLog(@"not successful in attemp to set $DISPLAY");
-    }    
-    
     // setup X connection and get the initial image from the server
     rootContext = xtoq_init(screen);
     
@@ -100,6 +87,8 @@
     imageRec = NSMakeRect(0, 0, 1028,768);//[image getWidth], [image getHeight]);
     // create a view, init'ing it with our rect
     ourView = [[XtoqView alloc] initWithFrame:imageRec];
+	[ourView setContext: rootContext];
+
     // add view to its window
     [xtoqWindow setContentView: ourView];  
     // set the initial image in the window
@@ -168,6 +157,17 @@
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
     xtoq_close();
+    
+    const char *spawn[4];
+    pid_t child;
+    int error = 0;
+     
+    spawn[0] = "/usr/bin/killall";
+    spawn[1] = "-9";
+    spawn[2] = "Xorg";
+    spawn[3] = NULL;
+     
+    posix_spawn(&child, spawn[0], NULL, NULL, (char * const*)spawn, environ);
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification
@@ -277,7 +277,7 @@
 }
 
 - (void) makeMenu {
-    // Create and show menu - http://cocoawithlove.com/2010/09/minimalist-cocoa-programming.html    
+    // Create menu  
     NSMenu *menubar;
     NSMenuItem *appMenuItem;
     NSMenu *appMenu;
@@ -342,7 +342,7 @@
     [startXMenu addItem:xlogoMenuItem];
     [startXApps setSubmenu:startXMenu];
     
-    // Run Xterm, does not seem to properly launch Xterm, might just scrap this.
+    // Run Xterm
     NSMenuItem *xtermMenuItem;
     xTitle = @"Run Xterm";
     xtermMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle 
@@ -422,9 +422,7 @@
     
     // create a view, init'ing it with our rect
     newView = [[XtoqView alloc] initWithFrame:imgRec];
-    
-    // set the initial image in the window
-    [newView setImage:imageRep];
+	[newView setContext:windowContext];
     
     // add view to its window
     [newWindow setContentView: newView ];
@@ -465,16 +463,15 @@
 - (void) updateImage:(xtoq_context_t *) windowContext
 {
     float  y_transformed;
-    //FIXME : rename test_xtoq_get_image to remove "test"
-    libImageT = test_xtoq_get_image(windowContext);
-    //NSLog(@"update image new values in - %i, %i, %i, %i", windowContext->damaged_x, windowContext->damaged_y, windowContext->damaged_width, windowContext->damaged_height);
+	NSRect newDamageRect;
 
     y_transformed =( windowContext->height - windowContext->damaged_y - windowContext->damaged_height)/1.0; 
-    imageNew = [[XtoqImageRep alloc] initWithData:libImageT
-                                                    x:((windowContext->damaged_x))
-                                                    y:y_transformed];
+	newDamageRect = NSMakeRect(windowContext->damaged_x,
+							   y_transformed,
+							   windowContext->damaged_width,
+							   windowContext->damaged_height);
 	XtoqView *localView = (XtoqView *)[(XtoqWindow *)windowContext->local_data contentView];
-    [ localView setPartialImage:imageNew];
+    [ localView setPartialImage:newDamageRect];
 }
 
 - (void) windowDidMove:(NSNotification*)notification {

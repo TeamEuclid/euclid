@@ -111,7 +111,6 @@ xtoq_get_image(xtoq_context_t *context) {
     
     xcb_get_geometry_reply_t *geom_reply;
     
-    //image_data_t img_data;
     xcb_image_t *image;
     
     geom_reply = _xtoq_get_window_geometry(context->conn, context->window);
@@ -138,13 +137,7 @@ xtoq_get_image(xtoq_context_t *context) {
     
     free(geom_reply);
     
-/*     printf("Returning initial image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height); */
     return xtoq_image;
-}
-
-void
-xtoq_free_image(xcb_image_t *img) {
-    free(img);
 }
 
 int 
@@ -158,13 +151,7 @@ xtoq_start_event_loop (xtoq_context_t *context,
 xtoq_image_t *
 test_xtoq_get_image(xtoq_context_t *context) {
     
-   // printf("Top of test get image\n");
-    //xcb_get_geometry_reply_t *geom_reply;
-    
-    //image_data_t img_data;
     xcb_image_t *image;
-    
-    //geom_reply = _xtoq_get_window_geometry(context.conn, context.window);
     
 	xcb_flush(context->conn);
     /* Get the image of the root window */
@@ -176,7 +163,6 @@ test_xtoq_get_image(xtoq_context_t *context) {
                           context->damaged_height,
                           (unsigned int) ~0L,
                           XCB_IMAGE_FORMAT_Z_PIXMAP);
-    //xtoq_image_t * xtoq_image;
     
     //FIXME - Calculate memory size correctly
     xtoq_image_t * xtoq_image = (xtoq_image_t *) malloc(10 * sizeof (xtoq_image_t));
@@ -187,59 +173,52 @@ test_xtoq_get_image(xtoq_context_t *context) {
     xtoq_image->width = context->damaged_width;
     xtoq_image->height = context->damaged_height;
     
-    //printf("Returning image with x=%d y=%d w=%d h=%d\n", xtoq_image->x, xtoq_image->y, xtoq_image->width, xtoq_image->height);
- 
-    //free(geom_reply);
     return xtoq_image;
 }
 
 
 void 
 xtoq_image_destroy(xtoq_image_t * xtoq_image){
-    //FIXME - is this all that needs to be done?
+
     xcb_image_destroy(xtoq_image->image);
     free(xtoq_image);
 }
  
 
-
-
-/* SOURCE: http://i3-wm.sourcearchive.com/documentation/3.b/client_8c-source.html */
-
 void
-xtoq_request_close(xtoq_context_t *context) {
-    
-    // is the context in the list?
-    context = _xtoq_get_context_node_by_window_id(context->window);
-    if (!context)
-        return;
-    
-    // kill using xcb_kill_client                              
-    if (!context->wm_delete_set == 1) {
-        xcb_kill_client(context->conn, context->window);
-        xcb_flush(context->conn);
-        return;
-    }
-    // kill using WM_DELETE_WINDOW
-    if (context->wm_delete_set == 1){
-        xcb_client_message_event_t event;
-                
-        memset(&event, 0, sizeof(xcb_client_message_event_t));
+xtoq_remove_context_damage(xtoq_context_t *context)
+{
+	xcb_xfixes_region_t region = xcb_generate_id(context->conn);
+	xcb_rectangle_t rect;
+	xcb_void_cookie_t cookie;
 
-        event.response_type = XCB_CLIENT_MESSAGE;
-        event.window = context->window;
-        event.type = _wm_atoms->wm_protocols_atom;//atoms[WM_PROTOCOLS];
-        event.format = 32;
-        event.data.data32[0] = _wm_atoms->wm_delete_window_atom;//atoms[WM_DELETE_WINDOW];
-        event.data.data32[1] = XCB_CURRENT_TIME;
-        
-        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
-                       (char*)&event);
-        xcb_flush(context->conn);
-        return;
-        
-    }
-    return;
+	if (!context) {
+		return;
+	}
+
+	rect.x = context->damaged_x;
+	rect.y = context->damaged_y;
+	rect.width = context->damaged_width;
+	rect.height = context->damaged_height;
+
+	xcb_xfixes_create_region(root_context->conn,
+							 region,
+							 1, 
+							 &rect);
+            
+	cookie = xcb_damage_subtract_checked (context->conn,
+										  context->damage,
+										  region,
+										  0);
+
+	if (!(_xtoq_request_check(context->conn, cookie,
+							  "Failed to subtract damage"))) {
+		context->damaged_x = 0;
+		context->damaged_y = 0;
+		context->damaged_width = 0;
+		context->damaged_height = 0;
+	}
+	return;
 }
 
 /* Close all windows, the connection, as well as the event loop */

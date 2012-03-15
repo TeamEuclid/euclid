@@ -89,14 +89,14 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_map_request_event_t *event) {
         return NULL;
 	}
     
-    // allocate memory for new xtoq_context_t
+    /* allocate memory for new xtoq_context_t */
     xtoq_context_t *context = malloc(sizeof(xtoq_context_t));
     
     xcb_get_geometry_reply_t *geom;
     geom = _xtoq_get_window_geometry(conn, event->window);
     
-    // set any available values from xcb_create_notify_event_t object pointer
-    // and geom pointer
+    /* set any available values from xcb_create_notify_event_t object pointer
+       and geom pointer */
     context->conn = conn;
     context->window = event->window;
     context->parent = event->parent;
@@ -105,22 +105,22 @@ _xtoq_window_created(xcb_connection_t * conn, xcb_map_request_event_t *event) {
     context->width = geom->width;
     context->height = geom->height;
 
-    // done with geom
     free (geom);
 
 	/* Set the ICCCM properties we care about */
 	set_icccm_properties(context);
     
-    //register for damage
+    /* register for damage */
     init_damage_on_window(context);
 
-    // add context to context_list
+    /* add context to context_list */
     context = _xtoq_add_context_t(context);
     
     return context;
 }
 
-xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
+xtoq_context_t *
+_xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
     
     xtoq_context_t *context = _xtoq_get_context_node_by_window_id(event->window);
     if (!context) {
@@ -128,14 +128,71 @@ xtoq_context_t * _xtoq_destroy_window(xcb_destroy_notify_event_t *event) {
 		return NULL;
 	}
 
-    // Destroy the damage object associated with the window.
+    /* Destroy the damage object associated with the window. */
     xcb_damage_destroy(context->conn,context->damage);
     
-    // Call the remove function in context_list.c
+    /* Call the remove function in context_list.c */
     _xtoq_remove_context_node(context->window);
     
-    //Returns the pointer for the context that was removed from the list.
+    /* Return the pointer for the context that was removed from the list. */
     return context;
+}
+void
+xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width) {
+    
+    /* Set values for xtoq_context_t */
+    context->x = x;
+    context->y = y;
+    context->width = width;
+    context->height = height;
+    
+    uint32_t values[] = {(uint32_t)x, (uint32_t)y, (uint32_t)width, (uint32_t)height };
+    
+    xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_X 
+                          | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
+
+	/* Set the damage area to the new window size so its redrawn properly */
+	context->damaged_width = width;
+	context->damaged_height = height;
+
+    xcb_flush(context->conn);
+    return;
+}
+
+void
+xtoq_request_close(xtoq_context_t *context) {
+    
+    /* check to see if the context is in the list */
+    context = _xtoq_get_context_node_by_window_id(context->window);
+    if (!context)
+        return;
+    
+    /* kill using xcb_kill_client */                              
+    if (!context->wm_delete_set == 1) {
+        xcb_kill_client(context->conn, context->window);
+        xcb_flush(context->conn);
+        return;
+    }
+    /* kill using WM_DELETE_WINDOW */
+    if (context->wm_delete_set == 1){
+        xcb_client_message_event_t event;
+        
+        memset(&event, 0, sizeof(xcb_client_message_event_t));
+        
+        event.response_type = XCB_CLIENT_MESSAGE;
+        event.window = context->window;
+        event.type = _wm_atoms->wm_protocols_atom;
+        event.format = 32;
+        event.data.data32[0] = _wm_atoms->wm_delete_window_atom;
+        event.data.data32[1] = XCB_CURRENT_TIME;
+        
+        xcb_send_event(context->conn, 0, context->window, XCB_EVENT_MASK_NO_EVENT, 
+                       (char*)&event);
+        xcb_flush(context->conn);
+        return;
+        
+    }
+    return;
 }
 
 /* Resize the window on server side */
@@ -266,23 +323,12 @@ init_damage_on_window (xtoq_context_t *context)
 	}
     /* Assign this damage object to the roots window's context */
     context->damage = damage_id;
+
+	/* Set the damage area in the context to zero */
+	context->damaged_x = 0;
+	context->damaged_y = 0;
+	context->damaged_width = 0;
+	context->damaged_height = 0;
 }
 
-void
-xtoq_configure_window(xtoq_context_t *context, int x, int y, int height, int width) {
-    
-    // Set values for xtoq_context_t
-    context->x = x;
-    context->y = y;
-    context->width = width;
-    context->height = height;
-    
-    uint32_t values[] = {(uint32_t)x, (uint32_t)y, (uint32_t)width, (uint32_t)height };
-    /* The connection c and the window win are supposed to be defined */
-    
-    xcb_configure_window (context->conn, context->window, XCB_CONFIG_WINDOW_X 
-                          | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);    
-    xcb_flush(context->conn);
-    return;
-}
 
