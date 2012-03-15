@@ -507,7 +507,8 @@
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height - WINDOWBAR;
         NSLog(@"Call xtoq_configure_window(moveContext, x = %i, y = %i, height = %i, width = %i)", x, y, height, width); 
-        xtoq_configure_window(moveContext, x, y - height, height, width);       
+        xtoq_configure_window(moveContext, x, y - height, height, width);
+		[[moveWindow contentView] setNeedsDisplay: YES];
     }    
 }
 
