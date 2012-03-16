@@ -61,21 +61,41 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-    xtoq_image_t *libImageT;
+  //  xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
-    xcb_image_t *imageT;
-    XtoqImageRep *image;
-    XtoqImageRep *imageNew;
-    XtoqView *view;
-
-    int originalHeight;
-    int originalWidth;
+   // xcb_image_t *imageT;
+   // XtoqImageRep *image;
+    //XtoqImageRep *imageNew;
+   // XtoqView *view;
     NSRect imageRec;
-    NSString *keyFirst;
+    
+//    NSString *keyFirst;
+//    int originalHeight;
+//    int originalWidth;
+    
 }
 
+/**
+ * Initialize 
+ */
 - (id) init;
+
+/**
+ * Sent by the default notification center immediately before the 
+ * application object is initialized.
+ * @param A notification named NSApplicationWillFinishLaunchingNotification. 
+ *        Calling the object method of this notification returns the 
+ *        NSApplication object itself.
+ */
 - (void) applicationWillFinishLaunching:(NSNotification *) aNotification;
+
+/**
+ * Sent by the default notification center after the application has been 
+ * launched and initialized but before it has received its first event.
+ * @param A notification named NSApplicationWillFinishLaunchingNotification. 
+ *        Calling the object method of this notification returns the 
+ *        NSApplication object itself.
+ */
 - (void) applicationDidFinishLaunching: (NSNotification *) aNotification;
 
 /**
@@ -103,69 +123,62 @@ id referenceToSelf;
 - (void) mouseButtonReleaseInView: (NSNotification *) aNotification;
 
 /**
- * Makemenu and related selector functions for launching X applications.
+ * Make menu and related selector functions for launching X applications.
  */
 - (void) makeMenu;
 
 /**
  * Launches the application based on filename.
- *
  * Launches the selected application based on the filename passed in as an
  * argument.  Uses posix_spawn() to launch the application after the arguments
  * have been filled in.
- *
  * @param filename The name of the application to be run within XtoQ.app.
  */
 - (void) launch_client: (NSString *) filename;
 
 /**
  * Runs xeyes.
- *
  * Sends "xeyes" argument to the launch client function to open up the
  * application xeyes within XtoQ.app.
- *
  * @param sender Only needed for functionality with Makemenu's menu system.
  */
 - (void) runXeyes: (id) sender;
 
 /**
  * Runs xclock.
- *
  * Sends "xclock" argument to the launch client function to open up the
  * application xclock within XtoQ.app.
- *
  * @param sender Only needed for functionality with Makemenu's menu system.
  */
 - (void) runXclock: (id) sender;
 
 /**
  * Runs xlogo.
- *
  * Sends "xlogo" argument to the launch client function to open up the
  * application xlogo within XtoQ.app.
- *
  * @param sender Only needed for functionality with Makemenu's menu system.
  */
 - (void) runXlogo: (id) sender;
 
+
+/**
+ * Receive notification of mouse movement from the app
+ * @param aNotification A notification containing an NSEvent 
+ */
 - (void) mouseMovedInApp: (NSNotification *) aNotification;
 
 /**
  * Runs xterm.
- *
  * Sends "xterm" argument to the launch client function to open up the
  * application xterm within XtoQ.app.
- *
  * @param sender Only needed for functionality with Makemenu's menu system.
  */
 - (void) runXterm: (id) sender;
 
 /**
  * Runs xman
- *
  * Sends "xman" argument to the launch client function to open up the
  * application xman within XtoQ.app.
- *
  * @param sender Olny needed for functionality with Makemenu's menu system.
  */
 -(void) runXman: (id) sender;
@@ -178,31 +191,79 @@ id referenceToSelf;
  */
 - (void) updateImage: (xtoq_context_t *) windowContext;
 
+/**
+ * Creates a new window
+ * @param an xtoq_context_t sent from eventHandler
+ */
 - (void) createNewWindow: (xtoq_context_t *) windowContext;
-- (void) destroyWindow:   (xtoq_context_t *) windowContext;
+
+/**
+ * Closes the window
+ * @param an xtoq_context_t sent from eventHandler
+ */
+- (void) destroyWindow: (xtoq_context_t *) windowContext;
+
+/**
+ * Send request to close
+ * @param an NSNotification containing an NSEvent 
+ */
+- (void) destroy:(NSNotification *) aNotification;
 
 /**
  * Sets the variable screen to correct display.
- *
  * Sets class variable screen to correct display and also sets the environment
  * variable "DISPLAY" to correct value.
- *
  * @param scrn This value is determined in XtoqApplication before connection
  *   to Xorg is established.
  */
 - (void) setScreen: (char *) scrn;
 
 - (void)windowWillMove:(NSNotification*)notification;
+
+/**
+ * Informs the delegate that the window has been moved.
+ * @param notification A notification named NSWindowDidMoveNotification.
+ */
 - (void)windowDidMove:(NSNotification*)notification;
+
+/**
+ * Informs the delegate that the window has been resized.
+ * @param notification A notification named NSWindowDidResizeNotification.
+ */
 - (void)windowDidResize:(NSNotification*)notification;
+
+/**
+ * Sent by the default notification center immediately before 
+ * the application terminates.
+ * @param aNotification A notification named 
+ *        NSApplicationWillTerminateNotification. Calling the 
+ *        object method of this notification returns the 
+ *        NSApplication object itself.
+ */
 - (void)applicationWillTerminate:(NSNotification *)aNotification;
+
+/**
+ * Reshapes the window
+ */
 - (void)reshape;
 
+/**
+ * Converts the Xserver y value to the OSX coordinate system
+ * @param yValue an int value of the y coordinat 
+ * @param windowH int value of the window eight 
+ * @return an int that has been converted
+ */
 - (int) xserverToOSX:(int)yValue windowHeight:(int)windowH;
+
+/**
+ * Converts the OSX y value to the Xserver coordinate system
+ * @param yValue an int value of the y coordinat 
+ * @param windowH int value of the window eight 
+ * @return an int that has been converted
+ */
 - (int) osxToXserver:(int)yValue windowHeight:(int)windowH;
 
 @end
-
 
 /**
  * Callback function that will receive events from the xtoq event loop

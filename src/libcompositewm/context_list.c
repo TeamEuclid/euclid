@@ -32,8 +32,6 @@ _xtoq_add_context_t(struct xtoq_context_t *context)
 {
     /* temp pointers for traversing */
     _xtoq_context_node *new_node;
-    _xtoq_context_node *curr;
-    _xtoq_context_node *prev;
     
     /* Create node to hold the new window */
     new_node = malloc(sizeof(_xtoq_context_node));

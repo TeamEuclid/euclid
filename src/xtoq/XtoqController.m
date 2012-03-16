@@ -98,8 +98,8 @@
     // set the initial image in the window
     //[ourView setImage:image];
 
-    originalWidth = [image getWidth];
-    originalHeight = [image getHeight];
+   // originalWidth = [image getWidth];
+   // originalHeight = [image getHeight];
     //[ourView setPartialImage:imageNew];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -249,8 +249,6 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     
-    float height = [[NSScreen mainScreen] frame].size.height;
-        
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
                                          0,
@@ -272,8 +270,6 @@
     heightAsNumber = [mouseReleaseInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
-    
-    float height = [[NSScreen mainScreen] frame].size.height;
     
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
@@ -483,16 +479,11 @@
     XtoqWindow *aWindow = [contextInfo objectForKey: @"1"];
     xtoq_context_t *theContext = [aWindow getContext];
     
-    //use dispatch_async() to handle the actual close 
-      dispatch_async(xtoqDispatchQueue, ^{
-          NSLog(@"Call xtoq_request_close(theContext)");
+    dispatch_async(xtoqDispatchQueue, ^{
           xtoq_request_close(theContext);
-      });
+    });
 }
 
-- (void) windowWillMove:(NSNotification*)notification {
-    //NSLog(@"window will move");
-}
 - (void) updateImage:(xtoq_context_t *) windowContext
 {
     float  y_transformed;
@@ -505,6 +496,10 @@
 							   windowContext->damaged_height);
 	XtoqView *localView = (XtoqView *)[(XtoqWindow *)windowContext->local_data contentView];
     [ localView setPartialImage:newDamageRect];
+}
+
+- (void) windowWillMove:(NSNotification*)notification {
+    // do nothing
 }
 
 - (void) windowDidMove:(NSNotification*)notification {
@@ -527,7 +522,7 @@
 					  windowHeight:moveContext->height] - WINDOWBAR;
         int width = (int)moveFrame.size.width;
         int height = (int)moveFrame.size.height - WINDOWBAR;
-        NSLog(@"Call xtoq_configure_window(moveContext, x = %i, y = %i, height = %i, width = %i)", x, y, height, width); 
+    //    NSLog(@"Call xtoq_configure_window(moveContext, x = %i, y = %i, height = %i, width = %i)", x, y, height, width); 
         xtoq_configure_window(moveContext, x, y - height, height, width);
 		[[moveWindow contentView] setNeedsDisplay: YES];
     }    
