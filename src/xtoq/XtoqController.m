@@ -281,7 +281,9 @@
 
 
 - (void) setScreen:(char *)scrn {
-    screen = scrn;
+    free(screen);
+    screen = strdup(scrn);
+    setenv("DISPLAY", screen, 1);
 }
 
 - (void) makeMenu {
@@ -359,6 +361,15 @@
     [startXMenu addItem:xtermMenuItem];
     [startXApps setSubmenu:startXMenu];
     
+    // Run Xman
+    NSMenuItem *xmanMenuItem;
+    xTitle = @"Run Xman";
+    xmanMenuItem = [[NSMenuItem alloc] initWithTitle:xTitle
+                                              action:@selector(runXman:)
+                                       keyEquivalent:@""];
+    [startXMenu addItem:xmanMenuItem];
+    [startXApps setSubmenu:startXMenu];
+    
     // Adding all the menu items to the main menu for XtoQ.
     [menubar addItem:appMenuItem];
     [menubar addItem:startXApps];
@@ -393,6 +404,10 @@
 }
 - (void) runXterm:(id) sender {
     [self launch_client:@"xterm"];    
+}
+-(void) runXman:(id) sender {
+    setenv("MANPATH", "`manpath`", 1);
+    [self launch_client:@"xman"];
 }
 
 // create a new window 

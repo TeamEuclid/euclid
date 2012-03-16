@@ -161,6 +161,16 @@ id referenceToSelf;
 - (void) runXterm: (id) sender;
 
 /**
+ * Runs xman
+ *
+ * Sends "xman" argument to the launch client function to open up the
+ * application xman within XtoQ.app.
+ *
+ * @param sender Olny needed for functionality with Makemenu's menu system.
+ */
+-(void) runXman: (id) sender;
+
+/**
  * Put a new image in the window / view
  * Send an image to the view after being notified of a damage event from 
  * the event handler.
