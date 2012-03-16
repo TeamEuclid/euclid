@@ -53,10 +53,11 @@ _xtoq_init_damage(xtoq_context_t *contxt)
     xcb_query_extension_reply_t *reply =_xtoq_init_extension(contxt->conn, "DAMAGE");
     
     xcb_damage_query_version_cookie_t version_cookie = 
-    xcb_damage_query_version(contxt->conn, 
-                             XCB_DAMAGE_MAJOR_VERSION,
-                             XCB_DAMAGE_MINOR_VERSION);
-	xcb_damage_query_version_reply_t* version_reply = xcb_damage_query_version_reply(contxt->conn, version_cookie, NULL);
+		xcb_damage_query_version(contxt->conn, 
+								 XCB_DAMAGE_MAJOR_VERSION,
+								 XCB_DAMAGE_MINOR_VERSION);
+	xcb_damage_query_version_reply_t* version_reply =
+		xcb_damage_query_version_reply(contxt->conn, version_cookie, NULL);
     
     _damage_event = reply->first_event + XCB_DAMAGE_NOTIFY;
     
@@ -65,12 +66,6 @@ _xtoq_init_damage(xtoq_context_t *contxt)
     
     xcb_damage_damage_t damage = xcb_generate_id(contxt->conn);
     
-    // Refer to the Damage Protocol. level = 0 corresponds to the level
-    // DamageReportRawRectangles.  Another level may be more appropriate.
-    uint8_t level = XCB_DAMAGE_REPORT_LEVEL_BOUNDING_BOX;
-    xcb_void_cookie_t cookie = xcb_damage_create(contxt->conn,
-                                                 damage, contxt->window, level);
-    
     /* Assign this damage object to the roots window's context */
     contxt->damage = damage;
     
@@ -78,17 +73,23 @@ _xtoq_init_damage(xtoq_context_t *contxt)
 
 void 
 _xtoq_init_composite(xtoq_context_t *contxt) {
-    xcb_query_extension_reply_t *reply = _xtoq_init_extension(contxt->conn, "Composite");
+    xcb_query_extension_reply_t *reply =
+		_xtoq_init_extension(contxt->conn, "Composite");
     
-    xcb_composite_query_version_cookie_t cookie = xcb_composite_query_version (contxt->conn, XCB_COMPOSITE_MAJOR_VERSION, XCB_COMPOSITE_MINOR_VERSION);
+    xcb_composite_query_version_cookie_t cookie =
+		xcb_composite_query_version (contxt->conn,
+									 XCB_COMPOSITE_MAJOR_VERSION,
+									 XCB_COMPOSITE_MINOR_VERSION);
     
-    xcb_composite_query_version_reply_t *version_reply = 	xcb_composite_query_version_reply (contxt->conn, cookie, NULL);
+    xcb_composite_query_version_reply_t *version_reply = 
+		xcb_composite_query_version_reply (contxt->conn, cookie, NULL);
     
-    xcb_composite_redirect_subwindows_checked(contxt->conn, contxt->window, XCB_COMPOSITE_REDIRECT_MANUAL);
+    xcb_composite_redirect_subwindows_checked(contxt->conn,
+											  contxt->window,
+											  XCB_COMPOSITE_REDIRECT_MANUAL);
     
     free(version_reply);
     free(reply);
-    
 }
 
 void
@@ -108,7 +109,6 @@ _xtoq_get_wm_atoms (xtoq_context_t *context)
 {
 	xcb_intern_atom_reply_t *atom_reply;
 	xcb_intern_atom_cookie_t atom_cookie;
-	xcb_generic_error_t *error;
 
     _wm_atoms = malloc(sizeof(xtoq_wm_atoms));
 

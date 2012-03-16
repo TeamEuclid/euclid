@@ -249,8 +249,6 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     
-    float height = [[NSScreen mainScreen] frame].size.height;
-        
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_press (rootContext,
                                          0,
@@ -272,8 +270,6 @@
     heightAsNumber = [mouseReleaseInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
-    
-    float height = [[NSScreen mainScreen] frame].size.height;
     
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
