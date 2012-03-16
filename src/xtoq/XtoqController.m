@@ -98,8 +98,8 @@
     // set the initial image in the window
     //[ourView setImage:image];
 
-    originalWidth = [image getWidth];
-    originalHeight = [image getHeight];
+   // originalWidth = [image getWidth];
+   // originalHeight = [image getHeight];
     //[ourView setPartialImage:imageNew];
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];

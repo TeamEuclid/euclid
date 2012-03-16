@@ -61,17 +61,18 @@ id referenceToSelf;
     //The X :1 paramater, updated in the XtoqApplication
     char *screen;
     
-    xtoq_image_t *libImageT;
+  //  xtoq_image_t *libImageT;
     xtoq_context_t *rootContext;
-    xcb_image_t *imageT;
-    XtoqImageRep *image;
-    XtoqImageRep *imageNew;
-    XtoqView *view;
-
-    int originalHeight;
-    int originalWidth;
+   // xcb_image_t *imageT;
+   // XtoqImageRep *image;
+    //XtoqImageRep *imageNew;
+   // XtoqView *view;
     NSRect imageRec;
-    NSString *keyFirst;
+    
+//    NSString *keyFirst;
+//    int originalHeight;
+//    int originalWidth;
+    
 }
 
 - (id) init;
