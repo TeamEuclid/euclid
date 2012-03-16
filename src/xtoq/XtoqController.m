@@ -386,6 +386,12 @@
     const char *file_name = [filename UTF8String];
     const char *newargv[4];
     
+    // Xman Special case
+    if ([filename isEqualToString:@"xman"]) {
+        const char *manpath = "/opt/local/share/man:/usr/share/man:/usr/local/share/man:/opt/X11/share/man:/usr/X11/man:/usr/local/git/share/man";        
+        setenv("MANPATH", manpath, 1);
+    }
+
     newargv[0] = file_name;
     newargv[1] = "-display";
     newargv[2] = screen;
@@ -395,6 +401,7 @@
     if(status) {
         NSLog(@"Error spawning file for launch.");
     }
+    
 }
 
 - (void) runXeyes:(id) sender {
@@ -410,7 +417,6 @@
     [self launch_client:@"xterm"];    
 }
 -(void) runXman:(id) sender {
-    setenv("MANPATH", "`manpath`", 1);
     [self launch_client:@"xman"];
 }
 
