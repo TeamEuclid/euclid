@@ -380,18 +380,26 @@
     int status;
     pid_t child;
     const char *file_name = [filename UTF8String];
-    const char *newargv[4];
+    const char *newargv[6];
     
     // Xman Special case
     if ([filename isEqualToString:@"xman"]) {
         const char *manpath = "/opt/local/share/man:/usr/share/man:/usr/local/share/man:/opt/X11/share/man:/usr/X11/man:/usr/local/git/share/man";        
         setenv("MANPATH", manpath, 1);
     }
-
+    
     newargv[0] = file_name;
     newargv[1] = "-display";
     newargv[2] = screen;
-    newargv[3] = NULL;
+    
+    if ([filename isEqualToString:@"xclock"]) {
+        newargv[3] = "-update";
+        newargv[4] = "1";
+        newargv[5] = NULL;
+    }
+    else {
+        newargv[3] = NULL;
+    }
     
     status = posix_spawnp(&child, newargv[0], NULL, NULL, (char * const *) newargv, environ);
     if(status) {
