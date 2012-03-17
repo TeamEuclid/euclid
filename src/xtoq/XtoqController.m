@@ -137,12 +137,12 @@
 		       name: @"XTOQdestroyTheWindow"
 		     object: nil];
     
-    // regester for window will/did movement notification
+  /*  // regester for window will/did movement notification
     [nc addObserver:self 
 		   selector:@selector(windowWillMove:) 
 		       name:NSWindowWillMoveNotification 
 		     object:nil];
-    
+  */  
     [nc addObserver:self 
 		   selector:@selector(windowDidMove:) 
 		       name:NSWindowDidMoveNotification 
@@ -491,11 +491,11 @@
 	XtoqView *localView = (XtoqView *)[(XtoqWindow *)windowContext->local_data contentView];
     [ localView setPartialImage:newDamageRect];
 }
-
+/*
 - (void) windowWillMove:(NSNotification*)notification {
     // do nothing
 }
-
+*/
 - (void) windowDidMove:(NSNotification*)notification {
     [self reshape];
 }

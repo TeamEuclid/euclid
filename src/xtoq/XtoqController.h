@@ -218,7 +218,7 @@ id referenceToSelf;
  */
 - (void) setScreen: (char *) scrn;
 
-- (void)windowWillMove:(NSNotification*)notification;
+//- (void)windowWillMove:(NSNotification*)notification;
 
 /**
  * Informs the delegate that the window has been moved.
