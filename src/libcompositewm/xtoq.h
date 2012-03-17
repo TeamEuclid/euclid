@@ -175,11 +175,11 @@ xtoq_key_release (xtoq_context_t *context, int window, uint8_t code);
  * Uses the XTEST protocol to send input events to the X Server (The X Server
  * is usually in the position of sending input events to a client). The client
  * will often choose to send coordinates through mouse motion and set the params 
- * x & y to 0 here.
+ * x & y to 0 here. The button number is 1 for left,2 for center, and 3 for right.
  * @param context xtoq_context_t 
  * @param x - x coordinate
  * @param y - y coordinate
- * @param window The window that the button press was made in.
+ * @param button The button pressed.
  */
 void
 xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int button);
@@ -188,40 +188,14 @@ xtoq_button_press (xtoq_context_t *context, long x, long y, int window, int butt
  * Uses the XTEST protocol to send input events to the X Server (The X Server
  * is usually in the position of sending input events to a client). The client
  * will often choose to send coordinates through mouse motion and set the params 
- * x & y to 0 here.
+ * x & y to 0 here. The button number is 1 for left,2 for center, and 3 for right.
  * @param context xtoq_context_t 
  * @param x - x coordinate
  * @param y - y coordinate
- * @param window The window that the button release was made in.
+ * @param button The button pressed.
  */
 void
 xtoq_button_release (xtoq_context_t *context, long x, long y, int window, int button);
-
-/**
- * Uses the XTEST protocol to send input events to the X Server (The X Server
- * is usually in the position of sending input events to a client). The client
- * will often choose to send coordinates through mouse motion and set the params 
- * x & y to 0 here.
- * @param context xtoq_context_t 
- * @param x - x coordinate
- * @param y - y coordinate
- * @param window The window that the button press was made in.
- */
-void
-xtoq_right_button_press (xtoq_context_t *context, long x, long y, int window, int button);
-
-/**
- * Uses the XTEST protocol to send input events to the X Server (The X Server
- * is usually in the position of sending input events to a client). The client
- * will often choose to send coordinates through mouse motion and set the params 
- * x & y to 0 here.
- * @param context xtoq_context_t 
- * @param x - x coordinate
- * @param y - y coordinate
- * @param window The window that the button release was made in.
- */
-void
-xtoq_right_button_release (xtoq_context_t *context, long x, long y, int window, int button);
 
 
 /**

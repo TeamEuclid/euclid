@@ -115,6 +115,9 @@ int XtoqApplicationMain(int argc, char** argv){
         case NSLeftMouseDown: case NSRightMouseDown: case NSOtherMouseDown:
         case NSLeftMouseUp: case NSRightMouseUp: case NSOtherMouseUp: {
             /* We want to force sending to appkit if we're over the menu bar */
+            int buttonInt = [self eventToButtonInt:e];
+            NSNumber *buttonNumber = [[NSNumber alloc] initWithInt:buttonInt];
+            
 		    NSPoint NSlocation = [e locationInWindow];
 			NSWindow *window = [e window];
 			NSRect NSframe, NSvisibleFrame;
@@ -146,24 +149,27 @@ int XtoqApplicationMain(int argc, char** argv){
 			    if  ([e type] == NSLeftMouseDown 
 					 || [e type] == NSRightMouseDown
 					 || [e type] == NSOtherMouseDown) {
+                    
     			    CGFloat f = 100;
 					NSNumber *n = [[NSNumber alloc] initWithFloat:f];
-					NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
-					[twoInfoDict setObject:e forKey:@"1"];
-					[twoInfoDict setObject:n forKey:@"2"];
+					NSMutableDictionary *threeInfoDict = [[NSMutableDictionary alloc] initWithCapacity:3];
+					[threeInfoDict setObject:e forKey:@"1"];
+					[threeInfoDict setObject:n forKey:@"2"];
+                    [threeInfoDict setObject:buttonNumber forKey:@"3"];
                     
 					[notificationCenter postNotificationName:@"XTOQmouseButtonDownEvent" 
 					                                  object:self 
-            										userInfo:twoInfoDict];
+            										userInfo:threeInfoDict];
                 } else {
 				    CGFloat f = 100;
 				    NSNumber *n = [[NSNumber alloc] initWithFloat:f];
-				    NSMutableDictionary *twoInfoDict = [[NSMutableDictionary alloc] initWithCapacity:2];
-				    [twoInfoDict setObject:e forKey:@"1"];
-					[twoInfoDict setObject:n forKey:@"2"];
+				    NSMutableDictionary *threeInfoDict = [[NSMutableDictionary alloc] initWithCapacity:3];
+				    [threeInfoDict setObject:e forKey:@"1"];
+					[threeInfoDict setObject:n forKey:@"2"];
+                    [threeInfoDict setObject:buttonNumber forKey:@"3"];
 					[notificationCenter postNotificationName:@"XTOQmouseButtonReleaseEvent" 
 										              object:self 
-									                userInfo:twoInfoDict];
+									                userInfo:threeInfoDict];
                 }
 			}
             break;
@@ -244,4 +250,21 @@ int XtoqApplicationMain(int argc, char** argv){
                 [super sendEvent:e];
             }
 }
+
+- (int) eventToButtonInt:(NSEvent *)e {
+    if ([e type] == NSLeftMouseDown ||
+        [e type] == NSLeftMouseUp) {
+        return 1;
+    }
+    else if ([e type] == NSRightMouseDown ||
+        [e type] == NSRightMouseUp ) {
+        return 3;
+    }    
+    else if ([e type] == NSOtherMouseDown ||
+             [e type] == NSOtherMouseUp ) {
+        return 2;
+    }
+    else return -1;
+}
+
 @end

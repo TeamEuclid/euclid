@@ -247,6 +247,10 @@
     NSNumber * heightAsNumber =  [NSNumber alloc];
     heightAsNumber = [mouseDownInfo objectForKey: @"2"];
     heightFloat = [heightAsNumber floatValue];
+    
+    NSNumber * mouseButton = [NSNumber alloc];
+    mouseButton = [mouseDownInfo objectForKey:@"3"];
+    int buttonInt = [mouseButton intValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     
     dispatch_async(xtoqDispatchQueue, 
@@ -254,7 +258,7 @@
                                          0,
                                          0, 
                                          (int)[event windowNumber],
-                                         0);;});
+                                         buttonInt);;});
 }
 
 // on this side all I have is a xtoq_context , on the library side I need
@@ -271,12 +275,17 @@
     heightFloat = [heightAsNumber floatValue];
     //NSLog(@"Mouse Info: %@", [mouseDownInfo objectForKey: @"2"]);
     
+    NSNumber * mouseButton = [NSNumber alloc];
+    mouseButton = [mouseReleaseInfo objectForKey:@"3"];
+    int buttonInt = [mouseButton intValue];
+    
+    
     dispatch_async(xtoqDispatchQueue, 
                    ^{ xtoq_button_release (rootContext,
                                            0,
                                            0,
                                            (int)[event windowNumber],
-                                           0);;});
+                                           buttonInt);;});
 }
 
 
