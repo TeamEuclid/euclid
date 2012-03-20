@@ -1,10 +1,9 @@
 Xtoq - X.org Rootless Compositing Window Manager
 
-
 Building
 ========
 
-The xtoq project can be built using GNU autotools. 
+The xtoq project can be built using GNU autotools.
 From the top level directory, execute the commands:
 
 $ ./autogen.sh
@@ -24,3 +23,27 @@ $ ./configure -prefix=/some/local/dir
 
 The 'make install' command will install the 'xtoq.app' directory into
 the /bin directory inside of the prefix given above.
+
+Running
+========
+To run xtoq.app:
+
+$ /Applications/XtoQ.app/Contents/MacOS/xtoq
+
+X11 programs can be run from the Applications menu within xtoq.app. You can also
+start apps from the command line by running them on the dummy driver (display) that xtoq.app is using.
+
+Contact Information
+===================
+
+Aaron Skomra        <skomra@lababit.com>
+Ben Carr            <carrbs@cs.pdx.edu>
+Ben Huddle          <benjaminhuddle@hotmail.com>
+Braden Wooley       <bwooley@pdx.edu>
+David Snyder        <dsnyder@cs.pdx.edu>
+Jamey Sharp         <jamey@minilop.net>
+Jeremy Huddleston   <jeremyhu@freedesktop.org>
+Jess VanDerwalker   <washu@sonic.net>
+Josh Triplett       <josh@joshtriplett.org>
+
+
